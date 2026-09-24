@@ -928,3 +928,13 @@ GitHub release tag `v0.0.42-vrN`, zip `rpcs3-v0.0.42-vrN-<commit>_win64.zip`. Fo
 build emucore/VKGSRender/rpcs3 so the exe carries that commit, run `plans/tools/package_release.py`, smoke-test
 the zip from a non-temporary folder, tag the commit and publish the zip. After merging a newer upstream
 version, restart at vr1.
+
+**Headset regressions found by the first release test (2026-09-24), fixed.** A fresh install froze Pure and
+WipEout once the headset was worn ("invalid layout": realign copied into a fresh UNDEFINED helper image).
+The per-frame pose machinery from the Ico pass (frame-boundary poses, blend-target realignment, feedback
+reprojection) then broke Pure (flashes, a bright square, the paused frame as a head-locked quad because its
+pose left the 8-entry history); it is now profile-gated (`reproject_older_frames`, Ico only), and an expired
+pose falls back to the newest. Pure's sky (far-plane DP4 block) now takes no eye offset. The no-3D fixed
+screen is profile-gated (`frames_without_3d_as_screen`, Ico only). Confirmed in the headset: Pure (sky,
+pause, gameplay). WipEout's slow menu in the dev setup was video memory at 750% (106%, 20 GB texture cache).
+Not yet re-checked after these changes: Ico. Release zip `rpcs3-v0.0.42-vr1-33b341b6_win64.zip`.
