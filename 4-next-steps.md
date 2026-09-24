@@ -905,3 +905,19 @@ head transform applied). `VKGSRender::vr_update_view` now counts camera draws pe
 frames without any it presents that frame as the fixed screen (HUD size/offset settings), and returns to
 the headset view on the first frame with a camera draw. Log: "VR: frames without camera draws: shown as
 the fixed screen". Note: `plans/tools/launch.ps1` without `-Probe 'render=1'` leaves VR rendering off.
+
+### Release readiness (2026-09-24)
+
+- Shipped games: WipEout HD Fury (BCES00664), Pure (BLUS30182), Ico (BCUS98259). The other seven profiles and
+  their patches moved to `rpcs3/vr-non-working/` (not in `bin/`, so not packaged). `rpcs3/vr-games.md` lists
+  all ten by playability; the Windows deploy scripts copy it into the package.
+- Defaults: `Video > VR > Enabled` and `HUD Fixed In Front` on; Reprojection Margin -1 = Auto.
+- Profile `max_fps` replaces `match_headset_refresh_rate`: 0 = syncs the vblank to the headset (WipEout,
+  Pure), otherwise (or unset) capped: configured vblank and margin Auto 10 degrees (Ico: 30).
+- Profile `game_refresh_rate_f32`: Pure's refresh variable (`[0x1050300]+0x14`) gets the effective vblank rate
+  every frame, so Pure follows any headset rate; its patch is now only the swap interval (verified 59.94 -> 90,
+  90 FPS with Vblank 90).
+- Patch key `Enabled By Default: true` (fork): on unless the user's `patch_config.yml` says otherwise; switching
+  one off is saved as `Enabled: false`. On by default: Pure's frame-rate patch; Ico's Disable MLAA (fork copy,
+  1.1, supersedes the community 1.0), Full Pixel Mode always on, Wider view (x20). Verified with no
+  `patch_config.yml`. Ico's unlocked frame-rate patch is not shipped (game runs 3x fast).
