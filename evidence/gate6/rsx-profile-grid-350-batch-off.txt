@@ -1,0 +1,99 @@
+thread rsx::thread (84348), 381 samples over 6s
+--- inclusive ---
+100.0%  named_thread<VKGSRender>::entry_point
+100.0%  rsx::thread::cpu_task
+100.0%  rsx::thread::on_task
+100.0%  0x1c3385bc060
+100.0%  cpu_thread::operator()
+100.0%  0x1c20adf040b
+ 97.9%  rsx::thread::run_FIFO
+ 58.3%  vkGetInstanceProcAddr
+ 48.6%  rsx::nv4097::set_begin_end
+ 48.0%  VKGSRender::end
+ 42.0%  vkResetEvent
+ 37.8%  rsx::thread::request_emu_flip
+ 37.8%  sys_rsx_context_attribute
+ 37.8%  rsx::gcm::driver_flip<1>::impl
+ 37.8%  rsx::thread::handle_emu_flip
+ 37.8%  VKGSRender::flip
+ 36.5%  VKGSRender::emit_geometry
+ 36.0%  WaitForMultipleObjectsEx
+ 36.0%  WaitForMultipleObjects
+ 36.0%  ZwWaitForMultipleObjects
+ 35.4%  vk::xr::commit_eyes
+ 10.5%  VKGSRender::begin_render_pass
+ 10.5%  vk::begin_renderpass
+  7.1%  VKGSRender::bind_vr_eye_constants
+  4.2%  vk::glsl::program::bind
+  3.9%  rsx::vr::camera_probe::apply_render_eye
+  3.9%  VKGSRender::load_texture_env
+  3.7%  VKGSRender::upload_vertex_data
+  3.4%  rsx::texture_cache<vk::texture_cache,vk::texture_cache_traits>::upload_texture<rsx::fragment_texture,vk::surface_cache>
+  3.1%  VKGSRender::load_program
+  2.9%  vkEnumerateInstanceLayerProperties
+  2.9%  vk::end_renderpass
+  2.9%  rsx::FIFO::FIFO_control::read
+  2.9%  rsx::FIFO::FIFO_control::fetch_u32
+  2.6%  `VKGSRender::emit_geometry'::`2'::<lambda_2>::operator()
+  2.4%  memcpy
+  2.1%  rsx::dma_manager::copy
+  2.1%  rsx::draw_command_processor::write_vertex_data_to_memory
+  2.1%  program_state_cache<vk::VKTraits>::get_graphics_pipeline<>
+  1.8%  VKGSRender::flush_command_queue
+  1.8%  program_state_cache<vk::VKTraits>::search_fragment_program
+  1.6%  VKGSRender::queue_swap_request
+  1.6%  VKGSRender::do_local_task
+  1.6%  memcpy_repmovs
+  1.3%  vk::command_buffer::submit
+  1.3%  ZwDelayExecution
+  1.3%  VKGSRender::close_and_submit_command_buffer
+  1.3%  vk::queue_submit
+  1.3%  RtlDelayExecution
+  1.3%  SwitchToThread
+  1.3%  program_hash_util::fragment_program_storage_hash::operator()
+  1.3%  vk::upload_image
+  1.3%  rsx::texture_cache<vk::texture_cache,vk::texture_cache_traits>::fast_texture_search<vk::surface_cache>
+  1.3%  vk::texture_cache::upload_image_from_cpu
+  1.3%  DrvPresentBuffers
+  1.0%  vk::command_buffer::bind_descriptor_sets
+  1.0%  vk_gr2608GetInstanceProcAddr
+  1.0%  VKGSRender::bind_texture_env
+  1.0%  rsx::thread::prefetch_fragment_program
+  1.0%  RtlAllocateHeap
+  1.0%  program_hash_util::fragment_program_utils::analyse_fragment_program
+  1.0%  mov_rdata
+  1.0%  vk::swapchain_WSI::present
+  1.0%  `vk::glsl::descriptor_table_t::update_descriptor_template'::`2'::<lambda_1>::operator()
+  1.0%  vk::glsl::descriptor_table_t::update_descriptor_template
+  0.8%  module+7fd87
+  0.8%  vk::query_pool_manager::free_queries<rsx::simple_array<unsigned int,4> >
+  0.8%  rsx::thread::analyse_current_rsx_pipeline
+  0.8%  VKGSRender::discard_occlusion_query
+  0.8%  rsx::reports::ZCULL_control::clear
+--- self (leaf) ---
+ 36.0%  ZwWaitForMultipleObjects
+ 18.1%  vkGetInstanceProcAddr
+  3.9%  rsx::vr::camera_probe::apply_render_eye
+  2.4%  memcpy
+  1.6%  rsx::FIFO::FIFO_control::fetch_u32
+  1.6%  memcpy_repmovs
+  1.3%  ZwDelayExecution
+  1.3%  program_hash_util::fragment_program_storage_hash::operator()
+  1.3%  rsx::thread::run_FIFO
+  1.0%  rsx::FIFO::FIFO_control::read
+  1.0%  VKGSRender::bind_vr_eye_constants
+  1.0%  program_hash_util::fragment_program_utils::analyse_fragment_program
+  1.0%  RtlAllocateHeap
+  1.0%  mov_rdata
+  0.8%  VKGSRender::emit_geometry
+  0.8%  vkResetEvent
+  0.8%  `vk::glsl::descriptor_table_t::update_descriptor_template'::`2'::<lambda_1>::operator()
+  0.5%  VKGSRender::update_draw_state
+  0.5%  get_system_time
+  0.5%  rsx::draw_command_processor::fill_vertex_program_constants_data
+  0.5%  NtGdiDdDDISubmitWaitForSyncObjectsToHwQueue
+  0.5%  vk::begin_renderpass
+  0.5%  rsx::nv4097::set_begin_end
+  0.5%  vk::query_pool_manager::free_query
+  0.5%  NtGdiDdDDISubmitCommandToHwQueue
+

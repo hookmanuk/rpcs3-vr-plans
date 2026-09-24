@@ -1,0 +1,22 @@
+Split/Second BLUS30300, Season race (Airport Terminal), RPCS3_OPENXR=0, temporary RPCS3_FIND_GAMETIME probe
+(guest frame counter this+0x1a71c / game time this+0x1a724), 2026-09-23.
+
+Vblank Rate 90, patch Refresh Rate 90 (run 1):
+GAMETIME candidate 0x46aaaddc: counter 650 -> 710, f32 22.966667 -> 24.999973
+GAMETIME wall 12.282 s: [0x46aaade4] 37.222 (rate 0.995)
+GAMETIME wall 0.950 s: [0x46aaade4] 38.211 (rate 1.005)
+GAMETIME wall 1.970 s: [0x46aaade4] 39.233 (rate 1.004)
+GAMETIME wall 3.002 s: [0x46aaade4] 40.266 (rate 1.003)
+GAMETIME wall 4.003 s: [0x46aaade4] 41.266 (rate 1.002)
+GAMETIME wall 5.010 s: [0x46aaade4] 42.233 (rate 0.994)
+
+Vblank Rate 90, patch Refresh Rate 90 (run 2):
+GAMETIME wall 7.766 s: [0x46aaaee4] 36.278 (rate 0.999)
+GAMETIME wall 8.795 s: [0x46aaaee4] 37.300 (rate 0.998)
+GAMETIME wall 9.796 s: [0x46aaaee4] 38.300 (rate 0.998)
+
+Vblank Rate 90, patch Refresh Rate 60 (control):
+GAMETIME candidate 0x46aab1dc: counter 761 -> 821, f32 40.833027 -> 43.882980
+GAMETIME wall 6.937 s: [0x46aab1e4] 54.266 (rate 1.497)
+GAMETIME wall 9.991 s: [0x46aab1e4] 58.849 (rate 1.498)
+GAMETIME wall 7.727 s: [0x46aab1e4] 130.069 (rate 1.499)

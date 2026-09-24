@@ -1,0 +1,65 @@
+void VKGSRender::upload_vr_instancing_data(const rsx::VertexProgramBase* prog)
+{
+	// An instanced clause (RPCS3 merges consecutive draws that differ only in
+	// transform constants, e.g. scattered rocks) reads its constants through a
+	// per-instance lookup table instead of the per-draw buffer, so the per-eye
+	// transform has to be applied to every instance's constants here. Pack the
+	// clause as usual into CPU memory, expand each instance to its full constant
+	// set, run it through the same per-eye transform as an ordinary draw, and
+	// upload one array per eye behind an identity lookup table.
+	static thread_local std::vector<u8> packed_lut, packed_constants;
+	static thread_local std::vector<u128> left, right;
+	static thread_local std::vector<u32> lut;
+
+	rsx::io_buffer lut_buf([&](usz size) -> std::tuple<void*, usz>
+	{
+		packed_lut.resize(size);
+		return { packed_lut.data(), size };
+	});
+	rsx::io_buffer constants_buf([&](usz size) -> std::tuple<void*, usz>
+	{
+		packed_constants.resize(size);
+		return { packed_constants.data(), size };
+	});
+	m_draw_processor.fill_constants_instancing_buffer(lut_buf, constants_buf, prog);
+
+	const bool full_bank = !prog || prog->has_indexed_constants;
+	const u32 slots = full_bank ? 468u : ::size32(prog->constant_ids);
+	const u32 instances = rsx::method_registers.current_draw_clause.pass_count();
+	const u32* packed_index = reinterpret_cast<const u32*>(packed_lut.data());
+	const u128* packed_value = reinterpret_cast<const u128*>(packed_constants.data());
+	ensure(lut_buf.size() == usz{slots} * instances * sizeof(u32));
+
+	const usz count = usz{slots} * instances;
+	left.resize(count);
+	right.resize(count);
+	lut.resize(count);
+	for (usz i = 0; i < count; ++i)
+	{
+		left[i] = right[i] = packed_value[packed_index[i]];
+		lut[i] = static_cast<u32>(i);
+	}
+
+	const u16* reloc = full_bank ? nullptr : prog->constant_ids.data();
+	const usz reloc_size = full_bank ? 0 : prog->constant_ids.size();
+	auto& probe = rsx::vr::camera_probe::get();
+	for (u32 instance = 0; instance < instances; ++instance)
+	{
+		probe.apply_render_eye(&left[usz{instance} * slots], reloc, reloc_size, m_framebuffer_layout.width, m_framebuffer_layout.height, -1.f);
+		probe.apply_render_eye(&right[usz{instance} * slots], reloc, reloc_size, m_framebuffer_layout.width, m_framebuffer_layout.height, 1.f);
+	}
+
+	const usz alignment = m_device->gpu().get_limits().minStorageBufferOffsetAlignment;
+	const auto upload = [&](const void* data, usz size) -> VkDescriptorBufferInfoEx
+	{
+		const usz offset = m_instancing_buffer_ring_info.alloc<1>(utils::align(size, alignment));
+		std::memcpy(m_instancing_buffer_ring_info.map(offset, size), data, size);
+		return { *m_instancing_buffer_ring_info.heap, offset, size };
+	};
+	m_instancing_indirection_buffer_info = upload(lut.data(), count * sizeof(u32));
+	m_instancing_constants_array_buffer_info = upload(left.data(), count * sizeof(u128));
+	m_vr_right_instancing_constants_info = upload(right.data(), count * sizeof(u128));
+	m_instancing_buffer_ring_info.unmap();
+	m_vr_instanced_ready = true;
+}
+

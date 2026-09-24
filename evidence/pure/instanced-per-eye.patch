@@ -1,0 +1,88 @@
+diff --git a/rpcs3/Emu/RSX/VK/VKDraw.cpp b/rpcs3/Emu/RSX/VK/VKDraw.cpp
+index a64ff078a..5459eed8f 100644
+--- a/rpcs3/Emu/RSX/VK/VKDraw.cpp
++++ b/rpcs3/Emu/RSX/VK/VKDraw.cpp
+@@ -1114,8 +1114,11 @@ void VKGSRender::emit_geometry(u32 sub_index)
+ 	VkDescriptorBufferViewEx persistent_buffer = m_persistent_attribute_storage ? *m_persistent_attribute_storage : *null_buffer_view;
+ 	VkDescriptorBufferViewEx volatile_buffer = m_volatile_attribute_storage ? *m_volatile_attribute_storage : *null_buffer_view;
+ 	bool update_descriptors = false;
++	// Instanced clauses carry their constants per instance; upload_vr_instancing_data
++	// prepared both eyes' arrays when this clause's program environment was loaded.
++	const bool vr_instanced = draw_call.is_trivial_instanced_draw;
+ 	bool vr_render = rsx::vr::camera_probe::get().render_enabled() && m_vr_right_draw_fbo &&
+-		!draw_call.is_trivial_instanced_draw;
++		(!vr_instanced || m_vr_instanced_ready);
+ 	// Gate 6: batch the right-eye draw into the current left pass's right-eye batch.
+ 	// Programmable blending (input attachments) and conditional rendering keep the
+ 	// per-draw replay: neither carries over into a secondary command buffer here.
+@@ -1141,6 +1144,18 @@ void VKGSRender::emit_geometry(u32 sub_index)
+ 	const VkDescriptorBufferInfoEx guest_constants_info = m_vertex_constants_buffer_info;
+ 	const u64 guest_constants_dynamic_offset = m_xform_constants_dynamic_offset;
+ 	const u64 guest_constants_source_offset = guest_constants_info.offset + guest_constants_dynamic_offset;
++	const auto bind_vr_eye = [&](f32 eye_sign)
++	{
++		if (!vr_instanced)
++		{
++			bind_vr_eye_constants(eye_sign, guest_constants_source_offset, m_xform_constants_data_size);
++		}
++		else if (m_vs_binding_table->instanced_cbuf_location != umax)
++		{
++			m_program->bind_uniform(eye_sign > 0.f ? m_vr_right_instancing_constants_info : m_instancing_constants_array_buffer_info,
++				vk::glsl::binding_set_index_vertex, m_vs_binding_table->instanced_cbuf_location);
++		}
++	};
+ 
+ 	if (m_current_draw.subdraw_id == 0)
+ 	{
+@@ -1151,9 +1166,9 @@ void VKGSRender::emit_geometry(u32 sub_index)
+ 		m_vertex_layout_dynamic_offset = m_vertex_layout_ring_info.alloc<8>(alloc_size);
+ 	}
+ 
+-	if (vr_render)
++	if (vr_render && !vr_instanced)
+ 	{
+-		bind_vr_eye_constants(-1.f, guest_constants_source_offset, m_xform_constants_data_size);
++		bind_vr_eye(-1.f);
+ 	}
+ 
+ 	// Update vertex fetch parameters
+@@ -1351,7 +1366,7 @@ void VKGSRender::emit_geometry(u32 sub_index)
+ 		m_draw_fbo = m_vr_right_draw_fbo;
+ 		m_fbo_images = m_vr_right_fbo_images;
+ 
+-		bind_vr_eye_constants(1.f, guest_constants_source_offset, m_xform_constants_data_size);
++		bind_vr_eye(1.f);
+ 		// On the primary: a barrier here ends the left pass, which runs the batch first.
+ 		bind_texture_env(true);
+ 
+@@ -1383,6 +1398,10 @@ void VKGSRender::emit_geometry(u32 sub_index)
+ 			m_program->bind_uniform(m_vertex_constants_buffer_info, vk::glsl::binding_set_index_vertex,
+ 				m_vs_binding_table->cbuf_location);
+ 		}
++		if (vr_instanced)
++		{
++			bind_vr_eye(-1.f);
++		}
+ 		bind_texture_env(false);
+ 	}
+ 	else if (vr_render)
+@@ -1400,7 +1419,7 @@ void VKGSRender::emit_geometry(u32 sub_index)
+ 		m_draw_fbo = m_vr_right_draw_fbo;
+ 		m_fbo_images = m_vr_right_fbo_images;
+ 
+-		bind_vr_eye_constants(1.f, guest_constants_source_offset, m_xform_constants_data_size);
++		bind_vr_eye(1.f);
+ 		update_vertex_env(sub_index * 2 + 1, upload_info);
+ 		bind_texture_env(true);
+ 		m_program->bind(*m_current_command_buffer, VK_PIPELINE_BIND_POINT_GRAPHICS);
+@@ -1421,6 +1440,10 @@ void VKGSRender::emit_geometry(u32 sub_index)
+ 			m_program->bind_uniform(m_vertex_constants_buffer_info, vk::glsl::binding_set_index_vertex,
+ 				m_vs_binding_table->cbuf_location);
+ 		}
++		if (vr_instanced)
++		{
++			bind_vr_eye(-1.f);
++		}
+ 		bind_texture_env(false);
+ 
+ 		if (vr_suspend_query)

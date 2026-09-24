@@ -1,0 +1,5 @@
+# Python caches
+__pycache__/
+*.pyc
+# Scratch screenshots from the scripted runs (kept copies go in evidence/)
+tools/re/*.png

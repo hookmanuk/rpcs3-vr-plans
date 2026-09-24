@@ -1,0 +1,359 @@
+# Making a VR profile for a new game
+
+This is the process that produced WipEout HD (`BCES00664`) and Pure (`BLUS30182`), written so it can be
+repeated for any game. Each step says what to run, what to look at, and what the result must be before
+moving on. The profile format itself is documented in `plans/profiles/README.md`.
+
+A profile is a small JSON file, `rpcs3/bin/vr_profiles/<TITLE_ID>.json`. It tells the renderer three
+things about the game's vertex constants:
+
+1. **Which constants hold the camera.** These are 4-slot blocks holding the object-to-clip matrix, and
+   the matrix layout they use.
+2. **Where the camera position is.** This is optional.
+3. **Which block is the HUD's screen-space matrix.**
+
+The renderer does the rest: it renders each eye, applies head rotation and position, and fits the HUD
+into a fixed box. Most of the work is finding those three facts, then proving that every draw which
+should follow your head actually does.
+
+Tools used below, all in `plans/tools/` unless noted:
+
+| Tool | Purpose |
+|---|---|
+| `launch.ps1` | restart RPCS3 on a game with the inspector, probe file, optional stereo/audit/no-headset |
+| `keys.ps1` | focus the game window and press keys (`W+X` = together); needs a keyboard pad profile |
+| `f12shot.ps1` | RPCS3's own screenshot (eye 0), works in exclusive fullscreen |
+| `sbsshot.ps1` | resize the game window and capture both eyes side by side (desktop, windowed) |
+| `profile_survey.py` | analyse a one-frame capture: passes, camera blocks, layout, uncovered programs, camera position, HUD block |
+| `keyboard-pad-template.yml` | temporary keyboard pad for scripted input |
+| `tools/pair_eyes.py`, `tools/fit_stereo.py` (repo root) | only for games with native 3D: pair eyes and fit the game's own stereo |
+
+Put evidence in `plans/evidence/<game>/` and findings in `plans/profiles/<TITLE_ID>-notes.md`.
+
+---
+
+## Step 0 - The game must run well in 2D first
+
+- It must boot and run on the Vulkan renderer at your intended resolution scale.
+- **Frame rate.** VR needs the headset's rate (72-120 Hz), or at least a steady 60 Hz reprojected by the
+  runtime. A 30 fps game needs a frame-rate patch first. Pure's is documented in
+  `plans/profiles/BLUS30182-notes.md`: PSGL swap interval forced to 1, plus the game's refresh constant
+  set to the vblank rate. Check the game clock stays real-time: time a lap or a timer against wall time.
+  This is what decides `match_headset_refresh_rate`.
+- **Updates.** Some games only have native 3D in a later update (WipEout needed v2.51). Check before you
+  decide there's no native stereo.
+- **Scripted input.** Copy `keyboard-pad-template.yml` to
+  `rpcs3/bin/config/input_configs/<TITLE_ID>/Default.yml`. Start is `Return`, not `Enter`: the key names
+  are Qt's. **Delete this file when you finish**, because it overrides the user's controller for this
+  game.
+- **Screenshots.** Window captures go stale in exclusive fullscreen, so use `f12shot.ps1` (eye 0 only).
+  For stereo checks, run windowed and use `sbsshot.ps1`. Captures must be DPI-aware; the display is
+  1920x1200 at 125%.
+
+**Done when:** you can reach a representative gameplay scene from boot with a script, at target frame
+rate, and screenshot it.
+
+## Step 1 - Choose the scenes
+
+Pick at least:
+
+- **A:** a stationary, repeatable gameplay moment, such as a start grid or a paused tutorial prompt. Used
+  for measurements.
+- **B:** normal gameplay in the most complex environment: foliage, rocks, particles, water, many
+  opponents.
+- **C:** menus and the pause screen, because these often use different post-processing.
+
+Programs that only appear in some scenes are the main way a profile goes wrong. Pure's rocks and sky
+only showed up as problems in a real race, not on the tutorial start line. Write down the menu path to
+each scene.
+
+## Step 2 - Capture frames with the inspector
+
+```powershell
+plans\tools\launch.ps1 -Game 'F:/rpsc3/games/<game>.iso'
+# ...drive to the scene...
+New-Item "$env:TEMP\rpcs3-vrprofile\insp\ARM" -ItemType File   # arms exactly one frame
+```
+
+Each capture is a `<TITLE_ID>_<time>_stereo.jsonl` in the `insp` folder. Every draw record has the
+program, the constants by original guest index, the render target and state, the fragment program id and
+the bound textures. Capture every scene from Step 1. Also turn on `Log shader programs` in the game's
+config. The logged shaders land in `rpcs3/bin/shaderlog/` as `VertexProgram<vp_session_id>.spirv` and
+`FragmentProgram<fp_session_id>.spirv`, and you need them in Step 3. Turn logging off and delete that
+folder afterwards.
+
+**If the game has native 3D**, also capture the same scene with `3D Display Mode: Side-by-Side` and the
+game's 3D prompt accepted. Then `tools/pair_eyes.py` finds the per-eye constants, and `tools/fit_stereo.py`
+fits the game's exact stereo shear. That's how WipEout's values were fixed, and it gives a correct
+classifier score for free (Gates 3-4 in `4-next-steps.md`).
+
+## Step 3 - Survey the capture
+
+```powershell
+python plans\tools\profile_survey.py <capture.jsonl>
+```
+
+Read the output in this order:
+
+1. **Render passes.** Note which targets have the output aspect (tagged); those are camera views. Other
+   sizes are shadow maps, reflections, post-processing chains and luminance targets. They're eye-invariant
+   unless proven otherwise.
+2. **Candidate camera blocks, by layout.**
+   - `rows`: `clip = v.x*c[b] + v.y*c[b+1] + v.z*c[b+2] + c[b+3]`. WipEout: `c[256]`, then `c[260]`.
+   - `columns`: the DP4 transpose, `clip[i] = dot(c[b+i], v)`, which PSGL/Cg games use. Pure: `c[26]`,
+     then `c[39]`.
+   - Keep every block that more than a couple of programs use. A second block is normal: WipEout keeps
+     view-projection in a second block when the first holds the object matrix, and Pure has a second copy
+     for its ground clutter.
+3. **UNCOVERED programs.** These are programs on camera-view targets that no chosen block covers, and
+   they're what will appear head-locked in the headset. For each one, open its logged shaders and decide:
+   - **Reads only `c[467]` or no matrix:** a full-screen quad (resolve, composite, post-process). It's fine
+     as long as it samples per-eye targets, which it does.
+   - **Reads the HUD block:** HUD, handled by `screen_space`.
+   - **Does world geometry with a different block:** add that block to `camera_blocks`. Pure's rocks were
+     this case: `c[39..42]`.
+   - **Computes the view in the fragment shader** (a sky or fog quad driven by fragment constants): not
+     fixable by a profile. Record it and raise it as renderer work.
+4. **Blocks with no z slot.** Marked `(no z slot: z = w)`. These are DP4 programs that take clip z from
+   the w row, usually a sky on the far plane (Pure's `16991145`: `c[26]`, `c[27]`, `c[29]`). The renderer
+   supports this for `column_vectors` only. If a row-vector game needs it, that's a code change.
+5. **Projection.** A = |x|/|w| and B = |y|/|w|. B/A should equal the output aspect (16:9 → 1.778). A
+   second cluster at another scale is a lower-resolution pass: WipEout's 640x360 pass runs at 0.75×. The
+   horizontal FOV is `2*atan(1/A)`.
+6. **Camera position slot.** A `w = 1` constant equal to the eye point solved from the matrix: WipEout
+   `c[465]`, Pure `c[18]`. Games use it for specular and fog; each eye moves it by half the baseline.
+   If there isn't one, leave `camera_position.slot` out.
+7. **HUD block.** An orthographic block with pixel-scale entries (Pure and WipEout: `c[256]`). Check it in
+   a gameplay capture, not just menus.
+
+Also check for **stray matches**. With more than one block listed, an unrelated program can happen to hold
+a perspective-looking matrix in one of them. Pure's `dc11dd79` is a post-process quad with arbitrary data
+in `c[39..42]`. If any listed block is only perspective by accident, set `"require_rigid_camera": true`,
+which requires the clip x, y and w directions to be orthogonal. Don't set it for games whose object
+matrices carry non-uniform scale (WipEout).
+
+## Step 4 - Write the profile
+
+Start from Pure's file (`column_vectors`) or WipEout's (`row_vectors`).
+
+- `camera_blocks`, `matrix_layout`, `require_rigid_camera`, `camera_position.slot` and
+  `screen_space.orthographic_block` all come from Step 3.
+- **World scale, `eye_baseline`.** This is the game's distance between the eyes in world units. It also
+  sets the scale for head tracking: `eye_baseline` units equal your IPD.
+  - With native 3D, use the game's own value (WipEout: 0.240).
+  - Otherwise, check the units. When the w row is unit length, w is view depth in world units. Compare
+    known sizes: the distance from camera to player, a vehicle's length or a doorway. If the units are
+    metres, `0.064` gives 1:1 scale (Pure).
+  - `RPCS3_OPENXR_EYE_SCALE` can tune it later in the headset.
+- **Stereo shear**, `clip.x += sep*(clip.w - conv)`.
+  - With native 3D, use the fitted values, including the per-target-width rules.
+  - Otherwise, the headset keeps only `sep*conv`, which must equal `A * eye_baseline / 2`. Choose `conv`
+    near the player's subject distance and solve for `sep`. Pure: A = 1.3006, eye_baseline 0.064 →
+    `sep*conv` = 0.0416; conv 2.6 → sep 0.016.
+- `reference_screen_width` is only needed if the game's native 3D was tuned for a TV size.
+- `match_headset_refresh_rate: true` only if Step 0 proved the game clock stays real-time when the
+  vblank rate changes, **with nothing else fixed at boot**. Pure's refresh rate is a patch value, so it's
+  off there.
+
+The loader validates the file on boot. The log shows `VR profile loaded for <id>: camera blocks ...`, or
+the invalid field with its line and column. A bad file leaves VR off and the game in 2D.
+
+## Step 5 - Prove the camera on the flat route (probes)
+
+Run with VR disabled in the game config and write probe lines to the probe file, one per scene. Each is
+re-read every frame against the same booted scene.
+
+| Probe line | Expected |
+|---|---|
+| (empty file) | baseline |
+| `yaw=10`, `roll=10`, `pitch=10` | the whole world turns coherently; HUD fixed |
+| `tx=1`, `tz=1` | the world moves; HUD fixed |
+| `stereo=0.05,conv=<c>` | far scenery shifts `0.05 * output_width/2` px; objects at depth `c` don't move; HUD 0 px |
+| `slot=400,comp=0,add=100` (a slot nobody reads) | same as baseline: the negative control |
+
+The log prints a classifier report per probe (`perturbed / rejected off-aspect / rejected no
+perspective`), and the negative control must perturb 0. Measure shifts numerically, for example by
+cross-correlating image strips. For stereo, pick regions with texture detail, because a translucent HUD
+panel matches the world behind it. The unrotated baseline must match a second baseline to within the
+noise floor. Measure that noise first; ambient animation isn't zero.
+
+**Done when:** every axis moves the world, the HUD never moves, and the negative control is noise.
+
+## Step 6 - Stereo on the desktop
+
+```powershell
+plans\tools\launch.ps1 -Game <iso> -Probe 'render=1' -NoHeadset
+plans\tools\sbsshot.ps1 -Out sbs.png
+```
+
+Check each of these, in every scene from Step 1:
+
+- **Disparity.** Far scenery at `2*sep*eye_width/2` px, the HUD at 0, near objects crossed. Pure at 533
+  px per eye: far +8 (expected 8.5), HUD 0, rider −5.
+- **Both eyes identical apart from parallax,** especially after post-processing: bloom, blur, tone
+  mapping, pause-screen effects. A difference means a render-target operation isn't mirrored to the right
+  eye. For each suspect draw, see which texture addresses it samples (the capture's `textures`) and who
+  writes them.
+  - **Blits** (NV3089) between render targets are now mirrored (`VKGSRender::vr_mirror_blit`). Pure
+    needed it: its frame reaches the display buffer by blit, so the pause blur was missing in one eye.
+  - Partial clears and instanced draws are still not mirrored. If a game needs them, that's code work.
+    `plans/evidence/pure/instanced-per-eye.patch` is an untested starting point.
+- **Frame rate.** Compare against Step 0. With stereo, it should still reach the vblank rate at your
+  resolution scale.
+
+## Step 7 - Rotation audit (desktop stand-in for the headset)
+
+```powershell
+plans\tools\launch.ps1 -Game <iso> -Probe 'render=1' -NoHeadset -Audit 25          # yaw
+plans\tools\launch.ps1 -Game <iso> -Probe 'render=1' -NoHeadset -Audit 'pitch:35'  # look up
+```
+
+The right eye is rotated through the same classifier and rotation as the headset, and the left eye stays
+the game's view. **Test in real gameplay (scene B) and look up at the sky.** Pure's two remaining bugs
+only showed there.
+
+- **Floating objects in the sky, or anything in the same screen place in both eyes:** a program the
+  camera blocks don't cover (Step 3, item 3). Pure's rocks.
+- **Sky with a hard white or haze band, or a sky that "moves with you":** a sky draw not covered, often
+  one without a z slot (Pure's sky), or a fragment-shader sky.
+- **Black regions at the edges:** geometry the game culled against its own frustum. This is expected for
+  large head turns and can't be fixed by a profile.
+- **The HUD:** it must stay where it is in both eyes.
+- **Image scale (world swims on head turns):** measure it. Run the audit through the headset remap
+  (`$env:RPCS3_VR_AUDIT_FOV = '1.0'` before `launch.ps1 ... -Audit 15`), screenshot with the
+  `RPCS3_VR_SHOT` hook, then `tools/rotation_audit.py <shot> --yaw 15 --proj 1,1 --fit-scale`.
+  It must report k = 1.00. k > 1 means the final image is zoomed against the game's projection, usually a
+  screen-size/overscan option: ICO measured 1.17 with "Full pixel mode" off and 1.00 with it on.
+
+Make before/after images of the rotated eye for each fix: `plans/evidence/pure/*-before-after.png`.
+
+## Step 8 - Headset
+
+Enable `Video > VR > Enabled` in the game's custom config. The option is only offered once a valid
+profile exists. Launch without the development variables and with SteamVR running. Check:
+
+- **Scale.** Does the vehicle or player look life-sized? Adjust `eye_baseline`, or try
+  `RPCS3_OPENXR_EYE_SCALE` first.
+- **Head turns.** Look behind, up and down: nothing may stay attached to your face.
+- **HUD box.** Check size and position, and the Fixed and Head-locked modes in the home menu's VR tab.
+- **Pause menu, menus, loading screens** and the RPCS3 overlays.
+- **Comfort and frame pacing** over a full race or level.
+
+Every problem found here should become a Step 7 reproduction on the desktop before you fix it.
+
+## Step 9 - Record and clean up
+
+- Evidence: captures, before/after images, measurements in `plans/evidence/<game>/`.
+- Notes: slots, reasoning and open issues in `plans/profiles/<TITLE_ID>-notes.md`.
+- New profile fields go in `plans/profiles/README.md`; progress goes in `plans/4-next-steps.md`.
+- Delete the temporary keyboard pad, `rpcs3/bin/shaderlog/`, and any `Log shader programs: true`.
+  Leave `VR > Enabled` on if the profile works.
+
+---
+
+## Known traps
+
+| Symptom | Cause | Fix |
+|---|---|---|
+| Objects hang in view when looking up | their program keeps the camera in another block | add that block to `camera_blocks` |
+| Sky moves with the head; white or haze band | sky program omits the z slot (z = w) | supported for `column_vectors`; else code |
+| An unrelated full-screen quad gets rotated | stray data in a listed block looks perspective | `require_rigid_camera: true` |
+| One eye misses blur or bloom | a render-target blit or copy isn't mirrored | blits mirrored; others need code |
+| Game runs double speed at 90/120 Hz | its clock counts vblanks, not time | fix it in the frame-rate patch; keep `match_headset_refresh_rate` off |
+| Scripted Start key does nothing | Qt key name is `Return` | use the template |
+| Screenshots never change | exclusive fullscreen | `f12shot.ps1`, or windowed with `sbsshot.ps1` |
+| Controller stops working | temporary keyboard pad left in `input_configs/<id>/` | delete it |
+| Setting `RPCS3_VR_PROBE_FILE` disables stereo | the file replaces the default `render=1` | put `render=1` in the file |
+
+---
+
+## In-emulator generation (implemented 2026-09-23)
+
+In a game without a profile, **home menu > Settings > VR** shows one button, **Generate VR Profile**.
+Pressing it closes the menu. After 30 frames it samples the running game's vertex constants: one frame
+every 0.5 s over 10 s of play (time while paused or stalled doesn't count). It then runs Step 3's analysis in C++ (`rsx::vr::profile_generator`,
+`rpcs3/Emu/RSX/Capture/rsx_vr_profile_generator.cpp`), writes `bin/vr_profiles/<TITLE_ID>.json`, loads it,
+and turns `VR > Enabled` on in the game's custom config. Stereo starts at once; the headset needs the
+game restarted. Every choice goes to the log (channel `VRGEN`): candidate blocks, the rigidity decision,
+the camera position match, uncovered programs, and coverage. If there's no perspective camera (a menu,
+not gameplay), it shows a failure notice and writes nothing.
+
+Tested on both games with the profile removed and VR off, by pressing the button during a race.
+Evidence is in `plans/evidence/generator/`.
+
+| | Pure (generated / hand-made) | WipEout (generated / hand-made) |
+|---|---|---|
+| layout, blocks | `column_vectors [26, 39]` / same | `row_vectors [256, 260]` / same |
+| rigid check | on / on | off / off |
+| camera position | `c[18]` / same | `c[465]` / same |
+| HUD block | `c[256]` / same | `c[256]` / same |
+| half-res rule | none / none | 640 wide 0.739x / 0.75x |
+| `eye_baseline` | 0.064 / 0.064 | 0.338 / 0.240 (native 3D) |
+| `bare_projection` | - / - | not sampled / true (menu only) |
+
+**World scale** comes from the near plane. Engines place it at a similar real distance, and Pure's is
+exactly 0.1 m, so `eye_baseline = 0.064 * near / 0.1`. WipEout's near plane is 0.53 units, which gives a
+world about 30% smaller than its native-3D tuning. **home menu > Settings > VR > World Scale** corrects
+this in the headset: 100% is the profile's scale, and WipEout's native scale is about 140%.
+
+**Per-target-width stereo rules** come from each render-target width's own projection, which is how
+WipEout's half-resolution pass gets 0.75x.
+
+**Never generated:**
+
+- `match_headset_refresh_rate`: needs the game clock checked against real time.
+- `reference_screen_width`: only matters for native-3D TV tuning.
+- `bare_projection`: set only when such a draw is sampled. WipEout's main-menu particle cloud isn't seen
+  in a race.
+
+Generate during the busiest gameplay, then check with Step 7. The playbook is still the process for
+fixing what it gets wrong.
+
+## Toward profiles generated inside the emulator (original assessment)
+
+The goal is for end users to make their own profiles from inside RPCS3. How feasible that is depends on
+the step.
+
+**Automatable now, with work (the heavy lifting):**
+
+- Steps 2-3 are mechanical. `profile_survey.py` recovered **both** existing profiles from a single flat
+  capture each. For WipEout: `row_vectors`, `[256, 260]`, `c[465]`, HUD `c[256]`. For Pure:
+  `column_vectors`, `[26, 39]`, the z-less sky, `c[18]`, HUD `c[256]`. Porting it to C++ over the
+  existing inspector, and running it **continuously in the background across many frames and scenes**
+  instead of once, would fix the "a program only appears in the race" problem. The emulator would
+  accumulate per-program statistics while the user plays, then write a draft profile.
+- Stereo values without native 3D follow from the projection and an assumed unit scale, as above. With
+  native 3D, the Gate 3-4 fit could also run in-app: capture the 3D mode once and fit.
+
+**Needs the user, but can be guided:**
+
+- **Validation.** Steps 5-8 are judgments about pictures. In-app, this could be a "VR profile wizard" in
+  the home menu:
+  1. "Drive or walk somewhere busy, then press Capture."
+  2. A preview with the camera rotated (the audit), showing **uncovered draws tinted red**, so anything
+     that would stay stuck to the face is obvious.
+  3. Sliders for world scale and HUD box.
+  4. Save.
+- The red tint doesn't exist yet. It's a debug colour on draws the classifier leaves on the game camera,
+  and it would make Step 7 a glance instead of an investigation.
+- **World scale** can't be inferred reliably, so it needs a slider in the headset.
+
+**Not automatable (per game, by a developer):**
+
+- **Frame-rate patches.** They need PPU reverse engineering, and a 30 fps game is unplayable in VR
+  without one.
+- **Cameras not in vertex constants:** CPU-pretransformed vertices, cameras computed in the fragment
+  shader (sky or fog quads driven by fragment constants), split-screen or multiple viewports.
+- **Renderer gaps** such as unmirrored partial clears, instanced draws, or a matrix layout the code
+  doesn't know. These are code changes, not profile values. Each one fixed once helps every later game.
+
+**Realistic estimate:** for the common case of a 3D game whose camera is a standard matrix in vertex
+constants (both games so far), an in-app auto-profiler plus a guided validation screen could produce a
+working profile with no manual analysis. The user would still need to do the rotated-view check and set
+world scale. Games needing a frame-rate patch, or games that break the assumptions above, would still
+need someone following this playbook. The next useful steps, in order:
+
+1. The red-tint debug view.
+2. Multi-frame background accumulation in the inspector.
+3. The C++ port of `profile_survey.py` writing a draft JSON.
+4. The home-menu wizard.

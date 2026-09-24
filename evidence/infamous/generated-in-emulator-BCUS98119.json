@@ -1,0 +1,24 @@
+{
+  "schema": 1,
+  "title_id": "BCUS98119",
+  "app_version": "01.00",
+
+  "matrix_layout": "row_vectors",
+  "camera_blocks": [263, 256],
+  "require_rigid_camera": true,
+  "output_aspect_tolerance": 0.02,
+
+  "camera_position": {
+    "eye_baseline": 1.28
+  },
+
+  "stereo": {
+    "formula": "clip_x_shear",
+    "per_eye_separation": 0.0128706,
+    "convergence": 51.2
+  },
+
+  "screen_space": {
+    "orthographic_block": 263
+  }
+}

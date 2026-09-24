@@ -1,0 +1,12 @@
+== classifier vs native oracle (740 paired draws with a camera block)
+   perspective block only           TP=641 FP=58 FN=0 TN=41   false positives by target: {(512, 256): 58}
+   aspect AND perspective (probe)   TP=641 FP=0 FN=0 TN=99   false positives by target: {}
+
+== native stereo fit: clip.x += sep * (clip.w - conv)
+   blocks fitted 641   max residual 3.81e-06   (columns 1..3 included in residual)
+   sep  mean +0.080743   conv mean +2.8242
+   variants:
+     sep=+0.08125 conv=+2.878  target 1280x720  draws=619
+     sep=+0.06094 conv=+2.878  target 640x360  draws=10
+     sep=+0.06094 conv=+0.000  target 640x360  draws=6
+     sep=+0.08125 conv=+0.000  target 1280x720  draws=6

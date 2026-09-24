@@ -1,0 +1,48 @@
+== ../plans/evidence/gate3/capture-3d-vinetak-grid.jsonl
+   1667 draws, split 'frame-pack-composite': 833 / 834, 787 paired (skipped 46/46)
+   2D route: 827 draws, 49 programs
+
+Camera-derived slots the renderer does NOT transform
+(slot differs between the game's own eyes, and is neither the selected
+ camera block nor c[465]); 'draws' is how many paired draws differ.
+
+   program 31797047  84 paired draws  targets 1280x720  [on 2D route]
+      c[256]  differs on 37/84 draws, 13 distinct delta(s)  -> per-object (or mispaired)
+      c[257]  differs on 32/84 draws, 7 distinct delta(s)  -> per-object (or mispaired)
+      c[258]  differs on 37/84 draws, 13 distinct delta(s)  -> per-object (or mispaired)
+      c[259]  differs on 48/84 draws, 20 distinct delta(s)  -> per-object (or mispaired)
+      c[467]  differs on 7/84 draws, 5 distinct delta(s)  -> per-object (or mispaired)
+   program 62893127  107 paired draws  targets 1280x720  [on 2D route]
+      c[467]  differs on 33/107 draws, 31 distinct delta(s)  -> per-object (or mispaired)
+   program 4f15f3a1  47 paired draws  targets 1280x720  [on 2D route]
+      c[467]  differs on 33/47 draws, 33 distinct delta(s)  -> per-object (or mispaired)
+   program c8a439fb  123 paired draws  targets 1280x720,640x360  [on 2D route]
+      c[467]  differs on 24/123 draws, 24 distinct delta(s)  -> per-object (or mispaired)
+   program d1f95af6  41 paired draws  targets 1280x720  [on 2D route]
+      c[467]  differs on 16/41 draws, 16 distinct delta(s)  -> per-object (or mispaired)
+   program 30c25d62  58 paired draws  targets 1280x720  [on 2D route]
+      c[467]  differs on 14/58 draws, 14 distinct delta(s)  -> per-object (or mispaired)
+   program 6958365e  24 paired draws  targets 1280x720  [on 2D route]
+      c[467]  differs on 9/24 draws, 9 distinct delta(s)  -> per-object (or mispaired)
+   program 5ff925df  9 paired draws  targets 1280x720  [on 2D route]
+      c[256]  differs on 2/9 draws, 1 distinct delta(s)  -> SHARED camera state
+      c[257]  differs on 2/9 draws, 1 distinct delta(s)  -> SHARED camera state
+      c[258]  differs on 2/9 draws, 1 distinct delta(s)  -> SHARED camera state
+      c[259]  differs on 2/9 draws, 1 distinct delta(s)  -> SHARED camera state
+   program dbf7ee42  4 paired draws  targets 1280x720,640x360  [on 2D route]
+      c[256]  differs on 1/4 draws, 1 distinct delta(s)  -> SHARED camera state
+      c[258]  differs on 1/4 draws, 1 distinct delta(s)  -> SHARED camera state
+      c[259]  differs on 1/4 draws, 1 distinct delta(s)  -> SHARED camera state
+      c[467]  differs on 2/4 draws, 2 distinct delta(s)  -> SHARED camera state
+   program 2e8ab745  3 paired draws  targets 1280x720  [on 2D route]
+      c[259]  differs on 2/3 draws, 1 distinct delta(s)  -> SHARED camera state
+      c[467]  differs on 3/3 draws, 1 distinct delta(s)  -> SHARED camera state
+   program e37918a8  3 paired draws  targets 1280x720  [on 2D route]
+      c[466]  differs on 2/3 draws, 2 distinct delta(s)  -> SHARED camera state
+      c[467]  differs on 2/3 draws, 2 distinct delta(s)  -> SHARED camera state
+   program d2dcc036  6 paired draws  targets 1280x720  [on 2D route]
+      c[467]  differs on 3/6 draws, 3 distinct delta(s)  -> per-object (or mispaired)
+   program 49ebff7f  6 paired draws  targets 1280x720,640x360  [on 2D route]
+      c[259]  differs on 2/6 draws, 1 distinct delta(s)  -> SHARED camera state
+
+   13 of 49 programs carry unhandled camera-derived state.

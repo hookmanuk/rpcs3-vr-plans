@@ -1,0 +1,38 @@
+== native 3D capture: plans/evidence/gate3/capture-3d-vinetak-grid.jsonl
+   title BCES00664 v02.51  frame 5527
+   avconf 1280x1470 stereo=True
+   1667 draws, 50 unique vertex programs
+   eye split: 833 / 834 draws  (method: frame-pack-composite)
+   paired 787 draws (94.5% of the smaller pass; skipped 46 in eye A, 46 in eye B)
+
+== eye-dependent constant slots (original RSX index c[0..467])
+  slot   differs   present   ratio  distinct  shaders  left -> right (first)
+----------------------------------------------------------------------------------------------------------------------
+c[465]       682       699  97.6%         1       40  [+47.1625, +39.9254, -96.5527, +1.0000] -> [+47.1642, +39.9249, -96.7927, +1.0000]
+c[259]       528       771  68.5%        26       32  [-587.8908, +172.4443, -270.9467, +1.0000] -> [-587.8908, +172.4185, -270.9467, +1.0000]
+c[256]       525       771  68.1%        21       31  [+0.0349, -0.2683, -0.9786, -0.9784] -> [-0.0247, -0.2683, -0.9786, -0.9784]
+c[258]       525       771  68.1%        21       31  [+0.9742, +0.0000, -0.2259, +0.0000] -> [+0.9949, +0.0000, -0.1008, +0.0000]
+c[257]       519       771  67.3%        16       30  [-0.0320, +0.4774, -0.8781, +0.0000] -> [-0.0279, +0.4773, -0.8783, +0.0000]
+c[260]       156       276  56.5%         2       13  [+0.0466, -0.3578, -0.9786, -0.9784] -> [-0.0329, -0.3578, -0.9786, -0.9784]
+c[261]       156       276  56.5%         2       13  [+0.0064, +1.6947, -0.2066, -0.2066] -> [-0.0104, +1.6947, -0.2066, -0.2066]
+c[262]       156       276  56.5%         2       13  [-0.9740, -0.0060, -0.0064, -0.0064] -> [-0.9745, -0.0060, -0.0064, -0.0064]
+c[263]       156       276  56.5%         2       13  [-96.4949, -51.3720, +52.6967, +53.7696] -> [-92.3600, -51.3720, +52.6967, +53.7696]
+c[467]       146       742  19.7%       141       11  [-242.7031, +96.8516, -107.9219, +0.0000] -> [-242.7031, +99.3828, -107.9219, +0.0000]
+c[466]         2       742   0.3%         2        1  [+0.0518, +0.0078, +0.0520, +0.0000] -> [+0.0517, +0.0078, +0.0519, +0.0000]
+
+== strongest camera candidates
+   (slot differs on nearly every paired draw AND takes a single, repeated
+    left/right value pair -> shared per-eye state, not per-object data)
+   c[465] on  699 draws, 40 shader(s)
+          left  ['+47.162544', '+39.925369', '-96.552742', '+1.000000']
+          right ['+47.164234', '+39.924870', '-96.792740', '+1.000000']
+          delta ['+0.001690', '-0.000500', '-0.239998', '+0.000000']
+
+== 2D/60fps cross-reference: plans/evidence/gate3/capture-2d-vinetak-grid.jsonl
+   827 draws, 49 unique vertex programs, stereo=False
+   vertex programs shared with native 3D : 49
+   present only in native 3D             : 1
+   present only in 2D                    : 0
+
+   candidate slots on the 2D route:
+     c[465] read by  739 2D draws   PRESENT - usable injection seam
