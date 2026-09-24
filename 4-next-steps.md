@@ -921,3 +921,10 @@ the fixed screen". Note: `plans/tools/launch.ps1` without `-Probe 'render=1'` le
   one off is saved as `Enabled: false`. On by default: Pure's frame-rate patch; Ico's Disable MLAA (fork copy,
   1.1, supersedes the community 1.0), Full Pixel Mode always on, Wider view (x20). Verified with no
   `patch_config.yml`. Ico's unlocked frame-rate patch is not shipped (game runs 3x fast).
+
+**Release procedure.** Versions are upstream's plus a fork tag: `0.0.42-vrN-<commit> Alpha` in the app,
+GitHub release tag `v0.0.42-vrN`, zip `rpcs3-v0.0.42-vrN-<commit>_win64.zip`. For each release: bump
+`RPCS3_VR_VERSION` in `rpcs3/rpcs3/rpcs3_version.cpp` (vr1 was the first release; the next is vr2), commit,
+build emucore/VKGSRender/rpcs3 so the exe carries that commit, run `plans/tools/package_release.py`, smoke-test
+the zip from a non-temporary folder, tag the commit and publish the zip. After merging a newer upstream
+version, restart at vr1.

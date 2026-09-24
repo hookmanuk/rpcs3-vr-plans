@@ -26,7 +26,11 @@ def fetch(url):
 
 
 def main():
-    version = re.search(r'RPCS3_GIT_VERSION "([^"]+)"', open(os.path.join(SRC, 'rpcs3', 'git-version.h')).read()).group(1)
+    commit = re.search(r'RPCS3_GIT_VERSION "([^"]+)"', open(os.path.join(SRC, 'rpcs3', 'git-version.h')).read()).group(1)
+    ver_src = open(os.path.join(SRC, 'rpcs3', 'rpcs3_version.cpp')).read()
+    base = '.'.join(re.search(r'utils::version version\{ (\d+), (\d+), (\d+),', ver_src).groups())
+    vr = re.search(r'#define RPCS3_VR_VERSION "([^"]+)"', ver_src).group(1)
+    version = f'v{base}-{vr}-{commit}'  # the GitHub release tag is v{base}-{vr}
     files = {}  # zip path -> bytes or source path
 
     # Git-tracked bin/ content (GuiConfigs, Icons, fonts, test, vr_profiles, patches), as a CI checkout has it.
@@ -65,7 +69,7 @@ def main():
     files['LICENSE'] = os.path.join(SRC, 'LICENSE')
 
     os.makedirs(OUT, exist_ok=True)
-    zip_path = os.path.join(OUT, f'rpcs3-vr-{version}_win64.zip')
+    zip_path = os.path.join(OUT, f'rpcs3-{version}_win64.zip')
     with zipfile.ZipFile(zip_path, 'w', zipfile.ZIP_DEFLATED, compresslevel=9) as z:
         for arc in sorted(files):
             src = files[arc]
