@@ -938,3 +938,9 @@ pose falls back to the newest. Pure's sky (far-plane DP4 block) now takes no eye
 screen is profile-gated (`frames_without_3d_as_screen`, Ico only). Confirmed in the headset: Pure (sky,
 pause, gameplay). WipEout's slow menu in the dev setup was video memory at 750% (106%, 20 GB texture cache).
 Not yet re-checked after these changes: Ico. Release zip `rpcs3-v0.0.42-vr1-925a3f98_win64.zip` (rebuilt after the vr-games.md playable table; supersedes 33b341b6).
+
+**Shadow of the Colossus (vr2, 2026-09-25, desktop-verified).** Executable-specific VR profiles
+(`<TITLE_ID>.<executable>.json`) so SotC and ICO can differ under one title ID; `BCUS98259.shadow.json`
+(camera c[60] + c[64], metres). Patches: Disable MLAA, Full Pixel Mode always on (k 1.19 -> 1.00), frame
+interval 1 at both init sites + the profile's live refresh float -> 90 FPS at real-time speed (memclock
+1.0x), Wider view x3 (44 -> ~150 degrees). Details: `plans/profiles/BCUS98259-shadow-notes.md`.

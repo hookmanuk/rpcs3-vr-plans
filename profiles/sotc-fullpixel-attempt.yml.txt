@@ -1,0 +1,18 @@
+  "Full Pixel Mode always on":
+    Games:
+      "Shadow of the Colossus":
+        BCUS98259: [ 01.00 ]
+    Author: "VR fork"
+    Notes: "Forces the Full Pixel Mode option on, whatever the save or the options menu says. With it off the game renders 1216x684 and zooms it to the screen (overscan), which makes the world swim in VR."
+    Patch Version: 1.0
+    Enabled By Default: true
+    Patch:
+      - [ be32, 0x0033b660, 0x38600001 ] # li r3,1   Full Pixel Mode setter (0x33b65c, object [TOC+0x124c]): the mode is always on
+      - [ be32, 0x0033b664, 0x38000001 ] # li r0,1
+      - [ be32, 0x0033b668, 0x90090008 ] # stw r0,8(r9)  mode changed: the renderer re-applies it
+      - [ be32, 0x0033b66c, 0x90690004 ] # stw r3,4(r9)  mode = on
+      - [ be32, 0x0033b670, 0x4e800020 ] # blr
+      - [ be32, 0x00070488, 0x38600001 ] # li r3,1 (was bl 0x10f644, read saved option 0x11): the options menu shows On
+      - [ be32, 0x0033bbc0, 0x39600002 ] # li r11,2 (was lwz r11,0x60(r11)): display mode read as 2 = Full Pixel (1 = overscan) in the three readers of [TOC+0x125c]+0x60
+      - [ be32, 0x0033bf08, 0x39600002 ] # li r11,2 (was lwz r11,0x60(r11))
+      - [ be32, 0x0033c50c, 0x38000002 ] # li r0,2 (was lwz r0,0x60(r9))

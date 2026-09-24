@@ -42,3 +42,5 @@ still drawn with the default rule (see the evidence file, `stereo.variants_seen`
 
 A game whose engine needs another `matrix_layout`, `stereo.formula` or screen-space test needs that
 rule added in code under a new name; the loader rejects values it does not know.
+
+**File name.** `bin/vr_profiles/<TITLE_ID>.json`, or `<TITLE_ID>.<executable>.json` for one game of a collection (lower-case executable file name without extension: `BCUS98259.shadow.json` for `Shadow.self`). The loader tries the executable-specific file first. The profile generator never overwrites an existing `<TITLE_ID>.json`; it writes the executable-specific name instead.
