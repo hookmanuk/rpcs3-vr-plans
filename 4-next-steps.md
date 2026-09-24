@@ -937,4 +937,4 @@ pose left the 8-entry history); it is now profile-gated (`reproject_older_frames
 pose falls back to the newest. Pure's sky (far-plane DP4 block) now takes no eye offset. The no-3D fixed
 screen is profile-gated (`frames_without_3d_as_screen`, Ico only). Confirmed in the headset: Pure (sky,
 pause, gameplay). WipEout's slow menu in the dev setup was video memory at 750% (106%, 20 GB texture cache).
-Not yet re-checked after these changes: Ico. Release zip `rpcs3-v0.0.42-vr1-33b341b6_win64.zip`.
+Not yet re-checked after these changes: Ico. Release zip `rpcs3-v0.0.42-vr1-925a3f98_win64.zip` (rebuilt after the vr-games.md playable table; supersedes 33b341b6).
