@@ -924,9 +924,9 @@ the fixed screen". Note: `plans/tools/launch.ps1` without `-Probe 'render=1'` le
 
 **Release procedure.** Versions are upstream's plus a fork tag: `0.0.42-vrN-<commit> Alpha` in the app,
 GitHub release tag `v0.0.42-vrN`, zip `rpcs3-v0.0.42-vrN-<commit>_win64.zip`. For each release: bump
-`RPCS3_VR_VERSION` in `rpcs3/rpcs3/rpcs3_version.cpp` (vr1 was the first release; the next is vr2), commit,
+`RPCS3_VR_VERSION` in `rpcs3/rpcs3/rpcs3_version.cpp` (vr2 tagged 2026-09-25; the next is vr3), commit,
 build emucore/VKGSRender/rpcs3 so the exe carries that commit, run `plans/tools/package_release.py`, smoke-test
-the zip from a non-temporary folder, tag the commit and publish the zip. After merging a newer upstream
+the zip from a non-temporary folder, push `openxr` and the annotated tag; Matt tests the zip and publishes the GitHub release himself. After merging a newer upstream
 version, restart at vr1.
 
 **Headset regressions found by the first release test (2026-09-24), fixed.** A fresh install froze Pure and
@@ -944,3 +944,5 @@ Not yet re-checked after these changes: Ico. Release zip `rpcs3-v0.0.42-vr1-925a
 (camera c[60] + c[64], metres). Patches: Disable MLAA, Full Pixel Mode always on (k 1.19 -> 1.00), frame
 interval 1 at both init sites + the profile's live refresh float -> 90 FPS at real-time speed (memclock
 1.0x), Wider view x3 (44 -> ~150 degrees). Details: `plans/profiles/BCUS98259-shadow-notes.md`.
+Release zip `rpcs3-v0.0.42-vr2-f44b619e_win64.zip` (tag `v0.0.42-vr2` pushed 2026-09-25; supersedes the
+d75032f8 build). Smoke test: starts from `release/`; not yet headset-tested or published.
