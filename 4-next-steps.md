@@ -944,7 +944,10 @@ Not yet re-checked after these changes: Ico. Release zip `rpcs3-v0.0.42-vr1-925a
 (camera c[60] + c[64], metres). Patches: Disable MLAA, Full Pixel Mode always on (k 1.19 -> 1.00), frame
 interval 1 at both init sites + the profile's live refresh float -> 90 FPS at real-time speed (memclock
 1.0x), Wider view x3 (44 -> ~150 degrees). Details: `plans/profiles/BCUS98259-shadow-notes.md`.
-Release zip `rpcs3-v0.0.42-vr2-06f95396_win64.zip` (2026-09-25). The first vr2 build (f44b619e) broke Ico's
-HUD box: SotC's HUD keep-depth (z scaled by w'/w, ad01b9083) applied to every game. It is now the profile flag
-`screen_space.hud_keep_depth` (SotC only); headset-confirmed for Ico and SotC. Tag `v0.0.42-vr2` still points at
-f44b619e: move it to 06f95396 before publishing.
+Release zip `rpcs3-v0.0.42-vr2-334d5e1c_win64.zip` (2026-09-25). The first vr2 build (f44b619e) showed Ico's
+menus unscaled (not in the HUD box). SotC's HUD keep-depth (z scaled by w'/w, ad01b9083) applied to every game;
+it is now the profile flag `screen_space.hud_keep_depth` (SotC only). But the Ico failure then recurred on the
+first run of a fresh install of 06f95396 and was gone on the second run with no changes: it tracks the empty
+shader cache (draws through the shader interpreter until compiled?), not keep-depth. Untested hypothesis:
+"Shader Interpreter only" should reproduce it every time. Shipped as a known issue in vr-games.md (Ico).
+Tag `v0.0.42-vr2` still points at f44b619e: move it to 334d5e1c before publishing (a forced tag push).
