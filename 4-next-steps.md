@@ -944,5 +944,7 @@ Not yet re-checked after these changes: Ico. Release zip `rpcs3-v0.0.42-vr1-925a
 (camera c[60] + c[64], metres). Patches: Disable MLAA, Full Pixel Mode always on (k 1.19 -> 1.00), frame
 interval 1 at both init sites + the profile's live refresh float -> 90 FPS at real-time speed (memclock
 1.0x), Wider view x3 (44 -> ~150 degrees). Details: `plans/profiles/BCUS98259-shadow-notes.md`.
-Release zip `rpcs3-v0.0.42-vr2-f44b619e_win64.zip` (tag `v0.0.42-vr2` pushed 2026-09-25; supersedes the
-d75032f8 build). Smoke test: starts from `release/`; not yet headset-tested or published.
+Release zip `rpcs3-v0.0.42-vr2-06f95396_win64.zip` (2026-09-25). The first vr2 build (f44b619e) broke Ico's
+HUD box: SotC's HUD keep-depth (z scaled by w'/w, ad01b9083) applied to every game. It is now the profile flag
+`screen_space.hud_keep_depth` (SotC only); headset-confirmed for Ico and SotC. Tag `v0.0.42-vr2` still points at
+f44b619e: move it to 06f95396 before publishing.
