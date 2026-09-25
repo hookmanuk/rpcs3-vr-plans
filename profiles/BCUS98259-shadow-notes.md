@@ -51,3 +51,37 @@ title ID as ICO, so its VR profile is executable-specific: `bin/vr_profiles/BCUS
 
 - Headset: HUD prompts in the HUD box, world scale, comfort at 90.
 - Motion blur / bloom at 90 FPS (community patches exist to disable them if they smear in stereo).
+
+## 2026-09-25 (afternoon): holes, performance, world scale, HUD
+
+- **Flashing holes / popping**: two separate causes.
+  - At a one-vblank interval ("Frame rate follows Vblank Rate", same site as the PSN 60 FPS patch; the
+    twin init 0x31f1b8 has no callers) the game drops objects for a frame whenever it misses its deadline.
+    Community reports of flicker on the castle steps with the 60 FPS patch match. Fix: patch off; the
+    profile's new `vblank_rate: 120` runs the game's own two-vblank frame at 60 FPS (`max_fps` 60).
+  - SPU mesh trimming (`SPU-2801f277...`, same program as EU 1.01) drops small triangles sized for the
+    PS3 resolution: missing stair/leg pieces at high resolution scales. Pappapatu's "Disable Mesh
+    Trimming" copied for BCUS98259 01.00 (v1.1 to beat the community 1.0), on by default.
+- **Depth readback**: the game copies its depth (c0c00000 -> 0x30800000) every frame and an SPU job
+  (BP_MainCellSpursKernel3) reads it; RPCS3 made it wait for almost the whole stereo scene (6-7 ms at 600%).
+  `occlusion_depth_readback` answers the read at once with far depth. Draw counts are unchanged (~1935 on
+  the stairs either way; an earlier 195 vs 1700 comparison came from a run stuck in the pause menu), so
+  what the job does with depth is unknown; no visible change in the headset.
+- **Performance** (RTX 5090, desktop stereo, blur/bloom off): 400% holds 60; 90 FPS (180 Hz vblank) is
+  limited by the main thread waiting on SPU jobs (~8 ms/frame: sys_event_flag_wait + usleep(5) polls in
+  0x31b780 when the 256-byte job descriptor pool runs out). SPU Block Size Giga looked like 90 at 300%
+  but that run was not in the shrine: unverified. Motion blur/bloom cost ~5 ms/frame at 600%; VR copies of
+  the community disable patches are on by default. The Wider view patch changes a shared 1.0 constant
+  (TOC-0x33cc, camera code 0xee438-0xee70c); frustum culling is separate from the depth readback (scale
+  1.0: 965 -> 614 draws).
+- **World scale**: the clip-space shear (0.0261 x 3.0) equals 64 mm only at the game's own projection
+  (A 2.449); with Wider view 3.0 (A 0.267) it was ~0.6 m. New `stereo.eye_offset: "baseline"`: the eye
+  offset is eye_baseline in world units from each matrix's clip-x row length.
+- **HUD**: title/menu/font glyphs are vertex program f7969a024cd51baa (matrix-less, c[467]) drawn into the
+  scene's final image, so `screen_space.hud_programs` boxes them. The menus depth test (GEQUAL, depth
+  write) against full-screen layers; the fixed HUD box's w change broke that, fixed by vr_keep_depth in
+  the vertex context (shader scales z by w'/w).
+- A stuck dwm.exe (4.9 cores for 12 hours) degraded all measurements until restarted.
+- Dev tools: RPCS3_VR_GPUPROF=1 (GPU ms and draws per target, RSX thread times, readback waits, flip
+  waits), RPCS3_VR_GPUPROF_TARGET, RPCS3_SYSCALL_PROFILE=1; plans/tools/re/sotc_modes.ps1, perfrun.ps1,
+  burst.sh, drawcounts.py.
