@@ -47,3 +47,17 @@ eyes with the HUD boxed (evidence 3).
   frustum at 130 degrees it persists, so it is most likely real geometry.
 - Not yet checked: menus/inventory in the HUD box, cutscene FOV changes, performance at 130 degrees
   (possible lower LOD), other areas.
+
+## Open: torch flame wrong in the left eye (2026-09-25, Matt's savestate `BLUS30443_1_0`)
+
+In some frames (about half) the left eye draws the wall torch's flame huge and stretched (two tall orange
+streaks down the tunnel) instead of small on the wall; the right eye is always right. Findings so far:
+- Good and broken frames have the same draw list, the same particle textures and the same constants in
+  the inspector capture (single stream). Particles are program `7f4d3587` (reads `c[0]`, `c[2]`, `c[8..11]`,
+  `c[104..111]`, `c[158]`, `c[159]`); its camera is `c[8]` (the `c[0]` block cannot bind), so the camera
+  classification is the same every frame.
+- They sample the depth buffer `0xc0b50000` (soft particles); glow quads `24ec205b` also read `0xc5870000`.
+- Removing the camera position slot (`c[158]`) does not fix it, and turns the whole view upside down.
+- Left eye = the primary command buffer, right eye = the batch; the difference is per eye, so suspects are
+  left-eye-only state: constant allocation reuse across consecutive draws of the same program, the depth
+  texture sampled while attached (feedback copy) in the left pass, conditional rendering / queries.
