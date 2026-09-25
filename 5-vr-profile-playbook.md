@@ -299,12 +299,34 @@ this in the headset: 100% is the profile's scale, and WipEout's native scale is 
 **Per-target-width stereo rules** come from each render-target width's own projection, which is how
 WipEout's half-resolution pass gets 0.75x.
 
-**Never generated:**
+**Frame rate** (added 2026-09-25) comes from game frames per second of play against the vblank rate.
+A game drawing every second vblank (ICO: 30 at 60 Hz) gets `vblanks_per_frame: 2`. The measured rate is
+written as both `max_fps` and `default_fps`, so the Frame Rate setting never offers more than the game was
+seen doing. Raising `max_fps` (or `0`, no maximum) needs the game clock checked against real time at a
+faster vblank, as for WipEout and Pure. A game that ran slow while sampled logs "uneven" and may get too
+low a rate.
 
-- `match_headset_refresh_rate`: needs the game clock checked against real time.
-- `reference_screen_width`: only matters for native-3D TV tuning.
-- `bare_projection`: set only when such a draw is sampled. WipEout's main-menu particle cloud isn't seen
-  in a race.
+**Never generated.** These need the game looked at in the headset or reverse-engineered. After generating,
+check for each symptom:
+
+| Symptom in the headset | Field (see `profiles/README.md`) | Found in |
+|---|---|---|
+| Menus or HUD fill the whole view instead of the HUD box | `screen_space.passthrough_hud: true` | ICO |
+| Menu/title text drawn into the 3D scene's final image stays full-view | `screen_space.hud_programs` (the program's ucode hash from an inspector capture) | SotC |
+| Menu layers reorder or vanish when leaning in (HUD depth-tests itself) | `screen_space.hud_keep_depth: true` | SotC |
+| Sprites (flames, glows) drift away from their source | `screen_space.preprojected_programs` | ICO |
+| Splash screens and videos fill the view | `screen_space.frames_without_3d_as_screen: true` | ICO |
+| Glow or blend layers trail head turns | `reproject_older_frames: true`, `current_frame_copies: true` | ICO, SotC |
+| Walls or sky missing when looking around | a "Wider view" patch for the game's culling, then `stereo.eye_offset: "baseline"` so the wider projection keeps the eye distance | ICO, SotC |
+| Objects flash or pop in (CPU/SPU occlusion culling on the depth buffer) | `occlusion_depth_readback` | SotC |
+| The game's clock runs fast or slow at a changed vblank | `game_refresh_rate_f32` | Pure, SotC |
+| One game of a collection needs different values | the generator already writes `<TITLE_ID>.<executable>.json` beside an existing `<TITLE_ID>.json` | SotC |
+
+Also never generated: `reference_screen_width` (only matters for native-3D TV tuning), and
+`bare_projection` unless such a draw is sampled (WipEout's main-menu particle cloud isn't seen in a race).
+
+**Keeping the generator current:** when a game's profile work teaches something measurable from vertex
+constants or frame timing, add it to the generator; otherwise add its symptom to the table above.
 
 Generate during the busiest gameplay, then check with Step 7. The playbook is still the process for
 fixing what it gets wrong.
