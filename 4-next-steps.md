@@ -961,3 +961,10 @@ without depth test get z = w/2. Demon's Souls (BLUS30443) generated from scratch
 headset (desktop captures of the headset session); Wider view patch at 130 degrees. Details and known issues:
 `plans/profiles/BLUS30443-notes.md`. To check in the headset before the next release: WipEout and Pure HUD
 (renderer HUD changes), Demon's Souls menus and play.
+
+**Ridge Racer 7 (BCAS20001, 2026-09-25, fork bbc406ae, not pushed).** Generated from scratch: camera `c[4]`, HUD
+found by the new matrix-less HUD detection (`passthrough_hud` + `hud_programs`), metres. The simulation is
+frame-locked (1.49x speed at 90 Hz), so it stays at 60 FPS with headset reprojection; benchmark 140 FPS stereo at
+300% (vblank 144), no performance work needed. Not yet checked in the headset. Open: screenshot crash in a
+headset session with no profile. Details: `plans/profiles/BCAS20001-notes.md`. Demon's Souls profile eye_baseline
+now 0.064 (metres rule).

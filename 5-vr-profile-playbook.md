@@ -321,12 +321,22 @@ When full-screen passes read the HUD block too, the generator keeps it and write
 Every generated profile gets `stereo.eye_offset: "baseline"`, so a Wider view patch doesn't change the eye
 distance.
 
+**Screen-space HUDs and world scale** (added 2026-09-25, Ridge Racer 7; notes in `profiles/BCAS20001-notes.md`).
+Full-frame draws without depth test that read no matrix block and sample ordinary textures are a
+screen-space HUD: the generator writes `passthrough_hud`, plus `hud_programs` for programs that draw into
+a target camera draws wrote that frame. World scale: a near plane from 0.01 to 1 means metres
+(`eye_baseline` 0.064); the near/0.1 rule only applies outside that range.
+
+**Frame-locked games.** The generator writes the measured rate as `max_fps`. Check real-time speed before
+raising it: run at a faster Vblank Rate and compare an in-game timer with wall time (Ridge Racer 7: 1.49x at
+90 Hz, so it stays at 60 and the headset reprojects).
+
 **Never generated.** These need the game looked at in the headset or reverse-engineered. After generating,
 check for each symptom:
 
 | Symptom in the headset | Field (see `profiles/README.md`) | Found in |
 |---|---|---|
-| Menus or HUD fill the whole view instead of the HUD box | `screen_space.passthrough_hud: true` | ICO |
+| Menus or HUD fill the whole view instead of the HUD box | `screen_space.passthrough_hud: true` (generated since 2026-09-25 when the HUD is matrix-less) | ICO, Ridge Racer 7 |
 | Menu/title text drawn into the 3D scene's final image stays full-view | `screen_space.hud_programs` (the program's ucode hash from an inspector capture) | SotC |
 | Menu layers reorder or vanish when leaning in (HUD depth-tests itself) | `screen_space.hud_keep_depth: true` | SotC |
 | Sprites (flames, glows) drift away from their source | `screen_space.preprojected_programs` | ICO |
