@@ -313,6 +313,14 @@ is measured over depth-tested draws that don't read colour targets; below 80% it
 orthographic block is only taken as the HUD block if full-screen passes (draws sampling colour targets)
 don't also read it: Demon's Souls reads `c[0]` for both, and its scene composite was drawn into the HUD box.
 
+**Camera-relative engines and shared HUD blocks** (added 2026-09-25, Demon's Souls; notes in
+`profiles/BLUS30443-notes.md`). Programs with indexed constants are sampled by the slots they read
+directly, so a camera beside bone matrices is found. A camera block at the origin (view rotation and
+projection only) is not used to find the camera position. A `row_vectors` HUD block may lack the z slot.
+When full-screen passes read the HUD block too, the generator keeps it and writes `hud_skips_passes`.
+Every generated profile gets `stereo.eye_offset: "baseline"`, so a Wider view patch doesn't change the eye
+distance.
+
 **Never generated.** These need the game looked at in the headset or reverse-engineered. After generating,
 check for each symptom:
 

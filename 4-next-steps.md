@@ -951,3 +951,13 @@ first run of a fresh install of 06f95396 and was gone on the second run with no 
 shader cache (draws through the shader interpreter until compiled?), not keep-depth. Untested hypothesis:
 "Shader Interpreter only" should reproduce it every time. Shipped as a known issue in vr-games.md (Ico).
 Tag `v0.0.42-vr2` still points at f44b619e: move it to 334d5e1c before publishing (a forced tag push).
+
+**Profile generator and Demon's Souls (2026-09-25, after vr2; fork commits 5052f024..bb248cd7, not pushed).**
+The generator now writes frame rate (`max_fps`/`default_fps`/`vblanks_per_frame`), handles camera-relative
+engines (indexed-constant programs, origin cameras), HUD blocks without a z slot and HUD blocks shared with
+post passes (`hud_skips_passes`), and always writes `eye_offset: "baseline"`. New renderer flags:
+`clip_space_scene_draws` (experimental, unused by shipped profiles), `hud_skips_passes`; fixed-box HUD draws
+without depth test get z = w/2. Demon's Souls (BLUS30443) generated from scratch renders correctly in the
+headset (desktop captures of the headset session); Wider view patch at 130 degrees. Details and known issues:
+`plans/profiles/BLUS30443-notes.md`. To check in the headset before the next release: WipEout and Pure HUD
+(renderer HUD changes), Demon's Souls menus and play.
