@@ -306,6 +306,13 @@ seen doing. Raising `max_fps` (or `0`, no maximum) needs the game clock checked 
 faster vblank, as for WipEout and Pure. A game that ran slow while sampled logs "uneven" and may get too
 low a rate.
 
+**Scene coverage and HUD passes** (added 2026-09-25, after Demon's Souls). The generator records per draw
+whether it depth-tests and whether it samples ordinary textures or colour render targets. Camera coverage
+is measured over depth-tested draws that don't read colour targets; below 80% it writes
+`clip_space_scene_draws` (the renderer then moves those draws with the camera draws' eye transform). An
+orthographic block is only taken as the HUD block if full-screen passes (draws sampling colour targets)
+don't also read it: Demon's Souls reads `c[0]` for both, and its scene composite was drawn into the HUD box.
+
 **Never generated.** These need the game looked at in the headset or reverse-engineered. After generating,
 check for each symptom:
 
