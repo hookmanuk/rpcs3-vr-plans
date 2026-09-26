@@ -356,6 +356,7 @@ check for each symptom:
 | Menu/title text drawn into the 3D scene's final image stays full-view | `screen_space.hud_programs` (the program's ucode hash from an inspector capture) | SotC |
 | Menu layers reorder or vanish when leaning in (HUD depth-tests itself) | `screen_space.hud_keep_depth: true` | SotC |
 | Sprites (flames, glows) drift away from their source | `screen_space.preprojected_programs` | ICO |
+| Frame rate drops only in busy scenes while GPU use stays low | find the bottleneck thread with `tools/threadcycles.py`, then `tools/rsx_sample.py rsx::thread 10`; `RPCS3_VR_GPUPROF=1` gives per-frame RSX/GPU breakdowns and right-eye rebuilt copies. Games in lockstep with the RSX thread are bounded by its per-draw work, which stereo roughly adds to | Ridge Racer 7 (right-eye cube-map rebuilds, fixed in the renderer) |
 | Wheels, glows or other scaled objects stay head-locked while the scene turns | `require_rigid_camera: false` (their object matrices fail the rigidity test); check nothing off-scene gains the rotation. The generator no longer sets rigidity from depth-tested scene draws (2026-09-26) | Ridge Racer 7 |
 | Splash screens and videos fill the view | `screen_space.frames_without_3d_as_screen: true` | ICO |
 | Glow or blend layers trail head turns | `reproject_older_frames: true`, `current_frame_copies: true` | ICO, SotC |

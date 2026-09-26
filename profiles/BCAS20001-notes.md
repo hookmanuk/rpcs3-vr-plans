@@ -39,6 +39,32 @@ in-emulator generator's output (2026-09-25) plus the frame-timing fields and `ma
   Xevious and the title's intro movie (Reiko) and attract replay in both eyes. No pre-fix capture of the
   movie itself; the user reported it.
 
+## Start-grid frame drops (2026-09-26, fork 243a7ad2)
+
+Headset report: well below 90 FPS on the start grid (46 even paused), 90 alone on track, GPU use low, worse at
+higher resolution scales.
+
+- **Lockstep with the game.** The RSX thread waits once a frame on the game's semaphore `0x60300800` (NV406E
+  acquire), and the game's PPU threads spend 92-96% in `sys_semaphore_wait`. The frame is therefore bounded by
+  RSX-thread work. Paused on the grid (~1300 draws/frame, 400%): RSX idle on that semaphore 5.5-7 ms/frame flat
+  vs 1.5-2 ms stereo, i.e. stereo cost ~3.5 ms/frame on a 11.1 ms budget. Alone on track (~320 draws) it idles
+  4-8 ms. Even flat, the grid is tight at 90 Hz (it had 16.7 ms on a PS3 at 60).
+- **Cause of most of the stereo cost:** car reflections sample an environment cube map built by a deferred copy
+  from six 256x256 faces (`0xc1a50000..0xc1b90000`). The left eye's copy is cached by the texture cache; the right
+  eye rebuilt it uncached from the right-eye faces on every draw: 36 rebuilds a frame on the grid, GPU copy work
+  that grows with the resolution scale, and each copy split the right-eye batches (87 a frame).
+- **Fix (renderer):** a right-eye copy whose sources are all off-aspect targets uses the left eye's copy (such
+  targets are never moved per eye). Rebuilds 36 -> 0, batches 87 -> 30, stereo idle 1.5-2 -> ~3.5 ms/frame;
+  restart + countdown in headset mode at 400% held 88-90 FPS (was 49-61). Also `camera_probe::profile()` no
+  longer rebuilds its key each call (it was ~5% of RSX-thread samples).
+- Not the cause: Multithreaded RSX (no change), host GPU labels (off), readbacks and hard syncs (0), the Draw
+  Thread's 24 `sys_event_queue_create/connect/destroy` per frame (~0.1 ms).
+- Tools: `plans/tools/threadcycles.py` (per-thread CPU; GetThreadTimes undercounts RPCS3's bursty threads),
+  `plans/tools/rsx_sample.py rsx::thread 10` (stack sampler with rpcs3.pdb; slows the game while it runs),
+  `RPCS3_VR_GPUPROF=1` (now also reports right-eye batches and rebuilt copies per frame).
+- Remaining stereo cost (~2 ms/frame on the grid) is the right eye's second pass through the driver and the
+  per-draw eye constants; multiview would be the structural fix.
+
 ## Frame rate: runs at the headset rate (2026-09-26)
 
 Native 60 FPS, one game step per vblank, time counted in frames: at a 90 Hz vblank everything ran 1.49x.

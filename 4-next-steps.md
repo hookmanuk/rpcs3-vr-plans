@@ -978,3 +978,7 @@ now 0.064 (metres rule).
 depth-tested scene draws); Xevious loader and intro movies black in the right eye (right-eye surfaces never
 initialized, stale depth; renderer now initializes them on bind, affects every game). To check in the headset:
 wheels/lights at the countdown, movies, and one other game for regressions from the surface change.
+**2026-09-26, fork 243a7ad2:** start-grid frame drops fixed: the right eye rebuilt the car reflections' cube map on
+every draw (36 uncached copies a frame); off-aspect copies are now shared with the left eye. Grid countdown
+88-90 FPS at 400% in headset mode (was 49-61). New tools `tools/threadcycles.py`, `tools/rsx_sample.py`.
+Headset check pending; the change applies to every game (copies from off-aspect targets).
