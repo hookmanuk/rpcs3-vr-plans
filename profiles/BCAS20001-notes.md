@@ -39,18 +39,28 @@ in-emulator generator's output (2026-09-25) plus the frame-timing fields and `ma
   Xevious and the title's intro movie (Reiko) and attract replay in both eyes. No pre-fix capture of the
   movie itself; the user reported it.
 
-## Reflections followed the head (2026-09-26, fork b855eda1)
+## Road reflections follow the head (open; b855eda1 reverted in 6c4e1a88)
 
-Headset report: headlight pools on the grid, other cars' brake lights and the tunnel's ceiling lights on the
-tarmac moved with the head. They are road reflections: 446 environment/road draws (`1397dca5` road) sample
-`0xc1a00000`, a 512x128 target of 128x128 tiles rendered with the game camera `c[4..7]` (a low-resolution
-reflection view), looked up with `c[20..23]`, an unmodified copy of that camera mapped into the tile. The flat
-probe route never moves off-aspect targets (classifier rule 1), but the per-eye transform used in the headset
-and desktop stereo (`apply_render_eye`) had no aspect gate, so the tiles followed the head while the lookup did
-not. Fixed in the renderer: camera draws into targets that are not camera views keep the game camera in both
-eyes (cube-map faces too). All profiles have `output_aspect_tolerance` >= 0.02, as on the probe route.
-Desktop audit: scene still rotates correctly; the reflections are too faint on the grid to prove the fix from
-stills, so the headset (tunnel) is the check. New probe option `hide=<vertex hash>[+...]` skips a program's draws.
+Headset report: street-light and headlight reflections on the tarmac (grid, tunnel ceiling lights) move with the
+head; separately, other cars' brake lights float in the wrong place (not on the road). Findings so far:
+
+- The road (`1397dca5`, fragment programs sampling unit 1) reads a 512x128 target `0xc1a00000` of 128x128 tiles at
+  its **own clip position**: its vertex program writes `dst_reg8 = dst_reg0` (tc1 = clip position) and the
+  fragment samples at `tc1.xy/tc1.w`, remapped into the tile by a fragment constant. So the tiles need exactly
+  the road's per-eye transform.
+- The tiles are drawn with the game camera `c[4..7]` into 128x128 viewports. The per-eye path applies the
+  headset-FOV remap and then `undo_viewport`, which stretches each tile over the whole 512x128 target: a
+  mismatch with the road's lookup. b855eda1 (off-aspect targets keep the game camera) was wrong and is reverted.
+  Tried (uncommitted, not kept): per-eye transform without `undo_viewport` for off-aspect draws with a 16:9
+  projection; the desktop audit (`RPCS3_VR_AUDIT=25`, `RPCS3_VR_AUDIT_FOV=1.0`) still showed the car's reflection
+  wedge at the unrotated screen position.
+- The tile draws (`970af287`) sample `0x50110000`, the game's previous finished frame (screen-space
+  reflection), which is the next thing to check (how their shader addresses it).
+- Repro on the desktop needs `RPCS3_VR_AUDIT_FOV` (otherwise the headset remap and `undo_viewport` never run).
+  Isolate the reflection layer by diffing frames with probe `hide=` of `970af287` (that probe option was part of
+  b855eda1 and is reverted too).
+- **Do not enable `Log shader programs` for this game:** it froze emulation when the main-menu video
+  (`menu.pam`) started, three times.
 
 ## Scene soft at any resolution scale (2026-09-26, fork 6e0d69cd)
 

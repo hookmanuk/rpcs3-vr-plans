@@ -985,6 +985,5 @@ Headset check pending; the change applies to every game (copies from off-aspect 
 **2026-09-26, fork 6e0d69cd:** scene sharpness at high resolution scales: the scene-resolve filter's tap offsets
 (vertex constants in texture coordinates) now scale with the resolution via the new profile field
 `resolution_scaled_constants`; 600% scene gradient energy x1.9-2.2. Stereo screenshots keep full resolution.
-**2026-09-26, fork b855eda1:** reflections (headlights, brake lights, tunnel lights) followed the head: the per-eye
-transform moved camera draws into off-aspect targets; now gated like the probe route (applies to every game,
-headset check pending: RR7 tunnel, and one other game). Probe `hide=` added.
+**2026-09-26:** b855eda1 (off-aspect targets keep the game camera) did not fix RR7's head-locked road reflections
+and is reverted (6c4e1a88); reflections and floating brake lights remain open, findings in `profiles/BCAS20001-notes.md`.
