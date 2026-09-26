@@ -39,6 +39,19 @@ in-emulator generator's output (2026-09-25) plus the frame-timing fields and `ma
   Xevious and the title's intro movie (Reiko) and attract replay in both eyes. No pre-fix capture of the
   movie itself; the user reported it.
 
+## Reflections followed the head (2026-09-26, fork b855eda1)
+
+Headset report: headlight pools on the grid, other cars' brake lights and the tunnel's ceiling lights on the
+tarmac moved with the head. They are road reflections: 446 environment/road draws (`1397dca5` road) sample
+`0xc1a00000`, a 512x128 target of 128x128 tiles rendered with the game camera `c[4..7]` (a low-resolution
+reflection view), looked up with `c[20..23]`, an unmodified copy of that camera mapped into the tile. The flat
+probe route never moves off-aspect targets (classifier rule 1), but the per-eye transform used in the headset
+and desktop stereo (`apply_render_eye`) had no aspect gate, so the tiles followed the head while the lookup did
+not. Fixed in the renderer: camera draws into targets that are not camera views keep the game camera in both
+eyes (cube-map faces too). All profiles have `output_aspect_tolerance` >= 0.02, as on the probe route.
+Desktop audit: scene still rotates correctly; the reflections are too faint on the grid to prove the fix from
+stills, so the headset (tunnel) is the check. New probe option `hide=<vertex hash>[+...]` skips a program's draws.
+
 ## Scene soft at any resolution scale (2026-09-26, fork 6e0d69cd)
 
 Headset report: grainy/muddy, lines never sharp even at 600%, unlike WipEout. Full-resolution captures
