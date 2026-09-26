@@ -39,6 +39,18 @@ in-emulator generator's output (2026-09-25) plus the frame-timing fields and `ma
   Xevious and the title's intro movie (Reiko) and attract replay in both eyes. No pre-fix capture of the
   movie itself; the user reported it.
 
+## Scene soft at any resolution scale (2026-09-26, fork 6e0d69cd)
+
+Headset report: grainy/muddy, lines never sharp even at 600%, unlike WipEout. Full-resolution captures
+(stereo screenshots are no longer squashed) showed scene edges smeared over ~6 px at 600% (one native pixel)
+while the HUD, drawn afterwards, was crisp. Cause: the pass that resolves the 1408x768 scene to 1280x720
+(vertex program `e2b9761e8fd87794`, fragment `r = (tex(uv+c467.zw) + tex(uv+c467.xy) + tex(uv+c466.xy)) * c0.x`)
+is a three-tap softening filter with tap offsets of about a quarter native pixel held as vertex constants
+`c[466..467]` in texture coordinates, so resolution scaling does not shrink them. Fixed by the new profile field
+`resolution_scaled_constants` (divides the slots by the scale). 600%: gradient energy of scene regions x1.9-2.2
+(`evidence/rr7/sharpness-600pct-before-after.png`, top before, bottom after). Not checked in the headset yet.
+Earlier theories that did not hold: anisotropic filtering (already 16x, live setting), SteamVR downsampling.
+
 ## Start-grid frame drops (2026-09-26, fork 243a7ad2)
 
 Headset report: well below 90 FPS on the start grid (46 even paused), 90 alone on track, GPU use low, worse at

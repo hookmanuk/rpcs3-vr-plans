@@ -982,3 +982,6 @@ wheels/lights at the countdown, movies, and one other game for regressions from 
 every draw (36 uncached copies a frame); off-aspect copies are now shared with the left eye. Grid countdown
 88-90 FPS at 400% in headset mode (was 49-61). New tools `tools/threadcycles.py`, `tools/rsx_sample.py`.
 Headset check pending; the change applies to every game (copies from off-aspect targets).
+**2026-09-26, fork 6e0d69cd:** scene sharpness at high resolution scales: the scene-resolve filter's tap offsets
+(vertex constants in texture coordinates) now scale with the resolution via the new profile field
+`resolution_scaled_constants`; 600% scene gradient energy x1.9-2.2. Stereo screenshots keep full resolution.
