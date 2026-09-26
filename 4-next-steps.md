@@ -964,7 +964,12 @@ headset (desktop captures of the headset session); Wider view patch at 130 degre
 
 **Ridge Racer 7 (BCAS20001, 2026-09-25, fork bbc406ae, not pushed).** Generated from scratch: camera `c[4]`, HUD
 found by the new matrix-less HUD detection (`passthrough_hud` + `hud_programs`), metres. The simulation is
-frame-locked (1.49x speed at 90 Hz), so it stays at 60 FPS with headset reprojection; benchmark 140 FPS stereo at
-300% (vblank 144), no performance work needed. Not yet checked in the headset. Open: screenshot crash in a
-headset session with no profile. Details: `plans/profiles/BCAS20001-notes.md`. Demon's Souls profile eye_baseline
+frame-locked (1.49x speed at 90 Hz); benchmark 140 FPS stereo at 300% (vblank 144), no performance work needed.
+**2026-09-26, fork f6c31d0d (pushed): runs at the headset rate.** Patch "Frame rate follows VR"
+(`bin/patches/BCAS20001_patch.yml`, on by default) plus the new profile fields `game_frame_time_f32`,
+`game_frame_ms_u32`, `game_fps_u32`; profile `max_fps 0`, `default_fps 0`. Measured at 90 Hz: physics, race timer,
+lap/race/time-limit clocks 0.99-1.0x real time; 60 Hz unchanged; 2D vs VR same-moment captures match. New dev
+hooks: PPU read watch, in-run watch file, full-range memory dumps. Not yet checked in the headset. Open:
+screenshot crash in a headset session with no profile; a full race to the finish (the test driver stalls on a
+wall). Details: `plans/profiles/BCAS20001-notes.md`. Demon's Souls profile eye_baseline
 now 0.064 (metres rule).

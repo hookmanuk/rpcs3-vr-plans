@@ -1,7 +1,7 @@
 # Ridge Racer 7 (BCAS20001 v01.00, Asia, En/Ja) - findings
 
 `EBOOT` PPU hash `PPU-de2b587bf99874b3fe390329ef4f18150e4f853f`. Profile `bin/vr_profiles/BCAS20001.json` is the
-in-emulator generator's output, unedited (2026-09-25). Not yet checked in the headset (SteamVR was off).
+in-emulator generator's output (2026-09-25) plus the frame-timing fields and `max_fps`/`default_fps 0` (2026-09-26). Not yet checked in the headset (SteamVR was off).
 
 ## Rendering
 
@@ -14,15 +14,38 @@ in-emulator generator's output, unedited (2026-09-25). Not yet checked in the he
 - **Units are metres**: the player car's body puts the camera at (0, 1.97, 5.74) in car space (chase camera
   5.7 m back, 2 m up) and its wheels at x = +-0.8 (1.6 m track). Near plane 0.3. `eye_baseline` 0.064.
 
-## Frame rate
+## Frame rate: runs at the headset rate (2026-09-26)
 
-- Native 60 FPS, one frame per vblank.
-- **The simulation is frame-locked**: at a 90 Hz vblank the lap timer ran 1.49x wall time (24.48 s of game
-  time in 16.41 s), and the lap timer counts frames (1:55.450 = 6927 frames at 1/60). Patching all 21 static
-  1/60 floats in the data segment (0x4af520..0x4d767c) to 1/90 changed nothing (still 1.49x): the step is not
-  one constant. Real 90 FPS would need the physics and logic re-timed; not attempted.
-- So the profile keeps `max_fps 60`: in the headset the game renders at 60 and the headset reprojects to its
-  own rate (90 Hz head tracking), as for ICO at 30.
+Native 60 FPS, one game step per vblank, time counted in frames: at a 90 Hz vblank everything ran 1.49x.
+Fixed by the patch "Frame rate follows VR" (`bin/patches/BCAS20001_patch.yml`, on by default) plus profile
+fields (`max_fps 0`, `default_fps 0`, so VR runs the vblank at the headset rate):
+
+| What | Where | Fix |
+|---|---|---|
+| Physics step | 21 static 1/60 floats 0x4af520..0x4d767c | `game_frame_time_f32` (1/fps) |
+| Race ms timer (0x104ac750, per car) | `li r5,17` at 0x13143c/0x13145c/0x131ebc/0x131ed4 | reads ms word 0x4d8ff0 (`game_frame_ms_u32`) |
+| Per-car frame counter +0xc (0x10311934) | 0x26ba98 | tick cave |
+| Car state +0x10, global frame count 0x104a5160, race object +0x324 | 0x12e718, 0x12e378, 0x2c6a04 | tick caves |
+| HUD frame timers (14 x {count, running}) | 0x30c33c | tick cave |
+| Per-car race objects +0x1b0, +0x1e8 (stride 0x270) | 0xff5bc, 0x100640 | tick caves |
+| 2D/HUD animation ms (16,17,17 pattern) | 0x129c8c | exact ms per frame |
+| Race timeline object +4 (frame events) | 0x2471e0 | tick cave; event checks skipped on a zero tick |
+| **Lap/race/time-limit clocks** (race object +0x3f4, +0x4b8, +0x650 up, +0x3e4 down; 1/3000 s, 50 per frame at ~55 sites) | one cave after the race loop's state update (0x23ad34) | a step of exactly +-50 since last frame becomes this frame's real 1/3000 s; other jumps (new lap, reset) kept |
+
+Tick caves add `floor(k*A/fps) - floor(k*(A-1)/fps)` (A = vblank count at 0x1028d6e4, fps from word 0x4d8ff4
+written by the profile, k = 60, 1000 or 3000) instead of a constant; at 60 Hz they reduce to the native steps.
+Spare words 0x4d8ff0..0x4d9004 (unreferenced by the game) hold ms, fps and the clock shadows.
+
+Measured (desktop stereo, 90 Hz): camera 0.66 m/frame (real speed), race timer 0.99x, all four race clocks
+0.99x, lap display 1.0x over 48 s steps; 60 Hz unchanged (lap display 9.33 s in 9.3 s). Same-moment 2D vs VR
+captures (probe `render=0`/`1`) at the countdown, coasting and stopped: HUD, minimap, speedometer and scene
+identical apart from parallax.
+
+Dead ends: slowing the global frame counter 0x1049fb0c (0x1027f0) or feeding the render stages a scaled copy
+deadlocks: it indexes GPU buffers (RSX semaphore timeout). The main loop's vblank step multiplier (0x39714)
+has no effect on physics. Several counters matched the displayed lap time by coincidence (the HUD timers,
+per-car +0x1b0/+0x1e8, the timeline object); the display's source was found by its formatter (division by 3,
+1/3000 s units) and an in-run watch on the race object.
 
 ## Benchmark (desktop stereo, Resolution Scale 300%, RTX 5090, 2026-09-25)
 
@@ -40,6 +63,8 @@ Stereo at 3x resolution has ample headroom for 90; no performance work needed.
   `ensure(current_queue_family ...)` in `vk::image::push_layout` (`image.cpp:227`) during the screenshot.
   Fine with `-NoHeadset` and with a profile and no headset session. Suspect the OpenXR publish path leaving
   the display image owned by another queue family (the XR queue) before the screenshot copy.
-- Headset check: HUD box, `bare_projection` banner, world scale, menus.
+- Headset check: HUD box, `bare_projection` banner, world scale, menus, 90 Hz play.
+- A full race to the finish at 90 Hz (results, lap records, time-limit expiry): the test driver only holds
+  accelerate and stalls on a wall.
 - Boot script used for tests: title -> Start x several (logos, Xevious loader, attract) -> Arcade (Down x3) ->
   Single Race -> Rave City Riverfront -> Normal -> machine -> Start Race.

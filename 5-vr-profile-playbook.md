@@ -328,8 +328,23 @@ a target camera draws wrote that frame. World scale: a near plane from 0.01 to 1
 (`eye_baseline` 0.064); the near/0.1 rule only applies outside that range.
 
 **Frame-locked games.** The generator writes the measured rate as `max_fps`. Check real-time speed before
-raising it: run at a faster Vblank Rate and compare an in-game timer with wall time (Ridge Racer 7: 1.49x at
-90 Hz, so it stays at 60 and the headset reprojects).
+raising it: run at a faster Vblank Rate and compare an in-game timer with wall time. A frame-locked game can
+still reach the headset rate with a game patch plus the profile's frame-timing fields (Ridge Racer 7, 2026-09-26;
+method in `profiles/BCAS20001-notes.md`):
+
+1. Physics: find the static 1/60 floats (dump, search 0x3c888889) and list them in `game_frame_time_f32`.
+   Measure camera metres per frame before and after to confirm.
+2. Timers and counters: two memory dumps (`RPCS3_VR_MEMDUMP`, now 0-0xbfffffff) a few seconds apart at 90 Hz,
+   next to screenshots of the on-screen clock; search values changing at the wrong rate in every unit (frames,
+   ms, 1/3000 s, float s). Counters in dynamically allocated memory move between runs: find them in the same
+   session from a signature (neighbouring words or a vtable), then `RPCS3_PPU_WATCH_FILE` installs the PPU
+   interpreter store/read watch on the address found. Look-alike counters are common; confirm each fix against
+   the displayed clock, not the dump.
+3. Patch each writer with a code cave adding `floor(k*A/fps) - floor(k*(A-1)/fps)` (A = the game's vblank
+   count, fps from a `game_fps_u32` word) instead of its constant step. Never slow a counter the renderer uses
+   (RR7's global frame counter indexes GPU buffers: deadlock). A field incremented at many sites gets one
+   correction per frame after the update instead.
+4. Verify at 60 Hz too: the caves must reduce to the native steps.
 
 **Never generated.** These need the game looked at in the headset or reverse-engineered. After generating,
 check for each symptom:
