@@ -259,6 +259,7 @@ Every problem found here should become a Step 7 reproduction on the desktop befo
 | Sky moves with the head; white or haze band | sky program omits the z slot (z = w) | supported for `column_vectors`; else code |
 | An unrelated full-screen quad gets rotated | stray data in a listed block looks perspective | `require_rigid_camera: true` |
 | One eye misses blur or bloom | a render-target blit or copy isn't mirrored | blits mirrored; others need code |
+| One eye black in a movie or 2D screen that depth-tests | right-eye surfaces were never initialized, so stale depth rejected the draw | fixed in the renderer (fork 50f7c0ea, Ridge Racer 7) |
 | Game runs double speed at 90/120 Hz | its clock counts vblanks, not time | fix it in the frame-rate patch; keep `match_headset_refresh_rate` off |
 | Scripted Start key does nothing | Qt key name is `Return` | use the template |
 | Screenshots never change | exclusive fullscreen | `f12shot.ps1`, or windowed with `sbsshot.ps1` |
@@ -355,6 +356,7 @@ check for each symptom:
 | Menu/title text drawn into the 3D scene's final image stays full-view | `screen_space.hud_programs` (the program's ucode hash from an inspector capture) | SotC |
 | Menu layers reorder or vanish when leaning in (HUD depth-tests itself) | `screen_space.hud_keep_depth: true` | SotC |
 | Sprites (flames, glows) drift away from their source | `screen_space.preprojected_programs` | ICO |
+| Wheels, glows or other scaled objects stay head-locked while the scene turns | `require_rigid_camera: false` (their object matrices fail the rigidity test); check nothing off-scene gains the rotation. The generator no longer sets rigidity from depth-tested scene draws (2026-09-26) | Ridge Racer 7 |
 | Splash screens and videos fill the view | `screen_space.frames_without_3d_as_screen: true` | ICO |
 | Glow or blend layers trail head turns | `reproject_older_frames: true`, `current_frame_copies: true` | ICO, SotC |
 | Walls or sky missing when looking around | a "Wider view" patch for the game's culling, then `stereo.eye_offset: "baseline"` so the wider projection keeps the eye distance | ICO, SotC |

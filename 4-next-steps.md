@@ -973,3 +973,8 @@ hooks: PPU read watch, in-run watch file, full-range memory dumps. Not yet check
 screenshot crash in a headset session with no profile; a full race to the finish (the test driver stalls on a
 wall). Details: `plans/profiles/BCAS20001-notes.md`. Demon's Souls profile eye_baseline
 now 0.064 (metres rule).
+**2026-09-26, fork 50f7c0ea:** headset report fixed on the desktop: wheels and light glows were head-locked
+(scaled object matrices rejected by `require_rigid_camera`; now off, and the generator no longer sets it from
+depth-tested scene draws); Xevious loader and intro movies black in the right eye (right-eye surfaces never
+initialized, stale depth; renderer now initializes them on bind, affects every game). To check in the headset:
+wheels/lights at the countdown, movies, and one other game for regressions from the surface change.

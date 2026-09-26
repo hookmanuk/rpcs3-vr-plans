@@ -1,0 +1,30 @@
+{
+  "schema": 1,
+  "title_id": "BCAS20001",
+  "app_version": "01.00",
+  "name": "RIDGE RACER 7",
+  "max_fps": 60,
+  "default_fps": 60,
+
+  "matrix_layout": "row_vectors",
+  "camera_blocks": [4, 3, 0],
+  "require_camera_aspect": true,
+  "output_aspect_tolerance": 0.04,
+
+  "camera_position": {
+    "eye_baseline": 0.064
+  },
+
+  "stereo": {
+    "formula": "clip_x_shear",
+    "per_eye_separation": 0.0158562,
+    "convergence": 2.56,
+    "eye_offset": "baseline"
+  },
+
+  "screen_space": {
+    "passthrough_hud": true,
+    "hud_programs": ["f78118c010d9eba2"],
+    "bare_projection": true
+  }
+}
