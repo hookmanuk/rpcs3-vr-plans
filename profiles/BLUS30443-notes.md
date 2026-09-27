@@ -81,3 +81,21 @@ image covers far more than the TV frame, so it blurred the floor and the top of 
 edges. New profile field `fragment_constant_overrides` sets `fc[0]` of
 `73cbac9f` to 0, so the composite outputs the sharp scene. Bloom still reads the blurred copy, unchanged.
 Evidence `evidence/demonssouls/4-dof-off-before-after.png` (top: before, bottom: after; both eyes).
+
+## Frame rate at the headset rate (2026-09-27)
+
+The community Unlock FPS 2.1 (Whatcookie, Gibbed) already makes game time real: `0x25ed8` presents every
+vblank, and the timestep function (`0x1b964` -> cave `0x16c7c30`) returns the timebase delta, capped at 50 ms.
+Its note warns of "physics issues" above 60. Measured on savestate `BLUS30443_1_1`, headset path,
+camera position `c[158]` from inspector captures before and after scripted input (`RPCS3_VR_KEYS`,
+temporary keyboard pad):
+
+| input | 60 FPS | 90 FPS |
+|---|---|---|
+| forward held 3 s | 10.480 (twice) | 10.525 (twice) |
+| forward + roll, 150 ms | 3.115 | 3.062 |
+
+Real-time within the input's frame rounding. The fork now carries the patch in `BLUS30443_patch.yml` as
+*Unlocked frame rate (follows Vblank Rate)*, on by default (fresh boot with the community entry off: applied,
+90 FPS), and the profile has `max_fps`/`default_fps` 0. Not measured: enemy AI, falling, Havok ragdolls.
+
