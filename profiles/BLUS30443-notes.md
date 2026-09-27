@@ -48,7 +48,7 @@ eyes with the HUD boxed (evidence 3).
 - Not yet checked: menus/inventory in the HUD box, cutscene FOV changes, performance at 130 degrees
   (possible lower LOD), other areas.
 
-## Open: torch flame wrong in the left eye (2026-09-25, Matt's savestate `BLUS30443_1_0`)
+## Fixed: torch flame wrong in the left eye (2026-09-25, Matt's savestate `BLUS30443_1_0`; fixed 2026-09-28, see below)
 
 In some frames (about half) the left eye draws the wall torch's flame huge and stretched (two tall orange
 streaks down the tunnel) instead of small on the wall; the right eye is always right. Findings so far:
@@ -98,4 +98,23 @@ temporary keyboard pad):
 Real-time within the input's frame rounding. The fork now carries the patch in `BLUS30443_patch.yml` as
 *Unlocked frame rate (follows Vblank Rate)*, on by default (fresh boot with the community entry off: applied,
 90 FPS), and the profile has `max_fps`/`default_fps` 0. Not measured: enemy AI, falling, Havok ragdolls.
+
+## Left-eye particles (fixed 2026-09-28, fork 2dc5848f, savestate `BLUS30443_1_4`)
+
+Matt: a light glow left of the soldier only in the right eye; "a few effects like that". Mono (`render=0`) has
+the glow, so the stereo path lost it in the left eye. Steps:
+- `hide=7f4d3587...` (particles) removes it: the glow is a soft particle (fragment shader fades by scene depth
+  from `0xc0b50000`, the depth buffer the draw is bound to).
+- `fragment_constant_overrides` on `7f4d3587` `fc[3].x` = +1e6 turns the fade off (-1e6 hides everything) and
+  exposes the fault: the left eye draws particles with other draws' sprites (dark smoke where the glow is,
+  orange smoke on the lantern). Reproduces in desktop stereo, not with `RPCS3_VR_BATCH=0`.
+- Per-eye vertex constants logged on the CPU were right for both eyes.
+- Cause: the left eye's vertex env push constant was recorded before `renderpass_op`. A draw sampling its
+  bound depth changes the render pass key, ending the left pass, which runs the right-eye batch
+  (`vkCmdExecuteCommands`) and leaves push constants undefined, so the left draw read another draw's vertex
+  layout entry. Fix: push after the pass change and program bind (`VKDraw.cpp`).
+
+Measured with the fade off (orange in the left/right soldier crop): before, 2 of 3 frames differed by 0.4-0.5;
+after, 6 of 6 within 0.07, same as batching off. Headset path: the glow in both eyes, 90 FPS. WipEout intro
+unchanged. The same fault explains the old torch flame streaks (left eye, about half the frames).
 

@@ -258,6 +258,7 @@ Every problem found here should become a Step 7 reproduction on the desktop befo
 | Sky moves with the head; white or haze band | sky program omits the z slot (z = w) | supported for `column_vectors`; else code |
 | An unrelated full-screen quad gets rotated | stray data in a listed block looks perspective | `require_rigid_camera: true` |
 | One eye misses blur or bloom | a render-target blit or copy isn't mirrored | blits mirrored; others need code |
+| A particle, glow or flame only in one eye, or with the wrong sprite in the left eye | was a renderer bug (left-eye push constants lost when a draw sampling its bound depth ended the pass); fixed in fork 2dc5848f. To diagnose others: compare with `render=0`, `hide=<program>`, and `RPCS3_VR_BATCH=0` (no right-eye batching) | fixed in the renderer (Demon's Souls) |
 | One eye black in a movie or 2D screen that depth-tests | right-eye surfaces were never initialized, so stale depth rejected the draw | fixed in the renderer (fork 50f7c0ea, Ridge Racer 7) |
 | Game runs double speed at 90/120 Hz | its clock counts vblanks, not time | fix it in the frame-rate patch; keep `match_headset_refresh_rate` off |
 | Scripted Start key does nothing | Qt key name is `Return` | use the template |

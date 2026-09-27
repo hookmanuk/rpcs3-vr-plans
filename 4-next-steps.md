@@ -1015,3 +1015,5 @@ at the view centre (a rotation moves the edges up to 2x as far at ~90 degrees). 
 
 **Demon's Souls at the headset rate (2026-09-27, fork 2801eea39, not pushed).** Community Unlock FPS carried in `BLUS30443_patch.yml` (on by default), profile `max_fps`/`default_fps` 0; running and roll distances equal at 60 and 90 FPS (`profiles/BLUS30443-notes.md`). Demon's Souls added to `vr-games.md` as game 6. `launch.ps1` sets `RPCS3_VR_KEYS` (`$Work\KEYS`). To check in the headset: combat and falling at 90.
 
+**Left-eye particles (2026-09-28, fork 2dc5848f, not pushed).** Demon's Souls soft particles (glows, torch flames) drew with other draws' sprites or stretched in the left eye in about half the frames. The left eye's vertex env push constant was lost when the right-eye batch ran mid-draw; now pushed after the render pass change. Affects every game with right-eye batching. Details: `profiles/BLUS30443-notes.md`. Open: in-engine cutscenes jerky (Matt; needs a cutscene savestate).
+
