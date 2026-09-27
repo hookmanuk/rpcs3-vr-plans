@@ -40,8 +40,7 @@ Put evidence in `plans/evidence/<game>/` and findings in `plans/profiles/<TITLE_
   `plans/profiles/BLUS30182-notes.md`: PSGL swap interval forced to 1, plus the game's refresh constant
   set to the vblank rate. Check the game clock stays real-time: time a lap or a timer against wall time.
   This is what decides `match_headset_refresh_rate`.
-- **Updates.** Some games only have native 3D in a later update (WipEout needed v2.51). Check before you
-  decide there's no native stereo.
+- **Updates.** Check whether a later game update adds native 3D before you decide there's no native stereo.
 - **Scripted input.** Copy `keyboard-pad-template.yml` to
   `rpcs3/bin/config/input_configs/<TITLE_ID>/Default.yml`. Start is `Return`, not `Enter`: the key names
   are Qt's. **Delete this file when you finish**, because it overrides the user's controller for this

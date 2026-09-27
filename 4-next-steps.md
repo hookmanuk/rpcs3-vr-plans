@@ -47,6 +47,8 @@ source was changed for this gate.
 
 ### Game build - v2.51 is a hard prerequisite for native 3D
 
+*Correction (2026-09-27, Matt): WipEout does not need the 2.51 update; the claim below is historical.*
+
 The disc ISO alone boots as `APP_VER=02.00`, and **that version contains no
 stereoscopic code at all**. At 2.00 the game only ever calls
 `cellVideoOutGetResolutionAvailability(resolutionId=0x2)` (plain 720p); it never
