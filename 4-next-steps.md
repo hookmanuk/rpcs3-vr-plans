@@ -989,3 +989,18 @@ Headset check pending; the change applies to every game (copies from off-aspect 
 glows no longer follow the head (profile `offaspect_player_views`, `bare_projection` off; generator writes
 `bare_projection` only without depth test). Ridge Racer 7's known VR issues are all fixed; open: an intermittent
 menu-video freeze during unattended captures (notes).
+
+**OFXR Bridge frame generation and SotC head-turn swim (2026-09-27, fork cd2dfff4, 44a6613f, c14aaeef, not
+pushed; headset-confirmed by Matt).** OFXR Bridge v0.2.7 (OpenXR implicit layer, `%LOCALAPPDATA%\OFXR Bridge`,
+tray option "Vulkan support") never engaged: SteamVR's `xrGetVulkanDeviceExtensionsKHR` count is two bytes past
+the text and OFXR appends `VK_KHR_external_semaphore_win32` after the first NUL, so we never enabled it. We now
+read the whole buffer; eye swapchains also take TRANSFER_SRC (OFXR `vkCmdCopyImage`s each eye). OFXR is fixed
+2x: it throttles the app's `xrWaitFrame` to half the refresh, and RPCS3's game clock does not follow
+`xrWaitFrame`, so the game must run at exactly half the refresh (new VR Frame Rate "45 FPS" at 90 Hz, or 60 at
+120 Hz) or frames are dropped unevenly (judder). Its flight logs (`RuntimeLayer\v336\*.log`) show
+`swapchain_eligibility result=0` when armed. WipEout at 425% (5440x3060 eyes) failed: SteamVR
+`vkAllocateMemory -2` for OFXR's private swapchains. Worth reporting upstream: the embedded-NUL append.
+SotC, with or without OFXR: the world slid on head turns and snapped back when the head stopped. SotC displays
+the scene drawn two frames earlier, re-aimed by `vr_realign_blend_targets`; its whole-pixel shift was exact only
+at the view centre (a rotation moves the edges up to 2x as far at ~90 degrees). Now an exact homography warp
+(`vr_homography_warp_pass`); trace `A{addr:dx,dy h}`. Ico uses the same path: recheck Ico in the headset.
