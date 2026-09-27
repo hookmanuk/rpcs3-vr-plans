@@ -924,7 +924,7 @@ the fixed screen". Note: `plans/tools/launch.ps1` without `-Probe 'render=1'` le
 
 **Release procedure.** Versions are upstream's plus a fork tag: `0.0.42-vrN-<commit> Alpha` in the app,
 GitHub release tag `v0.0.42-vrN`, zip `rpcs3-v0.0.42-vrN-<commit>_win64.zip`. For each release: bump
-`RPCS3_VR_VERSION` in `rpcs3/rpcs3/rpcs3_version.cpp` (vr2 tagged 2026-09-25; the next is vr3), commit,
+`RPCS3_VR_VERSION` in `rpcs3/rpcs3/rpcs3_version.cpp` (vr3 tagged 2026-09-27; the next is vr4), commit,
 build emucore/VKGSRender/rpcs3 so the exe carries that commit, run `plans/tools/package_release.py`, smoke-test
 the zip from a non-temporary folder, push `openxr` and the annotated tag; Matt tests the zip and publishes the GitHub release himself. After merging a newer upstream
 version, restart at vr1.
@@ -1006,3 +1006,5 @@ at the view centre (a rotation moves the edges up to 2x as far at ~90 degrees). 
 (`vr_homography_warp_pass`); trace `A{addr:dx,dy h}`. Ico uses the same path: recheck Ico in the headset.
 
 **SotC camera bounce (2026-09-27, fork 1cb72c1f + 16a7e549, not pushed; headset-confirmed by Matt).** The camera pushed into walls and snapped back: the Wider view patch's 3x FOV reached the camera framing logic. Patch 1.2 gives that logic fov / Scale and keeps the render view wide. New dev hook `RPCS3_VR_POKE=<file>` (lines `<addr> f32|u32 <value>`; code too under the static interpreter) for trying patches on savestates, which keep their old code. Details: `plans/profiles/BCUS98259-shadow-notes.md`; trap added to the playbook.
+
+**vr3 release (2026-09-27).** Tag `v0.0.42-vr3` at fork 5b6ddf80 (openxr pushed), zip `release/rpcs3-v0.0.42-vr3-5b6ddf80_win64.zip` (271 files; vr2 + Ridge Racer 7 and Demon's Souls profiles/patches). Since vr2: Ridge Racer 7 playable, SotC exact realign warp and camera-bounce fix (Wider view 1.2), OFXR Bridge frame generation + 45 FPS option, Demon's Souls profile, generator improvements. vr-games.md: OFXR section; WipEout no longer claims the 2.51 update is required (Matt: not true). Smoke test: packaged exe starts (first-run dialog) and carries vr3-5b6ddf80. Matt tests and publishes.
