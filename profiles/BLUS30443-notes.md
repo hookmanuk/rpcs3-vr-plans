@@ -42,7 +42,7 @@ eyes with the HUD boxed (evidence 3).
 
 ## Known issues
 
-- Depth of field blurs the near ground (the game's own look, also flat). No patch yet.
+- ~~Depth of field blurs the near ground.~~ Fixed 2026-09-27, see below.
 - A bright opening in the tutorial tunnel ceiling is visible only in VR's taller view; with the culling
   frustum at 130 degrees it persists, so it is most likely real geometry.
 - Not yet checked: menus/inventory in the HUD box, cutscene FOV changes, performance at 130 degrees
@@ -61,3 +61,23 @@ streaks down the tunnel) instead of small on the wall; the right eye is always r
 - Left eye = the primary command buffer, right eye = the batch; the difference is per eye, so suspects are
   left-eye-only state: constant allocation reuse across consecutive draws of the same program, the depth
   texture sampled while attached (feedback copy) in the left pass, conditional rendering / queries.
+
+## Depth of field off (2026-09-27, Matt's savestate `BLUS30443_1_1`)
+
+Matt: translucent HUD sections blurring the image (floor below the player, leaves behind "Tutorial").
+Not the HUD: with probe `hide=f2577d35...+fc7a7815...` the HUD was gone and the blur stayed. Hiding the
+two 640x360 blur passes made the ground sharp. The post chain after the scene (capture draws 252-271):
+
+| draw | vertex program | does |
+|---|---|---|
+| 254 | `2770ddcf` fp24 | CoC into the alpha of the scene `0xc07a0000`: depth DoF from `fc[3..9]` plus `clamp((r - fc8.x) * fc12.y) * fc13.z`, r = distance from the screen centre |
+| 255-257 | `2770ddcf` fp33, `acfb9632`, `c9084654` | downsample to 640x360 `0xc4610000`, blur H and V (16 taps) |
+| 258 | `73cbac9f` fp51 | composite into `0xc4260000`: `lerp(sharp, blurred, clamp(sharp.a * fc0.x))` |
+| 259-270 | `2770ddcf` | bloom chain from `0xc4610000` down to 16x16 |
+| 271 | `2770ddcf` fp23 | final composite into `0xc07a0000`, then the HUD |
+
+The screen-centre term blurs the picture edges, which on a TV are the corners. In the headset the eye
+image covers far more than the TV frame, so it blurred the floor and the top of the view, with doubled
+edges. New profile field `fragment_constant_overrides` sets `fc[0]` of
+`73cbac9f` to 0, so the composite outputs the sharp scene. Bloom still reads the blurred copy, unchanged.
+Evidence `evidence/demonssouls/4-dof-off-before-after.png` (top: before, bottom: after; both eyes).

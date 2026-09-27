@@ -3,6 +3,7 @@ param([Parameter(Mandatory)][string]$Game, [string]$Probe = '', [string]$Work = 
 # Restart RPCS3 on a game with the VR development hooks:
 #   inspector   RPCS3_STEREO_INSPECT=$Work\insp\   (create $Work\insp\ARM to capture one frame)
 #   probe file  RPCS3_VR_PROBE_FILE=$Work\probe.txt (rewritten any time; re-read every frame)
+#   screenshot  RPCS3_VR_SHOT=$Work\SHOT            (create it; plans\tools\re\shot.py does)
 #   -Probe 'render=1'   start with stereo rendering armed (the file replaces the default)
 #   -NoHeadset          RPCS3_OPENXR=0: both eyes side by side on the desktop
 #   -Audit 25 | pitch:35  rotation audit: right eye yawed/pitched, left eye as reference
@@ -14,6 +15,7 @@ Remove-Item "$Work\probe.txt" -ErrorAction SilentlyContinue
 if ($Probe) { Set-Content "$Work\probe.txt" $Probe -NoNewline }
 $env:RPCS3_STEREO_INSPECT = "$Work\insp\"
 $env:RPCS3_VR_PROBE_FILE = "$Work\probe.txt"
+$env:RPCS3_VR_SHOT = "$Work\SHOT"   # create this file for a screenshot (re/shot.py)
 if ($NoHeadset) { $env:RPCS3_OPENXR = '0' } else { Remove-Item Env:RPCS3_OPENXR -ErrorAction SilentlyContinue }
 if ($Audit) { $env:RPCS3_VR_AUDIT = $Audit } else { Remove-Item Env:RPCS3_VR_AUDIT -ErrorAction SilentlyContinue }
 Start-Process "$bin\rpcs3.exe" -ArgumentList "`"$Game`"" -WorkingDirectory $bin
