@@ -1004,3 +1004,5 @@ SotC, with or without OFXR: the world slid on head turns and snapped back when t
 the scene drawn two frames earlier, re-aimed by `vr_realign_blend_targets`; its whole-pixel shift was exact only
 at the view centre (a rotation moves the edges up to 2x as far at ~90 degrees). Now an exact homography warp
 (`vr_homography_warp_pass`); trace `A{addr:dx,dy h}`. Ico uses the same path: recheck Ico in the headset.
+
+**SotC camera bounce (2026-09-27, fork 1cb72c1f + 16a7e549, not pushed; headset-confirmed by Matt).** The camera pushed into walls and snapped back: the Wider view patch's 3x FOV reached the camera framing logic. Patch 1.2 gives that logic fov / Scale and keeps the render view wide. New dev hook `RPCS3_VR_POKE=<file>` (lines `<addr> f32|u32 <value>`; code too under the static interpreter) for trying patches on savestates, which keep their old code. Details: `plans/profiles/BCUS98259-shadow-notes.md`; trap added to the playbook.

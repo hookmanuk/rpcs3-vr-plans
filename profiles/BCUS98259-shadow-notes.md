@@ -85,3 +85,21 @@ title ID as ICO, so its VR profile is executable-specific: `bin/vr_profiles/BCUS
 - Dev tools: RPCS3_VR_GPUPROF=1 (GPU ms and draws per target, RSX thread times, readback waits, flip
   waits), RPCS3_VR_GPUPROF_TARGET, RPCS3_SYSCALL_PROFILE=1; plans/tools/re/sotc_modes.ps1, perfrun.ps1,
   burst.sh, drawcounts.py.
+
+## 2026-09-27: camera bounced into walls (Wider view patch 1.2, fork 1cb72c1f)
+
+- Headset report: in a narrow gap the camera kept pushing into the rock and snapping back, with no input.
+  Reproduced on Matt's savestate in desktop stereo; unchanged with the depth readback answered for real,
+  at 60 FPS, and with VR rendering off, so not the renderer.
+- Cause: the Wider view float 0x732894 (TOC-0x33cc, 1.0 -> 3.0) is read only in 0xee438-0xee710; in play
+  only 0xee570 runs (read watch), feeding the main camera's FOV (0xee59c), a second 1-degree camera (+0x20)
+  and a clamp. The main camera's FOV reaches the render view via 0xeea94 -> 0x1c218c (projection +0xc,
+  getter 0x1c21c8). Getter readers: 0xeed68 (view info copy) and 0xea628, the camera framing: tan(fov/2) x
+  distance to the target stored at +0x40/+0x44. With 150 degrees the framing logic moved the camera.
+- Fix (patch 1.2): 0xea654/0xea674/0xea67c make that fov / Scale (0.5*pi/180 folded into pi/360 at
+  TOC-0x6ee0); 0xee570/0xee574 (+5 other reads) give the second camera and clamp 1.0 from TOC-0x3398.
+  Render projection unchanged (inspector c[60] 0.272/0.456 before and after). Proven on the savestate by
+  poking the three words off (bounce, frame diffs 10-12) and on (still, ~3). Confirmed in the headset.
+- Savestates keep their code: patches are not re-applied on load. New dev hook RPCS3_VR_POKE (data, or code
+  under PPU Decoder: Interpreter (static)) tries a patch on a savestate; the read watch logs r3, r4, r24-r31.
+  Scripts/data: scratch only (memdumps, ppcdis.py = ps3elf-style capstone listing with TOC floats).

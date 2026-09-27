@@ -265,6 +265,7 @@ Every problem found here should become a Step 7 reproduction on the desktop befo
 | Screenshots never change | exclusive fullscreen | `f12shot.ps1`, or windowed with `sbsshot.ps1` |
 | Controller stops working | temporary keyboard pad left in `input_configs/<id>/` | delete it |
 | Setting `RPCS3_VR_PROBE_FILE` disables stereo | the file replaces the default `render=1` | put `render=1` in the file |
+| Camera keeps pushing into walls and snapping back, even with VR off | a Wider view patch's FOV also reaches camera logic (SotC: framing uses tan(fov/2) of the render view) | find the readers (`RPCS3_PPU_WATCH_FILE` read watch, getter call sites), try fixes live with `RPCS3_VR_POKE` under the interpreter, give camera logic fov / Scale (SotC patch 1.2) |
 
 ---
 
@@ -363,7 +364,7 @@ check for each symptom:
 | Wheels, glows or other scaled objects stay head-locked while the scene turns | `require_rigid_camera: false` (their object matrices fail the rigidity test); check nothing off-scene gains the rotation. The generator no longer sets rigidity from depth-tested scene draws (2026-09-26) | Ridge Racer 7 |
 | Splash screens and videos fill the view | `screen_space.frames_without_3d_as_screen: true` | ICO |
 | Glow or blend layers trail head turns | `reproject_older_frames: true`, `current_frame_copies: true` | ICO, SotC |
-| Walls or sky missing when looking around | a "Wider view" patch for the game's culling, then `stereo.eye_offset: "baseline"` so the wider projection keeps the eye distance | ICO, SotC |
+| Walls or sky missing when looking around | a "Wider view" patch for the game's culling, then `stereo.eye_offset: "baseline"` so the wider projection keeps the eye distance; then check the camera logic still sees the game's own FOV (Known traps) | ICO, SotC |
 | Objects flash or pop in (CPU/SPU occlusion culling on the depth buffer) | `occlusion_depth_readback` | SotC |
 | The game's clock runs fast or slow at a changed vblank | `game_refresh_rate_f32` | Pure, SotC |
 | One game of a collection needs different values | the generator already writes `<TITLE_ID>.<executable>.json` beside an existing `<TITLE_ID>.json` | SotC |
