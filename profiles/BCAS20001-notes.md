@@ -5,8 +5,8 @@ in-emulator generator's output (2026-09-25) plus the frame-timing fields and `ma
 
 ## Rendering
 
-- Camera `c[4]` (row_vectors), covering 97% of depth-tested scene draws; a second block `c[0]` (10 draws,
-  a camera-space banner such as the countdown) gives `bare_projection`.
+- Camera `c[4]` (row_vectors), covering 97% of depth-tested scene draws; a second block `c[0]`: view-space
+  light particles with a bare projection (not a banner; `bare_projection` must stay off, see below).
 - The scene renders at **1408x768** into `0xc0880000`, is composited to 1280x720 (`0x50110000`), and the
   race HUD is then drawn back into `0xc0880000` at 1280x720.
 - **HUD**: program `f78118c010d9eba2`, matrix-less (reads only `c[467]`, positions already in screen space),
@@ -39,28 +39,36 @@ in-emulator generator's output (2026-09-25) plus the frame-timing fields and `ma
   Xevious and the title's intro movie (Reiko) and attract replay in both eyes. No pre-fix capture of the
   movie itself; the user reported it.
 
-## Road reflections follow the head (open; b855eda1 reverted in 6c4e1a88)
+## Lights and reflections followed the head (fixed 2026-09-27, fork 50896fa2 + c480a370; headset-confirmed)
 
-Headset report: street-light and headlight reflections on the tarmac (grid, tunnel ceiling lights) move with the
-head; separately, other cars' brake lights float in the wrong place (not on the road). Findings so far:
+Three headset reports, two causes:
 
-- The road (`1397dca5`, fragment programs sampling unit 1) reads a 512x128 target `0xc1a00000` of 128x128 tiles at
-  its **own clip position**: its vertex program writes `dst_reg8 = dst_reg0` (tc1 = clip position) and the
-  fragment samples at `tc1.xy/tc1.w`, remapped into the tile by a fragment constant. So the tiles need exactly
-  the road's per-eye transform.
-- The tiles are drawn with the game camera `c[4..7]` into 128x128 viewports. The per-eye path applies the
-  headset-FOV remap and then `undo_viewport`, which stretches each tile over the whole 512x128 target: a
-  mismatch with the road's lookup. b855eda1 (off-aspect targets keep the game camera) was wrong and is reverted.
-  Tried (uncommitted, not kept): per-eye transform without `undo_viewport` for off-aspect draws with a 16:9
-  projection; the desktop audit (`RPCS3_VR_AUDIT=25`, `RPCS3_VR_AUDIT_FOV=1.0`) still showed the car's reflection
-  wedge at the unrotated screen position.
-- The tile draws (`970af287`) sample `0x50110000`, the game's previous finished frame (screen-space
-  reflection), which is the next thing to check (how their shader addresses it).
-- Repro on the desktop needs `RPCS3_VR_AUDIT_FOV` (otherwise the headset remap and `undo_viewport` never run).
-  Isolate the reflection layer by diffing frames with probe `hide=` of `970af287` (that probe option was part of
-  b855eda1 and is reverted too).
-- **Do not enable `Log shader programs` for this game:** it froze emulation when the main-menu video
-  (`menu.pam`) started, three times.
+- **Road/wall reflections** (street-light and headlight pools on the tarmac, tunnel ceiling lights). The scene
+  (road `1397dca5`, environment `b074df25`) samples a 512x128 target `0xc1a00000` of 128x128 reflection tiles at
+  its **own clip position** (vertex program copies the clip position to tc1; the fragment samples at
+  `tc1.xy/tc1.w`, remapped into a tile). The tiles are drawn with the game camera `c[4..7]` into 128x128
+  viewports, and the per-eye transform left them on the game camera. Fix: profile field
+  `offaspect_player_views`: camera draws into off-aspect targets whose projection has the output aspect get
+  the scene's rotation, eye offset and headset FOV but keep their viewport (no `undo_viewport`); right-eye copy
+  sharing limited to cube maps. Desktop audit (yaw 25, `RPCS3_VR_AUDIT_FOV=1.0`): the reflected car shadow went
+  from 247 px off the car to on it. An earlier attempt (b855eda1, off-aspect targets keep the game camera) was
+  wrong and reverted.
+- **Headlight streaks in the pre-race flyby and taillight glows in tunnels** floated. They are particle
+  programs `74dc2aee` and `fc0fac8a` whose vertices are already in view space, drawn with a bare projection in
+  `c[0]`. `bare_projection: true` (generated; I had assumed a countdown banner) put them in the fixed HUD box at
+  65% scale. Fix: `bare_projection: false`; the generator now writes it only for view-space draws without depth
+  test.
+
+Tools made for this (unattended, desktop locked): `RPCS3_VR_RTDUMP=<file>` dumps both eyes' display surfaces
+raw from the start of the flip; the inspector capture writes each program's GLSL (`vp_<hash>.glsl`,
+`fp_<hash>_<id>.glsl`) next to the capture; probe `hide=<vertex hash>[@<target>][+...]` skips draws, and
+diffing dumps with and without a program isolates its layer.
+
+**Menu-video freeze.** Emulation sometimes stops when the main-menu video (`menu.pam`) starts
+(`cellVdec: Video au decode has been waiting for a consumer`). Seen with `Log shader programs` on (every time)
+and in about 4 of 10 unattended boots that took screenshots/dumps (hard GPU syncs) during the video; not seen
+in Matt's normal play. Treat as an upstream timing race triggered by RSX stalls during the video. Do not enable
+`Log shader programs` for this game; unattended boots should avoid capturing during the menu.
 
 ## Scene soft at any resolution scale (2026-09-26, fork 6e0d69cd)
 

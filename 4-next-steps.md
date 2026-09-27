@@ -985,5 +985,7 @@ Headset check pending; the change applies to every game (copies from off-aspect 
 **2026-09-26, fork 6e0d69cd:** scene sharpness at high resolution scales: the scene-resolve filter's tap offsets
 (vertex constants in texture coordinates) now scale with the resolution via the new profile field
 `resolution_scaled_constants`; 600% scene gradient energy x1.9-2.2. Stereo screenshots keep full resolution.
-**2026-09-26:** b855eda1 (off-aspect targets keep the game camera) did not fix RR7's head-locked road reflections
-and is reverted (6c4e1a88); reflections and floating brake lights remain open, findings in `profiles/BCAS20001-notes.md`.
+**2026-09-27, fork 50896fa2 + c480a370 (pushed, headset-confirmed by Matt):** road/wall reflections and light
+glows no longer follow the head (profile `offaspect_player_views`, `bare_projection` off; generator writes
+`bare_projection` only without depth test). Ridge Racer 7's known VR issues are all fixed; open: an intermittent
+menu-video freeze during unattended captures (notes).
