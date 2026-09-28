@@ -159,3 +159,31 @@ New dev hooks from this: `RPCS3_VR_PEEK` (+`_EVERY`), `RPCS3_PPU_SAMPLE_STACK`, 
 Grey empty patches at the bottom of one cutscene shot: possibly the second camera block `0x01904334`
 (90 degrees) not widened; a poke to 130 degrees was inconclusive (the shot had passed).
 
+## Correction: in-engine cutscenes stepped at 30 Hz (2026-09-28, fork 5f274fb3)
+
+Matt: cutscenes stay jerky and are in-engine (turning 90 degrees still shows the game). Savestate 1_5 holds
+both kinds: a ~6 s pre-rendered video (castle), then an in-engine cutscene (the dragon) with game flips at
+the vblank rate. In the in-engine part the camera position (`RPCS3_VR_PEEK_CONST=158`) changed on only 1 flip
+in 3 at 90 Hz (1 in 2 at 60).
+- Cutscene ("remo") time is continuous: `0x5fd730` advances `[obj+0x1c]` by the task dt every frame
+  (write watch on `0x5fd808`: +0.0166 per frame). Duration = (frames 160 - 0) / 30 (`0x5f9ee0`).
+- Tracks are keyframes at 30 per second (camera keys 60 bytes apart, e.g. `0x3277afe4`). The sampler
+  `0x5f71d0` (only caller `0x614e30`, via `0x614de8` <- `0x615208`) finds the keys around t (mode 3,
+  `0x5f76b8`: key frame / 30.0) and computes the factor, but every channel then takes the nearest key
+  (`f10 >= 0.5`), and `0x562f8` builds the matrix. No interpolation.
+- Patch "Smooth cutscenes": `calloc` at `0x614e30` (51 instructions, `tools/re/remo_lerp.py`): sample at
+  floor(t*30)/30 and the next key, blend the two 4x4 output matrices by the fraction. Poked on 1_5 under
+  the interpreter (cave at `0x170d4bc`, test only): the camera moves every frame; picture correct. Applies at
+  a fresh boot (savestates keep old code).
+- VR also: video frames (UI refreshes) were never published to the headset, so the fixed screen showed the
+  last 3D frame; now published when the fixed screen is up.
+Not checked: whether character animation in cutscenes is also stepped (separate from these tracks).
+
+## Open: fog gate portal doubled in the headset (Matt, 1_6)
+
+Not reproduced: desktop audit (yaw 25), audit through the headset remap (`RPCS3_VR_AUDIT_FOV`) and the
+headset path with the headset still all show one portal; the refraction layer `24ec205b` follows the world
+with or without `c[4]` in `camera_blocks` (hide diff boxes shift with the arch). `preprojected_programs` for it
+misplaced the layer (dark rectangle bigger than the arch): not used. Needs a headset mirror capture with the
+head turned.
+
