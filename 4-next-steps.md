@@ -1019,3 +1019,5 @@ at the view centre (a rotation moves the edges up to 2x as far at ~90 degrees). 
 
 **Demon's Souls fog gates, HUD box clipping (2026-09-28, fork 2f18a88b..1c5d9a61, not pushed).** HUD-box draws are clipped to the box (game scissor mapped per eye): parked off-screen HUD elements no longer show. Profile camera block `c[4]` for the fog gate distortion layer (was head-locked). Dev hook `RPCS3_STATS_PERIOD_MS`. Cutscenes still 30 FPS (time-based cap; investigation in `profiles/BLUS30443-notes.md`). Black title menu not reproduced.
 
+**Demon's Souls cutscenes (2026-09-28, fork 77382a4b + 2045a8c7, not pushed).** The "30 FPS cutscenes" are pre-rendered videos: no draws and no game flips while they play; RPCS3 re-shows the display buffer by its UI refresh (~31/s). Cannot be unlocked. They now play on the fixed screen in the headset (UI refreshes during a >200 ms flip gap count as frames without camera draws; profile `frames_without_3d_as_screen`). New dev hooks: `RPCS3_VR_PEEK`, `RPCS3_PPU_SAMPLE_STACK`, `RPCS3_PPU_WATCH_EVERY`. To check in the headset: the video screen, and the switch back at the end of a cutscene.
+

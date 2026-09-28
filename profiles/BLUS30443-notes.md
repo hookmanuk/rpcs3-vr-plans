@@ -137,20 +137,25 @@ health/stamina fills past their frame lines are the game's own design (same in m
 render in mono, desktop stereo and the headset path; the DoF override does not touch them (no `73cbac9f`
 draw on the title).
 
-**Cutscenes at 30 FPS (open).** In-engine cutscenes run at 30.9 FPS at a 60 and a 90 Hz vblank (so a
-time-based cap, not a vblank interval), gameplay at the vblank rate. Tried under `PPU Decoder: Interpreter
-(static)` with `RPCS3_VR_POKE` (no effect on the cutscene rate):
-- `0x2b8f8` `li r5,0`: the flip-interval argument `(frame+0x6ed - 1) & 2` passed to `0xcbae8` (writes a
-  tag-0x8001 command).
-- `0x26600` `b 0x266a4`: the frame-mode decision (`+0x6ec`/`+0x6ed` = 1). The community patch sets `+0x6ed`
-  = 1 at one of two constructors (`0x25ed8`; the other is `0x252d8`).
-- `0x29260`..: `+0x6ed`/`+0x6ec` only select a debug label string.
-The render thread ("HighGraphics") spin-waits (30 us sleeps from `0x9f9608`) on a GPU label from
-`cellGcmGetLabelAddress` (`0x9f9544`); main thread waits at `0x9e03f8` <- `0xb499a4`. Flip commands:
-`0x1540f1c` (with wait label) and `0x1540f64`; vblank/flip handlers registered at `0x9f7728`/`0x9f7734`.
-Import stubs (fresh boot): `_cellGcmSetFlipCommand` `0x16b8ca4`, `...WithWaitLabel` `0x16b8e64`,
-`cellGcmSetVBlankHandler` `0x16b8e04`. Next: find what the RSX command stream or the vblank handler waits
-on during cutscenes (RSX label writes / semaphores per frame), or the remo player's frame step.
+**Cutscenes at 30 FPS (resolved 2026-09-28, fork 77382a4b): they are videos.** The story cutscenes (1_5:
+the arrival at Boletaria, the dragon) are pre-rendered movies. While one plays the RSX executes **no draws**
+and the game makes **no flips** (no `sys_rsx_context_attribute` 0x102/0x103); RPCS3 only re-shows the
+display buffer through its UI refresh (`flip_request::native_ui`, overlay `min_refresh_duration`, about 31
+per second), which is the "30 FPS". The content is 30 FPS video, so it cannot be unlocked. How it was found
+(worth repeating for other games): per-second counts of game flips (`handle_emu_flip`), UI refreshes, draws
+and flip syscalls, aligned with the title FPS by wall clock. Dead ends first, for the record: the PPU frame
+pacer (vblank handler `0x9f7018` posts a semaphore when the counter at `0x1b50434` reaches the threshold
+`0x1b50e34` = count + interval byte `+0xb` of the pacer object `0x1b50b88`, interval 1 throughout), the
+`+0x6ed` frame mode (`0x2b8ec`/`0x29260` never run here), the render-thread command dispatcher `0xd1e050`,
+audio buffering (no effect), and the `0x2baa4` 1/30 step (a fade state machine). The main loop runs at 60
+throughout (read watch on `0x1b924`).
+In VR the video filled the headset view, locked to the head: UI refreshes never ran `vr_update_view`. Now
+UI refreshes more than 200 ms after the last game flip count as frames without camera draws, and the
+profile sets `screen_space.frames_without_3d_as_screen`, so videos play on the fixed screen (HUD size and
+position settings). Log: "frames without camera draws: shown as the fixed screen" at the video, "camera draws
+again" when play resumes. Not yet seen in the headset.
+New dev hooks from this: `RPCS3_VR_PEEK` (+`_EVERY`), `RPCS3_PPU_SAMPLE_STACK`, `RPCS3_PPU_WATCH_EVERY`,
+`RPCS3_STATS_PERIOD_MS`.
 Grey empty patches at the bottom of one cutscene shot: possibly the second camera block `0x01904334`
 (90 degrees) not widened; a poke to 130 degrees was inconclusive (the shot had passed).
 
