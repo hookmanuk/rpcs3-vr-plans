@@ -26,6 +26,7 @@ Tools used below, all in `plans/tools/` unless noted:
 | `sbsshot.ps1` | resize the game window and capture both eyes side by side (desktop, windowed) |
 | `profile_survey.py` | analyse a one-frame capture: passes, camera blocks, layout, uncovered programs, camera position, HUD block |
 | `keyboard-pad-template.yml` | temporary keyboard pad for scripted input |
+| `pine.py` | live memory while the game runs, no relaunch: `info`, `read`/`write` (pointer syntax `[0x1050300]+0x14`), `dump` (1 MB in ~0.04 s), `find` a value, `watch` changes. RPCS3's IPC server (`bin/config/ipc.yml`, port 28012). Not frame-synced: per-frame logs, watchpoints and code patches stay with the `RPCS3_VR_PEEK` / `RPCS3_PPU_WATCH` / `RPCS3_VR_POKE` hooks |
 | `tools/pair_eyes.py`, `tools/fit_stereo.py` (repo root) | only for games with native 3D: pair eyes and fit the game's own stereo |
 
 Put evidence in `plans/evidence/<game>/` and findings in `plans/profiles/<TITLE_ID>-notes.md`.
