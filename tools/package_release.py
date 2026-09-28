@@ -64,8 +64,13 @@ def main():
     else:
         print('warning: no RPCS3-languages.zip in the latest translations release; packaging without translations')
 
-    # VR fork additions: the games list (the deploy scripts copy it too) and the licence.
+    # VR fork additions: the games list and settings guide with its screenshots (the deploy scripts copy them
+    # too) and the licence.
     files['vr-games.md'] = os.path.join(SRC, 'vr-games.md')
+    files['vr-settings.md'] = os.path.join(SRC, 'vr-settings.md')
+    shots = os.path.join(SRC, 'docs', 'vr-settings')
+    for n in os.listdir(shots):
+        files['docs/vr-settings/' + n] = os.path.join(shots, n)
     files['LICENSE'] = os.path.join(SRC, 'LICENSE')
 
     os.makedirs(OUT, exist_ok=True)
