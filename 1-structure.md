@@ -7,6 +7,7 @@
 | `rpcs3/` | https://github.com/hookmanuk/rpcs3 | The VR fork. Work is on the `openxr` branch. |
 | (upstream) | https://github.com/RPCS3/rpcs3 | Remote `upstream` in `rpcs3/`. The fork's `master` tracks it. |
 | `plans/` | https://github.com/hookmanuk/rpcs3-vr-plans | These plans, profile notes, evidence and tools (`main`). |
+| `hindsightvr-dev/` | https://gitlab.com/aknumbers/hindsightvr | Prior art: emulator VR integrations. |
 | `vr-modding-playbook/` | https://github.com/phunkaeg/vr-modding-playbook | Methodology reference. |
 
 To set up the workspace, clone `rpcs3` (branch `openxr`, with submodules) and `rpcs3-vr-plans`
