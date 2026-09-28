@@ -1023,3 +1023,5 @@ at the view centre (a rotation moves the edges up to 2x as far at ~90 degrees). 
 
 **Demon's Souls in-engine cutscenes (2026-09-28, fork 5f274fb3, not pushed).** Correction to the entry above: 1_5 has a short video and then an in-engine cutscene, whose tracks were sampled nearest-key at 30 Hz (camera still on 2 of 3 frames at 90 Hz). New patch "Smooth cutscenes" (calloc cave interpolating the sampler) and video frames now published to the headset's fixed screen. Needs a fresh boot. Open: portal doubled in the headset (not reproduced on the desktop); character animation in cutscenes not checked.
 
+**Demon's Souls fog gate portal (2026-09-28, fork d7a597e54, not pushed).** The doubled portal was the distortion layer on the game camera: its block `c[4]` fails the rigid test (object scale folded in). New profile field `nonrigid_camera_blocks`; BLUS30443 `[4]`. Verified on the headset path (same pose, before/after).
+

@@ -179,11 +179,15 @@ in 3 at 90 Hz (1 in 2 at 60).
   last 3D frame; now published when the fixed screen is up.
 Not checked: whether character animation in cutscenes is also stepped (separate from these tracks).
 
-## Open: fog gate portal doubled in the headset (Matt, 1_6)
+## Fixed: fog gate portal doubled in the headset (2026-09-28, fork d7a597e54)
 
-Not reproduced: desktop audit (yaw 25), audit through the headset remap (`RPCS3_VR_AUDIT_FOV`) and the
-headset path with the headset still all show one portal; the refraction layer `24ec205b` follows the world
-with or without `c[4]` in `camera_blocks` (hide diff boxes shift with the arch). `preprojected_programs` for it
-misplaced the layer (dark rectangle bigger than the arch): not used. Needs a headset mirror capture with the
-head turned.
-
+Matt's mirror shots: a second picture of the scene inside the fog gate, moving with the view. The
+distortion layer `24ec205b` draws and samples the scene copy through `c[4..7]`, which folds in the gate
+quad's non-uniform scale: clip y and w columns nearly parallel (cos -0.99), so `require_rigid_camera`
+rejected `c[4]` and the layer kept the game camera. In the headset that is the game's 150-degree
+projection inside a 92-degree eye: misplaced, and sampling the wrong part of the screen. The desktop audit
+could not show it (eye and game projections match there), and the hide-difference box was bounded by the
+fog wall, so it followed the arch either way. `preprojected_programs` misplaces it (the shader computes its
+sampling coordinates from its own clip position). Fix: new field `nonrigid_camera_blocks: [4]`. Headset
+path, same pose: without it a strip of unrelated brickwork in the portal, with it a refraction of the
+scene behind (the knight's outline).

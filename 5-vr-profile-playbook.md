@@ -255,7 +255,7 @@ Every problem found here should become a Step 7 reproduction on the desktop befo
 | Symptom | Cause | Fix |
 |---|---|---|
 | Objects hang in view when looking up | their program keeps the camera in another block | add that block to `camera_blocks` |
-| A second copy of a portal, distortion or glow that moves with the head | a program with its own perspective block (not in `camera_blocks`), often only drawn at special effects the generator never sampled: `-Audit`, then `hide=<program>`, read its vertex shader, add the block | Demon's Souls (`c[4]`, fog gates) |
+| A second picture of the scene inside a portal, refraction or glass, moving with the view (only in the headset) | the refraction program's block is listed but fails the rigid test (object scale folded in), so it keeps the game camera and samples the scene with the game's projection. Check the block's clip x/y/w orthogonality from a capture; list it in `nonrigid_camera_blocks`. The desktop audit does not show it (same projection) | Demon's Souls (`c[4]`, fog gates) |
 | Empty frames or icons just outside the HUD box | HUD elements parked off the game's screen; clipped to the box by the renderer since fork 2f18a88b | Demon's Souls |
 | Sky moves with the head; white or haze band | sky program omits the z slot (z = w) | supported for `column_vectors`; else code |
 | An unrelated full-screen quad gets rotated | stray data in a listed block looks perspective | `require_rigid_camera: true` |
