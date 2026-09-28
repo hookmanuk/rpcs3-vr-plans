@@ -1,11 +1,23 @@
 # Workspace structure and build reference
 
+## Repositories
+
+| Folder | Repository | Notes |
+|---|---|---|
+| `rpcs3/` | https://github.com/hookmanuk/rpcs3 | The VR fork. Work is on the `openxr` branch. |
+| (upstream) | https://github.com/RPCS3/rpcs3 | Remote `upstream` in `rpcs3/`. The fork's `master` tracks it. |
+| `plans/` | https://github.com/hookmanuk/rpcs3-vr-plans | These plans, profile notes, evidence and tools (`main`). |
+| `vr-modding-playbook/` | https://github.com/phunkaeg/vr-modding-playbook | Methodology reference. |
+
+To set up the workspace, clone `rpcs3` (branch `openxr`, with submodules) and `rpcs3-vr-plans`
+(as `plans/`) side by side, then follow the build baseline below.
+
 ## Reference repositories
 
 1. rpcs3/
    This is authoritative for RPCS3 implementation details.
 
-2. hindsightvr/
+2. hindsightvr-dev/
    Study its emulator integrations, especially Tier-2 camera
    discovery, draw classification, profiles, stereo generation,
    Vulkan multiview and OpenXR architecture.
