@@ -926,7 +926,7 @@ the fixed screen". Note: `plans/tools/launch.ps1` without `-Probe 'render=1'` le
 
 **Release procedure.** Versions are upstream's plus a fork tag: `0.0.42-vrN-<commit> Alpha` in the app,
 GitHub release tag `v0.0.42-vrN`, zip `rpcs3-v0.0.42-vrN-<commit>_win64.zip`. For each release: bump
-`RPCS3_VR_VERSION` in `rpcs3/rpcs3/rpcs3_version.cpp` (vr3 tagged 2026-09-27; the next is vr4), commit,
+`RPCS3_VR_VERSION` in `rpcs3/rpcs3/rpcs3_version.cpp` (vr4 tagged 2026-09-28; the next is vr5), commit,
 build emucore/VKGSRender/rpcs3 so the exe carries that commit, run `plans/tools/package_release.py`, smoke-test
 the zip from a non-temporary folder, push `openxr` and the annotated tag; Matt tests the zip and publishes the GitHub release himself. After merging a newer upstream
 version, restart at vr1.
@@ -1025,3 +1025,5 @@ at the view centre (a rotation moves the edges up to 2x as far at ~90 degrees). 
 
 **Demon's Souls fog gate portal (2026-09-28, fork d7a597e54, not pushed).** The doubled portal was the distortion layer on the game camera: its block `c[4]` fails the rigid test (object scale folded in). New profile field `nonrigid_camera_blocks`; BLUS30443 `[4]`. Verified on the headset path (same pose, before/after).
 
+
+**vr4 release (2026-09-28).** Tag `v0.0.42-vr4` at fork 607086ef (openxr pushed), zip `release/rpcs3-v0.0.42-vr4-607086ef_win64.zip` (277 files). Since vr3, all Demon's Souls: depth of field off (`fragment_constant_overrides`), unlocked frame rate at the headset rate, left-eye particle fix (affects every game with right-eye batching), HUD-box draws clipped to the box, fog gate layer (`nonrigid_camera_blocks`), smooth in-engine cutscenes patch, pre-rendered videos on the fixed screen; plus the VR settings guide (`vr-settings.md`). Smoke test: packaged exe starts (first-run dialog) and carries 607086ef. Still unchecked in the headset: Demon's Souls combat/falling at 90, cutscene video screen and switch back. Matt tests and publishes.
