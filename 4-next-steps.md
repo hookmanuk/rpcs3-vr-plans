@@ -1017,3 +1017,5 @@ at the view centre (a rotation moves the edges up to 2x as far at ~90 degrees). 
 
 **Left-eye particles (2026-09-28, fork 2dc5848f, not pushed).** Demon's Souls soft particles (glows, torch flames) drew with other draws' sprites or stretched in the left eye in about half the frames. The left eye's vertex env push constant was lost when the right-eye batch ran mid-draw; now pushed after the render pass change. Affects every game with right-eye batching. Details: `profiles/BLUS30443-notes.md`. Open: in-engine cutscenes jerky (Matt; needs a cutscene savestate).
 
+**Demon's Souls fog gates, HUD box clipping (2026-09-28, fork 2f18a88b..1c5d9a61, not pushed).** HUD-box draws are clipped to the box (game scissor mapped per eye): parked off-screen HUD elements no longer show. Profile camera block `c[4]` for the fog gate distortion layer (was head-locked). Dev hook `RPCS3_STATS_PERIOD_MS`. Cutscenes still 30 FPS (time-based cap; investigation in `profiles/BLUS30443-notes.md`). Black title menu not reproduced.
+

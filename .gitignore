@@ -3,3 +3,5 @@ __pycache__/
 *.pyc
 # Scratch screenshots from the scripted runs (kept copies go in evidence/)
 tools/re/*.png
+# Decrypted game executables (RPCS3_DUMP_ELF): never commit
+tools/re/elf/

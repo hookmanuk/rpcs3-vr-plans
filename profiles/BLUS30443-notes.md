@@ -118,3 +118,39 @@ Measured with the fade off (orange in the left/right soldier crop): before, 2 of
 after, 6 of 6 within 0.07, same as batching off. Headset path: the glow in both eyes, 90 FPS. WipEout intro
 unchanged. The same fault explains the old torch flame streaks (left eye, about half the frames).
 
+## Fog gate, HUD fragments, cutscene frame rate (2026-09-28, savestates `BLUS30443_1_5`, `_1_6`)
+
+**Second portal moving with the head (fixed, fork dae3f7ac).** Rotation audit (`-Audit 25`) and
+`hide=24ec205b...`: program `24ec205b` (fog gate distortion layer, also some glows; samples the scene copy
+`0xc57d0000`) draws through a full row-vector world-view-projection in `c[4..7]` (camera position `c[22]`),
+not a listed block, so it kept the game camera. `camera_blocks: [0, 8, 4]`. In the camera-relative programs
+`c[4..7]` is an inverse view (column 3 = 0,0,0,1) and is rejected. The generator never saw the program (it
+only draws at fog gates).
+
+**Empty frames and icons around the HUD (fixed in the renderer, fork 2f18a88b).** Three rectangle outlines
+above the health bar and heart/ring icons left of it: HUD elements the game parks just outside its screen,
+clipped by the TV edge, visible once the HUD is a box inside a wider view. No HUD draw uses a partial
+scissor. HUD-box draws now get the game's scissor mapped into the box, which clips to the box. The long
+health/stamina fills past their frame lines are the game's own design (same in mono).
+
+**Black opening menu: not reproduced.** With this build the title (logo fade-in) and NEW GAME / LOAD GAME
+render in mono, desktop stereo and the headset path; the DoF override does not touch them (no `73cbac9f`
+draw on the title).
+
+**Cutscenes at 30 FPS (open).** In-engine cutscenes run at 30.9 FPS at a 60 and a 90 Hz vblank (so a
+time-based cap, not a vblank interval), gameplay at the vblank rate. Tried under `PPU Decoder: Interpreter
+(static)` with `RPCS3_VR_POKE` (no effect on the cutscene rate):
+- `0x2b8f8` `li r5,0`: the flip-interval argument `(frame+0x6ed - 1) & 2` passed to `0xcbae8` (writes a
+  tag-0x8001 command).
+- `0x26600` `b 0x266a4`: the frame-mode decision (`+0x6ec`/`+0x6ed` = 1). The community patch sets `+0x6ed`
+  = 1 at one of two constructors (`0x25ed8`; the other is `0x252d8`).
+- `0x29260`..: `+0x6ed`/`+0x6ec` only select a debug label string.
+The render thread ("HighGraphics") spin-waits (30 us sleeps from `0x9f9608`) on a GPU label from
+`cellGcmGetLabelAddress` (`0x9f9544`); main thread waits at `0x9e03f8` <- `0xb499a4`. Flip commands:
+`0x1540f1c` (with wait label) and `0x1540f64`; vblank/flip handlers registered at `0x9f7728`/`0x9f7734`.
+Import stubs (fresh boot): `_cellGcmSetFlipCommand` `0x16b8ca4`, `...WithWaitLabel` `0x16b8e64`,
+`cellGcmSetVBlankHandler` `0x16b8e04`. Next: find what the RSX command stream or the vblank handler waits
+on during cutscenes (RSX label writes / semaphores per frame), or the remo player's frame step.
+Grey empty patches at the bottom of one cutscene shot: possibly the second camera block `0x01904334`
+(90 degrees) not widened; a poke to 130 degrees was inconclusive (the shot had passed).
+
