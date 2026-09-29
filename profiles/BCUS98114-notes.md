@@ -129,11 +129,49 @@ no admin needed) on the RSX thread during the first seconds of a race:
 - Next candidate: multiview (both eyes in one draw), which removes most of the stereo extra; it cannot lift
   the dip above flat's ~42-55 FPS. Matt chose bug fixes first.
 
+## Late evening (2026-09-29, fork dcb87dde3): still broken
+
+Matt's report after the 820db6c39 build: car shadows still red in the right eye, arcade menu clipped when the
+head moves back, desktop mirror shows each eye small, race start still slow.
+
+- **Red car shadows (right eye), NOT FIXED.** Flat and the left eye show a dark shadow; the right eye shows
+  bright red under nearby cars. The car bodies of nearby cars also show black blocks in both eyes (not
+  investigated). Findings:
+  - Not the shared-copy optimisation: `RPCS3_VR_NO_SHARE` (all right-eye copies rebuilt) kept the red and
+    made the game very slow.
+  - Not a view mismatch: the right eye's swapped views have the same format, swizzle, aspect and type as the
+    left eye's.
+  - The cause is the right eye reading its own scene target `0xc1980000` (1280x720, **2x MSAA**, diagonal;
+    sampled as 2560x720 through `sampler2DMS`, tiu 10). The shadow/lighting draws read the pixel under them
+    from the target they draw into (feedback loop, `TEX2D(10, wpos * c18.zw)`, then add their term). With
+    the right eye not swapping `0xc1980000` (reading the left eye's target) the red is gone; not swapping
+    the depth `0xc2100000` does not help.
+  - Moving these feedback draws out of the right-eye batch (per-draw replay, barrier after the earlier
+    right-eye writes) is committed as a sync fix but does **not** remove the red.
+  - Mid-frame dumps of both eyes' resolved `0xc1980000` at a feedback read match each other, but none caught
+    a car alongside. Next: Matt is saving a savestate paused with the red shadow in view; dump there, before
+    and after the shadow draws, and compare left/right pixels under the car.
+- **Arcade menu clipped when the head moves back, NOT FIXED.** The 3D card stack loses parts when the HMD
+  moves away from the screen. Hypothesis (untested): boxed card draws depth-test against unboxed
+  text-coverage depth. `RPCS3_VR_HEAD_OFFSET=0,0,0.3` (committed) reproduces head movement without the
+  headset.
+- **Desktop mirror shows each eye small, NOT FIXED.** The mirror calibrates the whole 2048x1080 display
+  surface, of which the game shows 1280x720 (62.5% x 67%). The headset gets the right region. Fix: crop to the
+  shown size before the calibration pass in `VKPresent.cpp`.
+- **Race start frame rate, NOT FIXED** (see above; multiview is the candidate).
+
+Test route: Matt's savestate `bin/savestates/BCUS98114/BCUS98114_1_0.SAVESTAT.zst` (car selection), then
+X, X, X; the race starts ~17-20 s later with the pack in view. Run at Resolution Scale 100 and restore 300.
+
 ## Open
 
-1. Intermittent upside-down menu (above; not seen since the display-buffer size fix, unverified).
-2. Cockpit and replay cameras and the garage not audited.
-3. Optional 8 GB data install: the game asks at every boot; declined in tests (decline with Left, then X).
+1. Red car shadows in the right eye; black blocks on nearby car bodies (above).
+2. Arcade menu clipping when the head moves back (above).
+3. Desktop mirror crop (above).
+4. Race-start frame rate (multiview).
+5. Intermittent upside-down menu (not seen since the display-buffer size fix, unverified).
+6. Cockpit and replay cameras and the garage not audited.
+7. Optional 8 GB data install: the game asks at every boot; declined in tests (decline with Left, then X).
 
 ## Driving the game unattended
 
