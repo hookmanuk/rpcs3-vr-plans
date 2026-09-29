@@ -93,9 +93,45 @@ that do not redraw) going through the camera path. Watch for it.
 - GPU per frame on the grid: scene 2.8 ms (both eyes), present 2.3, display buffers 1.6, shadow cascades
   1.1, reflection targets 1.1, cube faces 0.9.
 
+## Follow-up (2026-09-29 evening, fork 820db6c39)
+
+- **Car shadows green/magenta:** GT5 renders its shadow cascades (1024x682/1365/2048) into the memory of the
+  display buffer it is not showing (`0xc0000000`). The display-buffer test compared addresses only, so the
+  light-camera shadow draws were boxed (perspective draws into a display buffer). A display buffer now also
+  has to match the display buffer's size (2048x1080).
+- **Duplicate icon row / "small screens" in menus:** icon backgrounds sample a 54x42 patch of a 2048-wide
+  blur buffer (`0xc3780000`); counting any full-width colour target as a pass left them unboxed at their flat
+  position. A pass is now a draw sampling a screen-sized *texture* (the sampled width, not the surface's).
+- **Trails in 2D menus:** the arcade screen never clears its display buffer (it starts with a full-screen
+  gradient, boxed). Before the first boxed draw into a display buffer that no pass or full clear covered this
+  frame, the shown region is cleared in both eyes.
+- **Mirror edge strips:** the mirror's clear also writes depth; each eye now clears its own box rectangle.
+- **Pre-race flyby:** below the game's view the headset shows the sky dome's lower half (ground culled by the
+  game's own frustum). Content limit, not fixed.
+
+## Performance with cars in view (2026-09-29 evening)
+
+Sampling profiler (`plans/tools/sampler.py`: suspends threads, walks stacks with dbghelp and `rpcs3.pdb`,
+no admin needed) on the RSX thread during the first seconds of a race:
+
+- The RSX thread is CPU-bound (88-94% busy) in **flat too**: flat dips to ~42 FPS there, stereo to ~30.
+  GPU (RTX 5090) is ~38% utilised; resolution scale 100 vs 300 changes the dip only a little.
+- Stereo adds ~40% RSX time: the right-eye replay repeats program/descriptor binds, secondary batch
+  begin/execute and draw calls through the driver (~60% of RSX time is driver code), plus the per-draw
+  matrix work (`bind_vr_eye_constants`, `matrix_block::bind`, ~8%).
+- Base costs also present in flat: CPU texture uploads (~12-14%), pipeline lookup, blits.
+- GPU readbacks each frame: the RSX thread reads a 128x322 target at `0xc57f8000` as data (address
+  `0xc58080a0`), PPU threads read rotating 16x8 targets at `0x4fec2680..0x4fec3740`. Each read waited for all
+  queued GPU work (both eyes). Stereo now copies sections read before as soon as their surface is left and
+  submits: stalls 2.5 -> 0.6 ms/frame, ~1 ms off the worst frames.
+- No gain: Multithreaded RSX, Asynchronous Texture Streaming, Minimum Scalable Dimension 512, Accurate
+  ZCULL stats off. Relaxed ZCULL Sync hangs the race. Disable ZCull Occlusion Queries: small gain (kept).
+- Next candidate: multiview (both eyes in one draw), which removes most of the stereo extra; it cannot lift
+  the dip above flat's ~42-55 FPS. Matt chose bug fixes first.
+
 ## Open
 
-1. Intermittent upside-down menu (above).
+1. Intermittent upside-down menu (above; not seen since the display-buffer size fix, unverified).
 2. Cockpit and replay cameras and the garage not audited.
 3. Optional 8 GB data install: the game asks at every boot; declined in tests (decline with Left, then X).
 
