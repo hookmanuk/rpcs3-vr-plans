@@ -122,6 +122,17 @@ CMake with VS 2026, first confirm the generator exposed by `cmake --help`
 and configure with CMake 4.2 or newer. Do not edit the upstream preset merely
 to get a local build unless we intentionally want that change in the fork.
 
+## Profiling tools
+
+- **NVIDIA Nsight Systems 2026.5.1** (installed 2026-09-29): CPU/GPU timeline, Vulkan API calls, per-thread
+  sampling with call stacks, OS runtime. CLI: `C:\Program Files\NVIDIA Corporation\Nsight Systems 2026.5.1\target-windows-x64\nsys.exe`
+  (`nsys profile --trace=vulkan,osrt --sample=cpu -o <out> <rpcs3.exe> <game>`, then `nsys stats <out>.nsys-rep`).
+  Its guidance ships as a skill: `...\Nsight Systems 2026.5.1\skills\nsight-systems\SKILL.md` (read it first).
+  An older 2025.1.3 and Nsight Compute 2025.2.0 are also installed; there is no Nsight Graphics.
+- In-tree tools (`plans/tools/`): `rsx_sample.py THREAD SECONDS [HZ] [FOCUS...]` (sampling profiler for one
+  rpcs3 thread with call chains through FOCUS functions), `threadcycles.py` (per-thread CPU; spinning threads read
+  100%), `RPCS3_VR_GPUPROF=1` (per-frame GPU time per render target, draws, right-eye batches).
+
 ## Verified CMake findings and troubleshooting
 
 The VS 2022 CMake tree successfully detected Qt and Vulkan with:

@@ -1,6 +1,7 @@
-"""rsx_sample.py THREAD_SUBSTR SECONDS [HZ]: sampling profiler for one named rpcs3.exe thread (no admin needed).
+"""rsx_sample.py THREAD_SUBSTR SECONDS [HZ] [FOCUS...]: sampling profiler for one named rpcs3.exe thread (no admin needed).
 Suspends the thread, walks its stack (dbghelp StackWalk64 + rpcs3.pdb), and prints the top leaf
-functions (self) and the top functions anywhere on the stack (inclusive)."""
+functions (self) and the top functions anywhere on the stack (inclusive).
+FOCUS: for each named function, also print the most common rpcs3 call chains (outermost 8 frames) that contain it."""
 import ctypes, sys, time, collections
 from ctypes import wintypes as W
 
@@ -32,6 +33,7 @@ def tname(tid):
 
 P = pid()
 want = sys.argv[1]; secs = float(sys.argv[2]); hz = float(sys.argv[3]) if len(sys.argv) > 3 else 400
+focus = sys.argv[4:]; chains = {f: collections.Counter() for f in focus}
 tid = next(t for t in threads(P) if want in tname(t))
 hp = k.OpenProcess(0x0410, False, P)
 ht = k.OpenThread(0x0002 | 0x0008 | 0x0040, False, tid)
@@ -89,6 +91,10 @@ while time.perf_counter() < end:
     own[first] += 1
     for nm in set(names): incl[nm] += 1
     if len(names) > 1: pairs[names[0] + '  <-  ' + names[1]] += 1
+    for f in focus:
+        if f in names:
+            i = names.index(f)
+            chains[f][' <- '.join([f] + [nm for nm in names[i + 1:] if not nm.startswith('?')][:8])] += 1
     time.sleep(1 / hz)
 
 print(f'{n} samples of {tname(tid)} over {secs:.0f} s')
@@ -96,3 +102,5 @@ print('-- self'); [print(f'{c * 100 / n:5.1f}%  {s}') for s, c in self_c.most_co
 print('-- first rpcs3 frame (driver/CRT time charged to its caller)'); [print(f'{c * 100 / n:5.1f}%  {s}') for s, c in own.most_common(40)]
 print('-- inclusive'); [print(f'{c * 100 / n:5.1f}%  {s}') for s, c in incl.most_common(70)]
 print('-- leaf <- caller'); [print(f'{c * 100 / n:5.1f}%  {s}') for s, c in pairs.most_common(15)]
+for f in focus:
+    print(f'-- chains through {f}'); [print(f'{c * 100 / n:5.1f}%  {s}') for s, c in chains[f].most_common(12)]

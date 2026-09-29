@@ -34,7 +34,7 @@ if ($script:game -eq [IntPtr]::Zero) { throw 'RPCS3 game window not found' }
 [W]::SetForegroundWindow($script:game) | Out-Null
 Start-Sleep -Milliseconds 300
 
-$vk = @{ Left = 0x25; Up = 0x26; Right = 0x27; Down = 0x28; Enter = 0x0D; Return = 0x0D; Space = 0x20; Backspace = 0x08; F12 = 0x7B; F10 = 0x79; Shift = 0x10; Escape = 0x1B }
+$vk = @{ Left = 0x25; Up = 0x26; Right = 0x27; Down = 0x28; Enter = 0x0D; Return = 0x0D; Space = 0x20; Backspace = 0x08; F12 = 0x7B; F10 = 0x79; Shift = 0x10; Ctrl = 0x11; Alt = 0x12; Escape = 0x1B }
 function Code($k) { if ($vk.ContainsKey($k)) { $vk[$k] } else { [byte][char]$k.ToUpper() } }
 foreach ($chord in ($Keys -split ',' | Where-Object { $_ })) {
 	$codes = @($chord -split '\+' | ForEach-Object { Code $_ })
