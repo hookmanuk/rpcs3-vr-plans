@@ -350,6 +350,7 @@ method in `profiles/BCAS20001-notes.md`):
    (RR7's global frame counter indexes GPU buffers: deadlock). A field incremented at many sites gets one
    correction per frame after the update instead.
 4. Verify at 60 Hz too: the caves must reduce to the native steps.
+   A fixed-step game with one step-length constant in read-only data (Gran Turismo 5: `0x14017f8`, read through a getter) can't be fixed by listing that address: PINE and patches can't write it. Patch the getter's `lis`/`lfs` to read a word in the data/bss segment instead (the heap is unmapped when patches apply, so a patch write there silently fails), and put that word in `game_frame_time_f32`. `profiles/BCUS98114-notes.md`.
 
 **Never generated.** These need the game looked at in the headset or reverse-engineered. After generating,
 check for each symptom:
