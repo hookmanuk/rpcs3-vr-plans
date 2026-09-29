@@ -46,7 +46,18 @@ real 3D only from Continue / a new game.
   `c[8]`, plus `depth_offset_projection` (298 camera-space draws, not in the hand profile; unchecked). From the
   cutscene (`1_3`) it finds `linked_camera_blocks: [36]` but covers only 58% of scene draws (not investigated).
 
-## Frame rate (not solved)
+## Frame rate (solved 2026-09-29, patch `BLUS30367-patch.yml`, shipped in vr5)
+
+The engine clock `0x95b10` (G = `*(TOC-0x1254)` = `0x15db5e8`) reads the timebase each frame, converts the elapsed
+time to 1/60 s units (`ms * 0.05994`, constants at TOC-0x6dfc/-0x6e0c), clamps it to [MIN 1.0 at `0x14d26b8`, MAX 2.0]
+and stores it as the float step `G+0xac` (read at ~362 sites); it adds the step to the float game time `G+0xb8` and
+takes whole ticks `G+0xc4` (~45 sites, e.g. the Verse countdown at `0x1ebc10`) from its floor, forcing at least 1
+(`0x95db8`). Above 60 FPS both clamps made every frame a 60 FPS step. Patch: MIN 0.25 and `li r9,0` at `0x95db8`.
+Measured on `1_2` at 90 Hz with MIN only (poked live): game time 59.93/s; 343 linearly moving floats at real time,
+1402 still 1.5x (tick users) until the code change, which only applies on a fresh boot. Matt confirmed the full
+patch in the headset ("it all works").
+
+### Earlier investigation
 
 - **Game logic is fixed-step, one update per vblank.** Frame loop at `0xf70840`: sets byte `+0xc` of the vblank
   struct, then `sys_ppu_thread_yield` + `usleep(100)` until the vblank handler (`0xf70cb0`) clears it. No delta

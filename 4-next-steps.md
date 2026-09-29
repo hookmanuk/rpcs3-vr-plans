@@ -926,7 +926,7 @@ the fixed screen". Note: `plans/tools/launch.ps1` without `-Probe 'render=1'` le
 
 **Release procedure.** Versions are upstream's plus a fork tag: `0.0.42-vrN-<commit> Alpha` in the app,
 GitHub release tag `v0.0.42-vrN`, zip `rpcs3-v0.0.42-vrN-<commit>_win64.zip`. For each release: bump
-`RPCS3_VR_VERSION` in `rpcs3/rpcs3/rpcs3_version.cpp` (vr4 tagged 2026-09-28; the next is vr5), commit,
+`RPCS3_VR_VERSION` in `rpcs3/rpcs3/rpcs3_version.cpp` (vr5 tagged 2026-09-29; the next is vr6), commit,
 build emucore/VKGSRender/rpcs3 so the exe carries that commit, run `plans/tools/package_release.py`, smoke-test
 the zip from a non-temporary folder, push `openxr` and the annotated tag; Matt tests the zip and publishes the GitHub release himself. After merging a newer upstream
 version, restart at vr1.
@@ -1027,6 +1027,8 @@ at the view centre (a rotation moves the edges up to 2x as far at ~90 degrees). 
 
 
 **vr4 release (2026-09-28).** Tag `v0.0.42-vr4` at fork 607086ef (openxr pushed), zip `release/rpcs3-v0.0.42-vr4-607086ef_win64.zip` (277 files). Since vr3, all Demon's Souls: depth of field off (`fragment_constant_overrides`), unlocked frame rate at the headset rate, left-eye particle fix (affects every game with right-eye batching), HUD-box draws clipped to the box, fog gate layer (`nonrigid_camera_blocks`), smooth in-engine cutscenes patch, pre-rendered videos on the fixed screen; plus the VR settings guide (`vr-settings.md`). Smoke test: packaged exe starts (first-run dialog) and carries 607086ef. Still unchecked in the headset: Demon's Souls combat/falling at 90, cutscene video screen and switch back. Matt tests and publishes.
+
+**vr5 release (2026-09-29).** Tag `v0.0.42-vr5` at fork aaef58ad (openxr pushed), zip `release/rpcs3-v0.0.42-vr5-aaef58ad_win64.zip` (279 files). Since vr4: Bayonetta playable at the headset refresh rate (profile with `row_vector_blocks`, `linked_camera_blocks`; patch *Unlocked frame rate (real-time above 60 FPS)*, confirmed by Matt in the headset); right-eye twins for blit destinations the left texture cache promotes to render targets; stereo RSX-thread cuts (per-primary secondaries, per-frame profile cache, dynamic state reload only on change); generator fixes (xyw, row/linked/nonrigid blocks, camera position precision); GT5 (BCUS98114) parked in `vr-non-working/` (not ready). vr-games.md notes Bayonetta's menu glitches and the screen-space magic wisps. Smoke test: packaged exe starts (first-run dialog) and carries vr5-aaef58ad. Matt tests and publishes.
 
 **OFXR v365 still needs the whole-buffer extension read (2026-09-28).** Reverting to the C-string parse with OFXR Bridge v365: 6 instance / 7 device extensions, no `VK_KHR_external_semaphore_win32`, no `vulkan_interop` or private swapchains in the flight log (no frame generation). With the fix: 7 / 8, semaphore_win32 used, `swapchain_eligibility result=0`. OFXR's own negotiation record is unchanged (`vulkan_negotiation result=3 a=7 b=125 c=189`), so the extensions still sit past an embedded NUL. The fix stays.
 
