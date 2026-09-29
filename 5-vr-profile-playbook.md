@@ -359,6 +359,8 @@ check for each symptom:
 |---|---|---|
 | Menus or HUD fill the whole view instead of the HUD box | `screen_space.passthrough_hud: true` (generated since 2026-09-25 when the HUD is matrix-less) | ICO, Ridge Racer 7 |
 | Menu/title text drawn into the 3D scene's final image stays full-view | `screen_space.hud_programs` (the program's ucode hash from an inspector capture) | SotC |
+| HUD box right, but menu text scrambled and HUD elements leave trails when the head turns | fills/clears in output-pixel units boxed with the HUD (they write text coverage and clear the screen): `screen_space.output_pixel_draws_not_hud`; font atlases in view-aspect targets: `hud_display_buffers_only`; text clip masks from the projected position: `hud_box_after_shader`. Test head motion with `RPCS3_VR_WOBBLE=20` | Gran Turismo 5 |
+| Rear-view mirror stuck to the head at the top of the view | `screen_space.subviewport_cameras_in_box` (with `hud_box_after_shader`) | Gran Turismo 5 |
 | Menu layers reorder or vanish when leaning in (HUD depth-tests itself) | `screen_space.hud_keep_depth: true` | SotC |
 | Sprites (flames, glows) drift away from their source | `screen_space.preprojected_programs` | ICO |
 | Reflections or light pools on the ground follow the head | `offaspect_player_views: true` when the reflections are drawn with the player's camera into an off-aspect target and sampled at screen position. Find the drawing program with probe `hide=<vertex hash>[@<target>]` and `RPCS3_VR_RTDUMP` diffs | Ridge Racer 7 |
