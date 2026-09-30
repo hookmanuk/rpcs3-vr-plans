@@ -79,6 +79,28 @@ to 60 Hz while a decoder is open (intro, main menu background) and returns to 90
    program `4948caa7790a8473`) was boxed and lightened the box. Profile `screen_space.unboxed_draws`
    (`hmd-grain-before-after.png`: top boxed, bottom full view).
 
+## Film grain: on/off in the VR profile (2026-09-30, fork d8ce42738)
+
+The film grain is **off by default** in VR. To turn it back on, edit `bin/vr_profiles/BCES01743.json` and change
+`"hidden": true` to `"hidden": false` in the "Film grain" entry of `hidden_draws`:
+
+```json
+"hidden_draws": [
+  { "name": "Film grain", "program": "4948caa7790a8473", "texture": "128x128", "hidden": true }
+],
+```
+
+It applies at the next boot (or within half a second with `RPCS3_VR_PROFILE_RELOAD=1`); the log says
+"VR profile: Film grain hidden/shown". With VR disabled the grain is always drawn.
+(`film-grain-hidden-vs-shown.png`: top hidden, bottom shown.)
+
+Why not a game patch with a strength setting: the game's PostProcessPreset has "Noise" strength (default 0.15)
+and "Grain size" (1.0) fields (registered at `0x299b00`), but scaling them where the preset is applied
+(`0xe8660`) changed nothing (A/B boots). The grain is drawn as 40 tiles whose strength is in per-vertex colours
+(fragment program: alpha = texture.a x specular.a x diffuse.x), written each frame into an RSX ring buffer through
+a generic copy layer (vertex format descriptors at `0x3077a0`). Next step if a strength/size setting is wanted:
+find the writer with the PPU write watch under the interpreter.
+
 ## Open
 
 1. Headset: world scale, the gun's position, cutscene speed at 90; recheck menus and HUD after 44ef18bd2.
