@@ -24,6 +24,7 @@ are **tracked in `bin/`**, so the next release will ship them unless they are mo
 | Dragon's Dogma: Dark Arisen | BLUS31155 | `vr-non-working/` + untracked `bin/` copy | yes (community Unlock FPS, real-time) | not played | open-world frame rate unmeasured; needs update 01.02 |
 | Ratchet & Clank Collection (R&C 1 only) | BCUS98282 | `vr-non-working/` + untracked `bin/` copy | no: frame-locked, profile at 60 | not played | pause-menu frames turn with the head; R&C 2/3 untried |
 | Tales of Xillia | BLUS31006 | `vr-non-working/` + untracked `bin/` copy | no: frame-locked at 60 (community 60 FPS patch) | not played | 90 patch attempt failed; battles unchecked |
+| The Darkness | BLUS30035 | `vr-non-working/` + untracked `bin/` copy | yes (community 60 FPS patch, real-time) | not played | stereo breaks the lighting (red leaks, dark bands) |
 | God of War Collection (GOW1, GOW2) | BCES00800 | tracked in `bin/` | yes (profile, no patch) | not played | 5% black border |
 | Killzone 2 | BCUS98116 | tracked in `bin/` | no: default 45 | not played | RSX-bound; HUD and combat unchecked |
 | Gran Turismo 5 | BCUS98114 | `vr-non-working/` + untracked `bin/` copy | yes (patch) | tested, broken | right-eye red shadows, menu clipping, race start |
@@ -84,6 +85,15 @@ Notes: `profiles/BLUS31006-notes.md`. Evidence: `evidence/xillia/`.
   and did not change the step: see the notes for the next step (PPU write watch on the timing object).
 - **Profile:** generated, `row_vectors c[0, 47]`, HUD `c[0]` + `hud_skips_passes`; stereo and yaw audit clean.
 - **Open:** 90 FPS patch; battles; world scale.
+
+## The Darkness (BLUS30035, disc 01.03)
+
+Notes: `profiles/BLUS30035-notes.md`. Evidence: `evidence/darkness/`.
+
+- **Frame rate:** community *60 FPS* patch applies to the disc (01.03); real-time at 180; stereo 75-80.
+- **Profile:** generated (`column_vectors c[0]`, 100% coverage).
+- **Blocker:** any stereo shear breaks the multi-pass lighting (red light leaking, dark bands), even in a single
+  sheared view. Needs a stationary scene to bisect (the opening is scripted and animated).
 
 ## God of War Collection (BCES00800 v01.00, UK disc)
 
