@@ -111,6 +111,15 @@ surface and Read Color Buffers reloaded it from memory at 1280x720; the right ey
 Profile `keep_rendered_display_buffers: true` skips copies into a display buffer in stereo: left 2.10 / right 2.16
 (`hmd-both-eyes-full-res.png`), pause menu fine. Flat play keeps the copies.
 
+## Reticule size and HUD depth (2026-09-30, fork e3ee0c894)
+
+The aiming reticule is drawn at 1/4 of its size in VR: profile `screen_space.scaled_draws`, entries for vertex
+program `4948caa81a9a8473` with 128x128 and 64x64 textures, `"scale": 0.25` (`reticule-before-after.png`). To
+change it, edit the two `scale` values in `bin/vr_profiles/BCES01743.json` (1.0 = the game's size).
+
+To move the whole HUD (reticule included) further away: **home menu > Settings > VR > HUD Depth** (1-10 m,
+default 2 m). It keeps its apparent size. Measured HUD disparity: -113 px at 2 m, -12 px at 10 m.
+
 ## Open
 
 1. Headset: world scale, the gun's position, cutscene speed at 90; recheck menus and HUD after 44ef18bd2.
