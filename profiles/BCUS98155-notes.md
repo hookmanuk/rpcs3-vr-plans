@@ -39,7 +39,8 @@ Down landed on Options), and readings from those runs were mid-race or paused.
 | stereo, RSX early copies off (`RPCS3_VR_NO_RSX_EARLY=1`) | 56-80 (mean ~70) |
 | stereo, RSX early copies on | 64-84 (mean ~72) |
 
-After the start the field spreads and stereo holds 85-90. At 300% on the headset path a race ran 35-53 with the
+After the start the field spreads and stereo holds 85-90. Flat at 300% (2026-09-30 morning, Vblank 90): 89-90 through the pack start and
+mid-race, GPU (RTX 5090) 31-48%, so stereo at 300% needs roughly the whole GPU at the start. At 300% on the headset path a race ran 35-53 with the
 GPU at 68%, so at 300% the GPU is a limit too; 200% is worth trying in the headset.
 
 What the RSX thread spends in stereo (`rsx_sample.py`): driver submission (`emit_geometry`), and
