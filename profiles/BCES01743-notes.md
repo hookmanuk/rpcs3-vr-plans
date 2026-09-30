@@ -117,8 +117,8 @@ The aiming reticule is drawn at 0.35 of its size in VR: profile `screen_space.sc
 program `4948caa81a9a8473` with 128x128 and 64x64 textures, `"scale": 0.35` (was 0.25, Matt; `reticule-before-after.png` shows 0.25). To
 change it, edit the two `scale` values in `bin/vr_profiles/BCES01743.json` (1.0 = the game's size).
 
-To move the whole HUD (reticule included) further away: **home menu > Settings > VR > HUD Depth** (1-10 m,
-default 2 m). It keeps its apparent size. Measured HUD disparity: -113 px at 2 m, -12 px at 10 m.
+To move the whole HUD (reticule included) further away: **home menu > Settings > VR > HUD Depth** (1-10 m).
+Auto (the default) uses the profile's `"hud_depth": 4` (4 m); a value set per game or globally wins. It keeps its apparent size. Measured HUD disparity: -113 px at 2 m, -12 px at 10 m.
 
 ## Open
 
