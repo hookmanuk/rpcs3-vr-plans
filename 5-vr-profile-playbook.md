@@ -369,6 +369,7 @@ check for each symptom:
 | Frame rate low with many objects in view, GPU not busy | profile the RSX thread: `python plans/tools/sampler.py <pid> 8 rsx::thread` (no admin; needs `rpcs3.pdb`); compare with flat at the same moment | Gran Turismo 5 |
 | Menu or HUD text missing in the headset, appearing when the head moves back | HUD drawn with depth test on but no depth buffer / ALWAYS; the box kept its z (fixed in the renderer 2026-09-30: such a test no longer counts). Check the inspector `state.depth_func` (519 = ALWAYS) and `rt.zeta_address` | Killzone HD |
 | Outside the HUD box turns white (or bright) on a 2D screen | the screen's background is boxed and a glow/bloom pass over the whole display buffer feeds on the unwritten outside: `screen_space.clear_outside_box: true` | Killzone HD |
+| A movie stays black (or frozen) at a raised Vblank Rate, fine at 60; the log repeats "cellVdec: Video au decode has been waiting for a consumer" | the movie player paces itself by the vblank: `video_vblank_rate: 60`. Beware: screenshots (SHOT hook, F12) force a GPU sync that can keep such a player going, so test without them | Killzone HD |
 | Menus look different from run to run in the headset (full view vs boxed) | boxing used to wait for the game's first camera draw; since 2026-09-30 menus are boxed from the first headset frame | Killzone HD |
 | Menu layers reorder or vanish when leaning in (HUD depth-tests itself) | `screen_space.hud_keep_depth: true` | SotC |
 | Sprites (flames, glows) drift away from their source | `screen_space.preprojected_programs` | ICO |

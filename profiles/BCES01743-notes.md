@@ -60,6 +60,15 @@ the head moved back. Reproduced on the headset path with the SHOT hook (`hmd-pau
 
 After: `hmd-mainmenu-after.png`, `hmd-hud-after.png`, `hmd-pause-after.png` (fresh boot, headset path).
 
+## Intro movie black at 90 Hz (2026-09-30, fork 5146bc4c7)
+
+After the Guerrilla splash the intro movie (started at ~0:30) never showed; X skipped to the menu. The log
+repeats "cellVdec: Video au decode has been waiting for a consumer": the movie player (libsail) stops taking
+decoded frames. Bisected with game-list launches and no screenshots: flat, VR off and the 90 FPS patch off still
+stall; Vblank 60 plays; Write/Read Color Buffers are fine. My earlier runs "worked" only because the SHOT hook's
+screenshot (a full GPU sync) every 4 s kept the player going. Profile `video_vblank_rate: 60`: the vblank drops
+to 60 Hz while a decoder is open (intro, main menu background) and returns to 90 in gameplay (measured: 90 FPS).
+
 ## Open
 
 1. Headset: world scale, the gun's position, cutscene speed at 90; recheck menus and HUD after 44ef18bd2.
