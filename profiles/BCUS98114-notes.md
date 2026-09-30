@@ -163,16 +163,30 @@ head moves back, desktop mirror shows each eye small, race start still slow.
 Test route: Matt's savestate `bin/savestates/BCUS98114/BCUS98114_1_0.SAVESTAT.zst` (car selection), then
 X, X, X; the race starts ~17-20 s later with the pack in view. Run at Resolution Scale 100 and restore 300.
 
+## 2026-10-01 (fork 5774402d6, 7feab63fd): car shadows and desktop mirror fixed
+
+- **Red/green car shadows: FIXED.** Bisected with probe `hide=` over the scene programs from the race-start
+  savestate (`tools/re/gt_quick.sh`, `gtcrop.py`): the shadow blobs are program `1b18b27233f6c174`. It keeps
+  per-channel fog densities in `c[467]` (w 0.991), the slot the other programs use for the camera position, and
+  the profile's camera-position offset moved them by the eye: red in the right eye, green/blue in the left. The
+  renderer now offsets the slot only when it holds a point (w = 1) near the eye solved from the draw's own camera
+  block. Both eyes now show dark shadows (`evidence/gt5/car-shadows-before-after.png`). The earlier MSAA-feedback
+  theory was wrong: a single sheared view never showed it, and disabling MSAA or right-eye batching changed nothing.
+- **Confetti texture on car bodies:** also in flat at the same moment, so not a VR issue (the "black blocks" of
+  the old report were not seen).
+- **Desktop mirror: FIXED.** The shown 1280x720 region of each eye is copied to a scratch image before the
+  calibration pass (`evidence/gt5/desktop-mirror-cropped.png`). Checked on the desktop stereo window only.
+- The RTDUMP hook now resolves MSAA surfaces (it crashed the RSX thread on `0xc1980000`).
+
 ## Open
 
-1. Red car shadows in the right eye; black blocks on nearby car bodies (above). Repro: savestate
-   `bin/savestates/BCUS98114/BCUS98114_1_1.SAVESTAT.zst` (race start): red and green car shadows show at once, every time.
-2. Arcade menu clipping when the head moves back (above).
-3. Desktop mirror crop (above).
-4. Race-start frame rate (multiview).
-5. Intermittent upside-down menu (not seen since the display-buffer size fix, unverified).
-6. Cockpit and replay cameras and the garage not audited.
-7. Optional 8 GB data install: the game asks at every boot; declined in tests (decline with Left, then X).
+1. Arcade menu clipping when the head moves back (above). Not worked on: needs the headset path (SteamVR), whose
+   head position the desktop audit cannot fake. Matt stopped the session here.
+2. Race-start frame rate (multiview).
+3. Car shadows and the mirror crop in the headset (fixed on the desktop only).
+4. Intermittent upside-down menu (not seen since the display-buffer size fix, unverified).
+5. Cockpit and replay cameras and the garage not audited.
+6. Optional 8 GB data install: the game asks at every boot; declined in tests (decline with Left, then X).
 
 ## Driving the game unattended
 

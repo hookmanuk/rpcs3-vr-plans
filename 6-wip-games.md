@@ -27,7 +27,7 @@ are **tracked in `bin/`**, so the next release will ship them unless they are mo
 | The Darkness | BLUS30035 | `vr-non-working/` + untracked `bin/` copy | yes (community 60 FPS patch, real-time) | not played | stereo breaks the lighting (red leaks, dark bands) |
 | God of War Collection (GOW1, GOW2) | BCES00800 | tracked in `bin/` | yes (profile, no patch) | not played | 5% black border |
 | Killzone 2 | BCUS98116 | tracked in `bin/` | no: default 45 | not played | RSX-bound; HUD and combat unchecked |
-| Gran Turismo 5 | BCUS98114 | `vr-non-working/` + untracked `bin/` copy | yes (patch) | tested, broken | right-eye red shadows, menu clipping, race start |
+| Gran Turismo 5 | BCUS98114 | `vr-non-working/` + untracked `bin/` copy | yes (patch) | tested, broken | menu clipping, race-start frame rate |
 | MotorStorm: Pacific Rift | BCUS98155 | `vr-non-working/` + untracked `bin/` copy | yes (patch) | not played | stereo 50-70 at race start (needs multiview) |
 | Blur | BLUS30295 | `vr-non-working/` | yes (patch) | not played | 45-50 FPS stereo |
 | Need for Speed Most Wanted | BLUS31010 | `vr-non-working/` | yes (patch, fixed per rate) | not played | in-race speed at 90 unconfirmed |
@@ -150,16 +150,13 @@ Notes: `profiles/BCUS98114-notes.md` (the most detailed). Evidence: `evidence/gt
   menu trails and mirror edges are fixed.
 - **Config:** Disable ZCull Occlusion Queries is on in Matt's config. **Resolution Scale 200% freezes
   loading a race** (garbage fragment program, also with VR off). Any other scale works; 300% is verified.
+- **Fixed 2026-10-01 (desktop):** red/green car shadows (the shadow program keeps fog densities in the
+  camera-position slot `c[467]`; the renderer now checks the slot holds the eye point), desktop mirror crop.
 - **Open (from the notes):**
-  1. Red car shadows in the right eye (feedback reads of the 2x MSAA scene target `0xc1980000`); black
-     blocks on nearby car bodies. **Repro:** savestate
-     `rpcs3/bin/savestates/BCUS98114/BCUS98114_1_1.SAVESTAT.zst` is at the start of a race; red and green
-     car shadows show as soon as it loads, every time.
-  2. Arcade menu clipped when the head moves back.
-  3. Desktop mirror shows the whole 2048x1080 surface.
-  4. Race-start frame rate: the RSX thread is CPU-bound even flat (~42 flat, ~30 stereo). Needs multiview.
-  5. Intermittent upside-down menu (not seen since the display-buffer size fix).
-  6. Cockpit, replay and garage not audited.
+  1. Arcade menu clipped when the head moves back (needs the headset path).
+  2. Race-start frame rate: the RSX thread is CPU-bound even flat (~42 flat, ~30 stereo). Needs multiview.
+  3. Intermittent upside-down menu (not seen since the display-buffer size fix).
+  4. Cockpit, replay and garage not audited; the shadow and mirror fixes not yet seen in the headset.
 
 ## MotorStorm: Pacific Rift (BCUS98155 v01.00)
 
