@@ -1050,3 +1050,25 @@ at the view centre (a rotation moves the edges up to 2x as far at ~90 degrees). 
   each), off-aspect mip-chain gathers shared by the right eye. `profiles/BCUS98155-notes.md`.
 
 **vr6 release (2026-09-30).** Tag `v0.0.42-vr6` at fork c39a80e6 (openxr pushed), zip `release/rpcs3-v0.0.42-vr6-c39a80e6_win64.zip` (281 files). Since vr5: Killzone HD (BCES01743) playable as game 8 (90 FPS patch, VR profile; needs Write + Read Color Buffers, documented in vr-games.md; film grain hidden via profile `hidden_draws`, reticule at 35% via `scaled_draws`, HUD at 4 m via `hud_depth`, movies at 60 via `video_vblank_rate`, full-resolution left eye via `keep_rendered_display_buffers`, no head-turn ghosting via `reproject_older_frames`). Generic: HUD Depth setting (Auto = profile, else 2 m; home menu slider), projection layer from the first frame (menus world-fixed and 16:9 before any 3D), HUD box from the first headset frame with a validated FOV, headset overlay renderer's built-in images (button icons), depth test with no depth buffer/ALWAYS no longer keeps HUD z, RSX-side readbacks copied early before the right eye, faster camera-block slot lookup, off-aspect mip-chain gathers shared, unimplemented FP opcodes logged instead of fatal. MotorStorm moved to vr-non-working/ (stereo frame rate at race starts). Smoke test: packaged exe starts (first-run dialog) and carries vr6-c39a80e6. Matt tests and publishes.
+
+**New titles triaged for 90 FPS VR (2026-09-30, fork uncommitted at time of writing).** Uncharted: Drake's Fortune
+(BCUS98103 v01.00), God of War Collection (BCES00800 v01.00 UK), Killzone 2 (BCUS98116). Community patches: only
+God of War has any (v01.01, not this disc). Flat measurements at 100%, vblank raised to find the ceiling:
+
+| Game | native cap | ceiling (flat) | limit | VR 90? |
+|---|---|---|---|---|
+| God of War 1 / 2 | 60 | 90 (RSX 10-45%) | none at 90 | **yes**: 90 in stereo on the headset path, both games |
+| Killzone 2 | 30 | 86-89 (vblank 180, indoor carrier walk) | RSX thread ~85% busy | unlikely; ~45-55 expected in stereo (45 FPS half-rate mode candidate) |
+| Uncharted 1 | 30 | 42-46 (vblank 180, boat) | SPU/PPU: all SPU threads 100% | no |
+
+- **God of War Collection: profiles done (desktop + headset-path verified, not played in the headset).** Speed fix
+  by profile `game_fps_u32` (GOW1 `0x531dd0`, GOW2 `0x5720f4`: the engine's dt = 1/rate), game time measured 1.0x at
+  90. New profile field `screen_space.offaspect_projection` (the HUD is a 4:3 bare projection in the scene's slots;
+  generator detects it). Collections need a base profile for the launcher so OpenXR is prepared before the
+  exitspawn. Known: 5% black border (scene 1216x684 inset in 1280x720). `profiles/BCES00800-notes.md`.
+- **Killzone 2** needs Write + Read Color Buffers (loading screens garbage otherwise).
+- **Uncharted crash (fork bug, open):** with `Frame limit: Auto` the fork crashes in `VKGSRender::flip` ->
+  `bilinear_upscale_pass::scale_output` (`image::push_layout` on a freed image, or in the NVIDIA driver) during the
+  ~900 FPS loading screen at boot; `Frame limit: Off` avoids it, and the upstream build (`builds/sep26`) with Auto
+  does not crash. Minidumps `%LOCALAPPDATA%\CrashDumps\rpcs3.exe.25016.dmp`/`56704.dmp`; `tools/re/dmpstack.py` +
+  `tools/re/sym.py` symbolize them without a debugger.
