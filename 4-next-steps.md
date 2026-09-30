@@ -1066,9 +1066,13 @@ God of War has any (v01.01, not this disc). Flat measurements at 100%, vblank ra
   90. New profile field `screen_space.offaspect_projection` (the HUD is a 4:3 bare projection in the scene's slots;
   generator detects it). Collections need a base profile for the launcher so OpenXR is prepared before the
   exitspawn. Known: 5% black border (scene 1216x684 inset in 1280x720). `profiles/BCES00800-notes.md`.
-- **Killzone 2** needs Write + Read Color Buffers (loading screens garbage otherwise).
-- **Uncharted crash (fork bug, open):** with `Frame limit: Auto` the fork crashes in `VKGSRender::flip` ->
-  `bilinear_upscale_pass::scale_output` (`image::push_layout` on a freed image, or in the NVIDIA driver) during the
-  ~900 FPS loading screen at boot; `Frame limit: Off` avoids it, and the upstream build (`builds/sep26`) with Auto
-  does not crash. Minidumps `%LOCALAPPDATA%\CrashDumps\rpcs3.exe.25016.dmp`/`56704.dmp`; `tools/re/dmpstack.py` +
-  `tools/re/sym.py` symbolize them without a debugger.
+- **Killzone 2: first profile (fork d12f50a6e).** Needs Write + Read Color Buffers. Real-time game (no speed patch);
+  ~60 FPS stereo on the headset path in the light carrier walk (RSX-bound), so the profile defaults to 45 FPS
+  (`vblanks_per_frame 2`, vblank 90). `max_fps 0` now multiplies the headset rate by `vblanks_per_frame`.
+  Open: uncovered programs, HUD, combat, one occlusion-query hang. `profiles/BCUS98116-notes.md`.
+- **Boot crash in flip, fixed (fork 4704701a2).** `upload_image_simple` disposed the flip's uploaded display buffer at
+  once; any submit before the present blit freed it, crashing in `VKGSRender::flip` -> `scale_output` (image
+  `push_layout` or inside the NVIDIA driver) at boot loading screens: Uncharted 2 of 2 boots with Frame limit Auto,
+  Killzone 2 once in a stereo audit, and the first SHOT screenshot at Uncharted's boot. The uploads are now kept until
+  the next flip; Uncharted with Auto survives 2 of 2. Minidumps in `%LOCALAPPDATA%\CrashDumps` were read with
+  `tools/re/dmpstack.py` + `tools/re/sym.py` (no debugger on this machine).
