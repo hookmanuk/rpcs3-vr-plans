@@ -35,6 +35,7 @@ are **tracked in `bin/`**, so the next release will ship them unless they are mo
 | God of War III | BCUS98111 | `vr-non-working/` + untracked `bin/` copy | no (`max_fps 36`) | not played | early experimental; no notes |
 | MX vs ATV Reflex | BLUS30321 | untracked `bin/` only | no (`max_fps 30`) | not played | generated 2026-09-28; no notes |
 | Uncharted: Drake's Fortune | BCUS98103 | none | no: 42-46 flat | - | SPU/PPU-bound; not pursued |
+| Final Fantasy X/X-2 HD Remaster | BLUS31211 | none | no: 80-91 flat | - | RSX-bound flat; not pursued |
 
 ## Testing in the headset (applies to all)
 
@@ -237,6 +238,15 @@ and no recorded measurements: start from the playbook if it is picked up again.
 Profile generated 2026-09-28 (`row_vectors`, camera `c[4, 76, 16]`, HUD `c[24]`, metres, `max_fps 30`,
 `vblanks_per_frame 2`). It is untracked in `bin/` only, with no notes, patch or measurements. Next: a notes
 file, a frame-rate check, and a decision to commit it to `vr-non-working/` or drop it.
+
+## Final Fantasy X/X-2 HD Remaster (BLUS31211, disc)
+
+Triaged 2026-09-30 with no profile made. PhyreEngine; the launcher offers X, X Eternal Calm, X-2, X-2 Last Mission.
+FFX draws one frame every two vblanks (30 at 60, 45 at Vblank 90). In the opening campfire scene at Vblank 180 it
+reached 86-90 FPS with game clocks at 1.0x real time (memory dumps; a voiced cutscene, so gameplay timing is
+unchecked). At Vblank 240 (cap 120) the ceiling was only **80-91 FPS flat**, with the RSX thread and the game's
+`PhyreEngineRenderThread` both at ~100%: no headroom for stereo. The first boot compiles ~2,100 PPU modules
+(~8 minutes). Evidence: `evidence/ffx/`. FFX-2 uses the same engine and was not tried.
 
 ## Uncharted: Drake's Fortune (BCUS98103 v01.00)
 
