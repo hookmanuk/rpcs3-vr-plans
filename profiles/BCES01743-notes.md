@@ -120,6 +120,16 @@ change it, edit the two `scale` values in `bin/vr_profiles/BCES01743.json` (1.0 
 To move the whole HUD (reticule included) further away: **home menu > Settings > VR > HUD Depth** (1-10 m).
 Auto (the default) uses the profile's `"hud_depth": 4` (4 m); a value set per game or globally wins. It keeps its apparent size. Measured HUD disparity: -113 px at 2 m, -12 px at 10 m.
 
+## Ghosting on head turns (2026-09-30, fork 298f3308c)
+
+Matt: at a locked 90 FPS, fast head turns left a ghost of trees against the bright sky. Killzone blends the previous
+frame (the other display buffer) over each new one, a motion trail; that frame was drawn with an older head pose, so
+the headset showed a doubled image. Reproduced with `RPCS3_VR_WOBBLE=30` (`ghosting-before-wobble30.png`: gun and
+ruins doubled). Profile `reproject_older_frames: true` turns the older frame to the current pose before the blend:
+single, sharp edges (`ghosting-after-reproject.png`), still 90 FPS, fail/pause backgrounds intact. Hiding the blend
+(`hidden_draws`, HUD program with a 1280x720 texture) also removed the ghosting but blanked the fail screen's
+background, so it is not used.
+
 ## Open
 
 1. Headset: world scale, the gun's position, cutscene speed at 90; recheck menus and HUD after 44ef18bd2.
