@@ -165,7 +165,8 @@ X, X, X; the race starts ~17-20 s later with the pack in view. Run at Resolution
 
 ## Open
 
-1. Red car shadows in the right eye; black blocks on nearby car bodies (above).
+1. Red car shadows in the right eye; black blocks on nearby car bodies (above). Repro: savestate
+   `bin/savestates/BCUS98114/BCUS98114_1_1.SAVESTAT.zst` (race start): red and green car shadows show at once, every time.
 2. Arcade menu clipping when the head moves back (above).
 3. Desktop mirror crop (above).
 4. Race-start frame rate (multiview).

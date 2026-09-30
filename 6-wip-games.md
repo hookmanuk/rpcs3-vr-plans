@@ -103,7 +103,9 @@ Notes: `profiles/BCUS98114-notes.md` (the most detailed). Evidence: `evidence/gt
   loading a race** (garbage fragment program, also with VR off). Any other scale works; 300% is verified.
 - **Open (from the notes):**
   1. Red car shadows in the right eye (feedback reads of the 2x MSAA scene target `0xc1980000`); black
-     blocks on nearby car bodies.
+     blocks on nearby car bodies. **Repro:** savestate
+     `rpcs3/bin/savestates/BCUS98114/BCUS98114_1_1.SAVESTAT.zst` is at the start of a race; red and green
+     car shadows show as soon as it loads, every time.
   2. Arcade menu clipped when the head moves back.
   3. Desktop mirror shows the whole 2048x1080 surface.
   4. Race-start frame rate: the RSX thread is CPU-bound even flat (~42 flat, ~30 stereo). Needs multiview.
