@@ -67,6 +67,21 @@ Fork changes (generic):
   `emit_geometry` 12-13%, readback flush ~5-7%, camera classification ~6%, eye constants ~4%. The driver share
   is the right eye's repeated draw submission: multiview is what removes it.
 
+**Why stereo costs more here than in other games** (same restart, 100%, `RPCS3_VR_GPUPROF=1`, thread cycles):
+
+| | draws/frame | right-eye batches | RSX thread | FPS | RSX ms/frame |
+|---|---|---|---|---|---|
+| flat | 4,400-5,000 | - | 101% busy | 70-86 | ~11.6 |
+| stereo | 4,500-4,900 | 43-44 (~105 draws each) | 101% busy | 47-51 | ~19.5 |
+
+Batching works (few, long batches); the stereo extra is per draw, ~8 ms/frame = ~1.7 us per draw, no worse than
+Ridge Racer 7 (~1,300 draws, +3.5 ms, ~2.7 us/draw). The differences: MotorStorm draws 3-4x as much, and its
+RSX thread is already saturated flat at 90 Hz, so every microsecond of right-eye work costs frame rate (RR7 flat
+idled 5.5-7 ms/frame and absorbed its stereo cost). Inclusive in stereo: driver ~40% (symbols show as
+`vkGetInstanceProcAddr`/`vkResetEvent`: descriptor binds, draws, submits), `bind_vr_eye_constants` 12.7% (constants
+refilled from guest registers and classified per eye), `program::bind` 11.2%, `load_texture_env` 11.7%, readback
+flush 7%, early-copy submits from `prepare_rtts` ~4%.
+
 Tried: Multithreaded RSX, no clear change. Still open: the flush waits include the same pass's right-eye work
 (copy the left surface before the right-eye batch runs), and the per-draw stereo cost (multiview).
 
