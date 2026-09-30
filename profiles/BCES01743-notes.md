@@ -101,6 +101,16 @@ and "Grain size" (1.0) fields (registered at `0x299b00`), but scaling them where
 a generic copy layer (vertex format descriptors at `0x3077a0`). Next step if a strength/size setting is wanted:
 find the writer with the PPU write watch under the interpreter.
 
+## Left eye low resolution (2026-09-30, fork 963361b47)
+
+Matt: with a raised Resolution Scale the left eye was much softer than the right (300%: edge energy 1.50 vs 2.29).
+After its last draw every frame Killzone does two NV0039 memory copies: display buffer `0xce280000` -> main memory
+`0x30bf8000`, then main memory `0x305d2000` -> the display buffer. The copy back invalidated the left eye's scaled
+surface and Read Color Buffers reloaded it from memory at 1280x720; the right eye's host-only surface never saw it.
+(With Read Color Buffers off the left eye was black and the right eye showed the scene: `rcb-off-left-black.png`.)
+Profile `keep_rendered_display_buffers: true` skips copies into a display buffer in stereo: left 2.10 / right 2.16
+(`hmd-both-eyes-full-res.png`), pause menu fine. Flat play keeps the copies.
+
 ## Open
 
 1. Headset: world scale, the gun's position, cutscene speed at 90; recheck menus and HUD after 44ef18bd2.
