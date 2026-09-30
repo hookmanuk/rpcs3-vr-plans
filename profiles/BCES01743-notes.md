@@ -41,7 +41,26 @@ Keyboard pad from the template plus right stick (A/D/R/F). Boot, Return, then X 
 Helghast Assault > confirm > Templar), wait ~25 s, Return to skip the intro video. Gameplay starts in a trench
 with tutorial prompts.
 
+## Headset: menus and HUD text (2026-09-30, fork 44ef18bd2)
+
+Matt's first headset runs: main menu black (some runs), in-game HUD text empty, pause menu without text until
+the head moved back. Reproduced on the headset path with the SHOT hook (`hmd-pause-before.png`). Causes:
+
+1. **Depth test with nothing to test against.** Every menu/HUD draw has depth test on, no depth buffer
+   (`zeta 0`) and compare ALWAYS. The HUD box only sets z = w/2 for draws without depth test, so these kept
+   their z while the box and head position changed W: text near the far plane was clipped. The renderer now
+   counts a depth test only with a depth buffer and a compare other than ALWAYS.
+2. **Runs differed.** Screen-space boxing waited for the game's first camera draw (`m_vr_proj_valid`), so the
+   menu was full-view on a fresh boot and boxed once any 3D had been drawn. Boxing now starts with the first
+   headset frame (all titles).
+3. **White outside the box on the main menu** (`hmd-mainmenu-white-glow.png`): the menu's own video background
+   is boxed; its glow pass downsamples the whole display buffer and adds it back, so the never-written outside
+   of the box fed on itself to white. Profile `screen_space.clear_outside_box: true`. The shown-region clear
+   also looked at surface A only; Killzone draws into surface B.
+
+After: `hmd-mainmenu-after.png`, `hmd-hud-after.png`, `hmd-pause-after.png` (fresh boot, headset path).
+
 ## Open
 
-1. Headset: world scale, the gun's position, HUD box, cutscene speed at 90.
+1. Headset: world scale, the gun's position, cutscene speed at 90; recheck menus and HUD after 44ef18bd2.
 2. Performance in busier levels.
