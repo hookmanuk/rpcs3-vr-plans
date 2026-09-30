@@ -21,8 +21,9 @@ exact build commands.
 |---|---|
 | [1-structure.md](1-structure.md) | Workspace layout, repository URLs, dependencies and build commands |
 | [3-investigation.md](3-investigation.md) | Background on how RPCS3 renders and where the stereo camera work hooks in |
-| [4-next-steps.md](4-next-steps.md) | The gate checklist: what has been done, and what is open |
+| [4-next-steps.md](4-next-steps.md) | The gate checklist, generic renderer work and releases |
 | [5-vr-profile-playbook.md](5-vr-profile-playbook.md) | How to make or fix a game's VR profile |
+| [6-wip-games.md](6-wip-games.md) | State and open issues of every unreleased game |
 | [profiles/](profiles/) | Per-game VR profile notes and the profile format ([profiles/README.md](profiles/README.md)) |
 | `tools/` | Launch, capture and analysis scripts used by the playbook |
 | `evidence/` | Screenshots, captures and measurements for each gate and game |

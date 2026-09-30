@@ -821,30 +821,18 @@ which samples a couple of seconds of gameplay, writes `bin/vr_profiles/<TITLE_ID
 tab). Verified on Pure: the generated profile equals the hand-made one apart from an equivalent
 sep/conv split. Details and limits: `plans/5-vr-profile-playbook.md`, "In-emulator generation".
 
-## Third title: Split/Second (BLUS30300) frame-rate patch (2026-09-23)
+## Unreleased games
 
-Hand-made patch `plans/profiles/BLUS30300-patch.yml` (installed as `bin/patches/BLUS30300_patch.yml`,
-Refresh Rate 90, `config_BLUS30300.yml` Vblank Rate 90). Same PSGL swap-interval sites as Pure, plus the
-game's own dt: it runs one 1/60 s tick per vblank, so the patch makes `dt = ticks / Refresh Rate`. Game
-time measured at 1.00x wall time at 90/90 (1.50x at 90/60). Details: `plans/profiles/BLUS30300-notes.md`.
+Per-game state for everything not yet released (Split/Second, Blur, inFamous 1 and 2, MGS4, NFS Most Wanted,
+GT5, MotorStorm, God of War Collection, Killzone 2, and the rest) is in **`plans/6-wip-games.md`**, with detail
+in `plans/profiles/<TITLE_ID>-notes.md`. Game-specific progress is recorded there, not here. This file keeps
+the generic renderer, profile-format and tooling work, plus releases.
 
-An in-emulator "generate frame-rate patch" button was considered and dropped: the swap-interval half is
-a findable PSGL pattern, but the game-speed half is engine-specific code (here a tick-count dt in
-`0x509a4`), so it can't be generated reliably.
+An in-emulator "generate frame-rate patch" button was considered and dropped (2026-09-23). The swap-interval
+half is a findable PSGL pattern, but the game-speed half is engine-specific code (Split/Second's tick-count dt
+at `0x509a4`), so it can't be generated reliably.
 
-## Five more titles: Blur, inFamous, inFamous 2, MGS4, NFS Most Wanted (2026-09-23/24)
-
-Profiles in `bin/vr_profiles/`, notes in `plans/profiles/<TITLE_ID>-notes.md`, evidence in
-`plans/evidence/{blur,infamous,infamous2,mgs4,nfsmw}/`. All desktop-verified (stereo + yaw audit); none
-run in the headset yet.
-
-| Title | VR profile | 90 FPS |
-|---|---|---|
-| Blur BLUS30295 | yes | patch `BLUS30295-patch.yml` (flip every vblank); real-time clock; 80-84 mono / 45-50 stereo at 90 |
-| inFamous BCUS98119 | yes | no patch needed (uncapped, real-time); load-bound ~55 mono |
-| inFamous 2 BCUS98125 | yes | no patch needed; 52-72 stereo at 90 |
-| MGS4 BLUS30109 | yes | patch `BLUS30109-patch.yml` (one vblank per frame); real-time; 90 mono in Virtual Range, 45 in Act 1 |
-| NFS MW BLUS31010 | yes | patch `BLUS31010-patch.yml` (flip gate + timer pacer + 1/rate sim step via code cave); 90 FPS; see `plans/6-five-titles-status.md` |
+## Generic work from the five-title pass (2026-09-23/24)
 
 Renderer/profile-format additions (documented in `plans/profiles/README.md`): scaled-blit mirroring
 (`texture_cache::blit_vr_right`), partial-clear mirroring, right-eye rebuild of deferred texture copies,
@@ -856,11 +844,6 @@ overlapping blocks, anamorphic targets, reversed-depth near plane, 200x world-sc
 Dev hooks (environment variables, for unattended runs): `RPCS3_VR_GEN_TRIGGER`, `RPCS3_VR_KEYS` (key
 script into the keyboard pad), `RPCS3_VR_SHOT` (screenshot, both eyes when stereo), `RPCS3_VR_MEMDUMP`
 (guest memory snapshot), `RPCS3_USLEEP_STATS`; inspector captures now include blit/NV0039 notes.
-
-Not yet done: headset runs; NFS 30 FPS limiter; inFamous 2's SPU-processed layer is left-eye only;
-restore `Audio: Cubeb` and remove the temporary keyboard pads in `input_configs/<id>/`; commit.
-
-Current state and headset-test instructions: `plans/6-five-titles-status.md`.
 
 ### Low frame rates with headset reprojection (2026-09-24)
 
@@ -1032,44 +1015,25 @@ at the view centre (a rotation moves the edges up to 2x as far at ~90 degrees). 
 
 **OFXR v365 still needs the whole-buffer extension read (2026-09-28).** Reverting to the C-string parse with OFXR Bridge v365: 6 instance / 7 device extensions, no `VK_KHR_external_semaphore_win32`, no `vulkan_interop` or private swapchains in the flight log (no frame generation). With the fix: 7 / 8, semaphore_win32 used, `swapchain_eligibility result=0`. OFXR's own negotiation record is unchanged (`vulkan_negotiation result=3 a=7 b=125 c=189`), so the extensions still sit past an embedded NUL. The fix stays.
 
-**Gran Turismo 5 (BCUS98114 v02.11, 2026-09-29, fork e1648a6dd + 2c10ea9e6 + 820db6c39, not pushed).** Patch "Frame rate follows VR" (`bin/patches/BCUS98114_patch.yml`) redirects the fixed-step length (`0x14017f8`, read-only) to a bss word `0x1948440` that the profile's `game_frame_time_f32` sets to 1/fps; physics, sim and the race timer run 1.0x at 60 Hz and 0.99x at 90 Hz. Headset: HUD, menus (text, cards) and the rear-view mirror in the world-fixed box via four new `screen_space` options (`hud_display_buffers_only`, `hud_box_after_shader`, `output_pixel_draws_not_hud`, `subviewport_cameras_in_box`); right-eye texture rebuilds 172 -> 0 a frame (shadow atlas gathers and a dummy copy shared). Grid after the pack leaves: 90 FPS; with the pack in view the guest limits (35-90 FPS, flat 55-80), readback stalls grow in VR. Disable ZCull Occlusion Queries on in Matt's config. Evening (fork 820db6c39): car shadows, menu trails/duplicate icons and mirror edges fixed; race-start dip profiled: RSX thread CPU-bound even flat (flat ~42, stereo ~30 FPS), multiview is the stereo-side candidate. Late evening (fork dcb87dde3), still broken: right-eye car shadows red (the right eye's feedback reads of its 2x MSAA scene target `0xc1980000`; cause narrowed, not fixed), black blocks on nearby car bodies, arcade menu clipped when the head moves back, desktop mirror shows the whole 2048x1080 surface (each eye small), race-start frame rate. Also open: intermittent upside-down menu, cockpit/replay not audited. Details: `plans/profiles/BCUS98114-notes.md`, evidence `plans/evidence/gt5/`.
+**Generic work from GT5 (2026-09-29, fork e1648a6dd..dcb87dde3).** Four new `screen_space` options for games that
+draw HUD and menus straight into display buffers: `hud_display_buffers_only`, `hud_box_after_shader`,
+`output_pixel_draws_not_hud`, `subviewport_cameras_in_box` (`profiles/README.md`). GT5 itself: `6-wip-games.md`.
 
-**Night of 2026-09-30: Killzone HD, MotorStorm Pacific Rift, GT5 race freeze (not committed to openxr yet at time of writing; desktop only).**
-- **GT5 freeze going into a race:** not the VR code. At Resolution Scale 200% the RSX thread dies loading a race on a
-  garbage fragment program (`Unimplemented BEM class instruction`), also with VR disabled; 100% and 300% load and race.
-  Matt's config had moved 300 -> 200. Workaround: any other scale. The unimplemented FP opcodes now log instead of
-  throwing (garbage programs had reached the shader cache). `profiles/BCUS98114-notes.md`.
+**Night of 2026-09-30: Killzone HD (desktop only; shipped in vr6).**
 - **Killzone HD (BCES01743):** needs Write + Read Color Buffers (world black otherwise). Patch "Frame rate 90 FPS"
   (tick rate fps/1000 and step factor 30/fps; 60/72/120 variants): 90 FPS, clocks 1.00x. Generated profile
   (`row_vectors c[256, 258]`, HUD c[256], metres); stereo, yaw and pitch audits clean; 88-90 FPS stereo at 300% on
   the headset path. `profiles/BCES01743-notes.md`.
-- **MotorStorm Pacific Rift (BCUS98155):** fork patch file with the community unlocked frame rate (60 FPS + Variable
-  FPS; 90 FPS, clocks 1.00x), dynamic resolution off and motion blur off; profile `max_fps 0`. No other stereo-vs-flat
-  difference found on the desktop. Race start at 100%: flat ~86, stereo ~72 FPS (then 85-90); 300% on the headset path
-  35-53 (GPU 68%). Renderer: RSX-side render-target readbacks join the stereo early-copy list (small gain, A/B one run
-  each), off-aspect mip-chain gathers shared by the right eye. `profiles/BCUS98155-notes.md`.
+- **Generic, from GT5 and MotorStorm (see `6-wip-games.md`):** unimplemented FP opcodes (POW, BEM class,
+  TIMESWTEX) log instead of throwing (garbage programs had reached the shader cache); RSX-side render-target
+  readbacks join the stereo early-copy list; off-aspect mip-chain gathers are shared by the right eye.
 
 **vr6 release (2026-09-30).** Tag `v0.0.42-vr6` at fork c39a80e6 (openxr pushed), zip `release/rpcs3-v0.0.42-vr6-c39a80e6_win64.zip` (281 files). Since vr5: Killzone HD (BCES01743) playable as game 8 (90 FPS patch, VR profile; needs Write + Read Color Buffers, documented in vr-games.md; film grain hidden via profile `hidden_draws`, reticule at 35% via `scaled_draws`, HUD at 4 m via `hud_depth`, movies at 60 via `video_vblank_rate`, full-resolution left eye via `keep_rendered_display_buffers`, no head-turn ghosting via `reproject_older_frames`). Generic: HUD Depth setting (Auto = profile, else 2 m; home menu slider), projection layer from the first frame (menus world-fixed and 16:9 before any 3D), HUD box from the first headset frame with a validated FOV, headset overlay renderer's built-in images (button icons), depth test with no depth buffer/ALWAYS no longer keeps HUD z, RSX-side readbacks copied early before the right eye, faster camera-block slot lookup, off-aspect mip-chain gathers shared, unimplemented FP opcodes logged instead of fatal. MotorStorm moved to vr-non-working/ (stereo frame rate at race starts). Smoke test: packaged exe starts (first-run dialog) and carries vr6-c39a80e6. Matt tests and publishes.
 
-**New titles triaged for 90 FPS VR (2026-09-30, fork uncommitted at time of writing).** Uncharted: Drake's Fortune
-(BCUS98103 v01.00), God of War Collection (BCES00800 v01.00 UK), Killzone 2 (BCUS98116). Community patches: only
-God of War has any (v01.01, not this disc). Flat measurements at 100%, vblank raised to find the ceiling:
+**New titles triaged (2026-09-30):** Uncharted, God of War Collection, Killzone 2: results and state in
+`6-wip-games.md`. Generic changes from that work: profile field `screen_space.offaspect_projection` (and its
+generator detection); `max_fps 0` multiplies the headset rate by `vblanks_per_frame` (fork d12f50a6e).
 
-| Game | native cap | ceiling (flat) | limit | VR 90? |
-|---|---|---|---|---|
-| God of War 1 / 2 | 60 | 90 (RSX 10-45%) | none at 90 | **yes**: 90 in stereo on the headset path, both games |
-| Killzone 2 | 30 | 86-89 (vblank 180, indoor carrier walk) | RSX thread ~85% busy | unlikely; ~45-55 expected in stereo (45 FPS half-rate mode candidate) |
-| Uncharted 1 | 30 | 42-46 (vblank 180, boat) | SPU/PPU: all SPU threads 100% | no |
-
-- **God of War Collection: profiles done (desktop + headset-path verified, not played in the headset).** Speed fix
-  by profile `game_fps_u32` (GOW1 `0x531dd0`, GOW2 `0x5720f4`: the engine's dt = 1/rate), game time measured 1.0x at
-  90. New profile field `screen_space.offaspect_projection` (the HUD is a 4:3 bare projection in the scene's slots;
-  generator detects it). Collections need a base profile for the launcher so OpenXR is prepared before the
-  exitspawn. Known: 5% black border (scene 1216x684 inset in 1280x720). `profiles/BCES00800-notes.md`.
-- **Killzone 2: first profile (fork d12f50a6e).** Needs Write + Read Color Buffers. Real-time game (no speed patch);
-  ~60 FPS stereo on the headset path in the light carrier walk (RSX-bound), so the profile defaults to 45 FPS
-  (`vblanks_per_frame 2`, vblank 90). `max_fps 0` now multiplies the headset rate by `vblanks_per_frame`.
-  Open: uncovered programs, HUD, combat, one occlusion-query hang. `profiles/BCUS98116-notes.md`.
 - **Boot crash in flip, fixed (fork 4704701a2).** `upload_image_simple` disposed the flip's uploaded display buffer at
   once; any submit before the present blit freed it, crashing in `VKGSRender::flip` -> `scale_output` (image
   `push_layout` or inside the NVIDIA driver) at boot loading screens: Uncharted 2 of 2 boots with Frame limit Auto,

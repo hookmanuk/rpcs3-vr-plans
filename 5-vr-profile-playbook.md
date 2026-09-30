@@ -245,7 +245,7 @@ Every problem found here should become a Step 7 reproduction on the desktop befo
 
 - Evidence: captures, before/after images, measurements in `plans/evidence/<game>/`.
 - Notes: slots, reasoning and open issues in `plans/profiles/<TITLE_ID>-notes.md`.
-- New profile fields go in `plans/profiles/README.md`; progress goes in `plans/4-next-steps.md`.
+- New profile fields go in `plans/profiles/README.md`; game progress goes in `plans/6-wip-games.md` (generic renderer work in `plans/4-next-steps.md`).
 - Delete the temporary keyboard pad, `rpcs3/bin/shaderlog/`, and any `Log shader programs: true`.
   Leave `VR > Enabled` on if the profile works.
 

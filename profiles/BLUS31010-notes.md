@@ -9,7 +9,7 @@ Evidence: `plans/evidence/nfsmw/`.
   frame, then `X`); PSN sign-in prompt (`Down`, `X` = no); then the intro cutscene hands over to driving on
   Connors Bridge Road (~3 min from boot). `nav_nfs.sh` pattern: `Return`, wait, `Down`+`X`, wait ~2 min.
 
-## Frame rate (2026-09-24): solved, see plans/6-five-titles-status.md (the text below is the earlier dead end)
+## Frame rate (2026-09-24): solved, see plans/6-wip-games.md (the text below is the earlier dead end)
 
 - 60 FPS in menus and the title, 30 FPS in cutscenes and gameplay, at any Vblank Rate (60/90/120), so the
   cap is not only vblank-based.
