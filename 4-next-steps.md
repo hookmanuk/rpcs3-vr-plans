@@ -1045,5 +1045,6 @@ at the view centre (a rotation moves the edges up to 2x as far at ~90 degrees). 
   the headset path. `profiles/BCES01743-notes.md`.
 - **MotorStorm Pacific Rift (BCUS98155):** fork patch file with the community unlocked frame rate (60 FPS + Variable
   FPS; 90 FPS, clocks 1.00x), dynamic resolution off and motion blur off; profile `max_fps 0`. No other stereo-vs-flat
-  difference found on the desktop. Renderer: RSX-side render-target readbacks (texture uploads that flush a target)
-  now join the stereo early-copy list: race start 29-44 -> 43-63 FPS at 100%. `profiles/BCUS98155-notes.md`.
+  difference found on the desktop. Race start at 100%: flat ~86, stereo ~72 FPS (then 85-90); 300% on the headset path
+  35-53 (GPU 68%). Renderer: RSX-side render-target readbacks join the stereo early-copy list (small gain, A/B one run
+  each), off-aspect mip-chain gathers shared by the right eye. `profiles/BCUS98155-notes.md`.

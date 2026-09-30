@@ -29,21 +29,35 @@ description of what and where.
 
 ## Performance
 
-Flat at 100%: 88-90 FPS at the race start with the pack. Stereo was 29-44 there, RSX thread 100% busy with the
-GPU ~24% used. A quarter of the RSX thread was `cached_texture_section::flush` from `upload_texture`: every
-frame the game samples render target memory as plain textures (640x480 `0xc7b85480`, 640x360 `0xc243ab00`,
-320x180 `0xc7f37d00`, the 8x8 exposure target), so the texture cache wrote the targets back and waited for
-the GPU to finish both eyes' queued work.
+Measured from a fresh boot into a Free-Play race (Kanaloa Bay, 11 AI), first 7 s after the start, 100%, Vblank 90,
+desktop stereo. The only valid comparisons are fresh starts: Pause > Restart often failed silently (a dropped
+Down landed on Options), and readings from those runs were mid-race or paused.
 
-Fork change (generic): `texture_cache::flush_set` records the ranges it had to transfer; in stereo
-`VKGSRender::prepare_rtts` adds them to the early-copy list GT5 introduced (sections copied as soon as their
-surface is left, then submitted). Log: "VR: render target memory ... copied early from now on". Flush time on
-the RSX thread 24% -> 13%; stereo race start 29-44 -> 43-63 FPS, 70-90 once the pack spreads.
+| Mode | first 7 s |
+|---|---|
+| flat | 78-90 (mean ~86) |
+| stereo, RSX early copies off (`RPCS3_VR_NO_RSX_EARLY=1`) | 56-80 (mean ~70) |
+| stereo, RSX early copies on | 64-84 (mean ~72) |
 
-- Multithreaded RSX: no clear change (47-63).
-- 300% on the headset path: 35-53 FPS in a race, GPU 68%.
-- Still open: the remaining flush waits (the early copy still waits for the right eye's work of the same
-  pass), and the per-draw stereo cost (multiview).
+After the start the field spreads and stereo holds 85-90. At 300% on the headset path a race ran 35-53 with the
+GPU at 68%, so at 300% the GPU is a limit too; 200% is worth trying in the headset.
+
+What the RSX thread spends in stereo (`rsx_sample.py`): driver submission (`emit_geometry`), and
+`cached_texture_section::flush` from `upload_texture`: every frame the game samples render target memory as plain
+textures (640x480 `0xc7b85480`, 640x360 `0xc243ab00`, 320x180 `0xc7f37d00`, the 8x8 exposure target `0xc7f70100`),
+so the texture cache writes those targets back and waits for the GPU.
+
+Fork changes (generic):
+- `texture_cache::flush_set` records the ranges it had to transfer; in stereo `VKGSRender::prepare_rtts` adds them
+  to the early-copy list GT5 introduced (copied as soon as their surface is left, then submitted). Log: "VR: render
+  target memory ... copied early from now on". Measured gain small (above, one run each); kept because it cannot
+  cost more than the wait it replaces.
+- Right-eye rebuilds of a mip chain gathered from off-aspect targets (op `mipmap_gather`: MotorStorm's 2048x2048
+  environment map and its 7 levels, 25/frame in menus, 0-2 in a race) share the left eye's copy.
+- `RPCS3_VR_GPUPROF=1` now also logs what each kind of right-eye rebuild is ("right-eye rebuild op ... /frame").
+
+Tried: Multithreaded RSX, no clear change. Still open: the flush waits include the same pass's right-eye work
+(copy the left surface before the right-eye batch runs), and the per-draw stereo cost (multiview).
 
 ## Driving it unattended
 
