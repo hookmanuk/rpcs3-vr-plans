@@ -21,6 +21,7 @@ are **tracked in `bin/`**, so the next release will ship them unless they are mo
 
 | Game | ID | Profile | 90 FPS | Headset | Blocker |
 |---|---|---|---|---|---|
+| Dragon's Dogma: Dark Arisen | BLUS31155 | `vr-non-working/` + untracked `bin/` copy | yes (community Unlock FPS, real-time) | not played | open-world frame rate unmeasured; needs update 01.02 |
 | God of War Collection (GOW1, GOW2) | BCES00800 | tracked in `bin/` | yes (profile, no patch) | not played | 5% black border |
 | Killzone 2 | BCUS98116 | tracked in `bin/` | no: default 45 | not played | RSX-bound; HUD and combat unchecked |
 | Gran Turismo 5 | BCUS98114 | `vr-non-working/` + untracked `bin/` copy | yes (patch) | tested, broken | right-eye red shadows, menu clipping, race start |
@@ -45,6 +46,21 @@ patch in `Manage > Game Patches`. Those patches are not "Enabled By Default". Th
 - comfort and frame pacing.
 
 ---
+
+## Dragon's Dogma: Dark Arisen (BLUS31155 v01.02)
+
+Notes: `profiles/BLUS31155-notes.md`. Evidence: `evidence/ddda/`. Profile `BLUS31155.json`, patch file
+`BLUS31155_patch.yml` (both in `vr-non-working/`, copies untracked in `bin/`).
+
+- **Needs update 01.02** (installed): the community *Unlock FPS* patch (enabled in Matt's `patch_config.yml`) and the
+  fork's *Full screen (no letterbox)* patch (on by default) target it.
+- **Frame rate:** real-time with Unlock FPS (clocks 1.0x at ~130 FPS). Flat ceiling 120-135 in the prologue; stereo
+  89-90 at 100% (RSX ~91%). Profile `max_fps 0`.
+- **Letterbox:** the 3D view was 1280x608; the patch sets the game's 0.475 height/width factor to 16:9.
+- **Profile:** generated (`row_vectors c[255, 3, 0, 258, 19]`, HUD `c[266]`), `eye_baseline` 6.4 (centimetres,
+  estimated). Stereo, yaw and pitch audits clean after two renderer fixes (bone slots:
+  `camera_slots_read_directly`; stencil-only clears copied left depth into the right eye).
+- **Open:** open-world frame rate; NPC name tags stay in the HUD box; world scale and HUD in the headset.
 
 ## God of War Collection (BCES00800 v01.00, UK disc)
 

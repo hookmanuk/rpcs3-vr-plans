@@ -1040,3 +1040,13 @@ generator detection); `max_fps 0` multiplies the headset rate by `vblanks_per_fr
   Killzone 2 once in a stereo audit, and the first SHOT screenshot at Uncharted's boot. The uploads are now kept until
   the next flip; Uncharted with Auto survives 2 of 2. Minidumps in `%LOCALAPPDATA%\CrashDumps` were read with
   `tools/re/dmpstack.py` + `tools/re/sym.py` (no debugger on this machine).
+
+**Generic, from Dragon's Dogma (2026-09-30; game state in `6-wip-games.md`).**
+- Clear mirroring copied the whole depth-stencil image into the right eye for a depth-only or stencil-only clear.
+  A game that clears only the stencil between passes (Dragon's Dogma, before its light volumes) had its right-eye
+  depth replaced by the left eye's: large black areas in the right eye wherever the scene shifts. Only the cleared
+  aspects are copied now. Affects every game.
+- Profile flag `camera_slots_read_directly` (bone palettes in whole-bank programs no longer match camera blocks);
+  the generator writes it when it sampled indexed programs.
+- Dev hooks: `RPCS3_VR_RTDUMP` dumps depth surfaces too, and `prog=<vertex hash>` in the request dumps just before
+  that program's next draw (both eyes); probe `gamecam=<hash>[+<hash>]` keeps programs on the game camera.
