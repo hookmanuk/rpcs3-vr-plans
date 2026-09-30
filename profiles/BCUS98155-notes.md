@@ -57,6 +57,16 @@ Fork changes (generic):
   environment map and its 7 levels, 25/frame in menus, 0-2 in a race) share the left eye's copy.
 - `RPCS3_VR_GPUPROF=1` now also logs what each kind of right-eye rebuild is ("right-eye rebuild op ... /frame").
 
+2026-09-30 (fork 67bdf86ee), measured with Pause > Restart (restart menu screenshot checked each time), samples
+4-13 after the start, 100%, Vblank 90, desktop stereo:
+- Early copies now run *before* the pass's right-eye batch (probe `dev=1` = old order): flush 6.8% -> 5.2% of
+  the RSX thread, FPS within noise (old order ~48.5, new ~50.4).
+- `find_slot` uses a per-program slot table instead of a linear scan (`bind_camera_block` 6.9% -> 5.7%):
+  ~50 -> ~53 FPS (two runs each).
+- What is left on the RSX thread in stereo: NVIDIA driver time per draw (`vkGetInstanceProcAddr` self 18%),
+  `emit_geometry` 12-13%, readback flush ~5-7%, camera classification ~6%, eye constants ~4%. The driver share
+  is the right eye's repeated draw submission: multiview is what removes it.
+
 Tried: Multithreaded RSX, no clear change. Still open: the flush waits include the same pass's right-eye work
 (copy the left surface before the right-eye batch runs), and the per-draw stereo cost (multiview).
 
