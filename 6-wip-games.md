@@ -22,6 +22,7 @@ are **tracked in `bin/`**, so the next release will ship them unless they are mo
 | Game | ID | Profile | 90 FPS | Headset | Blocker |
 |---|---|---|---|---|---|
 | Dragon's Dogma: Dark Arisen | BLUS31155 | `vr-non-working/` + untracked `bin/` copy | yes (community Unlock FPS, real-time) | not played | open-world frame rate unmeasured; needs update 01.02 |
+| Ratchet & Clank Collection (R&C 1 only) | BCUS98282 | `vr-non-working/` + untracked `bin/` copy | no: frame-locked, profile at 60 | not played | pause-menu frames turn with the head; R&C 2/3 untried |
 | God of War Collection (GOW1, GOW2) | BCES00800 | tracked in `bin/` | yes (profile, no patch) | not played | 5% black border |
 | Killzone 2 | BCUS98116 | tracked in `bin/` | no: default 45 | not played | RSX-bound; HUD and combat unchecked |
 | Gran Turismo 5 | BCUS98114 | `vr-non-working/` + untracked `bin/` copy | yes (patch) | tested, broken | right-eye red shadows, menu clipping, race start |
@@ -62,6 +63,16 @@ Notes: `profiles/BLUS31155-notes.md`. Evidence: `evidence/ddda/`. Profile `BLUS3
   estimated). Stereo, yaw and pitch audits clean after two renderer fixes (bone slots:
   `camera_slots_read_directly`; stencil-only clears copied left depth into the right eye).
 - **Open:** open-world frame rate; NPC name tags stay in the HUD box; world scale and HUD in the headset.
+
+## Ratchet & Clank Collection (BCUS98282, disc 01.00)
+
+Notes: `profiles/BCUS98282-notes.md`. Evidence: `evidence/ratchet/`. Only R&C 1 tried.
+
+- **Frame rate:** 90 flat is easy (RSX ~61%), stereo 75-80, but the game is frame-locked (1.5x at 90). Profile runs
+  it at native 60 (`max_fps 60`). Lead for a 90 patch: four 1/60 floats (`0x770304`, `0x770314`, `0x112c078`,
+  `0x112c080`) at 1/90 make walking real-time; the rest is unverified.
+- **Profile:** generated, `column_vectors c[0]`, HUD `c[4]`, metres, 100% coverage; stereo and yaw audit clean.
+- **Open:** pause-menu button frames use their own perspective camera and turn with the head; R&C 2 and 3.
 
 ## God of War Collection (BCES00800 v01.00, UK disc)
 
