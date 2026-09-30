@@ -284,15 +284,23 @@ Conditional rendering (`_vkCmdBeginConditionalRenderingEXT`) and programmable bl
 attachments with the self-dependency barrier) work inside multiview passes and lose their "keep the
 per-draw replay" special cases.
 
+Per title: GT5's config already has `Disable ZCull Occlusion Queries` on (kept as a small gain in
+`BCUS98114-notes.md`), so none of this applies to the headline title. That per-game setting is also
+the escape hatch for any title where the averaged counts ever show an artefact. Two slots per query
+halve the pool's capacity; raise the pool size so the "out of free occlusion slots, forcing hard sync"
+path is not hit more often than today.
+
 ### 3.10 Device support and switches
 
 - `[SOURCE]` `vkutils/device.cpp`: `physical_device::get_physical_device_features` chains optional
   feature structs; add `VkPhysicalDeviceMultiviewFeatures` (or `VkPhysicalDeviceVulkan11Features`) and
   the Vulkan 1.2 `shaderOutputViewportIndex`; enable them in `render_device::create`; expose
   `get_multiview_support()` beside the existing `get_*_support()` accessors and `maxMultiviewViewCount`.
-- `RPCS3_VR_MULTIVIEW=0` keeps the two-draw path during bring-up (dev switch, like `RPCS3_VR_BATCH`),
-  so every title can be A/B'd on the same build. Once the title matrix in section 5 passes, the two-draw
-  path is deleted (Phase M5) and a device without multiview runs the game in 2D with a log line.
+- The two-draw path stays (decision 2026-09-30): it is the runtime fallback on a device without
+  multiview, and the A/B reference on the same build. Selection: multiview when the device supports it,
+  `RPCS3_VR_MULTIVIEW=0` (later a `Video > VR` setting if it earns one) forces two draws. The right-eye
+  surface cache and the mirror sites therefore remain in the code, compiled but idle on the multiview
+  path; section 3.1's deletion list becomes "unused while multiview is active".
 - `RPCS3_VR_GPUPROF=1` keeps GPU ms per target and draws; the batch and rebuild counters go.
 
 ### 3.11 What does not change
@@ -340,9 +348,10 @@ far +50, rail +49, near edge +26, ship nose +26, ship body +19, HUD 0. the rotat
 - [ ] Deferred copies create 2-layer temporaries from stereo sources and copy per layer; cached again.
 - [ ] Remove the right-eye branch of `bind_texture_env`.
 
-Gate: the titles whose bugs came from right-eye texture reads look right in both eyes on the desktop:
-NFS Most Wanted lighting (deferred copy of a render target), Blur (scaled MSAA blits), Gran Turismo 5
-car shadows (feedback loop on the MSAA scene target), ICO (memory bounce, older-frame reprojection),
+Gate: the titles whose bugs came from right-eye texture reads look right in both eyes on the desktop,
+Gran Turismo 5 first (car shadows: feedback loop on the MSAA scene target; per-car texture sharing;
+the rear-view mirror in the box), then NFS Most Wanted lighting (deferred copy of a render target), Blur
+(scaled MSAA blits), ICO (memory bounce, older-frame reprojection),
 Ridge Racer 7 (environment cube map gathered from off-aspect faces, road reflection tiles with
 `offaspect_player_views`), Bayonetta motion vectors, Demon's Souls soft particles (depth sampling that
 broke the batches). Compare each against a two-draw capture of the same savestate
@@ -354,12 +363,13 @@ broke the batches). Compare each against a two-draw capture of the same savestat
 - [ ] Remove `m_vr_right_rtts` and every mirror site (3.1, 3.7).
 - [ ] `RPCS3_VR_GPUPROF` reports 0 batches, 0 rebuilds.
 
-Gate (performance, `rsx_sample.py` / `RPCS3_VR_GPUPROF=1`, same savestates as the notes):
+Gate (performance, the point of the work: `rsx_sample.py` / `RPCS3_VR_GPUPROF=1`, same savestates as
+the notes). GT5's race start is the headline number; the others confirm the gain is general:
 
 | Title | Now (two draws) | Target with multiview |
 |---|---|---|
 | Bayonetta 100% 90 Hz, RSX ms/frame | ~11 (flat 7.8) | <= 9 |
-| GT5 race start, stereo FPS dip | ~30 (flat ~42) | within 10% of flat |
+| **GT5 race start, stereo FPS dip** | ~30 (flat ~42) | within 10% of flat (the RSX thread is CPU-bound in flat too, so flat is the ceiling; stereo RSX time within ~5% of flat) |
 | WipEout ships in view, right-eye replay RSX time | ~210 ms/s | 0 (no replay exists) |
 | Ridge Racer 7 grid, stereo idle | ~3.5 ms/frame | >= 5 ms/frame |
 | MotorStorm pack start 300% | 64-84 FPS | within 10% of flat (89-90) unless GPU-bound |
@@ -372,12 +382,14 @@ query semantics.
 ### M4 - optimisations
 
 - [ ] Per-view instanced constants (3.5).
-- [ ] 1-layer surfaces for game-camera targets with promotion on mixed binding (3.1); measure memory and fill savings on GT5 (shadow maps) and ICO (cube faces).
+- [ ] 1-layer surfaces for game-camera targets with promotion on mixed binding (3.1). Memory is not a
+      priority (decision 2026-09-30); do this only if it shows a fill-rate gain on GT5's shadow atlases.
 - [ ] Layered compute resolves instead of per-layer loops if the loop shows up in `RPCS3_VR_GPUPROF`.
 
 ### M5 - cleanup and release
 
-- [ ] Delete the two-draw path and `RPCS3_VR_MULTIVIEW`; multiview becomes a requirement for VR.
+- [ ] Two-draw path kept as fallback and A/B reference (decision 2026-09-30); make sure both paths
+      still build and run on every title in section 5.
 - [ ] Update `profiles/README.md` (the copy-sharing rules that no longer exist), `vr-settings.md`,
       `4-next-steps.md` Gate 6, this file's status.
 - [ ] Release vr6 with the title matrix results.
@@ -446,18 +458,19 @@ above plus `VKQueryPool.{h,cpp}`, `VKShaderInterpreter.cpp`, `VKResolveHelper.h`
 `VKTextureCache.{h,cpp}`, `vkutils/image.{h,cpp}`, `Program/GLSLCommon.cpp`, the three interpreter
 GLSL files and `gcm_enums.h`.
 
-## 8. Questions for Matt
+## 8. Decisions (2026-09-30, Matt)
 
-1. Keep the two-draw path as a runtime fallback after M5 (devices without multiview run stereo the old
-   way), or delete it and require multiview for VR? The plan assumes delete: two paths double every
-   future fix.
-2. Occlusion queries: is "the guest sees the average of both eyes" acceptable as the shipping
-   semantics, with the strict left-only mode kept as a dev switch? The alternative (strict everywhere)
-   keeps a per-draw replay for every queried draw, which in WipEout is the whole world pass.
-3. Memory: start with every render target at 2 layers (simplest, same VRAM as today), and only do the
-   1-layer optimisation for shadow maps and cube faces in M4 if a title needs it? (Ridge Racer 7's six 256x256 faces and GT5's shadow atlases are the candidates.)
-4. Which title should gate M2 first? The plan puts NFS Most Wanted and GT5 at the front because their
-   right-eye texture bugs were the hardest to fix by hand and are the best test that layered sampling
-   replaces all of that logic.
-5. Should the M3 headset pass wait for the whole title matrix, or go title by title as each passes the
-   desktop capture comparison (the plan assumes title by title, WipEout first)?
+The goal is performance; nothing else motivates the change.
+
+1. **Keep the two-draw path.** It stays as the runtime fallback and the A/B reference (3.10, M5).
+2. **Occlusion queries: averaged over both eyes**, with the strict left-only dev switch (3.9). What
+   changes for the guest: counts are the mean of the two eyes instead of the left eye's; an object
+   visible to only one eye passes "any samples" tests for both; two query slots per query. GT5 runs
+   with ZCull occlusion queries disabled, so it is unaffected; that per-game setting is the escape
+   hatch elsewhere.
+3. **Memory is not a priority.** Every render target gets two layers; the 1-layer optimisation in M4
+   is only worth doing for fill rate, if at all.
+4. **GT5 gates the work.** It is first in the M2 texture gate and the headline number in M3. Its
+   ceiling is flat's own RSX-bound ~42 FPS dip at the race start; multiview removes the stereo extra
+   (~40% RSX time), it cannot lift the flat dip.
+5. Headset testing goes title by title as each passes the desktop comparison, GT5 first.
