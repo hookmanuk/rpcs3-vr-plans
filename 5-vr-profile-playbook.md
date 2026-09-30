@@ -363,6 +363,9 @@ check for each symptom:
 | Rear-view mirror stuck to the head at the top of the view | `screen_space.subviewport_cameras_in_box` (with `hud_box_after_shader`) | Gran Turismo 5 |
 | Car/object shadows turn odd colours (green in one eye, magenta in the other) | a shadow map rendered into a display buffer's memory is being HUD-boxed; the display-buffer test must match size, not only address (fixed in the fork for `hud_display_buffers_only`) | Gran Turismo 5 |
 | 2D menus leave trails outside the HUD box when the head turns | the game never clears the display buffer; `hud_display_buffers_only` clears the shown region before the first boxed draw of a frame | Gran Turismo 5 |
+| 3D world black in gameplay, HUD and menus fine | the game reads its frame back on the CPU: `Write Color Buffers` and `Read Color Buffers` on in the game config (WCB alone was not enough) | Killzone HD |
+| Picture soft or washed out only in VR, sharp flat | the game's dynamic resolution reacting to the stereo cost: disable it with a patch | MotorStorm Pacific Rift |
+| Stereo FPS far below flat, `cached_texture_section::flush` high in `rsx_sample.py rsx::thread` | the game samples render-target memory as plain textures each frame (needs Write Color Buffers); flushed ranges are copied early in stereo since 2026-09-30 (log "copied early from now on"); what is left is the wait for the same pass's right-eye work | MotorStorm Pacific Rift, GT5 |
 | Frame rate low with many objects in view, GPU not busy | profile the RSX thread: `python plans/tools/sampler.py <pid> 8 rsx::thread` (no admin; needs `rpcs3.pdb`); compare with flat at the same moment | Gran Turismo 5 |
 | Menu layers reorder or vanish when leaning in (HUD depth-tests itself) | `screen_space.hud_keep_depth: true` | SotC |
 | Sprites (flames, glows) drift away from their source | `screen_space.preprojected_programs` | ICO |

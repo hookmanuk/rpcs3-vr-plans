@@ -178,3 +178,20 @@ X, X, X; the race starts ~17-20 s later with the pack in view. Run at Resolution
 Temporary keyboard pad from `tools/keyboard-pad-template.yml`. Decline the install with Left then X; Return
 skips the intro; Right then X = Arcade; X = Single Race, difficulty, High Speed Ring, Zonda R '09, colour, load;
 one more X for the list page, another X starts the race (about 20 s to load). Hold W (R2) to accelerate.
+
+## Race-load freeze (2026-09-30)
+
+Matt: "freezes going into a race every time". Reproduced from the car-selection savestate: the RSX thread dies
+while the race loads with `Unimplemented BEM class instruction` (`FPOpcodes.cpp`, the fragment-program register
+annotation). The program at that draw is garbage (`Unexpected precision modifier`, `Invalid Src type 3`, `TXPBEM`).
+It is **not** the VR code: it happens with `VR > Enabled: false` too, and with ZCull occlusion queries on or off.
+
+It depends on **Resolution Scale**: 200% crashes every time (4 of 4 runs, same RSX address `0x0a6f638`);
+100% and 300% load the race and drive normally (screenshots). Matt's config had moved from 300 to 200.
+Probable cause (untested): at 2x the scaled 1280x720 surfaces are 2560 wide, the same width the 2x MSAA scene
+target `0xc1980000` is sampled at, and the texture cache confuses the two, so a transfer the game uses to place
+fragment ucode lands in a GPU surface instead of memory. Workaround: any scale but 200% (300% verified).
+
+Fork change: the unimplemented FP opcodes (POW, BEM class, TIMESWTEX) now log an error instead of throwing.
+That alone doesn't save the race at 200% (the garbage shaders then hang the GPU: device lost), but the garbage
+programs had already been written to the shader cache, and a throw there would end the RSX thread at boot.
