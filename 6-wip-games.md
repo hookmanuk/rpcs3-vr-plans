@@ -23,6 +23,7 @@ are **tracked in `bin/`**, so the next release will ship them unless they are mo
 |---|---|---|---|---|---|
 | Dragon's Dogma: Dark Arisen | BLUS31155 | `vr-non-working/` + untracked `bin/` copy | yes (community Unlock FPS, real-time) | not played | open-world frame rate unmeasured; needs update 01.02 |
 | Ratchet & Clank Collection (R&C 1 only) | BCUS98282 | `vr-non-working/` + untracked `bin/` copy | no: frame-locked, profile at 60 | not played | pause-menu frames turn with the head; R&C 2/3 untried |
+| Tales of Xillia | BLUS31006 | `vr-non-working/` + untracked `bin/` copy | no: frame-locked at 60 (community 60 FPS patch) | not played | 90 patch attempt failed; battles unchecked |
 | God of War Collection (GOW1, GOW2) | BCES00800 | tracked in `bin/` | yes (profile, no patch) | not played | 5% black border |
 | Killzone 2 | BCUS98116 | tracked in `bin/` | no: default 45 | not played | RSX-bound; HUD and combat unchecked |
 | Gran Turismo 5 | BCUS98114 | `vr-non-working/` + untracked `bin/` copy | yes (patch) | tested, broken | right-eye red shadows, menu clipping, race start |
@@ -73,6 +74,16 @@ Notes: `profiles/BCUS98282-notes.md`. Evidence: `evidence/ratchet/`. Only R&C 1 
   `0x112c080`) at 1/90 make walking real-time; the rest is unverified.
 - **Profile:** generated, `column_vectors c[0]`, HUD `c[4]`, metres, 100% coverage; stereo and yaw audit clean.
 - **Open:** pause-menu button frames use their own perspective camera and turn with the head; R&C 2 and 3.
+
+## Tales of Xillia (BLUS31006, disc 01.00)
+
+Notes: `profiles/BLUS31006-notes.md`. Evidence: `evidence/xillia/`.
+
+- **Frame rate:** community *60 FPS* patch (enabled); the world steps one 60 Hz tick per frame, so it stays at 60
+  (`max_fps 60`). Lots of headroom (180 flat, 130-150 stereo at Vblank 180). A frame-step code cave for 90 was tried
+  and did not change the step: see the notes for the next step (PPU write watch on the timing object).
+- **Profile:** generated, `row_vectors c[0, 47]`, HUD `c[0]` + `hud_skips_passes`; stereo and yaw audit clean.
+- **Open:** 90 FPS patch; battles; world scale.
 
 ## God of War Collection (BCES00800 v01.00, UK disc)
 

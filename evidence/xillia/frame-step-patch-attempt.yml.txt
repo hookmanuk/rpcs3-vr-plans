@@ -1,0 +1,24 @@
+Version: 1.2
+
+PPU-a7f26bbbcb13fd5f554d0612f490861feec78e8f:
+  "Frame rate follows VR (needs 60 FPS)":
+    Games:
+      "Tales of Xillia":
+        BLUS31006: [ All ]
+    Author: "VR fork"
+    Notes: "Use with the community 60 FPS patch. The game advances its world by one 60 Hz tick per frame (frame step at 0x23f12c = ticks x 1.0, stored in the frame-timing object +0xa4), so above 60 FPS it runs fast. This scales that step by 60/fps from the word at 0xf11ac8, which the VR profile sets to 1/fps every frame (game_frame_time_f32). With the word at 0 (VR off) the step is unchanged."
+    Patch Version: 1.0
+    Enabled By Default: true
+    Patch:
+      - [ calloc, 0x0023f12c, 11 ]
+      - [ be32, 0x0, 0xeda00072 ] # fmuls f13, f0, f1 (the replaced instruction)
+      - [ be32, 0x0, 0x3d8000f1 ] # lis r12, 0xf1
+      - [ be32, 0x0, 0x816c1ac8 ] # lwz r11, 0x1ac8(r12)   1/fps from the VR profile
+      - [ be32, 0x0, 0x2c0b0000 ] # cmpwi r11, 0
+      - [ be32, 0x0, 0x4182001c ] # beq (return): VR off, step unchanged
+      - [ be32, 0x0, 0xc18c1ac8 ] # lfs f12, 0x1ac8(r12)
+      - [ be32, 0x0, 0x3d604270 ] # lis r11, 0x4270 (60.0)
+      - [ be32, 0x0, 0x916c1acc ] # stw r11, 0x1acc(r12)
+      - [ be32, 0x0, 0xc16c1acc ] # lfs f11, 0x1acc(r12)
+      - [ be32, 0x0, 0xed8c02f2 ] # fmuls f12, f12, f11   60/fps
+      - [ be32, 0x0, 0xedad0332 ] # fmuls f13, f13, f12   step x 60/fps
