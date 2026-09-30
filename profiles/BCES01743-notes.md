@@ -69,6 +69,16 @@ stall; Vblank 60 plays; Write/Read Color Buffers are fine. My earlier runs "work
 screenshot (a full GPU sync) every 4 s kept the player going. Profile `video_vblank_rate: 60`: the vblank drops
 to 60 Hz while a decoder is open (intro, main menu background) and returns to 90 in gameplay (measured: 90 FPS).
 
+## Headset report 2 (2026-09-30, fork 0ab5b780c)
+
+1. HUD box ultrawide and 2. head-locked until the character select screen: until the game's first camera draw,
+   frames went to the headset as the fixed-screen quad (head-locked, stretched), with the box already inside. The
+   projection layer now starts with the first frame when rendering with the headset FOV (log: "Projection layer:
+   game FOV 0.0 x 0.0" during the splash screens is expected).
+3. Grey panel behind the in-game HUD: the film grain (40 tiles of a 128x128 noise texture, HUD matrix, HUD vertex
+   program `4948caa7790a8473`) was boxed and lightened the box. Profile `screen_space.unboxed_draws`
+   (`hmd-grain-before-after.png`: top boxed, bottom full view).
+
 ## Open
 
 1. Headset: world scale, the gun's position, cutscene speed at 90; recheck menus and HUD after 44ef18bd2.
