@@ -38,3 +38,19 @@ viewport is full 1280x720).
 - Tried to reach an in-engine cutscene from the disc: the title's EPISODE MENU ("Continue previous game") does not
   react to scripted Cross or Start; NEW GAME would overwrite Matt's save (`BLUS30721-BCSAVEDATA`, 18:23), so stopped.
   Next: a savestate from Matt at a cutscene with bars, then probe `hide=`/`why=` for the bar and background draws.
+
+## 2026-10-01 late: letterbox bars and the grey 16:9 box removed
+
+Matt's savestate `vrtest_asura_matt_letterbox` (= `BLUS30721_1_1`, the title screen with the cinematic bars). On the
+OpenXR Simulator with an inspector capture (`f1860`):
+- **Bars:** two untextured draws of `fc13d36fbccec49a` (vertex colour, 30 vertices, HUD block `c[200]` scale
+  ±6.58e-5, translation ±(1,-1)), one per bar. Hidden with `hidden_draws` (texture `0x0`). The same program is a
+  generic coloured quad, so a fade or a menu panel drawn with it would be hidden too: watch for missing fades.
+- **Grey box:** not a draw of its own. The full-screen pass `5c313870ebfa5cd0` (scene `0xcaf90000` -> `0xcb6c0000`)
+  is the game's world shader with `c[200..203]` as its world matrix, identity there, so it read as a HUD draw and
+  was boxed (probe `why=5c313870ebfa5cd0`: `box 1`). Only the HUD box got this frame's image; outside it the target
+  kept older pixels, a slightly different shade. `screen_space.hud_skips_passes: true` leaves draws that sample a
+  colour render target as drawn.
+- Checked: the title (bars and rectangle gone, text kept, head straight and turned) and the Episode 1 space battle
+  (reticle and "Rapid Fire" text still in the HUD box). Evidence: `tools/re/asl_m1.png` (before), `asl_m5.png` (after).
+- Not seen yet: an in-engine cutscene during gameplay (Matt's report); the bars there should be the same program.

@@ -122,3 +122,17 @@ Each game of the collection is its own executable, so each has an executable pro
 - Result: R&C 1 **10.7 ms, 71.4-72.0 FPS, 0% late**; R&C 3 **9.2 ms, 72.0 FPS**. R&C 1 stays the tightest.
 - R&C 2: the hangar state is 543 draws/frame (2 ms RSX). Matt made `vrtest_rc2_aranos_hall` (Aranos machinery hall,
   606 draws, 5.9 ms): sustained **120 Hz**. Outdoor R&C 2 levels (Oozla onwards) are not measured.
+
+## 2026-10-01 late: R&C 1 "fixed 2D window" and sheared plane found and fixed
+
+Cause: `screen_space.boxed_camera_programs` (added 2026-09-30 for the pause-menu panels) listed `ef49d731f4b4551b` and
+`d032c3b0051293db`. Those are R&C 1's **world programs** (depth pre-pass 524 draws, scene 771 + 2468 draws in a Veldin
+frame), so in the headset path (`m_vr_view && m_vr_hmd_fov`, never on the desktop) most of the level was drawn into
+the HUD box with the game's camera: Matt's "gameplay on a fixed 2D window with depth issues" and the title screen's
+sheared rectangle (`vrtest_rc1_matt_shear` = `BCUS98282_1_3`). The earlier "not reproduced" simulator run looked at
+scenes where the box happened to line up.
+Fix (fork b16362394): the key is replaced by `screen_space.boxed_cameras`, matching the camera block's clip-w row. The
+pause-menu panels use a fixed axis-aligned menu camera, clip w = x - 256: `"boxed_cameras": [[1, 0, 0, -256]]`.
+Checked on the OpenXR Simulator: gameplay at the shear state (no seam, rover and near ground back), the R&C 1 title
+from the disc (full 3D at 0 and -11 degrees), and the pause menu (panels line up with the text, world-fixed at
++-20 degrees and looking up). Still open: the paused background (a copy of the last frame) follows the head.

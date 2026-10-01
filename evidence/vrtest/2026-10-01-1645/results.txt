@@ -33,3 +33,17 @@ BCUS98282 vrtest_rc3_veldin_battle vblank 72 scale 300%:
    => no frame stats (did not run)
    (no frame stats: retrying once)
 (Stopped here at Matt's request, 2026-10-01, to test the build himself: R&C 1 72 Hz, R&C 2 hangar 120 Hz on the optimised build.)
+BCUS98282 vrtest_rc3_veldin_battle vblank 72 scale 300%:
+   
+   => no frame stats (did not run)
+SUSTAINABLE BCUS98282 vrtest_rc3_veldin_battle: none Hz
+# BLUS30632 vrtest_anarchy_practice: Anarchy Reigns: Training > Practice
+BLUS30632 vrtest_anarchy_practice vblank 144 scale 300%:
+   126 frames over 19.8 s: avg 6.4 FPS, 1% low 65.7, 0.1% low 0.1 (worst frame 18081.7 ms), median 13.98 ms, late 0.79%, RSX thread 146402730743664.94 ms/frame
+   => median of 1 windows: avg 6.4 FPS, 1% low 65.7, late frames 0.79%, RSX thread 146402730743664.94 ms/frame
+SUSTAINABLE BLUS30632 vrtest_anarchy_practice: none Hz
+# BLUS30405 vrtest_dante_acre: Dante's Inferno: Acre, first fight
+BLUS30405 vrtest_dante_acre vblank 72 scale 300%:
+   
+   => no frame stats (did not run)
+   (no frame stats: retrying once)

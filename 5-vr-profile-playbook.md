@@ -268,6 +268,8 @@ Every problem found here should become a Step 7 reproduction on the desktop befo
 | Screenshots never change | exclusive fullscreen | `f12shot.ps1`, or windowed with `sbsshot.ps1` |
 | Controller stops working | temporary keyboard pad left in `input_configs/<id>/` | delete it |
 | Setting `RPCS3_VR_PROBE_FILE` disables stereo | the file replaces the default `render=1` | put `render=1` in the file |
+| The level (or part of it) is a flat window that shears with head turns; a straight seam through the scenery | a program-wide box rule caught world draws (R&C 1's `boxed_camera_programs` listed its two world programs) | box menu cameras by their clip-w row: `screen_space.boxed_cameras` |
+| A faint 16:9 rectangle over the world (brighter or darker inside the HUD box) | a full-screen pass reads the HUD block (identity world matrix there) and is boxed: only the box gets this frame | `hud_skips_passes: true` (Asura's Wrath, pass `5c313870`); probe `why=<hash>` shows `box 1` |
 | Camera keeps pushing into walls and snapping back, even with VR off | a Wider view patch's FOV also reaches camera logic (SotC: framing uses tan(fov/2) of the render view) | find the readers (`RPCS3_PPU_WATCH_FILE` read watch, getter call sites), try fixes live with `RPCS3_VR_POKE` under the interpreter, give camera logic fov / Scale (SotC patch 1.2) |
 
 ---
@@ -334,6 +336,8 @@ code, so it is not a headset test. The OpenXR Simulator is a real OpenXR runtime
   "Headset 'OpenXR Simulator' found" and "First stereo frame submitted".
 - Head: the simulator starts at y = 1.7 m in every space (a real LOCAL space starts at the head), so the screen sits
   low: write `{"x":0,"y":0,"z":0,"yaw":0,"pitch":0}` to `%LOCALAPPDATA%\OpenXR-Simulator\head_pose_command.json`.
+  **`yaw`, `pitch` and `roll` there are radians** (25 degrees = 0.436). Before 2026-10-01 late the scripts wrote 25, which is
+  25 rad = -7.6 degrees; 10 faces backwards (-147). The trace line `L<pose>(<yaw>)` in the log shows the yaw RPCS3 rendered.
   `pose_sweep_command.json` (`{"enabled":true,"yaw_amp_deg":30,"pitch_amp_deg":15,"freq_hz":0.25}`) moves the head
   continuously: needed to see head-locked screens or anything that changes with head movement.
 - Capture: `tools/re/simshot.py OUT` (the composited eyes, as the headset shows them); `shot.py` gives RPCS3's own

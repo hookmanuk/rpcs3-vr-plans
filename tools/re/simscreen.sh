@@ -29,7 +29,7 @@ n=1
 while [ $n -le $shots ]; do
   sleep "$wait"
   pose 0; py -3.13 simshot.py "${out}_${n}_y0" 960 >/dev/null
-  pose 25; py -3.13 simshot.py "${out}_${n}_y25" 960 >/dev/null
+  pose 0.436; py -3.13 simshot.py "${out}_${n}_y25" 960 >/dev/null  # 25 degrees (the pose command takes radians)
   pose 0
   n=$((n + 1))
 done
