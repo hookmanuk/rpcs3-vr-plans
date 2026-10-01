@@ -49,3 +49,11 @@ shader draws, sized to the game's view. Next: hide the scene programs one by one
 ## Open
 
 - Headset run; world scale; sky card; UI animation speed at 90; later levels.
+
+## 2026-10-01: first headset run (Matt, 90 Hz)
+
+- Gameplay performs really well.
+- Splash screen, menus and the intro movie are tied to the head.
+- Needs culling/FOV improvements: objects that the wider headset view should show are culled (the game culls to its
+  own frustum). Lead: find the culling frustum or FOV the game uses and widen it with a patch (as ICO's "Wider view
+  (VR culling)").
