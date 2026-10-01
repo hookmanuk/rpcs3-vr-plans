@@ -28,6 +28,7 @@ are **tracked in `bin/`**, so the next release will ship them unless they are mo
 | Dynasty Warriors 6 Empires | BLUS30306 | `vr-non-working/` + untracked `bin/` copy | no: frame-locked, profile at 60 (180 flat possible) | not played | 90 FPS needs a logic-step patch |
 | Puppeteer | BCUS98227 | `vr-non-working/` + untracked `bin/` copy | partly: frame time found, still 2 vblanks per flip | not played | flip interval patch; stereo unchecked |
 | Jak and Daxter Collection | BCUS98281 | `vr-non-working/` + untracked `bin/` copies | Jak 1, Jak II yes (real-time, no patch) | not played | Jak 1 particles; Jak 3 not started |
+| Asura's Wrath | BLUS30721 | `vr-non-working/` + untracked `bin/` copy | yes (community Unlock FPS, real-time) | not played | QTE mashing at 90 untested |
 | God of War Collection (GOW1, GOW2) | BCES00800 | tracked in `bin/` | yes (profile, no patch) | not played | 5% black border |
 | Killzone 2 | BCUS98116 | tracked in `bin/` | no: default 45 | not played | RSX-bound; HUD and combat unchecked |
 | Gran Turismo 5 | BCUS98114 | `vr-non-working/` + untracked `bin/` copy | yes (patch) | tested, broken | menu clipping, race-start frame rate |
@@ -114,6 +115,12 @@ Generated profile not yet checked in stereo.
 Notes: `profiles/BCUS98281-notes.md`. Evidence: `evidence/jak/`. Jak 1 (170-180 flat) and Jak II (~130 flat) are
 real-time at any rate, so no patch; generated per-executable profiles, yaw audits coherent apart from Jak 1's indoor
 sparkles. Jak 3 not started.
+
+## Asura's Wrath (BLUS30721, disc 01.00)
+
+Notes: `profiles/BLUS30721-notes.md`. Evidence: `evidence/asura/`. Community Unlock FPS (+ motion blur and depth of
+field off): 90 FPS at Vblank 180, real-time; generated profile with `vblanks_per_frame 2`; stereo and yaw audit
+look right in Episode 1.
 
 ## God of War Collection (BCES00800 v01.00, UK disc)
 
