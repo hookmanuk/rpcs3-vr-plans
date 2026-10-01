@@ -49,3 +49,5 @@ Savestates: `BCUS98281_1_0` (Jak 1, Samos' hut after the intro), `BCUS98281_1_1`
 - Performs well, but **everything looks 1.5x speed at 90 FPS**. This contradicts the "Real-time" result above (float
   clocks 1.00x, matching walk displacement at 60 and 180): that test did not cover what runs per frame. Re-check by
   eye at 60 vs 90 (animations, effects, NPC movement) and find the per-frame step; Jak II's result is suspect too.
+- Matt's gameplay savestate: `bin/savestates/BCUS98281/vrtest_jak1_matt_gameplay.SAVESTAT.zst` (hard link to
+  `BCUS98281_1_5`, 18:08); also `vrtest_jak1_matt_1804` (`_1_4`, 18:04).
