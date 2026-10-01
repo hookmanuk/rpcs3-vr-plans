@@ -26,6 +26,7 @@ are **tracked in `bin/`**, so the next release will ship them unless they are mo
 | Tales of Xillia | BLUS31006 | `vr-non-working/` + untracked `bin/` copy | yes (community 60 FPS + fork patch) | not played | battles unchecked |
 | The Darkness | BLUS30035 | `vr-non-working/` + untracked `bin/` copy | yes (community 60 FPS patch, real-time) | not played | stereo breaks the lighting (red leaks, dark bands) |
 | Dynasty Warriors 6 Empires | BLUS30306 | `vr-non-working/` + untracked `bin/` copy | no: frame-locked, profile at 60 (180 flat possible) | not played | 90 FPS needs a logic-step patch |
+| Puppeteer | BCUS98227 | `vr-non-working/` + untracked `bin/` copy | partly: frame time found, still 2 vblanks per flip | not played | flip interval patch; stereo unchecked |
 | God of War Collection (GOW1, GOW2) | BCES00800 | tracked in `bin/` | yes (profile, no patch) | not played | 5% black border |
 | Killzone 2 | BCUS98116 | tracked in `bin/` | no: default 45 | not played | RSX-bound; HUD and combat unchecked |
 | Gran Turismo 5 | BCUS98114 | `vr-non-working/` + untracked `bin/` copy | yes (patch) | tested, broken | menu clipping, race-start frame rate |
@@ -100,6 +101,12 @@ Notes: `profiles/BLUS30035-notes.md`. Evidence: `evidence/darkness/`.
 
 Notes: `profiles/BLUS30306-notes.md`. Evidence: `evidence/dw6e/`. Generated profile, stereo and yaw audit clean,
 180 FPS flat in battle, but frame-locked (3.4x at 180, no dt found): runs at 60 with reprojection for now.
+
+## Puppeteer (BCUS98227, disc 01.00)
+
+Notes: `profiles/BCUS98227-notes.md`. Native 30, frame-locked; the game's frame time (`0x98ebec`) is now driven by
+the profile and gives near-real-time movement at 90 FPS. Still flips every 2 vblanks: needs a flip-interval patch.
+Generated profile not yet checked in stereo.
 
 ## God of War Collection (BCES00800 v01.00, UK disc)
 

@@ -25,5 +25,5 @@ if ($NoHeadset) { $env:RPCS3_OPENXR = '0' } else { Remove-Item Env:RPCS3_OPENXR 
 if ($FakeHmd) { $env:RPCS3_VR_FAKE_HMD = "$FakeHmd" } else { Remove-Item Env:RPCS3_VR_FAKE_HMD -ErrorAction SilentlyContinue }
 if ($Audit) { $env:RPCS3_VR_AUDIT = $Audit } else { Remove-Item Env:RPCS3_VR_AUDIT -ErrorAction SilentlyContinue }
 Start-Process "$bin\rpcs3.exe" -ArgumentList "`"$Game`"" -WorkingDirectory $bin
-for ($i = 0; $i -lt 180; $i++) { Start-Sleep 1; $t = (Get-Process rpcs3 -ErrorAction SilentlyContinue | Select-Object -First 1).MainWindowTitle; if ($t -match 'FPS: [1-9]') { break } }
+for ($i = 0; $i -lt 180; $i++) { Start-Sleep 1; if ($i % 5 -eq 4) { & "$PSScriptRoot\re\dismiss_pkg.ps1" | Out-Null }; $t = (Get-Process rpcs3 -ErrorAction SilentlyContinue | Select-Object -First 1).MainWindowTitle; if ($t -match 'FPS: [1-9]') { break } }
 "running: $t"
