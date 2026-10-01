@@ -16,6 +16,14 @@ Bandits).
   at `0x44c9e8` from the physics solver around `0x32614`. Profile runs it at **60** (`max_fps 60`); the headset
   reprojects. A 90 FPS fix needs the RR7 method (counter caves) or the logic step found from the vblank handler.
 
+- 2026-10-01: no vblank handler is registered (the `cellGcmSetVBlankHandler` calls at `0x4d94b0`/`0x4d94e8` pass
+  0; the conditional ones at `0x4e18a0`/`0x4e196c` never ran in a boot: no log line). Float values that advance
+  ~1.0/s at 60 (`0xa0c35c`, `0xa0a684`) are animation values, not clocks (they oscillate at 180). Only an integer
+  frame counter (`0x92d8e8`, +1 per frame) found. The logic is one fixed step per frame with no time variable:
+  90 FPS would need patching movement and animation integrators one by one. Left at 60 (headset reprojects).
+  Executable dumped to `tools/re/elf/BLUS30306.elf`; import stubs resolved by hand (the FNID table of `cellGcmSys`
+  at `0x624058`, stub table `0x7d0260`).
+
 ## VR profile (generated)
 
 `row_vectors`, camera `c[0, 264, 262, 263, 16, 256, 261]` (overlapping bases: `require_camera_aspect`),
