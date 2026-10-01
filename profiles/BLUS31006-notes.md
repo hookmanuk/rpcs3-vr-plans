@@ -48,3 +48,10 @@ The first battle is well into the story (not reached by scripted input).
 
 - Battles at 90 (timing), skits.
 - World scale (50 units/m assumed), battles (a separate camera and HUD), menus and skits in the headset.
+
+## 2026-10-01: first headset run (Matt, 90 Hz)
+
+- White screen forever (not frozen) after the first Namco splash screen, **only when Start is pressed on that splash
+  screen**. Without pressing anything the game boots normally: in the headset, in desktop stereo at Vblank 90 and on
+  the OpenXR Simulator at 90 (no `cellVdec ... waiting for a consumer` warnings in the log).
+- Open: does pressing Start on the splash also do it flat at 60 (upstream behaviour) or only with VR? Compare logs.
