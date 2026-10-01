@@ -74,3 +74,15 @@ The first battle is well into the story (not reached by scripted input).
   classified as a camera draw and transformed like the main pass; the shadow maps (64x64, 128x128) stay as drawn.
 - Field minimap: world-fixed in the HUD box (a 25-degree turn moves it as far as the scene, image registration).
   "HUDs all over the place" must be other screens (battles, menus, pop-ups): not reachable from the savestate.
+
+## 2026-10-01 night: menus, and the white screen
+
+- **Menus fixed** (fork 1c082730c): on the Options screen the 2D sprite program `387450c1b505f028` counted as a camera
+  draw. Its `c[0..3]` is a pixel ortho, so the second camera block `c[47]` (a stale perspective matrix) matched. In
+  the field every draw with a perspective `c[47]` also has one in `c[0]`, which matches first, so `c[47]` was only
+  ever matched by menus: `camera_blocks [0]`. The game overwrites rather than clears its composite buffer, so the
+  automatic 2D check kept seeing 3D: `frames_without_3d_as_screen: true`. Simulator: Options is a world-fixed screen
+  (before: full-view with a grey layer, likely the "white" Matt saw); the field is unchanged (minimap boxed).
+- **White screen after Start on the splash: not reproduced.** Start pressed while the Namco splash shows: flat at 60
+  and on the simulator at 90 the game continues to the Options screen. Matt's white screen was probably that Options
+  screen drawn full-view over the headset (fixed above). Recheck in the headset.
