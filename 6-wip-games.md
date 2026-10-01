@@ -30,6 +30,7 @@ are **tracked in `bin/`**, so the next release will ship them unless they are mo
 | Jak and Daxter Collection | BCUS98281 | `vr-non-working/` + untracked `bin/` copies | Jak 1, Jak II yes (real-time, no patch) | not played | Jak 1 particles; Jak 3 not started |
 | Asura's Wrath | BLUS30721 | `vr-non-working/` + untracked `bin/` copy | yes (community Unlock FPS, real-time) | not played | QTE mashing at 90 untested |
 | Anarchy Reigns | BLUS30632 | `vr-non-working/` + untracked `bin/` copies (profile, patch) | yes (fork patch, real-time verified) | not played | campaign unchecked; HUD timers 3x |
+| Dante's Inferno | BLUS30405 | `vr-non-working/` + untracked `bin/` copy | yes (profile `game_frame_ms_f32`, no patch; 0.99x at 90) | not played | sky is a screen card; world scale unchecked |
 | God of War Collection (GOW1, GOW2) | BCES00800 | tracked in `bin/` | yes (profile, no patch) | not played | 5% black border |
 | Killzone 2 | BCUS98116 | tracked in `bin/` | no: default 45 | not played | RSX-bound; HUD and combat unchecked |
 | Gran Turismo 5 | BCUS98114 | `vr-non-working/` + untracked `bin/` copy | yes (patch) | tested, broken | menu clipping, race-start frame rate |
@@ -130,6 +131,13 @@ the community 60 FPS) routes the characters' fixed 1/30 step through a word the 
 walk and run speed equal to 60 FPS (1.5x without it). Scene at 1024x720; generated profile (after generator fixes)
 `row_vectors [4, 24]`, HUD `c[54]` after the shader. Stereo, audit and the fake-headset HUD box are right in
 Practice. Open: campaign, HUD sprite timers at 3x, headset run.
+
+## Dante's Inferno (BLUS30405, disc 01.00)
+
+Notes: `profiles/BLUS30405-notes.md`. Evidence: `evidence/dante/`. Frame-locked above 60 by a whole-frame clock;
+the profile sets its frame interval (new key `game_frame_ms_f32`, `0x119ecb4`): real-time at 90 without a patch.
+Generated profile (row vectors, five camera blocks, HUD `c[0]`); the HUD vanished in stereo until
+`require_rigid_camera` (generator fixed to write it). Stereo, audit, pause menu right on the desktop.
 
 ## God of War Collection (BCES00800 v01.00, UK disc)
 

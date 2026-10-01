@@ -1059,3 +1059,8 @@ generator detection); `max_fps 0` multiplies the headset rate by `vblanks_per_fr
 - Renderer: the HUD box applies on output-aspect targets as well as view targets; a HUD draw is a pass for
   `hud_skips_passes` only when it samples a view-shaped target (new texture kind `vr_texture_view_target`); the
   after-shader HUD box works with `RPCS3_VR_FAKE_HMD`; draw clauses are not host-instanced while VR renders.
+
+**Generic, from Dante's Inferno (2026-10-01).** Profile key `game_frame_ms_f32` (float milliseconds per frame,
+written with 1000/fps). Generator: a depth-less draw whose first matching camera block is strongly sheared
+(|cos| > 0.5) is stray data, so it writes `require_rigid_camera` (the HUD's UV/colour parameters in a camera
+block's slots had vanished the HUD in stereo).
