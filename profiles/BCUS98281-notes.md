@@ -80,3 +80,18 @@ Savestates: `BCUS98281_1_0` (Jak 1, Samos' hut after the intro), `BCUS98281_1_1`
   implausible (far cliff nearer than the trunk), so either the view units are not 4096/m or the template matching
   on this grassy, repetitive scene is unreliable at these offsets. Next: per-w offset with a units estimate from a
   known size (Jak's height, a door), and a parallax check on a scene with distinct objects; then Matt in the headset.
+
+## 2026-10-01 late: Jak 1 stereo depth fixed (fork 156196976, generator 03abf3550)
+
+- New `stereo.eye_offset: baseline_per_w` (fork): the baseline eye offset per unit of the block's clip-w row, so each
+  object's scale cancels and `eye_baseline` is in view units. With the plain `baseline` only objects with w-row scale
+  ~1 (Jak, the eco vent) got parallax and the world (scales down to 0.016) was flat: Jak floated in front of it.
+- Units: the earlier attempt used 262.144 (GOAL's 4096 per metre) and was 4096x too large (garbage matches). Jak's
+  model (`8f8b007b`, draws 2024-2046) has its origin 12.28 view units away and is 2.9 units tall on screen, so a
+  view unit is ~0.5 m (Jak ~1.45 m, camera ~6 m behind): `eye_baseline` 0.128.
+- OpenXR Simulator, `tools/re/parallax.py` (sub-pixel): far-field offset -739.7 px (= the asymmetric frusta with the
+  10-degree margin); parallax trunk 52 px, lamp post 16, Jak 11.0 (predicted 11.1 for 12.28 units), eco vent 8,
+  cliff 2, far palms 1: ordered by depth.
+- Also: `fc3fabcf3cb724b2` full-screen passes (glow composite 512x360, scene copy 1024x720, untextured fill) in
+  `unboxed_draws`: they were boxed since `orthographic_block 0` (faint rectangles when the head turned).
+- World Scale in the VR settings corrects the size if 0.5 m per unit is off.
