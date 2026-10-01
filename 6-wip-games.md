@@ -26,7 +26,7 @@ are **tracked in `bin/`**, so the next release will ship them unless they are mo
 | Tales of Xillia | BLUS31006 | `vr-non-working/` + untracked `bin/` copy | yes (community 60 FPS + fork patch) | not played | battles unchecked |
 | The Darkness | BLUS30035 | `vr-non-working/` + untracked `bin/` copy | yes (community 60 FPS patch, real-time) | not played | stereo and headset view fixed in the opening; rest of the game unchecked |
 | Dynasty Warriors 6 Empires | BLUS30306 | `vr-non-working/` + untracked `bin/` copy | no: frame-locked, profile at 60 (180 flat possible) | not played | 90 FPS needs a logic-step patch |
-| Puppeteer | BCUS98227 | `vr-non-working/` + untracked `bin/` copy | partly: frame time found, still 2 vblanks per flip | not played | flip interval patch; stereo unchecked |
+| Puppeteer | BCUS98227 | `vr-non-working/` + untracked `bin/` copy | yes (profile frame time, Vblank 180 = 90 FPS, real-time) | not played | stage small in the headset view; SPU post skipped in VR |
 | Jak and Daxter Collection | BCUS98281 | `vr-non-working/` + untracked `bin/` copies | Jak 1, Jak II yes (real-time, no patch) | not played | Jak 1 particles; Jak 3 not started |
 | Asura's Wrath | BLUS30721 | `vr-non-working/` + untracked `bin/` copy | yes (community Unlock FPS, real-time) | not played | QTE mashing at 90 untested |
 | Anarchy Reigns | BLUS30632 | `vr-non-working/` + untracked `bin/` copies (profile, patch) | yes (fork patch, real-time verified) | not played | campaign unchecked; HUD timers 3x |

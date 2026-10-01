@@ -19,6 +19,24 @@ Installation" dialog): `tools/launch.ps1` now dismisses it automatically.
   `cellGcmSetFlipMode` / `_cellGcmSetFlipCommandWithWaitLabel` stubs at `0x771fb8` / `0x772000`). Until then
   the profile keeps `vblanks_per_frame 2` (45 FPS at 90 Hz with the right speed, or 30 at 60 Hz).
 
+## 2026-10-01: 90 FPS and stereo working (desktop)
+
+- **90 FPS:** the flip interval does not need changing: at Vblank 180 the game flips every second vblank = 90 FPS,
+  and the profile now has `max_fps 0`, `default_fps 0` (it kept `vblanks_per_frame 2`, so the headset path runs
+  the vblank at twice the headset rate). Walk speed (Kutaro's position `0x99a010`, per-frame peek,
+  `tools/re/pp_phys.sh`): 3.9 u/s at native 30, 4.0 at 90 with the profile frame time: real-time.
+- **Stereo was left-eye only:** the frame goes through main memory for EDGE post-processing on the SPUs (blit of the
+  scene `0xc0750000` to `0x39600000`, SPU job, result at `0x399c0000`, drawn back by the final composite), so both
+  eyes showed the left eye's image (yaw audit identical, 0 px parallax). The community *Disable SPU MLAA* patch does
+  not remove the bounce. Fork: new profile key **`texture_redirects`** `[{"from": "0x399c0000", "to": "0xc0750000"}]`
+  makes the composite read the scene render target per eye. Parallax now ~34 px, audit correct, 90 FPS stereo
+  (`evidence/puppeteer/`). Cost: the SPU post effects (MLAA) are skipped in VR (flat is unchanged: the redirect
+  only applies while stereo rendering is on). *Disable SPU MLAA* was enabled in `patch_config.yml` during the test
+  (harmless, saves SPU time).
+- Headset view (`-FakeHmd 100`): correct but the stage is small: the game camera is a narrow ~45-degree theatre view
+  (A = 2.41), so in a 100-degree headset view the stage fills about a third of the width with darkness around.
+  Worth trying World Scale / camera depth in the headset.
+
 ## VR profile (generated)
 
 `column_vectors`, camera `c[256, 264, 0]`, HUD `c[0]` + `hud_skips_passes`, metres. 100% of depth-tested draws.
@@ -26,4 +44,5 @@ Stereo and audits not yet checked (time-boxed).
 
 ## Open
 
-- Flip interval 1 (above); then stereo, yaw audit, world scale (a puppet stage: metres may be wrong).
+- Headset run: stage size (World Scale), HUD and menus; later levels (different SPU post buffers would need their
+  own `texture_redirects`).
