@@ -22,7 +22,7 @@ are **tracked in `bin/`**, so the next release will ship them unless they are mo
 | Game | ID | Profile | 90 FPS | Headset | Blocker |
 |---|---|---|---|---|---|
 | Dragon's Dogma: Dark Arisen | BLUS31155 | `vr-non-working/` + untracked `bin/` copy | yes (community Unlock FPS, real-time) | not played | open-world frame rate unmeasured; headset frame rate (risk); needs update 01.02 |
-| Ratchet & Clank Collection | BCUS98282 | `vr-non-working/` + untracked `bin/` copy | R&C 1 yes (profile frame-time values) | not played | R&C 1 pause menu; stereo 75-80; R&C 2/3 untried |
+| Ratchet & Clank Collection | BCUS98282 | `vr-non-working/` + untracked `bin/` copies (base + rc1/rc2/rc3 executable profiles) | R&C 1, 2, 3 yes (profile frame-time values, run speed verified) | not played | stereo 75-85 (RSX work in series with the game); R&C 1 pause menu |
 | Tales of Xillia | BLUS31006 | `vr-non-working/` + untracked `bin/` copy | yes (community 60 FPS + fork patch) | not played | battles unchecked |
 | The Darkness | BLUS30035 | `vr-non-working/` + untracked `bin/` copy | yes (community 60 FPS patch, real-time) | not played | stereo breaks the lighting (red leaks, dark bands) |
 | Dynasty Warriors 6 Empires | BLUS30306 | `vr-non-working/` + untracked `bin/` copy | no: frame-locked, profile at 60 (180 flat possible) | not played | 90 FPS needs a logic-step patch |
@@ -74,13 +74,16 @@ Notes: `profiles/BLUS31155-notes.md`. Evidence: `evidence/ddda/`. Profile `BLUS3
 
 ## Ratchet & Clank Collection (BCUS98282, disc 01.00)
 
-Notes: `profiles/BCUS98282-notes.md`. Evidence: `evidence/ratchet/`. Only R&C 1 tried.
+Notes: `profiles/BCUS98282-notes.md`. Evidence: `evidence/ratchet/`. All three games tried (each has an executable
+profile `BCUS98282.rc1/rc2/rc3.ppu.json`).
 
-- **Frame rate:** 90 flat is easy (RSX ~61%), stereo 75-80, but the game is frame-locked (1.5x at 90). Profile runs
-  it at native 60 (`max_fps 60`). Lead for a 90 patch: four 1/60 floats (`0x770304`, `0x770314`, `0x112c078`,
-  `0x112c080`) at 1/90 make walking real-time; the rest is unverified.
-- **Profile:** generated, `column_vectors c[0]`, HUD `c[4]`, metres, 100% coverage; stereo and yaw audit clean.
-- **Open:** pause-menu button frames use their own perspective camera and turn with the head; R&C 2 and 3.
+- **Frame rate:** each game keeps a constant timing block (1.0, 1/60, 1/3600, 1/216000...); the executable profiles
+  drive it with `game_frame_time_f32` / `_sq_` / `_cube_`, `max_fps 0`. Run speed at 90 equals 60 in all three.
+- **Stereo frame rate 75-85 at Vblank 90:** GPU mostly idle, RSX thread 4.2 ms of a 12.3 ms frame; the game seems to
+  wait for the RSX each frame, so the stereo RSX cost pushes frames past the vblank (details in the notes).
+- **Profile:** generated, `column_vectors c[0]`, HUD `c[4]`, metres, 100% coverage; stereo and yaw audits clean;
+  HUD sprites boxed in the headset view via `passthrough_hud` + `hud_programs`.
+- **Open:** stereo frame rate; R&C 1 pause-menu button frames use their own perspective camera and turn with the head.
 
 ## Tales of Xillia (BLUS31006, disc 01.00)
 
