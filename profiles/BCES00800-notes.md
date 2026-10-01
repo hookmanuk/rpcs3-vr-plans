@@ -96,4 +96,6 @@ takes ~10 s before the screen changes). Keyboard pad: template plus right stick;
   averages two samples one pixel apart; the offsets are texture-coordinate fractions in `c[466..467]`, so at 300% they
   spanned ~3 pixels and left a light halo along every silhouette. `resolution_scaled_constants` [`c4882b95379447a8`,
   466, 467] in `BCES00800.gow1.json` (as Ridge Racer 7): halo gone on Matt's savestate (desktop stereo, 300%).
-- Open: the main menu's 2D/3D depth (not looked at yet); GoW 2 probably has the same resolve.
+- Main menu fixed (fork, new key `screen_frame_draws`): the menu is Kratos in 3D in front of a 2D fire background
+  with the logo; the headset view pulled them apart. A frame with the logo draw (`a3b1455d9ebdd381`, 1024x256) goes
+  whole on the fixed screen. Simulator: menu world-fixed, gameplay headset view. Open: GoW 2 (same resolve and menu?).
