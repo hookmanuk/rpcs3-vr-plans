@@ -14,6 +14,13 @@ Savestates: `BCUS98281_1_0` (Jak 1, Samos' hut after the intro), `BCUS98281_1_1`
 - Yaw-25 audit: outdoors coherent. In Samos' hut, blended sparkles (`71e17d7f15754935`, 40-vertex draws) showed as
   black pentagons fixed on screen in the rotated eye: to fix.
 
+- 2026-10-01: the black pentagons were not the sparkles (`71e17d7f`, hiding it changed nothing) but
+  `07b162cff7a683bf`: pre-projected glare quads (identity `c[0..3]`, positions already in clip space) drawn into a
+  512x360 buffer with each quad killed where the scene depth (`0xc05c0000`, read as Z24) is nearer: a lens flare
+  occlusion test. In a rotated eye the flat-screen quads test against other depth and show (black, through the
+  modulate composite `fc3fabcf`). Profile `hidden_draws` [`07b162cff7a683bf`, texture 1024x720] hides the glare in
+  VR; headset-view wobble in Samos' hut is clean (`evidence/jak/`).
+
 ## Jak II (Jak2.self)
 
 - 60 native; **~130 flat** at Vblank 180 in the prison area. Real-time (same displacement test: no 3x cluster).
@@ -31,6 +38,6 @@ Savestates: `BCUS98281_1_0` (Jak 1, Samos' hut after the intro), `BCUS98281_1_1`
 
 ## Open
 
-- Jak 1 sparkle particles in the rotated eye; HUD check in both; stereo frame rates on the headset path.
+- HUD check in both; stereo frame rates on the headset path.
 - Jak 3: below 90 flat in Spargus (above).
 - The launcher's attract scenes are 3D (30 FPS) with the base profile = Jak 1's.
