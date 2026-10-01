@@ -55,3 +55,16 @@ Stereo and audits not yet checked (time-boxed).
 - In the game proper it kind of works, but the world looks far away and small (world scale, `eye_baseline`).
 - Desktop stereo and the fixed-pose fake headset never showed the trails; reproduce on the OpenXR Simulator with a
   head sweep from the savestate.
+
+## 2026-10-01 evening: OpenXR Simulator, Matt's savestate (the intro stage)
+
+- **Fixed: the light that follows the head.** Program `03dd68c4dfe94371` draws light glows at the lights' flat-screen
+  positions: 160x120 halos (around the candles and the orb) and 208x252 glints (the orb). They also sample the scene
+  target (occlusion), so the renderer took them as passes and left them as drawn: head-locked. `hidden_draws` for
+  both (fork). Simulator, head turned 20 degrees: the head-locked dot is gone. **Check in gameplay that Pikarina's
+  cursor is not one of these sprites**; if it disappears, drop the 208x252 rule.
+- Trails: not seen on the simulator with the head still or sweeping (yaw 25, pitch 10 at 0.5 Hz); still open.
+- Dark: the intro is dark in flat play too; in VR the SPU post (`texture_redirects`) is skipped, which may also drop
+  a brightening pass. Open.
+- Small and far away: the camera sits in the audience of a puppet theatre; try World Scale (VR settings) above 100%.
+  `eye_baseline` 0.064 assumes metres; unchecked.
