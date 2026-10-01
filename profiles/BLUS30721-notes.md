@@ -32,3 +32,9 @@ viewport is full 1280x720).
 - To do: in-engine cutscenes show a 16:9 box with black letterbox bars. Hide the box background and the bars in VR,
   keeping the 3D world and the HUD elements (subtitles, prompts). The bars are drawn by the game (full 1280x720
   viewport); find their programs with probe `hide=` / `why=` in a cutscene, then `hidden_draws`.
+
+## 2026-10-01 night: letterbox not started
+
+- Tried to reach an in-engine cutscene from the disc: the title's EPISODE MENU ("Continue previous game") does not
+  react to scripted Cross or Start; NEW GAME would overwrite Matt's save (`BLUS30721-BCSAVEDATA`, 18:23), so stopped.
+  Next: a savestate from Matt at a cutscene with bars, then probe `hide=`/`why=` for the bar and background draws.

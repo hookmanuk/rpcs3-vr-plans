@@ -59,6 +59,23 @@ at 90 and 60, and `tools/re/dk_boot.ps1` (Start + Cross at 25 s) gets through it
 Next: the same boot at Vblank 60 with the headset, and at 90 without it (`RPCS3_OPENXR=0`), to split "90 Hz" from
 "headset session". Capture: `evidence/headsetsim/darkness_sim_90hz.png`.
 
+**Status after the 2026-10-01 evening/night fixes (fork openxr, local commits c7b092610..1c082730c; all checked on the
+OpenXR Simulator unless noted). Recheck in the headset:**
+
+| Game | Fixed | Still open |
+|---|---|---|
+| all | splash screens, videos and 2D menus on the fixed screen instead of following the head (generic) | |
+| Dragon's Dogma | boot screens | slow save holds 90 on the simulator (not reproduced) |
+| R&C collection | loader and menus | R&C 1 "fixed 2D window" not reproduced (headset view correct, also via the collection menu) |
+| Tales of Xillia | menus (camera block, 2D frames), a boxed scene copy (misplaced effect) | white screen not reproduced; battles unchecked; character outlines (if any remain) |
+| Puppeteer | the intro light that followed the head (hidden glows) | trails (not seen on the simulator), dark, small (try World Scale) |
+| Jak 1 | HUD/pause menu boxed; speed (capped at 60) | stereo depth: cause found (per-object scale in the eye offset), fix open |
+| God of War 1 | main menu (whole frame on the fixed screen); Kratos's edge halo (desktop-checked) | GoW 2 unchecked |
+| Dante's Inferno | splash, menus, intro movie, pause menu | culling at the wide headset FOV (needs a patch) |
+| GT5 | | 60 on the grid state; need a savestate where it drops |
+| Asura's Wrath | | cutscene letterbox: need a cutscene savestate |
+| The Darkness, Anarchy Reigns | parked | |
+
 **Fix in progress (2026-10-01 evening, fork c7b092610, local): boot screens no longer follow the head.** Frames
 without 3D now go on the fixed screen by default (render targets carry `vr_has_3d`; a frame with no camera draws
 whose displayed buffer holds no 3D is 2D; a paused game re-showing its 3D frame stays in the headset view). The
