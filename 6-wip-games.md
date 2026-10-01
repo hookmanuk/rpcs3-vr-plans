@@ -41,7 +41,7 @@ found): a lead for Dragon's Dogma's slow save. Use `RPCS3_VR_WOBBLE` (moving pos
 and treat only Matt's headset runs as headset results.
 
 **OpenXR Simulator (set up 2026-10-01): use it for headset checks.** A real OpenXR runtime in
-`F:psc3\source\OpenXR-Simulator` (Pimax Dream Air profile, 90 Hz); `tools/re/simboot.ps1 -Iso <disc> -Probe render=1`
+`F:\rpsc3\source\OpenXR-Simulator` (Pimax Dream Air profile, 90 Hz); `tools/re/simboot.ps1 -Iso <disc> -Probe render=1`
 boots RPCS3 on it for that launch only, `tools/re/simshot.py OUT` captures the composited eyes. Setup and quirks:
 `5-vr-profile-playbook.md` > "Headset checks with the OpenXR Simulator".
 
