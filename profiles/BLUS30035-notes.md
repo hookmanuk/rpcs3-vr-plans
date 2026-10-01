@@ -1,7 +1,7 @@
 # The Darkness (BLUS30035, disc 01.03)
 
 Added 2026-09-30. Profile `bin/vr_profiles/BLUS30035.json` (generated in the opening car scene), copy in
-`rpcs3/vr-non-working/`. Desktop stereo fixed 2026-10-01; headset view still dark (below). Community **60 FPS** patch (tronuo, `patch.yml`) targets 01.03,
+`rpcs3/vr-non-working/`. Desktop stereo and headset view fixed 2026-10-01 (below). Community **60 FPS** patch (tronuo, `patch.yml`) targets 01.03,
 which is the disc version, and is enabled in Matt's `patch_config.yml`.
 
 ## Frame rate
@@ -81,10 +81,15 @@ fragment constant that the shear does not update).
   Today's earlier change (only view-shaped targets make a HUD draw a pass) had also made the luminance passes look
   like HUD; the bare-projection test now uses "any colour target".
 - Result: desktop stereo matches flat, 90 FPS (`evidence/darkness/stereo-desktop-fixed-2026-10-01.png`).
-- **Headset view still almost black** (`-FakeHmd 100`). `camera_scissor_full` (new profile key, probe `dev=0x400`:
-  camera draws scissor to the viewport, scissored stencil-only clears widened) changes nothing. Lead being tested:
-  the headset eye offset is `baseline/2 x |clip-x row|`, and the object scale folded into `c[0..3]` (scaled shadow
-  volumes) makes it differ per object; `|x row| / |w row|` (the projection scale) is scale-independent.
+- **Headset view fixed too** (`-FakeHmd 100`): RTDUMP showed the light buffer right after lighting as in desktop
+  stereo, black after the tone map: in the headset path the LUT build quads (bare projection, ordinary 324x18
+  textures, depth ALWAYS) went into the HUD box. Profile: `screen_space.unboxed_draws` [`7053e6a262fcd712`, texture
+  324x18] keeps them as drawn; the HUD (`7053e6a2` draws 880/881, font and icon textures, blended, into the scene
+  buffer) stays boxed. Lit, HUD boxed, lighting stable while the head turns (wobble), 90 FPS
+  (`evidence/darkness/fakehmd100-fixed-hud-boxed.png`, `fakehmd100-wobble.png`). Neither `camera_scissor_full` nor
+  a scale-independent eye offset (tried, reverted) was needed. `hud_display_buffers_only` also lights it but leaves
+  the HUD unboxed (it is drawn into the scene buffer, not a display buffer).
+- Open: play past the opening (Darkness powers, guns, other lights); headset run; world scale (metres assumed).
 - Savestate `bin/savestates/BLUS30035/dk_tutorial.SAVESTAT.zst` (static frame at "View tutorial help").
 
 ## Boot
