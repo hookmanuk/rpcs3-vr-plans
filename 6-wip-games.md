@@ -65,8 +65,9 @@ whose displayed buffer holds no 3D is 2D; a paused game re-showing its 3D frame 
 released profiles that were not opted in set `frames_without_3d_as_screen: false` (unchanged for them). Checked on
 the OpenXR Simulator (head straight vs turned 25 degrees): Dante's Inferno (splash, title, intro movie), Dragon's
 Dogma (notices, title), the R&C collection (logos, game-select menu), Anarchy Reigns (SEGA, intro text) are
-world-fixed; Dante's gameplay returns to the headset view. Still head-locked: Dante's pause menu (drawn over a copy
-of the 3D frame, so it counts as 3D). Cost 0.4% of the RSX thread.
+world-fixed; Dante's gameplay returns to the headset view. Dante's pause menu (drawn over a copy of the 3D frame,
+so the automatic check counted it as 3D) is fixed by its profile's `frames_without_3d_as_screen: true`. Cost 0.4% of
+the RSX thread.
 
 **R&C 1 "fixed 2D window" not reproduced (2026-10-01 evening).** On the OpenXR Simulator R&C 1 renders a proper
 headset view, from the savestate and through the collection menu (`rc_boot.ps1` with the simulator runtime): yaw
@@ -108,7 +109,7 @@ pass mark** for fully compatible.
 | Jak and Daxter Collection | BCUS98281 | `vr-non-working/` + untracked `bin/` copies | Jak 1 **no**: steps a fixed 1/60 per frame (1.5x at 90): capped at 60 in VR for now; Jak II probably the same; Jak 3 no (74-85 flat in Spargus) | Jak 1 72; Jak II below 72 (69); Jak 3 below 72 (43) | **Jak 1**: HUD boxed and speed fixed (capped at 60, reprojected) 2026-10-01 evening, simulator-checked; wrong stereo depth: cause found (eye offset scaled by each object's matrix scale), fix open | HUD unchecked |
 | Asura's Wrath | BLUS30721 | `vr-non-working/` + untracked `bin/` copy | yes (community Unlock FPS, real-time) | **120 Hz** (Episode 1 space battle) | **works well**; cutscene letterbox box/bars to remove | QTE mashing at 90 untested |
 | Anarchy Reigns | BLUS30632 | `vr-non-working/` + untracked `bin/` copies (profile, patch) | yes (fork patch, real-time verified) | 90 (Training only) | **parked**: splash/intro head-locked, HUD culled by depth; bad performance and graphics issues in gameplay | campaign unchecked; HUD timers 3x |
-| Dante's Inferno | BLUS30405 | `vr-non-working/` + untracked `bin/` copy | yes (profile `game_frame_ms_f32`, no patch; 0.99x at 90) | 120 | gameplay performs really well; splash, menus and intro movie head-locked; objects culled at the edges of the headset view | sky is a screen card; world scale unchecked |
+| Dante's Inferno | BLUS30405 | `vr-non-working/` + untracked `bin/` copy | yes (profile `game_frame_ms_f32`, no patch; 0.99x at 90) | 120 | gameplay performs really well; splash, menus, intro movie and pause menu world-fixed since 2026-10-01 evening (simulator); objects culled at the edges of the headset view | sky is a screen card; world scale unchecked |
 | God of War Collection (GOW1, GOW2) | BCES00800 | tracked in `bin/` | yes (profile, no patch) | 120 (GoW 1) | **GoW 1 issues**: main menu 2D/3D at the wrong depth; Kratos's blurred edges fixed 2026-10-01 evening (resolve offsets); performance good | 5% black border |
 | Killzone 2 | BCUS98116 | tracked in `bin/` | no: default 45 | not measured | not played | RSX-bound; HUD and combat unchecked |
 | Gran Turismo 5 | BCUS98114 | `vr-non-working/` + untracked `bin/` copy | yes (patch) | ~~90 (race start)~~ ~40 FPS in the headset (Matt) | tested, broken: **~40 FPS, needs 60 minimum** | menu clipping, race-start frame rate |
