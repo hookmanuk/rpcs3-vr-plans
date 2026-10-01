@@ -60,6 +60,12 @@ fragment constant that the shear does not update).
   holds shadow counts 0-9 (`evidence/darkness/depth-before-light-pass-fakehmd-vs-flat.png`). Next: dump depth +
   stencil right before and after one light pass in both modes and check whether its EQUAL test or its stencil test
   rejects (e.g. make a probe option that forces the light passes to depth LEQUAL / stencil ALWAYS to see which).
+- **Found:** new probe switches `dev=0x100` (depth EQUAL -> LEQUAL for colour draws) and `dev=0x200` (no stencil
+  test for colour draws). LEQUAL changes nothing; without the stencil test the light comes back (no shadows):
+  `evidence/darkness/fakehmd-lequal-nostencil-both.png`. So with the head transform the stencil shadow volumes
+  mark everything as shadowed, and the lit result is also speckled (a second fault, maybe a screen-position lookup
+  in the light pass). Next: dump stencil after the volumes for one light in flat vs headset view; check whether the
+  volumes are drawn with depth clamp / an infinite far plane that the headset projection breaks.
 
 ## Boot
 
