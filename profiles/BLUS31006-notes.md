@@ -7,18 +7,22 @@ illusion; in `patch.yml`, enabled in Matt's `patch_config.yml`). Desktop only.
 ## Frame rate (100%)
 
 Native 30. With the community 60 FPS patch the game renders every vblank, but its world advances one 60 Hz tick
-per frame, so it is **frame-locked at 60** (the patch notes say to keep Vblank at 60; it slows down below 60).
-Headroom is large: at Vblank 180 the field ran at 180 flat and 130-150 in desktop stereo. Profile `max_fps 60`,
-`default_fps 60` (the headset reprojects).
+per frame, so it is **frame-locked at 60** without the fork patch below (the patch notes say to keep Vblank at 60; it slows down below 60).
+Headroom is large: at Vblank 180 the field ran at 180 flat and 130-150 in desktop stereo. With the fork patch it follows the headset rate.
 
-**Attempted 90 FPS patch (not working, kept as `evidence/xillia/frame-step-patch-attempt.yml.txt`).** The frame
-step is computed at `0x23f114..0x23f134`: `r20 = ticks + 1` (the community patch sets `addi r20, r16, 1`), then
-`f13 = float(ticks) * k` stored to the frame-timing object `+0xa4` and `float(ticks)` to `+0xa8`, with `60` (`u32`)
-at `+0xa0`. A code cave scaling `f13` by `60 * W` (`W` at bss `0xf11ac8`, meant for `game_frame_time_f32`) applied
-and ran, but the timing objects found by signature (`60, dt, 1.0f`) kept `dt` unchanged and walking distances did
-not settle (the test corridor turns, so the walk measurements were too noisy to conclude). Next step: a PPU write
-watch (`RPCS3_PPU_WATCH`) on the real timing object's `+0xa4` to find where it lives and who reads it, then verify
-with a fixed, repeatable walk.
+**90 FPS patch (2026-10-01): "Frame rate follows VR (use with 60 FPS)"**, `bin/patches/BLUS31006_patch.yml`, on by
+default, profile `game_frame_time_f32: ["0xf11ac8"]`, `max_fps 0`, `default_fps 0`.
+- Found with the PPU interpreter (`RPCS3_PPU_TRACE=23f130`, new `RPCS3_PPU_TRACE_REGS=r18,f0,f13`) and read/write
+  watches (`RPCS3_PPU_WATCH_FILE`): the frame-timing object is a per-channel array at `0xe340b0` (stride 0xc0);
+  channel 0 at `0xe34118`. `+0xa8` = ticks (float, 60 Hz units), `+0xa4` = step (ticks x 1.0), both read through
+  getters `0x23e0d4` / `0x23e074` thousands of times a frame; `+0x98` counts frames, `+0x88` is time-based.
+- The cave at `0x23f12c` multiplies the tick count by `60 * W` before both are stored; `W` (bss `0xf11ac8`) is seeded
+  with 1/60 by the patch and set to 1/fps by the profile. The first attempt scaled only the step, not the ticks
+  (which most systems read): no effect.
+- Verified: walking (player position `0xe78150`, fresh boot, 0.5 s forward then back): 60 FPS 275.1 out / 280.8
+  back; 90 FPS with the patch 275.4 / 280.8; 90 FPS without it 393.7 / 394.3 (1.43x). The game-time float
+  `0xe3eeb0` runs at 0.99x of its 60 FPS rate. Per-frame u32 counters still run 1.5x (unknown uses). Battles not
+  checked. Test scripts: `tools/re/tox_ob.sh`, `outback.py`.
 
 ## VR profile (generated)
 
@@ -36,5 +40,5 @@ sometimes needs a hand at character select.
 
 ## Open
 
-- A real 90 FPS patch (above); until then 60 with reprojection.
+- Battles at 90 (timing), skits.
 - World scale (50 units/m assumed), battles (a separate camera and HUD), menus and skits in the headset.

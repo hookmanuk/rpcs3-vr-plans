@@ -4,6 +4,9 @@ $w = "$env:TEMP\rpcs3-vrprofile"
 $env:RPCS3_VR_GEN_TRIGGER = "$w\GEN"
 $env:RPCS3_VR_MEMDUMP = "$w\tox_dump"
 $env:RPCS3_VR_POKE = "$w\POKE"
+$env:RPCS3_PPU_WATCH_FILE = "$w\WATCH"
+if ($env:TOX_PEEK) { Set-Content "$w\peek.txt" $env:TOX_PEEK -NoNewline; $env:RPCS3_VR_PEEK = "$w\peek.txt" } else { Remove-Item Env:RPCS3_VR_PEEK -ErrorAction SilentlyContinue }
+if ($env:TOX_TRACE) { $env:RPCS3_PPU_TRACE = $env:TOX_TRACE; $env:RPCS3_PPU_TRACE_REGS = $env:TOX_REGS } else { Remove-Item Env:RPCS3_PPU_TRACE -ErrorAction SilentlyContinue }
 $a = @{ Game = "F:/rpsc3/games/Tales of Xillia (USA) (En,Fr,Es).iso" }
 if (-not $Headset) { $a.NoHeadset = $true }
 if ($Probe) { $a.Probe = $Probe }
