@@ -64,3 +64,19 @@ Savestates: `BCUS98281_1_0` (Jak 1, Samos' hut after the intro), `BCUS98281_1_1`
   The earlier "real-time" result (walk displacement) was wrong. Fix for now: `max_fps 60`, `default_fps 60` (runs
   at its native 60 with the headset at 90, reprojected), verified 60.0 FPS on the simulator. A real VR-rate fix needs
   the frame step found and driven from the profile, as for R&C. Jak II uses the same engine: probably the same.
+
+## 2026-10-01 evening: Jak 1 wrong stereo depth — cause found, fix not finished
+
+- Measured on the OpenXR Simulator (RPCS3 SHOT of the headset session, `tools/re/parallax.py`): with the profile as
+  it is, the trunk a metre away, the lamp post, Jak, the eco vent, the far cliff and palms all have the same R-L
+  offset (-741 px, scores 0.87-1.0): **no parallax at all** on the headset path. (The desktop path uses the screen
+  shear and is fine.)
+- Cause: `eye_offset: baseline` shifts clip x by `eye_baseline * |x row|`. Jak 1's scene blocks `c[0..3]` are per-
+  object matrices: in one gameplay frame the w-row length (an object's scale) is 1 (camera-space draws, `e9a3ac88`),
+  0.5 (`55eb3ab7`, `8f8b007b`) and 0.0158 (`a9e7e67f`, 999 draws), while `|x row| / |w row|` is 1.6 for all (the
+  projection). So each object's eye offset is scaled by its own size: small-scale objects get almost none.
+- Tried and reverted: a profile option dividing by the w row (`baseline_per_w`, consistent across objects by
+  construction) with `eye_baseline` 262.144 (GOAL's 4096 units per metre): the parallax measured afterwards was
+  implausible (far cliff nearer than the trunk), so either the view units are not 4096/m or the template matching
+  on this grassy, repetitive scene is unreliable at these offsets. Next: per-w offset with a units estimate from a
+  known size (Jak's height, a door), and a parallax check on a scene with distinct objects; then Matt in the headset.
