@@ -68,6 +68,14 @@ Dogma (notices, title), the R&C collection (logos, game-select menu), Anarchy Re
 world-fixed; Dante's gameplay returns to the headset view. Still head-locked: Dante's pause menu (drawn over a copy
 of the 3D frame, so it counts as 3D). Cost 0.4% of the RSX thread.
 
+**R&C 1 "fixed 2D window" not reproduced (2026-10-01 evening).** On the OpenXR Simulator R&C 1 renders a proper
+headset view, from the savestate and through the collection menu (`rc_boot.ps1` with the simulator runtime): yaw
+and pitch move the world, the sky is overhead. Through the menu the simulator first looped STOPPING/IDLE (its
+`xrEndSession` re-sent STOPPING; patched locally, branch `rpcs3-vr` in `OpenXR-Simulator`), and the session
+then survives the switch (IDLE, READY, VISIBLE). A runtime whose session does not recover after the executable
+switch would show the desktop window as a flat panel, which is what Matt describes; Matt's `RPCS3.log` from an R&C
+headset run (OpenXR lines) would confirm it.
+
 **First question when continuing: did the 2026-10-01 renderer changes cause any of this?** Not known yet. A/B each
 game in the fake headset view (`-FakeHmd 100`, Vblank 90, boot from the disc, not a savestate) on the current build
 and on the last committed build (`openxr` 90640f92d), then in the headset. Leads, unverified:

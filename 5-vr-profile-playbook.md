@@ -338,6 +338,11 @@ code, so it is not a headset test. The OpenXR Simulator is a real OpenXR runtime
   continuously: needed to see head-locked screens or anything that changes with head movement.
 - Capture: `tools/re/simshot.py OUT` (the composited eyes, as the headset shows them); `shot.py` gives RPCS3's own
   image for comparison. `runtime_status.json` has frame time and the head pose.
+- Local patches (branch `rpcs3-vr`, not pushed): the Dream Air profile, and `xrEndSession` moves the session to IDLE
+  only (it re-sent STOPPING, so RPCS3 looped STOPPING/IDLE after a collection's executable switch, 9 million log
+  lines). Rebuild after pulling: `cmake --build build` in the VS dev shell.
+- `tools/re/simscreen.sh ID ISO OUT [WAIT] [SHOTS]`: boot on the simulator at Vblank 90 and capture the headset view
+  straight and turned 25 degrees: a world-fixed screen moves between the two, a head-locked one does not.
 - Still not the headset: no reprojection or timewarp, a D3D12 compositor, no lens distortion. Matt's runs stay final.
 
 ## In-emulator generation (implemented 2026-09-23)
