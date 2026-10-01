@@ -32,7 +32,11 @@ Matt's recheck after the evening fixes (fork up to 03abf3550). New savestates (h
 | Dante's Inferno | The intro movie after New Game is still stuck to the head. |
 | Asura's Wrath | `vrtest_asura_matt_letterbox`: the letterbox bars and a subtle grey 16:9 background box are visible. |
 
-Also asked: full VR profiles for two new games, **Super Stardust HD** and **Resogun**.
+**New games to profile (Matt, 2026-10-01/02):** full VR profiles for
+- **Super Stardust HD** (PSN, installed: `dev_hdd0/game/NPUA80068`)
+- **Resogun** (PSN, installed: `dev_hdd0/game/NPUA80900`)
+- **Kingdom Hearts HD 1.5 ReMIX** (`F:/rpsc3/games/Kingdom Hearts - HD 1.5 ReMIX (USA) (En,Fr,Es).iso`)
+- **Kingdom Hearts HD 2.5 ReMIX** (`F:/rpsc3/games/Kingdom Hearts - HD 2.5 ReMIX (USA) (En,Fr,Es).iso`)
 
 ## First headset test (Matt, 90 Hz, 2026-10-01)
 
