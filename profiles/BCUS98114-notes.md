@@ -219,3 +219,9 @@ programs had already been written to the shader cache, and a throw there would e
   and the black is in the fake headset's desktop presentation (not investigated further). With
   `RPCS3_VR_HEAD_OFFSET=0,0,0.3` the box just gets smaller; the arcade card-stack clipping was not on this screen.
 - Not a 90 FPS game at race start (~42 flat), so the remaining GT5 items stay parked.
+
+## 2026-10-01: headset (Matt, 90 Hz)
+
+- Still about **40 FPS** in the headset; **at least 60 is needed** for the game to work. Build: 2026-10-01 RSX-thread
+  optimisations (uncommitted). The regression's "90 Hz (race start)" (grid savestate, 40 s settle) does not reflect
+  racing: re-measure in a race.

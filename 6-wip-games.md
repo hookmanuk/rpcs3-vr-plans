@@ -33,6 +33,7 @@ screens, menus and intro videos at the headset rate were never seen in a headset
 | Puppeteer | Barely works. Trails of graphics everywhere and very dark; in the intro a light moves with the head. Savestate showing the trails: `bin/savestates/BCUS98227/vrtest_puppeteer_matt_trails.SAVESTAT.zst` (hard link to `BCUS98227_1_1`, 2026-10-01 17:59). In the game proper it kind of works, but the world looks far away and small. |
 | Jak and Daxter (Jak 1) | All HUD elements tied to the face. Stereo broken on lots of objects: at the wrong depth, hurts the eyes. Gameplay performs well, but **everything looks 1.5x speed at 90 FPS** (contradicts the desktop "real-time" check, see the Jak section). Savestate in gameplay: `bin/savestates/BCUS98281/vrtest_jak1_matt_gameplay.SAVESTAT.zst` (hard link to `BCUS98281_1_5`, 18:08; an earlier one `vrtest_jak1_matt_1804` = `_1_4`). |
 | God of War Collection (GoW 1) | The main menu looks wrong: 2D and 3D elements combined at the wrong depth. In gameplay the main character has blurred edges; savestate `bin/savestates/BCES00800/vrtest_gow1_matt_blur.SAVESTAT.zst` (hard link to `BCES00800_1_2`, 2026-10-01 18:14). Performance good. |
+| Gran Turismo 5 | Performance still bad: **around 40 FPS** in the headset. It needs at least 60 to be playable (the game's own rate). The "90 Hz (race start)" figure from the regression run (savestate after a 40 s settle) does not reflect play. |
 
 **The simulated headset is not the headset.** `RPCS3_VR_FAKE_HMD` renders the headset image on the desktop (same
 camera transforms, headset FOV and HUD box) but with a **fixed forward pose**: head-locked and world-fixed screens look
@@ -90,7 +91,7 @@ pass mark** for fully compatible.
 | Dante's Inferno | BLUS30405 | `vr-non-working/` + untracked `bin/` copy | yes (profile `game_frame_ms_f32`, no patch; 0.99x at 90) | 120 | not played | sky is a screen card; world scale unchecked |
 | God of War Collection (GOW1, GOW2) | BCES00800 | tracked in `bin/` | yes (profile, no patch) | 120 (GoW 1) | **GoW 1 issues**: main menu 2D/3D at the wrong depth; Kratos's edges blurred in gameplay; performance good | 5% black border |
 | Killzone 2 | BCUS98116 | tracked in `bin/` | no: default 45 | not measured | not played | RSX-bound; HUD and combat unchecked |
-| Gran Turismo 5 | BCUS98114 | `vr-non-working/` + untracked `bin/` copy | yes (patch) | 90 (race start) | tested, broken | menu clipping, race-start frame rate |
+| Gran Turismo 5 | BCUS98114 | `vr-non-working/` + untracked `bin/` copy | yes (patch) | ~~90 (race start)~~ ~40 FPS in the headset (Matt) | tested, broken: **~40 FPS, needs 60 minimum** | menu clipping, race-start frame rate |
 | MotorStorm: Pacific Rift | BCUS98155 | `vr-non-working/` + untracked `bin/` copy | yes (patch) | not measured | not played | stereo 50-70 at race start (needs multiview) |
 | Blur | BLUS30295 | `vr-non-working/` | yes (patch) | not measured | not played | 45-50 FPS stereo |
 | Need for Speed Most Wanted | BLUS31010 | `vr-non-working/` | yes (patch, fixed per rate) | not measured | not played | in-race speed at 90 unconfirmed |
@@ -298,6 +299,11 @@ Notes: `profiles/BCUS98114-notes.md` (the most detailed). Evidence: `evidence/gt
 - **Open (from the notes):**
   1. Arcade menu clipped when the head moves back (needs the headset path).
   2. Race-start frame rate: the RSX thread is CPU-bound even flat (~42 flat, ~30 stereo). Needs multiview.
+- **Headset (Matt, 2026-10-01, on the build with the RSX-thread optimisations): ~40 FPS. Target: at least 60**
+  (the game's own rate; below that it does not work). The regression run's "90 Hz (race start)" was measured from the
+  grid savestate after a 40 s settle and does not reflect racing. Next: measure the RSX thread (cycle-exact, frame
+  stats) in a race at 60 Hz flat and stereo, profile with `RPCS3_RSX_SAMPLE=3`, and check how much of today's per-draw
+  gain GT5 got; a savestate mid-race from Matt would make the measurement repeatable.
   3. Intermittent upside-down menu (not seen since the display-buffer size fix).
   4. Cockpit, replay and garage not audited; the shadow and mirror fixes not yet seen in the headset.
 
