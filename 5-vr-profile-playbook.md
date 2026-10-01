@@ -270,6 +270,10 @@ Every problem found here should become a Step 7 reproduction on the desktop befo
 | Setting `RPCS3_VR_PROBE_FILE` disables stereo | the file replaces the default `render=1` | put `render=1` in the file |
 | The level (or part of it) is a flat window that shears with head turns; a straight seam through the scenery | a program-wide box rule caught world draws (R&C 1's `boxed_camera_programs` listed its two world programs) | box menu cameras by their clip-w row: `screen_space.boxed_cameras` |
 | A faint 16:9 rectangle over the world (brighter or darker inside the HUD box) | a full-screen pass reads the HUD block (identity world matrix there) and is boxed: only the box gets this frame | `hud_skips_passes: true` (Asura's Wrath, pass `5c313870`); probe `why=<hash>` shows `box 1` |
+| A menu flickers between the fixed screen and stuck to the face | the menu's frames alternate between "camera draws" and none (a 3D element classified only some frames) | `screen_frame_draws` with a draw only that menu makes (GoW 1 Power Up: `a3b1455d`, 512x512) |
+| An intro or logo animation is at an odd angle or missing in the headset | a real-time 3D animation through a camera: the headset view turns it with the head | `screen_frame_draws` for its programs (GoW Collection selector intro) |
+| A movie stuck to the face although 2D frames go on the screen | the game renders 3D behind the movie (the next level loading), so the frame counts as 3D | `screen_frame_draws` with the movie draw (YUV planes in main memory; Dante's Inferno `2f7541c3`, 1280x736) |
+| Characters and the world look tiny (or huge) | `eye_baseline` from the near-plane guess | measure a character (Measuring world scale, above) |
 | Camera keeps pushing into walls and snapping back, even with VR off | a Wider view patch's FOV also reaches camera logic (SotC: framing uses tan(fov/2) of the render view) | find the readers (`RPCS3_PPU_WATCH_FILE` read watch, getter call sites), try fixes live with `RPCS3_VR_POKE` under the interpreter, give camera logic fov / Scale (SotC patch 1.2) |
 
 ---
@@ -348,6 +352,20 @@ code, so it is not a headset test. The OpenXR Simulator is a real OpenXR runtime
 - `tools/re/simscreen.sh ID ISO OUT [WAIT] [SHOTS]`: boot on the simulator at Vblank 90 and capture the headset view
   straight and turned 25 degrees: a world-fixed screen moves between the two, a head-locked one does not.
 - Still not the headset: no reprojection or timewarp, a D3D12 compositor, no lens distortion. Matt's runs stay final.
+
+### Measuring world scale (`eye_baseline`) from the headset path (2026-10-02)
+
+The generator's near-plane rule (near plane = 0.1 m) is a guess: God of War 1 came out at 50 units/m and measured
+13.5 (the world looked ~3.7x too small). Measure on a character of known size:
+1. Run on the OpenXR Simulator, dump both eyes' display buffer (`RTDUMP` with its address; `tools/re/rtdump2png.py`),
+   join them side by side.
+2. Set `eye_baseline` to 0.0001 live and measure any region with `tools/re/parallax.py`: that R-L is the frusta's
+   offset (infinity). Restore the value and measure the character: its disparity d = infinity - R-L.
+3. Distance in game units D = fx * eye_baseline / d, with fx = pixels per tangent unit across the eye image
+   (from the infinity offset: fx = offset / (tan(right half) - tan(left half)) of the headset's per-eye FOV).
+4. Height in units H = h_px / fy * D (fy from the vertical FOV); units per metre = H / real height. Set
+   `eye_baseline` = 0.064 x units per metre and check the disparity scales by the same factor.
+Jak 1 (0.5 m per unit) used the same relation: parallax = k x eye_baseline / depth.
 
 ## In-emulator generation (implemented 2026-09-23)
 

@@ -99,3 +99,26 @@ takes ~10 s before the screen changes). Keyboard pad: template plus right stick;
 - Main menu fixed (fork, new key `screen_frame_draws`): the menu is Kratos in 3D in front of a 2D fire background
   with the logo; the headset view pulled them apart. A frame with the logo draw (`a3b1455d9ebdd381`, 1024x256) goes
   whole on the fixed screen. Simulator: menu world-fixed, gameplay headset view. Open: GoW 2 (same resolve and menu?).
+
+## 2026-10-02: Matt's second headset run, fixed on the OpenXR Simulator (fork 116138201)
+
+- **Game selector intro "not visible or at a very weird angle":** the collection's intro (Kratos's blades sweeping
+  across the logo, before `GAMESEL.self`) is a real-time 3D animation through a camera (`c[256]`), not a movie, so
+  the headset view turned it with the head. The selector profile lists its four programs as `screen_frame_draws`
+  (`c760d3b1` 1920x1200 background, `b08e6382` 512x512 blades, `a35ef6b2` 256x256, `195bc177` 1920x1080): it now
+  plays as a screen in front (checked straight and turned 25 degrees).
+- **GoW 1 Power Up screen flickering between the fixed HUD and the face:** the menu frames switched between "no
+  camera draws" (fixed screen) and "camera draws" (headset view) every ~3 frames at 90 Hz, ~180 switches in 6 s;
+  the four captured menu frames had identical draw lists, so the camera classification of some menu draw changes
+  frame to frame. Fixed with `screen_frame_draws` `{a3b1455d9ebdd381, 512x512}` (a menu-art draw not seen in
+  gameplay, where `a3b1455d` only draws 4x4 and 128x16): 7 switches in 6 s (the opening animation and the close), a
+  steady world-fixed screen in between. A generic exit hysteresis (3 frames with 3D to leave the screen) did not fix
+  it (the pattern is 3 on / 3 off) and was reverted. Risk: if gameplay ever draws `a3b1455d` with a 512x512 texture
+  (a boss bar?), that frame goes on the screen.
+- **Characters very small:** `eye_baseline` 3.20128 came from the generator's near-plane rule (near 5 units = 0.1 m,
+  50 units/m). Measured on Kratos in `vrtest_gow1_matt_blur` from RPCS3's own eye images (RTDUMP of `0xc0400000`,
+  3840x2160 per eye): with `eye_baseline` ~0 every region sits at R-L -615.1 px (the frusta's offset), with 3.2 Kratos
+  is 56.9 px nearer, so at ~1489 px per tangent unit he is 84 units away; his head (42 px) and shoulder-to-belt
+  (80 px) give 13-14 units per metre. **`eye_baseline` 0.864** (0.064 m x 13.5): Kratos's disparity became 15.2 px
+  (predicted 15.4). The world in the headset should be ~3.7x larger than before. GoW 2 (same engine, also 3.20128)
+  not measured yet.
