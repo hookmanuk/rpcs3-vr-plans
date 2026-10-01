@@ -38,6 +38,12 @@ First-run Options (Start), opening movie (Start > Skip Movie > Yes), character s
 cutscene (Start > Skip Cutscene > Yes), two tutorial screens: `tools/re/tox_boot.ps1` scripts it, with timing that
 sometimes needs a hand at character select.
 
+## 2026-10-01: headset view (desktop, `-FakeHmd 100`)
+
+At the first field (academy corridor): minimap and pop-ups boxed, scene follows the head, 90 FPS
+(`evidence/xillia/fakehmd100-field-minimap-boxed.png`). Savestate `bin/savestates/BLUS31006/tox_field.SAVESTAT.zst`.
+The first battle is well into the story (not reached by scripted input).
+
 ## Open
 
 - Battles at 90 (timing), skits.
