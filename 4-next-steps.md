@@ -1064,3 +1064,9 @@ generator detection); `max_fps 0` multiplies the headset rate by `vblanks_per_fr
 written with 1000/fps). Generator: a depth-less draw whose first matching camera block is strongly sheared
 (|cos| > 0.5) is stray data, so it writes `require_rigid_camera` (the HUD's UV/colour parameters in a camera
 block's slots had vanished the HUD in stereo).
+
+**Generic, from The Darkness and Dragon's Dogma (2026-10-01, fork 25ccbbe91).** Bare-projection quads that sample
+any colour render target, have no rejecting depth test (desktop stereo), or draw through a small sub-viewport are
+passes left as drawn (post chains, LUT builds); profile key `camera_scissor_full`; the passthrough HUD accepts draws
+sampling small render targets; the fake headset records camera targets; dev tools: probe `why=<hash>`,
+RTDUMP of RGBA16F targets and `prog=<hash>#n`.

@@ -24,7 +24,7 @@ are **tracked in `bin/`**, so the next release will ship them unless they are mo
 | Dragon's Dogma: Dark Arisen | BLUS31155 | `vr-non-working/` + untracked `bin/` copy | yes (community Unlock FPS, real-time) | not played | open-world frame rate unmeasured; headset frame rate (risk); needs update 01.02 |
 | Ratchet & Clank Collection | BCUS98282 | `vr-non-working/` + untracked `bin/` copies (base + rc1/rc2/rc3 executable profiles) | R&C 1, 2, 3 yes (profile frame-time values, run speed verified) | not played | stereo 75-85 (RSX work in series with the game); R&C 1 pause menu |
 | Tales of Xillia | BLUS31006 | `vr-non-working/` + untracked `bin/` copy | yes (community 60 FPS + fork patch) | not played | battles unchecked |
-| The Darkness | BLUS30035 | `vr-non-working/` + untracked `bin/` copy | yes (community 60 FPS patch, real-time) | not played | stereo breaks the lighting (red leaks, dark bands) |
+| The Darkness | BLUS30035 | `vr-non-working/` + untracked `bin/` copy | yes (community 60 FPS patch, real-time) | not played | desktop stereo fixed; headset view almost black (shadow stencil) |
 | Dynasty Warriors 6 Empires | BLUS30306 | `vr-non-working/` + untracked `bin/` copy | no: frame-locked, profile at 60 (180 flat possible) | not played | 90 FPS needs a logic-step patch |
 | Puppeteer | BCUS98227 | `vr-non-working/` + untracked `bin/` copy | partly: frame time found, still 2 vblanks per flip | not played | flip interval patch; stereo unchecked |
 | Jak and Daxter Collection | BCUS98281 | `vr-non-working/` + untracked `bin/` copies | Jak 1, Jak II yes (real-time, no patch) | not played | Jak 1 particles; Jak 3 not started |
