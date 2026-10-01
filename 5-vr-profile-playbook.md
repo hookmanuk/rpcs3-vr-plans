@@ -315,6 +315,31 @@ In stereo the RSX thread is usually the bottleneck (it draws every draw twice): 
 - Function-level self time can mislead: Ratchet & Clank's 5% "in bind_camera_block" was the first read of a
   scratch buffer filled with non-temporal (streaming) stores; only the inline line view showed it.
 
+## Headset checks with the OpenXR Simulator (2026-10-01)
+
+The desktop fake headset (`RPCS3_VR_FAKE_HMD`) has a fixed pose, no OpenXR session and skips the real-headset-only
+code, so it is not a headset test. The OpenXR Simulator is a real OpenXR runtime: RPCS3 runs its full headset path.
+
+- Source and build: `F:psc3\source\OpenXR-Simulator` (github.com/elliotttate/OpenXR-Simulator, 8de3457). Local
+  change: a **Pimax Dream Air** profile (`dreamair`, hmdgdb "Pimax Dream Air LH": per-eye FOV -55.08/45.54 deg
+  horizontal, +-44.55 vertical, panel 3840x3552) in `src/ui_enhancements.h`. Build with VS 2026 Insiders (its CMake
+  and Ninja after `Enter-VsDevShell`; **not** `build_simulator.ps1`, which uses `vswhere -latest`):
+  `cmake -S . -B build -G Ninja -DCMAKE_BUILD_TYPE=Release -DBUILD_TESTING=OFF; cmake --build build` -> `bin\`.
+- Settings: `%LOCALAPPDATA%\OpenXR-Simulator\settings.json` (`headset_profile: dreamair`, native render size, IPD 64).
+  It paces at 90 Hz (fixed). It has no `XR_FB_display_refresh_rate`, so the fork keeps the configured Vblank Rate:
+  set the game's Vblank to the headset rate (90) for the test.
+- Boot: `tools/re/simboot.ps1 -Iso <disc or savestate> -Probe render=1` sets `XR_RUNTIME_JSON` for that launch only
+  (the system's runtime, Matt's headset, is untouched). `-Probe render=1` is required: the dev launcher's probe file
+  otherwise disarms stereo and no session starts (a normal launch arms it by default). The log shows
+  "Headset 'OpenXR Simulator' found" and "First stereo frame submitted".
+- Head: the simulator starts at y = 1.7 m in every space (a real LOCAL space starts at the head), so the screen sits
+  low: write `{"x":0,"y":0,"z":0,"yaw":0,"pitch":0}` to `%LOCALAPPDATA%\OpenXR-Simulator\head_pose_command.json`.
+  `pose_sweep_command.json` (`{"enabled":true,"yaw_amp_deg":30,"pitch_amp_deg":15,"freq_hz":0.25}`) moves the head
+  continuously: needed to see head-locked screens or anything that changes with head movement.
+- Capture: `tools/re/simshot.py OUT` (the composited eyes, as the headset shows them); `shot.py` gives RPCS3's own
+  image for comparison. `runtime_status.json` has frame time and the head pose.
+- Still not the headset: no reprojection or timewarp, a D3D12 compositor, no lens distortion. Matt's runs stay final.
+
 ## In-emulator generation (implemented 2026-09-23)
 
 In a game without a profile, **home menu > Settings > VR** shows one button, **Generate VR Profile**.

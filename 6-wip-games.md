@@ -40,6 +40,17 @@ pose bookkeeping with the fake headset once dropped Dragon's Dogma to 6 FPS and 
 found): a lead for Dragon's Dogma's slow save. Use `RPCS3_VR_WOBBLE` (moving pose) before trusting a fake-headset result,
 and treat only Matt's headset runs as headset results.
 
+**OpenXR Simulator (set up 2026-10-01): use it for headset checks.** A real OpenXR runtime in
+`F:psc3\source\OpenXR-Simulator` (Pimax Dream Air profile, 90 Hz); `tools/re/simboot.ps1 -Iso <disc> -Probe render=1`
+boots RPCS3 on it for that launch only, `tools/re/simshot.py OUT` captures the composited eyes. Setup and quirks:
+`5-vr-profile-playbook.md` > "Headset checks with the OpenXR Simulator".
+
+**The Darkness reproduced on the simulator (2026-10-01):** disc boot at Vblank 90: copyright splash, the intro's fire
+video, then black for good (Cross does nothing). RPCS3's own image is black too, so the game itself draws black at
+90 Hz; the headset path is not losing a picture. No `cellVdec ... waiting for a consumer` warning in the log.
+Next: the same boot at Vblank 60 with the headset, and at 90 without it (`RPCS3_OPENXR=0`), to split "90 Hz" from
+"headset session". Capture: `evidence/headsetsim/darkness_sim_90hz.png`.
+
 **First question when continuing: did the 2026-10-01 renderer changes cause any of this?** Not known yet. A/B each
 game in the fake headset view (`-FakeHmd 100`, Vblank 90, boot from the disc, not a savestate) on the current build
 and on the last committed build (`openxr` 90640f92d), then in the headset. Leads, unverified:
