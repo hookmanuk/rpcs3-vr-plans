@@ -31,6 +31,15 @@ screens, menus and intro videos at the headset rate were never seen in a headset
 | Tales of Xillia | Does not work at all: after the first Namco splash screen the view stays white forever (not frozen, but no game). |
 | The Darkness | Broken after the splash screen. |
 
+**The simulated headset is not the headset.** `RPCS3_VR_FAKE_HMD` renders the headset image on the desktop (same
+camera transforms, headset FOV and HUD box) but with a **fixed forward pose**: head-locked and world-fixed screens look
+identical, and nothing that depends on head movement can show. No OpenXR session (no compositor, no 90 Hz pacing, no
+reprojection), a symmetric FOV, and the real-headset-only code is skipped: per-target pose stamping
+(`vr_stamp_targets`), `vr_track_frame_boundary`, pose carried through copies, `vr_realign_blend_targets`. Running that
+pose bookkeeping with the fake headset once dropped Dragon's Dogma to 6 FPS and Anarchy Reigns to 60 (cause never
+found): a lead for Dragon's Dogma's slow save. Use `RPCS3_VR_WOBBLE` (moving pose) before trusting a fake-headset result,
+and treat only Matt's headset runs as headset results.
+
 **First question when continuing: did the 2026-10-01 renderer changes cause any of this?** Not known yet. A/B each
 game in the fake headset view (`-FakeHmd 100`, Vblank 90, boot from the disc, not a savestate) on the current build
 and on the last committed build (`openxr` 90640f92d), then in the headset. Leads, unverified:
