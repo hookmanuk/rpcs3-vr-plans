@@ -20,11 +20,17 @@ Savestates: `BCUS98281_1_0` (Jak 1, Samos' hut after the intro), `BCUS98281_1_1`
 - Profile (generated): `column_vectors c[0]`, 100% coverage, `camera_target_aspect 1.42222`, HUD `c[0]` +
   `hud_skips_passes`, near 8 units -> 80 units/m (`eye_baseline` 5.12, unchecked). Yaw-25 audit coherent.
 
-## Jak 3
+## Jak 3 (Jak3.self, `PPU-8f44cd9f...`)
 
-Not started.
+- 2026-10-01: New Game (save slot 1), opening cutscene (not skippable: Start pauses it), title, Spargus.
+  Savestates `jak3_spargus` (cutscene) and `jak3_play` (first control, Spargus palace) in
+  `bin/savestates/BCUS98281/`.
+- **Not a 90 FPS candidate in Spargus:** cutscenes 180 at Vblank 180, but gameplay **74-85 flat** (Vblank 180
+  uncapped and Vblank 90 both). RSX thread 4.3 ms of 12.3 ms between flips, GPU idle; one game thread ~70%:
+  the game's own work. No profile made (workflow step 1).
 
 ## Open
 
-- Jak 1 sparkle particles in the rotated eye; HUD check in both; Jak 3; stereo frame rates on the headset path.
+- Jak 1 sparkle particles in the rotated eye; HUD check in both; stereo frame rates on the headset path.
+- Jak 3: below 90 flat in Spargus (above).
 - The launcher's attract scenes are 3D (30 FPS) with the base profile = Jak 1's.
