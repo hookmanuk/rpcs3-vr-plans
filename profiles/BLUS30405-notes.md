@@ -39,6 +39,13 @@ points: weak; removing it changed nothing visible), HUD `c[0]`, near 0.35 (taken
   floating rectangle in the wide view and leaves black sky when turning. Geometry beyond the game camera's
   frustum is culled (black areas when turning), as in other games.
 
+## 2026-10-01: sky in the headset view (not fixed)
+
+The sky ends at the edge of the game's frustum (a bounded "card", `evidence/dante/fakehmd100-sky-card.png`). Not the
+full-screen composite `f7863935bce5eba2` (hidden: no change) and not `2a5dce5dcdcf3e11` (a small sky/environment
+render into a 320x320 target; kept on the game camera: no change). The sky is probably world geometry the main
+shader draws, sized to the game's view. Next: hide the scene programs one by one (`hide=`) to find the sky mesh.
+
 ## Open
 
 - Headset run; world scale; sky card; UI animation speed at 90; later levels.
