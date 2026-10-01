@@ -130,6 +130,13 @@ single, sharp edges (`ghosting-after-reproject.png`), still 90 FPS, fail/pause b
 (`hidden_draws`, HUD program with a 1280x720 texture) also removed the ghosting but blanked the fail screen's
 background, so it is not used.
 
+## VR frame rate at 300% (2026-10-01)
+
+Regression state `vrtest_kz_trench` (Helghast Assault, first trench, made with the **120 FPS** patch entry: savestates
+keep the patched code, and that loop takes up to 4 fixed steps a frame, so it measures every rate): **90 Hz
+sustained** (90: 90.0 FPS, 0.14% late; 120: ~100 FPS). `evidence/vrtest/2026-10-01-1437`. No Compatible Savestate
+Mode needed.
+
 ## Open
 
 1. Headset: world scale, the gun's position, cutscene speed at 90; recheck menus and HUD after 44ef18bd2.

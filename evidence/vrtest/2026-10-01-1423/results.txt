@@ -1,0 +1,16 @@
+# BCAS20001 vrtest_rr7_boot: Ridge Racer 7 (released): no savestate; disc boot + key script; Rave City Riverfront countdown and tunnel run
+BCAS20001 vrtest_rr7_boot vblank 72 scale 300%:
+   576 frames over 8.0 s: avg 72.0 FPS, 1% low 58.6, 0.1% low 57.5 (worst frame 17.4 ms), median 13.92 ms, late 0.00%
+   577 frames over 8.0 s: avg 72.0 FPS, 1% low 60.6, 0.1% low 50.4 (worst frame 19.8 ms), median 13.91 ms, late 0.00%
+   561 frames over 8.0 s: avg 70.0 FPS, 1% low 35.7, 0.1% low 34.7 (worst frame 28.8 ms), median 13.95 ms, late 2.85%
+   => median of 3 windows: avg 72.0 FPS, 1% low 58.6, late frames 0.00%
+BCAS20001 vrtest_rr7_boot vblank 90 scale 300%:
+   716 frames over 8.0 s: avg 89.4 FPS, 1% low 70.5, 0.1% low 44.3 (worst frame 22.6 ms), median 11.08 ms, late 0.70%
+   720 frames over 8.0 s: avg 89.9 FPS, 1% low 76.2, 0.1% low 44.7 (worst frame 22.4 ms), median 11.07 ms, late 0.14%
+   703 frames over 8.0 s: avg 87.9 FPS, 1% low 45.0, 0.1% low 43.7 (worst frame 22.9 ms), median 11.05 ms, late 2.42%
+   => median of 3 windows: avg 89.4 FPS, 1% low 70.5, late frames 0.70%
+BCAS20001 vrtest_rr7_boot vblank 120 scale 300%:
+   
+   => no frame stats (did not run)
+SUSTAINABLE BCAS20001 vrtest_rr7_boot: 90 Hz
+DONE /f/rpsc3/source/plans/evidence/vrtest/2026-10-01-1423

@@ -1,0 +1,18 @@
+# BLUS30182 vrtest_pure_race: Pure (released): Alto Vista race, from the start line (holds R2)
+BLUS30182 vrtest_pure_race vblank 72 scale 300%:
+   576 frames over 8.0 s: avg 72.0 FPS, 1% low 68.7, 0.1% low 68.3 (worst frame 14.6 ms), median 14.01 ms, late 0.00%
+   577 frames over 8.0 s: avg 72.0 FPS, 1% low 68.6, 0.1% low 68.1 (worst frame 14.7 ms), median 14.01 ms, late 0.00%
+   573 frames over 8.0 s: avg 71.6 FPS, 1% low 66.4, 0.1% low 15.7 (worst frame 63.9 ms), median 14.01 ms, late 0.35%
+   => median of 3 windows: avg 72.0 FPS, 1% low 68.6, late frames 0.00%
+BLUS30182 vrtest_pure_race vblank 90 scale 300%:
+   718 frames over 8.0 s: avg 89.7 FPS, 1% low 83.0, 0.1% low 58.8 (worst frame 17.0 ms), median 11.02 ms, late 0.28%
+   720 frames over 8.0 s: avg 90.0 FPS, 1% low 83.2, 0.1% low 83.0 (worst frame 12.0 ms), median 11.02 ms, late 0.00%
+   710 frames over 8.0 s: avg 88.7 FPS, 1% low 69.0, 0.1% low 44.6 (worst frame 22.4 ms), median 11.02 ms, late 0.28%
+   => median of 3 windows: avg 89.7 FPS, 1% low 83.0, late frames 0.28%
+BLUS30182 vrtest_pure_race vblank 120 scale 300%:
+   941 frames over 8.0 s: avg 117.6 FPS, 1% low 87.1, 0.1% low 53.2 (worst frame 18.8 ms), median 8.50 ms, late 0.43%
+   961 frames over 8.0 s: avg 120.0 FPS, 1% low 110.8, 0.1% low 84.7 (worst frame 11.8 ms), median 8.50 ms, late 0.00%
+   928 frames over 8.0 s: avg 115.9 FPS, 1% low 82.9, 0.1% low 34.5 (worst frame 29.0 ms), median 8.51 ms, late 0.43%
+   => median of 3 windows: avg 117.6 FPS, 1% low 87.1, late frames 0.43%
+SUSTAINABLE BLUS30182 vrtest_pure_race: 90 Hz
+DONE /f/rpsc3/source/plans/evidence/vrtest/2026-10-01-1406

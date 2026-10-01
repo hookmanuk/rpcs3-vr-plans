@@ -1,0 +1,17 @@
+# Ridge Racer 7 (BCAS20001): no savestates (the menu video's HLE VDEC context stays open). From the disc boot:
+# Xevious loader (Start), title (Start), main menu Down x3 = Arcade, Single Race, Rave City Riverfront, Normal,
+# machine category 4, Confirm Machine, Start Race; then hold Cross (accelerate) for 40 s. The car reaches the end of the tunnel (lap ~25 s) and stops against the first corner, so SETTLE 84 measures the countdown and the tunnel run.
+wait 18000
+Return 150 11000
+Return 150 11000
+K 150 800
+K 150 800
+K 150 800
+X 150 5000
+X 150 4000
+X 150 4000
+X 150 5000
+X 150 5000
+X 150 5000
+X 150 15000
+X 40000 100

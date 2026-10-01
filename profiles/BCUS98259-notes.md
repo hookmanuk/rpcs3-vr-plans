@@ -95,7 +95,7 @@ Dev tools added: `RPCS3_PPU_WATCH=<addr>,<len>,<code start>,<code end>[,<gate ad
 each store instruction that writes a range (PPU interpreter only; ICO gate `16e580,801f0384` waits for
 ICO.self behind the launcher). `plans/tools/re/ico_boot.ps1` boots to New Game with the key hook,
 `ico_ab.sh SCALE OUT` runs the yaw audit at a patch value, `ico_scale.py` sets the value.
-Savestates do not work for ICO: boot fresh.
+Savestates did not work for ICO at the time (they do from gameplay: see "VR frame rate at 300%" below); patches still need a fresh boot.
 - 2026-09-24 headset: at 3.0 culling still showed looking up and down (the game's vertical FOV is the
   narrow one). Options up to 40.0 added (20.0: ~176 x 166 degrees in gameplay); set to 20.0 for a test.
   A frustum cannot cover directions more than 90 degrees from the game camera's forward axis, so
@@ -128,3 +128,9 @@ setter `0x18ec48`, which writes the requested mode to object `0xc34270`+0x10. Th
 `0x18eca0` applies it when it differs from +0x14 (applied). Patch "Full Pixel Mode always on" makes that
 check and the getter (`0x18ec58`) read 1 and the menu show ON. Verified on a fresh boot with a save that
 has it OFF: requested 0, applied 1. The old advice to switch it on by hand is no longer needed.
+
+## VR frame rate at 300% (2026-10-01)
+
+ICO savestates do work when made in gameplay: `vrtest_ico_bridge` (title > Continue > file 1, Old Bridge; made
+flat). At its VR rate (30 FPS, Vblank 60): 30.0 FPS, 1% low 29.6, no late frames (`evidence/vrtest/2026-10-01-1455`).
+The manifest tag `rates=30` keeps the regression run at 30.

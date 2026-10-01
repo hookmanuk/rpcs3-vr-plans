@@ -163,3 +163,12 @@ Stereo at 3x resolution has ample headroom for 90; no performance work needed.
   accelerate and stalls on a wall.
 - Boot script used for tests: title -> Start x several (logos, Xevious loader, attract) -> Arcade (Down x3) ->
   Single Race -> Rave City Riverfront -> Normal -> machine -> Start Race.
+
+## VR frame rate at 300% (2026-10-01)
+
+**90 Hz sustained** (72: 0% late; 90: 89.4 FPS, 0.70% late; 120: 117.3 FPS, 2.34% late), measured over the
+countdown and the Rave City Riverfront tunnel run (`evidence/vrtest/2026-10-01-1423`, `-1431`). Cross accelerates.
+**No savestates**: "HLE VDEC (video decoder) context(s) exist" even mid-race (the menu video's decoder stays open),
+so the regression run boots the disc and plays `tools/re/vrtest_boot/vrtest_rr7_boot.keys`. For the same reason the
+profile key `video_vblank_rate` cannot fix the menu-video freeze here: it would hold races at its rate too. The
+freeze hit 2 of 5 scripted stereo boots at the main menu (vblank 90 and 120); `vr_regress.sh` retries once.

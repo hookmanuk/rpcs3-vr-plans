@@ -24,6 +24,11 @@ compare runs on the same PC.
    config (`tools/re/gclean.sh <ID>`).
 6. Check it: `sh tools/re/vr_regress.sh <state name>` should boot it, walk, and print frame stats.
 
+Manifest columns (`tools/re/vrtest_states.txt`): `ID STATE VPF WALK SETTLE scene`. WALK is 1 (walk back and forth with
+the left stick), 0 (no input) or a pad key to hold for 25 s (`W` = R2, accelerate in Pure). A `rates=30` tag in the
+scene text replaces the default rates 72/90/120 (frame-locked games). A game that cannot savestate gets a disc-boot
+key script `tools/re/vrtest_boot/<STATE>.keys` instead (Ridge Racer 7).
+
 Vblank matters for **Anarchy Reigns** only: each character copies the frame time when it is created, so the
 characters in a savestate keep the step of the rate it was made at. The original was made at Vblank 180 (90 FPS).
 That does not affect the frame-rate measurement, only game speed; make the state at the rate you want to check
@@ -55,9 +60,14 @@ speed at. The other games read their frame time every frame.
 | `wipeout_race` | BCES00664 | released profile + patches; your custom config | Start any single race; once the ship is moving (hold X to accelerate), Ctrl+S. WALK=0 (the stick keys do nothing useful). |
 | `gowc_boat` | BCES00800 | released profile; set **Compatible Savestate Mode** to true in the game's custom config while saving, then set it back | `tools/re/gow_boot.ps1` (God of War 1, new game); wait out the ~90 s intro video, X; Ctrl+S at the first fight on the boat. |
 | `icosotc_1` | BCUS98259 | released profiles (`BCUS98259*.json`) | Shadow of the Colossus, an open valley while riding/walking. (The original was made by hand; any open-world scene in SotC will do, numbers then differ from the old baseline.) |
+| `ico_bridge` | BCUS98259 | released profiles + patches (as in `vr-games.md`) | Collection launcher: ICO; title Return; Continue, file 1 (a save at the Old Bridge; any save point works); X, then walk a step so the camera follows; Ctrl+S. Measured at 30 FPS only (`rates=30` in the manifest: ICO is frame-locked at 30 in VR). |
 | `demons_1` | BLUS30443 | released profile + patches | New character; Ctrl+S in the tutorial corridor (first steps of the Boletarian Palace tutorial). |
 | `bayonetta_play` | BLUS30367 | profile + patches as in `vr-games.md` | New game; Ctrl+S during the graveyard fight in the Prologue. |
 | `gt5_race_start` | BCUS98114 | `BCUS98114_patch.yml`; your custom config (300% works, **200% freezes**) | Arcade > single race; Ctrl+S on the grid right after the start. SETTLE 40 (GT5 stalls for ~30 s after the savestate loads). WALK=0. |
+| `pure_race` | BLUS30182 | released profile; set **Compatible Savestate Mode** while saving (as for God of War) | Warnings X, X, Return; autosave notice X; title Return; Main Menu Down (Single Event), X; Race, X; track (Alto Vista), rider and ATV: X each; wait ~40 s for the intro flyby; Ctrl+S on the start line. R2 (W) accelerates, so WALK=W. |
+| `rr7_boot` (no savestate) | BCAS20001 | released profile | Ridge Racer 7 **cannot savestate** ("HLE VDEC (video decoder) context(s) exist": the menu video's decoder stays open). The run boots the disc from `games.yml` and plays `tools/re/vrtest_boot/vrtest_rr7_boot.keys` (Arcade > Single Race > Rave City Riverfront, holds Cross); nothing to recreate. |
+| `kz_trench` | BCES01743 | released profile + `BCES01743_patch.yml`; make it with **Frame rate 120 FPS** on and *90 FPS* off (Manage > Game Patches), then switch back | Savestates keep the patched code, and the 120 entry's loop takes up to 4 fixed steps a frame, so one state measures 72, 90 and 120. Boot; Return; X (skips the intro movie to the menu); X GAME, X Campaign, X Helghast Assault, X Easy, X Templar; ~20 s, then Return and X to skip the intro movie; Ctrl+S at the first control in the trench. |
+| `asura_space` | BLUS30721 | community *Unlock FPS*, *Disable Motion Blur*, *Disable Depth of Field*; a temporary custom config with only `Savestate: Compatible Savestate Mode: true` while saving (delete it after) | PSN notice X; Return through the logos; title Return; "Load successful" X; NEW GAME, EASY, Yes (overwrites the save); "Save successful" X; the Episode 1 opening cannot be skipped (Start pauses it: X resumes); Return at the in-episode PRESS START title; Ctrl+S in the space battle (rail shooter). |
 | (NFS Most Wanted) | BLUS31010 | | Skipped: the disc image is no longer in `F:/rpsc3/games`. |
 
 ## RPCS3 savestate gotchas
@@ -66,7 +76,10 @@ speed at. The other games read their frame time every frame.
   oldest `<TITLE_ID>_*.SAVESTAT.zst` when you save a new one. Files whose names do **not** start with the title ID
   (`vrtest_...`) are never touched, so always rename. (On the original PC the `vrtest_` files are hard links to
   RPCS3's own files, so they survive its cleanup.)
-- **"Failed to savestate: failed to lock SPU threads execution"** (God of War Collection, Asura's Wrath): set
+- **"Failed to savestate: HLE VDEC (video decoder) context(s) exist"** (Ridge Racer 7): no workaround without
+  changing the game's library settings; such games get a `vrtest_boot/<STATE>.keys` disc-boot script instead
+  (`vr1pct.sh` boots the disc when that file exists; SETTLE must cover the menus).
+- **"Failed to savestate: failed to lock SPU threads execution"** (God of War Collection, Pure, Asura's Wrath): set
   `Savestate > Compatible Savestate Mode: true` in the game's custom config, boot again, save, then set it back.
 - Savestates may stop loading after large emulator updates (the log says so); recreate them then.
 - A savestate refuses to load if the disc image is no longer at the path it was made from

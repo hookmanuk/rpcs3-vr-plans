@@ -1,0 +1,8 @@
+# BCUS98259 vrtest_ico_bridge: ICO (released): Old Bridge, from a save (Continue, file 1); frame-locked at 30 in VR, rates=30
+BCUS98259 vrtest_ico_bridge vblank 60 scale 300%:
+   241 frames over 8.0 s: avg 30.0 FPS, 1% low 29.7, 0.1% low 29.2 (worst frame 34.3 ms), median 33.51 ms, late 0.00%
+   241 frames over 8.0 s: avg 30.0 FPS, 1% low 29.6, 0.1% low 29.4 (worst frame 34.1 ms), median 33.52 ms, late 0.00%
+   240 frames over 8.0 s: avg 30.0 FPS, 1% low 29.4, 0.1% low 29.3 (worst frame 34.2 ms), median 33.52 ms, late 0.00%
+   => median of 3 windows: avg 30.0 FPS, 1% low 29.6, late frames 0.00%
+SUSTAINABLE BCUS98259 vrtest_ico_bridge: 30 Hz
+DONE /f/rpsc3/source/plans/evidence/vrtest/2026-10-01-1455

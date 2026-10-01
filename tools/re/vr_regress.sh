@@ -10,9 +10,17 @@ grep -v '^#' vrtest_states.txt | grep -- "${1:-.}" | while read id st vpf walk s
   [ -z "$id" ] && continue
   echo "# $id $st: $rest" | tee -a "$D/results.txt"
   best=none
-  for rate in ${RATES:-72 90 120}; do
+  # A scene text tag "rates=30" (comma list) replaces the default rates: frame-locked games (ICO runs at 30).
+  tag=$(echo "$rest" | grep -o "rates=[0-9,]*" | cut -d= -f2 | tr , ' ')
+  for rate in ${RATES:-${tag:-72 90 120}}; do
     out=$(SETTLE=$settle sh vr1pct.sh "$id" "$st" $((rate * vpf)) "$walk")
     echo "$out" | tee -a "$D/results.txt"
+    # No stats at all = the game stalled before measuring (Ridge Racer 7's menu-video freeze): one retry.
+    if echo "$out" | grep -q "no frame stats"; then
+      echo "   (no frame stats: retrying once)" | tee -a "$D/results.txt"
+      out=$(SETTLE=$settle sh vr1pct.sh "$id" "$st" $((rate * vpf)) "$walk")
+      echo "$out" | tee -a "$D/results.txt"
+    fi
     [ -f "p1_${st}_$((rate * vpf)).png" ] && cp "p1_${st}_$((rate * vpf)).png" "$D/${st}_$rate.png"
     late=$(echo "$out" | grep -o "late frames [0-9.]*%" | grep -o "[0-9.]*")
     avg=$(echo "$out" | grep -o "median of [0-9]* windows: avg [0-9.]*" | grep -o "[0-9.]*$")

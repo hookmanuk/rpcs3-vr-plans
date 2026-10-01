@@ -55,3 +55,9 @@ fit against); evidence in `plans/evidence/pure/`.
 
 Open: headset validation (scale, comfort, HUD box); FPS 80-87 with stereo at 300% (vs 90 mono);
 the camera probe renderer only arms by default when `RPCS3_VR_PROBE_FILE` is unset.
+
+## VR frame rate at 300% (2026-10-01)
+
+Regression state `vrtest_pure_race` (Alto Vista race from the start line, holding R2 = W): **90 Hz sustained**
+(90 Hz: 89.7 FPS, 0.28% late; 120 Hz: 117.6 FPS, below the 99% mark). Savestates need `Compatible Savestate Mode`
+(set only while saving). R2 accelerates, not Cross. `evidence/vrtest/2026-10-01-1406`.

@@ -1,0 +1,15 @@
+# BLUS30721 vrtest_asura_space: Asura's Wrath: Episode 1, space battle (rail shooter)
+BLUS30721 vrtest_asura_space vblank 144 scale 300%:
+   576 frames over 8.0 s: avg 71.9 FPS, 1% low 68.6, 0.1% low 37.5 (worst frame 26.7 ms), median 14.00 ms, late 0.17%
+   576 frames over 8.0 s: avg 72.0 FPS, 1% low 68.7, 0.1% low 61.6 (worst frame 16.2 ms), median 14.00 ms, late 0.00%
+   => median of 2 windows: avg 71.9 FPS, 1% low 68.6, late frames 0.00%
+BLUS30721 vrtest_asura_space vblank 180 scale 300%:
+   720 frames over 8.0 s: avg 89.9 FPS, 1% low 86.2, 0.1% low 44.0 (worst frame 22.7 ms), median 11.03 ms, late 0.14%
+   720 frames over 8.0 s: avg 90.0 FPS, 1% low 86.3, 0.1% low 86.0 (worst frame 11.6 ms), median 11.03 ms, late 0.00%
+   => median of 2 windows: avg 89.9 FPS, 1% low 86.2, late frames 0.00%
+BLUS30721 vrtest_asura_space vblank 240 scale 300%:
+   957 frames over 8.0 s: avg 119.6 FPS, 1% low 110.4, 0.1% low 26.0 (worst frame 38.4 ms), median 8.47 ms, late 0.10%
+   960 frames over 8.0 s: avg 120.0 FPS, 1% low 114.5, 0.1% low 101.0 (worst frame 9.9 ms), median 8.47 ms, late 0.00%
+   => median of 2 windows: avg 119.6 FPS, 1% low 110.4, late frames 0.00%
+SUSTAINABLE BLUS30721 vrtest_asura_space: 120 Hz
+DONE /f/rpsc3/source/plans/evidence/vrtest/2026-10-01-1445

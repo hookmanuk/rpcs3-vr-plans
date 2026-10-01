@@ -22,4 +22,6 @@ viewport is full 1280x720).
 ## Open
 
 - QTE mashing at 90; on-foot combat sections; HUD (QTE prompts) placement in the headset; world scale.
-- Savestates fail ("failed to lock SPU threads": needs SPU savestate-compatible mode).
+- Savestates need `Savestate > Compatible Savestate Mode` (otherwise "failed to lock SPU threads"): set it only while saving.
+  Regression state `vrtest_asura_space` (Episode 1 space battle): **120 Hz sustained** at 300% (Vblank 240: 119.6 FPS,
+  no late frames; 2026-10-01, `evidence/vrtest/2026-10-01-1445`).
