@@ -25,3 +25,10 @@ viewport is full 1280x720).
 - Savestates need `Savestate > Compatible Savestate Mode` (otherwise "failed to lock SPU threads"): set it only while saving.
   Regression state `vrtest_asura_space` (Episode 1 space battle): **120 Hz sustained** at 300% (Vblank 240: 119.6 FPS,
   no late frames; 2026-10-01, `evidence/vrtest/2026-10-01-1445`).
+
+## 2026-10-01: first headset run (Matt, 90 Hz)
+
+- Works well.
+- To do: in-engine cutscenes show a 16:9 box with black letterbox bars. Hide the box background and the bars in VR,
+  keeping the 3D world and the HUD elements (subtitles, prompts). The bars are drawn by the game (full 1280x720
+  viewport); find their programs with probe `hide=` / `why=` in a cutscene, then `hidden_draws`.
