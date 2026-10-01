@@ -32,6 +32,7 @@ screens, menus and intro videos at the headset rate were never seen in a headset
 | The Darkness | Broken after the splash screen. Later the same day: not a hang. After the intro's fire video the screen stays black for a long time (the old desktop boot script pressed Start there, so it never showed); waited out in the headset, the intro's videos are missing. **Parked: performance is terrible**, under 60 FPS in Matt's savestate `bin/savestates/BLUS30035/vrtest_darkness_matt_slow.SAVESTAT.zst` (hard link to `BLUS30035_1_1`, 2026-10-01 17:42). |
 | Puppeteer | Barely works. Trails of graphics everywhere and very dark; in the intro a light moves with the head. Savestate showing the trails: `bin/savestates/BCUS98227/vrtest_puppeteer_matt_trails.SAVESTAT.zst` (hard link to `BCUS98227_1_1`, 2026-10-01 17:59). In the game proper it kind of works, but the world looks far away and small. |
 | Jak and Daxter (Jak 1) | All HUD elements tied to the face. Stereo broken on lots of objects: at the wrong depth, hurts the eyes. Gameplay performs well, but **everything looks 1.5x speed at 90 FPS** (contradicts the desktop "real-time" check, see the Jak section). Savestate in gameplay: `bin/savestates/BCUS98281/vrtest_jak1_matt_gameplay.SAVESTAT.zst` (hard link to `BCUS98281_1_5`, 18:08; an earlier one `vrtest_jak1_matt_1804` = `_1_4`). |
+| God of War Collection (GoW 1) | The main menu looks wrong: 2D and 3D elements combined at the wrong depth. In gameplay the main character has blurred edges; savestate `bin/savestates/BCES00800/vrtest_gow1_matt_blur.SAVESTAT.zst` (hard link to `BCES00800_1_2`, 2026-10-01 18:14). Performance good. |
 
 **The simulated headset is not the headset.** `RPCS3_VR_FAKE_HMD` renders the headset image on the desktop (same
 camera transforms, headset FOV and HUD box) but with a **fixed forward pose**: head-locked and world-fixed screens look
@@ -87,7 +88,7 @@ pass mark** for fully compatible.
 | Asura's Wrath | BLUS30721 | `vr-non-working/` + untracked `bin/` copy | yes (community Unlock FPS, real-time) | **120 Hz** (Episode 1 space battle) | not played | QTE mashing at 90 untested |
 | Anarchy Reigns | BLUS30632 | `vr-non-working/` + untracked `bin/` copies (profile, patch) | yes (fork patch, real-time verified) | 90 | not played | campaign unchecked; HUD timers 3x |
 | Dante's Inferno | BLUS30405 | `vr-non-working/` + untracked `bin/` copy | yes (profile `game_frame_ms_f32`, no patch; 0.99x at 90) | 120 | not played | sky is a screen card; world scale unchecked |
-| God of War Collection (GOW1, GOW2) | BCES00800 | tracked in `bin/` | yes (profile, no patch) | 120 (GoW 1) | not played | 5% black border |
+| God of War Collection (GOW1, GOW2) | BCES00800 | tracked in `bin/` | yes (profile, no patch) | 120 (GoW 1) | **GoW 1 issues**: main menu 2D/3D at the wrong depth; Kratos's edges blurred in gameplay; performance good | 5% black border |
 | Killzone 2 | BCUS98116 | tracked in `bin/` | no: default 45 | not measured | not played | RSX-bound; HUD and combat unchecked |
 | Gran Turismo 5 | BCUS98114 | `vr-non-working/` + untracked `bin/` copy | yes (patch) | 90 (race start) | tested, broken | menu clipping, race-start frame rate |
 | MotorStorm: Pacific Rift | BCUS98155 | `vr-non-working/` + untracked `bin/` copy | yes (patch) | not measured | not played | stereo 50-70 at race start (needs multiview) |
@@ -240,6 +241,11 @@ so that OpenXR is prepared before the exitspawn into a game.
 
 - **State:** desktop and headset-path verified; not played in the headset. Both games reach 90 FPS in
   stereo on the headset path (flat RSX load 10-45%).
+- **Headset, GoW 1 (Matt, 2026-10-01):** performance good. The main menu looks wrong: its 2D and 3D elements are
+  combined at the wrong depth. In gameplay the main character has blurred edges (a screen-space pass, e.g. motion
+  blur or an outline/glow, misaligned with the head-transformed scene): Matt's savestate `vrtest_gow1_matt_blur`
+  (`BCES00800_1_2`, 18:14). GoW 2 not tried. **Note: this collection is tracked in `bin/` and would ship in the
+  next release as it is.**
 - **Frame rate:** no patch. Profile `game_fps_u32` sets the engine's dt to 1/rate (GOW1 `0x531dd0`,
   GOW2 `0x5720f4`); game time measured at 1.0x at 90.
 - **HUD:** a 4:3 bare projection in the scene's slots. The new profile field

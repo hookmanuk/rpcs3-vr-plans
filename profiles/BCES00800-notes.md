@@ -82,3 +82,10 @@ pause menu, in-game cutscenes.
 selector and the executable switch in the log, starts a new game. The intro video (~90 s GoW1, ~2.5 min GoW2)
 cannot be skipped. GoW1's boat enemies kill an idle Kratos in under a minute: restart with X (the checkpoint load
 takes ~10 s before the screen changes). Keyboard pad: template plus right stick; temporary, deleted after the session.
+
+## 2026-10-01: first headset run, GoW 1 (Matt, 90 Hz)
+
+- Performance good.
+- Main menu looks wrong: 2D and 3D elements combined at the wrong depth.
+- In gameplay the main character has blurred edges. Savestate: `bin/savestates/BCES00800/vrtest_gow1_matt_blur.SAVESTAT.zst`
+  (hard link to `BCES00800_1_2`, 18:14). Reproduce on the OpenXR Simulator with a head sweep from it.
