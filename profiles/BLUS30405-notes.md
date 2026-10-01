@@ -57,3 +57,13 @@ shader draws, sized to the game's view. Next: hide the scene programs one by one
 - Needs culling/FOV improvements: objects that the wider headset view should show are culled (the game culls to its
   own frustum). Lead: find the culling frustum or FOV the game uses and widen it with a patch (as ICO's "Wider view
   (VR culling)").
+
+## 2026-10-02: intro movie after Start Game still head-locked: fixed
+
+The ~90 s intro movie (after Start Game, calibration, difficulty) is drawn over the first level, which the game
+already renders behind it (Acre's camera draws every frame), so the frame counted as 3D and the full-view movie quad
+(`2f7541c34fd0c5d7`, Y plane 1280x736 and chroma 768x384 in main memory) followed the head. Profile:
+`"screen_frame_draws": [ { "program": "2f7541c34fd0c5d7", "texture": "1280x736" } ]`: any frame with the movie draw
+goes on the fixed screen. Checked on the OpenXR Simulator from the disc (head straight and turned 25 degrees: the
+movie moves as a world-fixed screen; after the movie gameplay returns to the headset view, HUD boxed). Other FMVs
+use the same player and should follow. No save data created.
