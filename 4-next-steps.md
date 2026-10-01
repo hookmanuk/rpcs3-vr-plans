@@ -1050,3 +1050,12 @@ generator detection); `max_fps 0` multiplies the headset rate by `vblanks_per_fr
   the generator writes it when it sampled indexed programs.
 - Dev hooks: `RPCS3_VR_RTDUMP` dumps depth surfaces too, and `prog=<vertex hash>` in the request dumps just before
   that program's next draw (both eyes); probe `gamecam=<hash>[+<hash>]` keeps programs on the game camera.
+
+**Generic, from Anarchy Reigns (2026-10-01; game state in `6-wip-games.md`).**
+- Generator: the camera test rejects a projection with A > 30 (under 3.8 degrees: a HUD ortho read as x/y/w rows
+  had won); when bare projections are most camera draws they set the projection and near plane (object-scaled MVPs
+  gave near 0.0017); camera blocks that no sampled draw binds are left out; the HUD search covers output-aspect
+  targets when `camera_target_aspect` differs; HUD draws sampling a small render target write `hud_box_after_shader`.
+- Renderer: the HUD box applies on output-aspect targets as well as view targets; a HUD draw is a pass for
+  `hud_skips_passes` only when it samples a view-shaped target (new texture kind `vr_texture_view_target`); the
+  after-shader HUD box works with `RPCS3_VR_FAKE_HMD`; draw clauses are not host-instanced while VR renders.

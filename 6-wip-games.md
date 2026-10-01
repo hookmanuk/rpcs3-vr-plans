@@ -29,6 +29,7 @@ are **tracked in `bin/`**, so the next release will ship them unless they are mo
 | Puppeteer | BCUS98227 | `vr-non-working/` + untracked `bin/` copy | partly: frame time found, still 2 vblanks per flip | not played | flip interval patch; stereo unchecked |
 | Jak and Daxter Collection | BCUS98281 | `vr-non-working/` + untracked `bin/` copies | Jak 1, Jak II yes (real-time, no patch) | not played | Jak 1 particles; Jak 3 not started |
 | Asura's Wrath | BLUS30721 | `vr-non-working/` + untracked `bin/` copy | yes (community Unlock FPS, real-time) | not played | QTE mashing at 90 untested |
+| Anarchy Reigns | BLUS30632 | `vr-non-working/` + untracked `bin/` copies (profile, patch) | yes (fork patch, real-time verified) | not played | campaign unchecked; HUD timers 3x |
 | God of War Collection (GOW1, GOW2) | BCES00800 | tracked in `bin/` | yes (profile, no patch) | not played | 5% black border |
 | Killzone 2 | BCUS98116 | tracked in `bin/` | no: default 45 | not played | RSX-bound; HUD and combat unchecked |
 | Gran Turismo 5 | BCUS98114 | `vr-non-working/` + untracked `bin/` copy | yes (patch) | tested, broken | menu clipping, race-start frame rate |
@@ -121,6 +122,14 @@ sparkles. Jak 3 not started.
 Notes: `profiles/BLUS30721-notes.md`. Evidence: `evidence/asura/`. Community Unlock FPS (+ motion blur and depth of
 field off): 90 FPS at Vblank 180, real-time; generated profile with `vblanks_per_frame 2`; stereo and yaw audit
 look right in Episode 1.
+
+## Anarchy Reigns (BLUS30632, disc 01.00)
+
+Notes: `profiles/BLUS30632-notes.md`. Evidence: `evidence/anarchy/`. Fork patch *Frame rate follows VR* (instead of
+the community 60 FPS) routes the characters' fixed 1/30 step through a word the profile sets: 90 FPS at Vblank 180,
+walk and run speed equal to 60 FPS (1.5x without it). Scene at 1024x720; generated profile (after generator fixes)
+`row_vectors [4, 24]`, HUD `c[54]` after the shader. Stereo, audit and the fake-headset HUD box are right in
+Practice. Open: campaign, HUD sprite timers at 3x, headset run.
 
 ## God of War Collection (BCES00800 v01.00, UK disc)
 

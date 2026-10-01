@@ -2,7 +2,7 @@
 import sys, numpy as np
 def load(b):
     idx = np.fromfile(b + '.idx', dtype='<u4'); raw = np.fromfile(b + '.bin', dtype=np.uint8)
-    keep = [k for k, p in enumerate(idx) if p < 0x20000000]
+    import os; keep = [k for k, p in enumerate(idx) if p < int(os.environ.get("MAXADDR", "20000000"), 16)]
     return idx[keep], np.concatenate([raw[k * 0x10000:(k + 1) * 0x10000] for k in keep])
 ia, a = load(sys.argv[1]); ib, b = load(sys.argv[2]); ic, c = load(sys.argv[3])
 lo = float(sys.argv[4]) if len(sys.argv) > 4 else 20
@@ -17,4 +17,6 @@ for off in (0, 4, 8, 12):
         o = off + i * 16; out.append((int(ia[o // 0x10000]) + o % 0x10000, A[i], B[i], C[i], d1[i], d2[i]))
 from collections import Counter
 print(len(out), 'candidates; distance histogram', Counter(round(r[4]) for r in out).most_common(8))
-for r in out[:12]: print(hex(r[0]), np.round(r[1], 1), np.round(r[2], 1), np.round(r[3], 1), 'out %.1f back %.1f' % (r[4], r[5]))
+import os
+out = [r for r in out if r[0] >= int(os.environ.get("MINADDR", "0"), 16)]
+for r in out[:int(os.environ.get("TOP", "12"))]: print(hex(r[0]), np.round(r[1], 1), np.round(r[2], 1), np.round(r[3], 1), 'out %.1f back %.1f' % (r[4], r[5]))
