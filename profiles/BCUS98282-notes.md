@@ -85,6 +85,12 @@ Each game of the collection is its own executable, so each has an executable pro
   thread time, and the RSX thread's stereo cost (the right-eye replay; the GPU profile's per-category RSX times
   miss part of it, the RSX thread is ~53% of a core) pushes it past 11.1 ms. A real fix is cheaper right-eye
   submission on the RSX thread (multiview, the standing plan item), not a game patch.
+- New GPU-profile fields (fork): RSX thread CPU time per frame and the VR share. R&C 3 Veldin, uncapped: flat
+  RSX thread CPU **5.1 ms** of a 6.35 ms frame (the RSX thread is the bottleneck even flat); stereo **8.2 ms** of
+  11.2: left-eye constants 1.9 ms + right-eye replay 2.7 ms for ~3,300 draws. Inside the eye-constant binding
+  (both eyes): fill 0.23, camera classification/transform 1.76, ring upload + descriptor 0.87 ms. Getting under
+  11.1 ms needs ~0.5-1 ms off the RSX thread: reuse the left eye's classification for the right eye, one upload
+  for both eyes, or multiview.
 
 ## Open
 
