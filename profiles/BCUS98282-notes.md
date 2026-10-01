@@ -109,3 +109,16 @@ Each game of the collection is its own executable, so each has an executable pro
   the head while the text stays in the HUD box (`evidence/ratchet/pause-menu-audit-yaw25.png`). Needs a way to put a
   program's camera draws into the HUD box (the GT5 mechanisms need `hud_box_after_shader`).
 - 90 FPS patch (above); headset run.
+
+## 2026-10-01: RSX-thread optimisation (all three now hold 72 at 4K per eye)
+
+- Cycle-exact RSX thread CPU per frame at 72 Hz (`RPCS3_VR_FRAMESTATS`; the old GPUPROF field used GetThreadTimes
+  and undercounted by more than half): R&C 1 **13.2 ms** in stereo (66.8 FPS) vs 7.2 ms flat, R&C 3 12.2 ms. The
+  RSX thread was the bottleneck, not the serial game/RSX wait alone.
+- Fixed in the renderer (A/B with `tools/re/vr_ab.sh`, `evidence/vrperf/`): camera-slot lookup by binary search
+  (an 8-entry table cache thrashed: ~5%); the right eye's attachment list no longer reallocated per draw; the eye
+  constants' CPU scratch filled with ordinary stores (streaming stores, then read back by the classification:
+  ~13%); the vertex-program hash cached for the per-draw VR checks.
+- Result: R&C 1 **10.7 ms, 71.4-72.0 FPS, 0% late**; R&C 3 **9.2 ms, 72.0 FPS**. R&C 1 stays the tightest.
+- R&C 2: the hangar state is 543 draws/frame (2 ms RSX). Matt made `vrtest_rc2_aranos_hall` (Aranos machinery hall,
+  606 draws, 5.9 ms): sustained **120 Hz**. Outdoor R&C 2 levels (Oozla onwards) are not measured.

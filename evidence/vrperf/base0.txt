@@ -1,0 +1,3 @@
+base0 vrtest_rc1_veldin 72Hz: median of 3 windows: avg 66.4 FPS, 1% low 45.7, late frames 2.44%, RSX thread 5.12 ms/frame
+base0 vrtest_rc3_veldin_battle 72Hz: median of 3 windows: avg 69.9 FPS, 1% low 48.7, late frames 0.00%, RSX thread 4.58 ms/frame
+base0 vrtest_ddda_prologue 72Hz: median of 3 windows: avg 68.8 FPS, 1% low 55.1, late frames 0.00%, RSX thread 5.67 ms/frame

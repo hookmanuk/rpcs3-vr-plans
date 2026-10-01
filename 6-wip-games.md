@@ -21,13 +21,14 @@ are **tracked in `bin/`**, so the next release will ship them unless they are mo
 
 **Sustained in VR, 300%** = the highest headset rate (72 / 90 / 120 Hz) the game holds in desktop stereo at
 Resolution Scale 300% (3840x2160 per eye) on a Ryzen 7 9800X3D + RTX 5090, with under 1% missed frames, from its
-regression savestate (`tools/re/vrtest_states.txt`, run 2026-10-01 `evidence/vrtest/2026-10-01-1259/`). **72 is the
+regression savestate (`tools/re/vrtest_states.txt`, run 2026-10-01 `evidence/vrtest/2026-10-01-1259/`; Ratchet &
+Clank and Dragon's Dogma re-measured after the RSX-thread work the same day, `evidence/vrperf/`). **72 is the
 pass mark** for fully compatible.
 
 | Game | ID | Profile | Real-time above 60 | Sustained in VR, 300% | Headset | Blocker |
 |---|---|---|---|---|---|---|
-| Dragon's Dogma: Dark Arisen | BLUS31155 | `vr-non-working/` + untracked `bin/` copy | yes (community Unlock FPS, real-time) | below 72 (68 at 72, prologue) | not played | open-world frame rate unmeasured; headset frame rate (risk); needs update 01.02 |
-| Ratchet & Clank Collection | BCUS98282 | `vr-non-working/` + untracked `bin/` copies (base + rc1/rc2/rc3 executable profiles) | R&C 1, 2, 3 yes (profile frame-time values, run speed verified) | R&C 1 below 72 (67); R&C 3 below 72 (70, Veldin battle); R&C 2 120 (light interior only) | not played | below 72 in heavy scenes at 300% (the right eye's RSX-thread cost); R&C 1 pause menu |
+| Dragon's Dogma: Dark Arisen | BLUS31155 | `vr-non-working/` + untracked `bin/` copy | yes (community Unlock FPS, real-time) | **72 Hz** (prologue; 68 before the 2026-10-01 renderer work and `zcull_approximate`) | not played | open-world frame rate and outdoor flares with `zcull_approximate` unchecked; headset frame rate (risk); needs update 01.02 |
+| Ratchet & Clank Collection | BCUS98282 | `vr-non-working/` + untracked `bin/` copies (base + rc1/rc2/rc3 executable profiles) | R&C 1, 2, 3 yes (profile frame-time values, run speed verified) | **R&C 1 72 Hz** (71.5, tightest); **R&C 3 72 Hz**; **R&C 2 120 Hz** (Aranos hall; outdoor levels unmeasured) | not played | R&C 1 has little margin at 72; R&C 1 pause menu |
 | Tales of Xillia | BLUS31006 | `vr-non-working/` + untracked `bin/` copy | yes (community 60 FPS + fork patch) | 90 | not played | battles unchecked |
 | The Darkness | BLUS30035 | `vr-non-working/` + untracked `bin/` copy | yes (community 60 FPS patch, real-time) | below 72 (48 at 72) | not played | too slow at 300% (48 at 72); stereo and headset view fixed in the opening |
 | Dynasty Warriors 6 Empires | BLUS30306 | `vr-non-working/` + untracked `bin/` copy | no: frame-locked, profile at 60 (180 flat possible) | 120, but frame-locked: plays at 60 | not played | 90 FPS needs a logic-step patch |
@@ -75,7 +76,11 @@ Notes: `profiles/BLUS31155-notes.md`. Evidence: `evidence/ddda/`. Profile `BLUS3
 - **Profile:** generated (`row_vectors c[255, 3, 0, 258, 19]`, HUD `c[266]`), `eye_baseline` 6.4 (centimetres,
   estimated). Stereo, yaw and pitch audits clean after two renderer fixes (bone slots:
   `camera_slots_read_directly`; stencil-only clears copied left depth into the right eye).
-- **Open:** open-world frame rate; NPC name tags stay in the HUD box; world scale and HUD in the headset.
+- **Frame rate at 4K per eye (2026-10-01):** 68-69 at 72 Hz until the RSX thread was profiled: 41% of it waited
+  for exact occlusion-query counts (both eyes' GPU work per wait). Profile key `zcull_approximate: true` (ZCULL
+  Accuracy "Approximate" while VR renders only): **72.0 FPS, 0% late**, RSX thread 13.9 -> 7.8 ms per frame.
+- **Open:** open-world frame rate; outdoor flares with `zcull_approximate` (any visible pixel reports as fully
+  visible); NPC name tags stay in the HUD box; world scale and HUD in the headset.
 
 ## Ratchet & Clank Collection (BCUS98282, disc 01.00)
 
@@ -84,11 +89,14 @@ profile `BCUS98282.rc1/rc2/rc3.ppu.json`).
 
 - **Frame rate:** each game keeps a constant timing block (1.0, 1/60, 1/3600, 1/216000...); the executable profiles
   drive it with `game_frame_time_f32` / `_sq_` / `_cube_`, `max_fps 0`. Run speed at 90 equals 60 in all three.
-- **Stereo frame rate 75-85 at Vblank 90:** GPU mostly idle, RSX thread 4.2 ms of a 12.3 ms frame; the game seems to
-  wait for the RSX each frame, so the stereo RSX cost pushes frames past the vblank (details in the notes).
+- **Stereo frame rate (2026-10-01):** the RSX thread was the bottleneck (cycle-exact 13.2 ms of a 15 ms frame in
+  R&C 1 at 72 Hz; the earlier 4.2 ms figure came from an undercounting timer). After the renderer work (Gate 6 entry
+  in `4-next-steps.md`): R&C 1 **72 Hz** (10.7-10.8 ms, 71.5 FPS, 0% late), R&C 3 **72 Hz** (9.2 ms), R&C 2 **120 Hz**
+  in Matt's `vrtest_rc2_aranos_hall` (the hangar state is too light to show anything).
 - **Profile:** generated, `column_vectors c[0]`, HUD `c[4]`, metres, 100% coverage; stereo and yaw audits clean;
   HUD sprites boxed in the headset view via `passthrough_hud` + `hud_programs`.
-- **Open:** stereo frame rate; R&C 1 pause-menu button frames use their own perspective camera and turn with the head.
+- **Open:** R&C 1 has little margin at 72 (busier scenes may drop); R&C 2 outdoor levels unmeasured; R&C 1
+  pause-menu button frames use their own perspective camera and turn with the head.
 
 ## Tales of Xillia (BLUS31006, disc 01.00)
 

@@ -1,0 +1,1 @@
+dd_inexact vrtest_ddda_prologue 72Hz: median of 3 windows: avg 72.0 FPS, 1% low 57.4, late frames 0.00%, RSX thread 7.95 ms/frame

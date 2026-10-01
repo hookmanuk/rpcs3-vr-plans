@@ -1,0 +1,3 @@
+opt1_findslot vrtest_rc1_veldin 72Hz: median of 3 windows: avg 68.0 FPS, 1% low 47.8, late frames 0.18%, RSX thread 12.78 ms/frame
+opt1_findslot vrtest_rc3_veldin_battle 72Hz: median of 3 windows: avg 70.1 FPS, 1% low 50.4, late frames 0.00%, RSX thread 11.92 ms/frame
+opt1_findslot vrtest_ddda_prologue 72Hz: median of 3 windows: avg 67.7 FPS, 1% low 55.1, late frames 0.18%, RSX thread 14.35 ms/frame

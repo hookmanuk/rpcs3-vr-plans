@@ -1,0 +1,4 @@
+opt4_hash_get vrtest_rc1_veldin 72Hz: median of 3 windows: avg 71.4 FPS, 1% low 50.1, late frames 0.00%, RSX thread 10.71 ms/frame
+opt4_hash_get vrtest_ddda_prologue 72Hz: no frame stats (did not run)
+opt4_hash_get vrtest_rc3_veldin_battle 72Hz: no frame stats (did not run)
+opt4_hash_get vrtest_ddda_prologue 72Hz: median of 3 windows: avg 69.0 FPS, 1% low 56.3, late frames 0.00%, RSX thread 13.88 ms/frame

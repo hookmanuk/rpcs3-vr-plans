@@ -1,0 +1,5 @@
+opt3_scratchfill vrtest_rc1_veldin 72Hz: median of 3 windows: avg 71.3 FPS, 1% low 49.2, late frames 0.00%, RSX thread 10.86 ms/frame
+opt3_scratchfill vrtest_rc3_veldin_battle 72Hz: median of 3 windows: avg 72.0 FPS, 1% low 51.5, late frames 0.00%, RSX thread 9.24 ms/frame
+opt3_scratchfill vrtest_ddda_prologue 72Hz: median of 3 windows: avg 68.9 FPS, 1% low 56.4, late frames 0.00%, RSX thread 13.93 ms/frame
+opt3_scratchfill vrtest_rc2_aranos 72Hz: median of 3 windows: avg 72.0 FPS, 1% low 65.3, late frames 0.00%, RSX thread 2.01 ms/frame
+opt3_scratchfill vrtest_rc2_aranos_hall 72Hz: median of 3 windows: avg 72.0 FPS, 1% low 57.0, late frames 0.00%, RSX thread 5.87 ms/frame

@@ -1072,3 +1072,25 @@ any colour render target, or (desktop stereo) have no rejecting depth test, are 
 LUT builds); the passthrough HUD accepts draws
 sampling small render targets; the fake headset records camera targets; dev tools: probe `why=<hash>`,
 RTDUMP of RGBA16F targets and `prog=<hash>#n`.
+
+**Generic: RSX-thread cost of stereo (2026-10-01, uncommitted build under test by Matt; games in `6-wip-games.md`).**
+The RSX thread is the stereo bottleneck in draw-heavy games: measured cycle-exact, Ratchet & Clank 1 used 13.2 ms
+of a 15 ms frame at 72 Hz (7.2 ms flat). Changes, each A/B-measured on the same savestates at 72 Hz, 4K per eye
+(`tools/re/vr_ab.sh`, `evidence/vrperf/`, index in `evidence/vrperf/README.md`):
+- The eye constants' CPU scratch is filled with ordinary stores. `fill_vertex_program_constants_data` streams
+  (non-temporal stores, right for the write-combined ring); the camera classification then read the streamed
+  buffer straight back, stalling on memory twice per draw. R&C 1 12.5 -> 10.9 ms, R&C 3 10.2 -> 9.2 ms.
+- Camera slots are found by binary search in the program's sorted `constant_ids` (an 8-entry cache of
+  468-entry tables thrashed). R&C 1 13.2 -> 12.8 ms.
+- The right eye's attachment list is copied into a member vector instead of reallocating per draw; dev trigger
+  files (SHOT, MEMDUMP, POKE, WATCH, RTDUMP, the probe file) are checked at most every 100 ms (test runs only).
+  R&C 3 11.9 -> 10.2 ms.
+- Vertex-program ucode hash cached per compiled program for the VR checks; `camera_probe::get()` inline (small).
+- Profile key `zcull_approximate` (ZCULL Accuracy "Approximate" while VR renders): Dragon's Dogma waited 41% of
+  its RSX thread for exact occlusion counts covering both eyes' GPU work. 13.9 -> 7.8 ms.
+- Measurement: `RPCS3_VR_FRAMESTATS` logs the RSX thread's CPU ms per frame (`QueryThreadCycleTime`; the GPU
+  profile's field used GetThreadTimes and undercounted by more than half, now fixed too); `RPCS3_RSX_SAMPLE=1|2|3`
+  in-process sampler with inline-aware source lines. Playbook: "Finding and measuring RSX-thread cost".
+- Remaining stereo cost in R&C 1: ~2.5-3.5 ms per frame over flat, mostly recording each draw a second time
+  (driver time, descriptor sets, push constants). Further large cuts need Vulkan multiview (Gate 6 item).
+- Not yet done: a full `vr_regress.sh` pass on this build (stopped after R&C 1 and R&C 2 for Matt's testing).

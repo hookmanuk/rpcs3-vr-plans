@@ -297,6 +297,24 @@ jitter shows ~64 while every frame is on time, hence the late-frame count.
   Run `vr_regress.sh` after renderer changes and compare with the previous run. Add a state for every new game.
   How to recreate the set on another PC: `7-vr-regression.md`.
 
+### Finding and measuring RSX-thread cost (2026-10-01)
+
+In stereo the RSX thread is usually the bottleneck (it draws every draw twice): Ratchet & Clank used 13 ms of a
+15 ms frame. Measure with exact numbers, change one thing, and compare on the same savestates at the same rate.
+
+- `RPCS3_VR_FRAMESTATS` also logs **the RSX thread's CPU ms per frame** (`QueryThreadCycleTime`; `GetThreadTimes`
+  undercounts RPCS3's threads by more than half). At a fixed rate, lower is better, independent of the FPS cap.
+- `tools/re/vr_ab.sh LABEL [STATE...]`: one 72 Hz run per state (default R&C 1, R&C 3, Dragon's Dogma), summary
+  lines appended to `evidence/vrperf/LABEL.txt`. Env `PROBE=render=0` measures flat; `VIDEO_EXTRA="Key=value;..."`
+  overrides Video settings for the run (restored after).
+- `RPCS3_RSX_SAMPLE=1|2|3` (fork, in-process): samples the RSX thread's host stack every ms and logs every
+  `RPCS3_STATS_PERIOD_MS` the top functions, self and inclusive; `=2` adds the top stacks, `=3` adds **source lines
+  resolved through inlined code** (DbgHelp inline trace), which is what finds a hot line inside an inlined helper.
+  `tools/rsx_sample.py` (external, same idea without inline lines) and `tools/threadcycles.py` (per-thread CPU)
+  also work.
+- Function-level self time can mislead: Ratchet & Clank's 5% "in bind_camera_block" was the first read of a
+  scratch buffer filled with non-temporal (streaming) stores; only the inline line view showed it.
+
 ## In-emulator generation (implemented 2026-09-23)
 
 In a game without a profile, **home menu > Settings > VR** shows one button, **Generate VR Profile**.
@@ -413,6 +431,8 @@ check for each symptom:
 | HUD missing in stereo (both eyes, also without a headset) | the HUD program keeps other data in a camera block's slots (Dante's Inferno: UV and colour in `c[4..7]`) and the eye transform wrecks it: `require_rigid_camera: true` (the generator now writes it for strongly sheared depth-less matches). Find the HUD program with an inspector capture (draws with a pixel-scale ortho) | Dante's Inferno |
 | Game runs fast above 60 although its clock reads real time | it counts whole frames of a fixed interval, at least one per frame: find the interval (float ms or s) the frame function divides by and drive it from the profile (`game_frame_ms_f32` / `game_frame_time_f32`) | Dante's Inferno |
 | HUD stays full-size at the screen edges in the headset view while the scene follows the head | the HUD reads no ortho block the profile names (an object transform plus a packed scale/offset slot) and draws into the scene's target: `passthrough_hud` + `hud_programs` [its vertex hashes] (after-shader box). Probe `why=<hash>` shows what the renderer decided for that program | Dragon's Dogma |
+| Stereo well below the flat rate; the RSX thread's CPU ms per frame (`RPCS3_VR_FRAMESTATS`) near the frame time | the per-draw VR cost on the RSX thread. Profile with `RPCS3_RSX_SAMPLE=3` and A/B with `tools/re/vr_ab.sh`. Fixed in the renderer (2026-10-01): the eye constants' CPU scratch was filled with streaming stores and read straight back (~13% of the RSX thread), camera slots were looked up through a thrashing cache (binary search now), and the right eye's attachment list was reallocated per draw | Ratchet & Clank 1-3 |
+| Stereo far below flat while the RSX thread spends its time in `ZCULL_control::sync` / `get_occlusion_query_result` | the game reads occlusion-query (ZCULL) results synchronously; in stereo each wait covers both eyes' GPU work. Profile key `zcull_approximate: true` (ZCULL Accuracy "Approximate" while VR renders: any visible pixel reports as fully visible). Check flares and glows that could depend on the visible pixel count | Dragon's Dogma |
 | Stereo below 90 with the GPU mostly idle and no thread saturated | `RPCS3_VR_GPUPROF=1` prints GPU ms per target and the RSX thread's busy time between flips. If the RSX busy time plus the game's own frame work exceeds the frame, the game waits for the RSX every frame (serialised): cut RSX per-draw cost or find the game's wait | Ratchet & Clank |
 | Image blown out, wrong colours or black in stereo, though the lit scene is right | the post chain (luminance reduction, colour-grading LUT build) drawn with bare-projection quads gets the eye transform or the HUD box. Find the pass with RTDUMP `prog=<hash>#n` dumps flat vs stereo; the fork leaves passes sampling render targets as drawn; draws with ordinary textures that are not HUD: `unboxed_draws` | The Darkness |
 | Both eyes show exactly the same image (audit shows no yaw, 0 px parallax) though camera draws are classified | the frame is bounced through main memory for SPU post-processing (MLAA/EDGE post) and the composite samples the SPU's output: `texture_redirects` from that main-memory texture to the scene render target | Puppeteer |

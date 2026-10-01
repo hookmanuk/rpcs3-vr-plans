@@ -1,0 +1,35 @@
+# BCUS98282 vrtest_rc1_veldin: Ratchet & Clank 1: Veldin, start (HelpDesk tip on screen)
+BCUS98282 vrtest_rc1_veldin vblank 72 scale 300%:
+   569 frames over 8.0 s: avg 71.1 FPS, 1% low 49.8, 0.1% low 48.4 (worst frame 20.7 ms), median 13.94 ms, late 0.00%, RSX thread 11.29 ms/frame
+   572 frames over 8.0 s: avg 71.5 FPS, 1% low 50.2, 0.1% low 48.8 (worst frame 20.5 ms), median 13.91 ms, late 0.00%, RSX thread 10.83 ms/frame
+   574 frames over 8.0 s: avg 71.6 FPS, 1% low 50.1, 0.1% low 48.2 (worst frame 20.7 ms), median 13.88 ms, late 0.00%, RSX thread 10.69 ms/frame
+   => median of 3 windows: avg 71.5 FPS, 1% low 50.1, late frames 0.00%, RSX thread 10.83 ms/frame
+BCUS98282 vrtest_rc1_veldin vblank 90 scale 300%:
+   667 frames over 8.0 s: avg 83.3 FPS, 1% low 56.9, 0.1% low 54.3 (worst frame 18.4 ms), median 11.39 ms, late 2.25%, RSX thread 10.78 ms/frame
+   675 frames over 8.0 s: avg 84.3 FPS, 1% low 57.5, 0.1% low 53.9 (worst frame 18.6 ms), median 11.46 ms, late 1.33%, RSX thread 10.36 ms/frame
+   676 frames over 8.0 s: avg 84.4 FPS, 1% low 58.8, 0.1% low 55.8 (worst frame 17.9 ms), median 11.39 ms, late 0.74%, RSX thread 10.30 ms/frame
+   => median of 3 windows: avg 84.3 FPS, 1% low 57.5, late frames 1.33%, RSX thread 10.36 ms/frame
+SUSTAINABLE BCUS98282 vrtest_rc1_veldin: 72 Hz
+# BCUS98282 vrtest_rc2_aranos: Ratchet & Clank 2: Aranos interior (light scene)
+BCUS98282 vrtest_rc2_aranos vblank 72 scale 300%:
+   577 frames over 8.0 s: avg 72.0 FPS, 1% low 65.4, 0.1% low 63.4 (worst frame 15.8 ms), median 13.93 ms, late 0.00%, RSX thread 2.01 ms/frame
+   577 frames over 8.0 s: avg 72.0 FPS, 1% low 65.2, 0.1% low 61.6 (worst frame 16.2 ms), median 13.92 ms, late 0.00%, RSX thread 2.00 ms/frame
+   577 frames over 8.0 s: avg 72.0 FPS, 1% low 65.4, 0.1% low 41.4 (worst frame 24.1 ms), median 13.93 ms, late 0.17%, RSX thread 1.97 ms/frame
+   => median of 3 windows: avg 72.0 FPS, 1% low 65.4, late frames 0.00%, RSX thread 2.00 ms/frame
+BCUS98282 vrtest_rc2_aranos vblank 90 scale 300%:
+   721 frames over 8.0 s: avg 90.0 FPS, 1% low 79.1, 0.1% low 65.8 (worst frame 15.2 ms), median 11.06 ms, late 0.00%, RSX thread 2.00 ms/frame
+   720 frames over 8.0 s: avg 90.0 FPS, 1% low 79.3, 0.1% low 77.3 (worst frame 12.9 ms), median 11.05 ms, late 0.00%, RSX thread 1.95 ms/frame
+   720 frames over 8.0 s: avg 90.0 FPS, 1% low 79.2, 0.1% low 48.8 (worst frame 20.5 ms), median 11.03 ms, late 0.14%, RSX thread 1.97 ms/frame
+   => median of 3 windows: avg 90.0 FPS, 1% low 79.2, late frames 0.00%, RSX thread 1.97 ms/frame
+BCUS98282 vrtest_rc2_aranos vblank 120 scale 300%:
+   961 frames over 8.0 s: avg 120.0 FPS, 1% low 102.5, 0.1% low 98.5 (worst frame 10.2 ms), median 8.38 ms, late 0.00%, RSX thread 1.96 ms/frame
+   961 frames over 8.0 s: avg 120.0 FPS, 1% low 102.0, 0.1% low 98.3 (worst frame 10.2 ms), median 8.41 ms, late 0.00%, RSX thread 1.87 ms/frame
+   960 frames over 8.0 s: avg 119.9 FPS, 1% low 104.1, 0.1% low 58.0 (worst frame 17.3 ms), median 8.40 ms, late 0.10%, RSX thread 1.85 ms/frame
+   => median of 3 windows: avg 120.0 FPS, 1% low 102.5, late frames 0.00%, RSX thread 1.87 ms/frame
+SUSTAINABLE BCUS98282 vrtest_rc2_aranos: 120 Hz
+# BCUS98282 vrtest_rc3_veldin_battle: Ratchet & Clank 3: Veldin battle
+BCUS98282 vrtest_rc3_veldin_battle vblank 72 scale 300%:
+   
+   => no frame stats (did not run)
+   (no frame stats: retrying once)
+(Stopped here at Matt's request, 2026-10-01, to test the build himself: R&C 1 72 Hz, R&C 2 hangar 120 Hz on the optimised build.)

@@ -1,0 +1,3 @@
+opt2_fboimages_devpoll vrtest_rc1_veldin 72Hz: median of 3 windows: avg 67.5 FPS, 1% low 46.3, late frames 1.31%, RSX thread 12.53 ms/frame
+opt2_fboimages_devpoll vrtest_rc3_veldin_battle 72Hz: median of 3 windows: avg 72.0 FPS, 1% low 50.9, late frames 0.00%, RSX thread 10.18 ms/frame
+opt2_fboimages_devpoll vrtest_ddda_prologue 72Hz: median of 3 windows: avg 68.9 FPS, 1% low 56.6, late frames 0.00%, RSX thread 14.00 ms/frame

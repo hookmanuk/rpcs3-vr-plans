@@ -99,3 +99,18 @@ Keyboard pad from `tools/keyboard-pad-template.yml` into `input_configs/BLUS3115
 `tools/re/dd_boot.ps1 [-Probe render=1] [-Audit 25]` boots and presses Start plus X five times (autosave notice,
 offline notice, Main Menu, Load Game, save); scripted X presses during loads are dropped, so check with a
 screenshot and press X again if it stopped at a menu. The first boot compiles PPU modules for ~2 minutes.
+
+## Frame rate at 72 Hz, 4K per eye (2026-10-01)
+
+- Stereo at 300% held ~68-69 FPS (`vrtest_ddda_prologue`): the RSX thread used 13.9-14.4 ms of CPU per frame
+  (cycle-exact; flat 8.0). `RPCS3_RSX_SAMPLE`: **41% of it waited in `ZCULL_control::sync` ->
+  `get_occlusion_query_result`**: the game writes labels that flush the pipe while occlusion queries are pending,
+  and RPCS3 waits for each query's exact count (ZCULL Accuracy "Precise", the default). In stereo each wait covers
+  both eyes' GPU work.
+- Relaxed ZCULL Sync: 13.3 ms, 70 FPS (little help). ZCULL Accuracy "Approximate" (`Accurate ZCULL stats: false`):
+  7.95 ms, 72.0 FPS, 0% late. Still images in the prologue look the same (lantern glow; the NPC moves between the
+  shots).
+- New profile key **`zcull_approximate: true`** (fork): Approximate reports only while VR renders (flat play and the
+  user's setting untouched). With it: **72.0 FPS, 0% late, RSX thread 7.80 ms** (`evidence/vrperf/`).
+- Not checked: outdoors (sun/lens flares could scale with the visible pixel count; with Approximate any visible
+  pixel counts as fully visible).

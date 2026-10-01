@@ -25,3 +25,4 @@ BCAS20001   vrtest_rr7_boot              1  0    84     Ridge Racer 7 (released)
 BCES01743   vrtest_kz_trench             1  1    10     Killzone HD (released): Helghast Assault, opening trench (made with the 120 FPS patch)
 BLUS30721   vrtest_asura_space           2  1    10     Asura's Wrath: Episode 1, space battle (rail shooter)
 BCUS98259   vrtest_ico_bridge            2  1    10     ICO (released): Old Bridge, from a save (Continue, file 1); frame-locked at 30 in VR, rates=30
+BCUS98282   vrtest_rc2_aranos_hall       1  1    10     Ratchet & Clank 2: Aranos, the machinery hall further in (made by Matt)

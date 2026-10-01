@@ -1,0 +1,1 @@
+opt5_dd_zcull_profile vrtest_ddda_prologue 72Hz: median of 3 windows: avg 72.0 FPS, 1% low 58.1, late frames 0.00%, RSX thread 7.80 ms/frame
