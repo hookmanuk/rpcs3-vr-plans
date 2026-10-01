@@ -37,6 +37,22 @@ animated, which made A/B metrics unreliable): get to a stationary point in the f
 `gamecam=` and read the light passes' fragment shaders (they may reconstruct position from `gl_FragCoord` with a
 fragment constant that the shear does not update).
 
+## 2026-10-01 (headset view on the desktop, `-FakeHmd 100`)
+
+- Draw 1 (`efdffb82a28ba329`, a screen-filling background quad with a bare projection) was rotated away by the head
+  transform and left the edges unwritten: `game_camera_programs: ["efdffb82a28ba329"]`.
+- The final composite (1024x576 scene into the 1280x720 display buffer) and the post passes are bare-projection quads
+  drawn with the generic vertex program `7053e6a262fcd712`; `bare_projection` put them into the HUD box (the whole
+  scene in a small box). Fork change: with `hud_skips_passes` (now in the profile) a bare-projection draw that samples
+  a colour target is a pass and stays as drawn. The composite now fills the view and the HUD text is boxed.
+- **Still broken:** with the head transform the shading passes are almost black (only rim light), flat is lit
+  (`evidence/darkness/fakehmd-composite-unboxed-dark.png` vs `flat-same-moment-2.png`). `7053e6a262fcd712` is used
+  by most draws (shadow volumes, world, post, composite), so per-ucode `gamecam`/`hide` tests are too coarse here
+  (keeping it on the game camera just disables VR). Next: a probe filter by storage hash or by target + depth state
+  to isolate the stencil shadow volumes (z-only `6ae71959` storage variant), then compare stencil per eye with RTDUMP
+  (depth-stencil dumps work, `prog=` trigger). The opening car scene sits still at the "View tutorial help" prompt,
+  which makes a good static test frame.
+
 ## Boot
 
 `tools/re/dk_boot.ps1`: intro video (X), autosave notice (X), New Game, Medium, then the opening car scene.
