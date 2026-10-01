@@ -46,3 +46,12 @@ Stereo and audits not yet checked (time-boxed).
 
 - Headset run: stage size (World Scale), HUD and menus; later levels (different SPU post buffers would need their
   own `texture_redirects`).
+
+## 2026-10-01: first headset run (Matt, 90 Hz)
+
+- Barely works: trails of graphics everywhere and very dark. In the intro a light moves with the head.
+- Savestate showing the trails: `bin/savestates/BCUS98227/vrtest_puppeteer_matt_trails.SAVESTAT.zst` (hard link to
+  `BCUS98227_1_1`, 17:59).
+- In the game proper it kind of works, but the world looks far away and small (world scale, `eye_baseline`).
+- Desktop stereo and the fixed-pose fake headset never showed the trails; reproduce on the OpenXR Simulator with a
+  head sweep from the savestate.
