@@ -1058,7 +1058,9 @@ generator detection); `max_fps 0` multiplies the headset rate by `vblanks_per_fr
   targets when `camera_target_aspect` differs; HUD draws sampling a small render target write `hud_box_after_shader`.
 - Renderer: the HUD box applies on output-aspect targets as well as view targets; a HUD draw is a pass for
   `hud_skips_passes` only when it samples a view-shaped target (new texture kind `vr_texture_view_target`); the
-  after-shader HUD box works with `RPCS3_VR_FAKE_HMD`; draw clauses are not host-instanced while VR renders.
+  after-shader HUD box works with `RPCS3_VR_FAKE_HMD`. (A change that stopped host instancing of draw clauses
+  while VR renders was reverted: it did not fix what it was made for, and a count over 17 games' savestates found
+  no instanceable clauses in VR, so it had no tested use.)
 
 **Generic, from Dante's Inferno (2026-10-01).** Profile key `game_frame_ms_f32` (float milliseconds per frame,
 written with 1000/fps). Generator: a depth-less draw whose first matching camera block is strongly sheared
@@ -1066,7 +1068,7 @@ written with 1000/fps). Generator: a depth-less draw whose first matching camera
 block's slots had vanished the HUD in stereo).
 
 **Generic, from The Darkness and Dragon's Dogma (2026-10-01, fork 25ccbbe91).** Bare-projection quads that sample
-any colour render target, have no rejecting depth test (desktop stereo), or draw through a small sub-viewport are
-passes left as drawn (post chains, LUT builds); profile key `camera_scissor_full`; the passthrough HUD accepts draws
+any colour render target, or (desktop stereo) have no rejecting depth test, are passes left as drawn (post chains,
+LUT builds); the passthrough HUD accepts draws
 sampling small render targets; the fake headset records camera targets; dev tools: probe `why=<hash>`,
 RTDUMP of RGBA16F targets and `prog=<hash>#n`.

@@ -76,8 +76,8 @@ fragment constant that the shear does not update).
   through it, and the HDR luminance passes read 324x18 targets. In desktop stereo the bare-projection rules only
   ran in the headset path, so these quads were sheared: LUT slices written a few texels off, exposure wrong.
 - Fork: a bare-projection quad that samples any colour render target, or (desktop) has no depth test that can
-  reject, or draws through a viewport much smaller than its target, is a pass and is left as drawn; with
-  `hud_display_buffers_only` a depth-less bare projection outside a display buffer is a pass in the headset path.
+  reject, is a pass and is left as drawn. (A sub-viewport rule and a `hud_display_buffers_only` clause tried on the
+  way were removed: neither was needed.)
   Today's earlier change (only view-shaped targets make a HUD draw a pass) had also made the luminance passes look
   like HUD; the bare-projection test now uses "any colour target".
 - Result: desktop stereo matches flat, 90 FPS (`evidence/darkness/stereo-desktop-fixed-2026-10-01.png`).
@@ -86,7 +86,7 @@ fragment constant that the shear does not update).
   textures, depth ALWAYS) went into the HUD box. Profile: `screen_space.unboxed_draws` [`7053e6a262fcd712`, texture
   324x18] keeps them as drawn; the HUD (`7053e6a2` draws 880/881, font and icon textures, blended, into the scene
   buffer) stays boxed. Lit, HUD boxed, lighting stable while the head turns (wobble), 90 FPS
-  (`evidence/darkness/fakehmd100-fixed-hud-boxed.png`, `fakehmd100-wobble.png`). Neither `camera_scissor_full` nor
+  (`evidence/darkness/fakehmd100-fixed-hud-boxed.png`, `fakehmd100-wobble.png`). Neither `camera_scissor_full` (a profile key tried and removed) nor
   a scale-independent eye offset (tried, reverted) was needed. `hud_display_buffers_only` also lights it but leaves
   the HUD unboxed (it is drawn into the scene buffer, not a display buffer).
 - Open: play past the opening (Darkness powers, guns, other lights); headset run; world scale (metres assumed).

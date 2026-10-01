@@ -48,7 +48,7 @@ characters hold dt 1/90). Jack's feet position: f32 xyz at `0x1d7fc10` (static).
   `hud_box_after_shader`.
 - Renderer: the HUD box applies on output-aspect targets as well as camera-view targets; a HUD draw counts as a
   pass (`hud_skips_passes`) only when it samples a view-shaped target; the after-shader box works with the fake
-  HMD; draw clauses are not host-instanced while VR renders (each subdraw gets its own eye constants).
+  HMD. (Disabling host instancing in VR was tried for the gauge, did not fix it, and was reverted.)
 - The health gauge samples a 256x256 mask the HUD draws first, at UVs derived from its clip position: boxed through
   the constants, it sampled the wrong place (teal instead of green). After the shader it is right.
 
