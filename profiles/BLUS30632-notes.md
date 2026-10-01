@@ -57,3 +57,12 @@ characters hold dt 1/90). Jack's feet position: f32 xyz at `0x1d7fc10` (static).
 - Campaign (cutscenes, open areas, vehicles), other characters, online menus.
 - HUD animation timers at 3x.
 - Headset run.
+
+## 2026-10-01: first headset run (Matt, 90 Hz): parked
+
+- Splash screens and the intro are tied to the head, with HUD elements culled by depth. The intro is very long and
+  cannot be skipped.
+- In gameplay: bad performance and lots of graphics issues. The desktop checks covered Training > Practice only.
+- Savestate at the start of gameplay: `bin/savestates/BLUS30632/vrtest_anarchy_matt_gameplay.SAVESTAT.zst` (hard
+  link to `BLUS30632_1_2`, 18:36); also `vrtest_anarchy_matt_1834` (`_1_1`, 18:34).
+- **Parked** by Matt.

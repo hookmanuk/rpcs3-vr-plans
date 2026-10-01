@@ -35,6 +35,7 @@ screens, menus and intro videos at the headset rate were never seen in a headset
 | God of War Collection (GoW 1) | The main menu looks wrong: 2D and 3D elements combined at the wrong depth. In gameplay the main character has blurred edges; savestate `bin/savestates/BCES00800/vrtest_gow1_matt_blur.SAVESTAT.zst` (hard link to `BCES00800_1_2`, 2026-10-01 18:14). Performance good. |
 | Gran Turismo 5 | Performance still bad: **around 40 FPS** in the headset. It needs at least 60 to be playable (the game's own rate). The "90 Hz (race start)" figure from the regression run (savestate after a 40 s settle) does not reflect play. |
 | Asura's Wrath | **Works well.** In-engine cutscenes show a 16:9 box with black letterbox bars. Wanted: hide the box background and the black bars, showing just the 3D world and the HUD elements (text). |
+| Anarchy Reigns | **Parked.** Splash screens and the intro are tied to the head, with HUD elements culled by depth. The intro is very long and cannot be skipped. Bad performance and lots of graphics issues in gameplay. Savestate at the start of gameplay: `bin/savestates/BLUS30632/vrtest_anarchy_matt_gameplay.SAVESTAT.zst` (hard link to `BLUS30632_1_2`, 18:36; also `vrtest_anarchy_matt_1834` = `_1_1`). |
 
 **The simulated headset is not the headset.** `RPCS3_VR_FAKE_HMD` renders the headset image on the desktop (same
 camera transforms, headset FOV and HUD box) but with a **fixed forward pose**: head-locked and world-fixed screens look
@@ -88,7 +89,7 @@ pass mark** for fully compatible.
 | Puppeteer | BCUS98227 | `vr-non-working/` + untracked `bin/` copy | yes (profile frame time, Vblank 180 = 90 FPS, real-time) | 72 | **barely works**: graphics trails, very dark, intro light follows the head; world far away and small | stage small in the headset view; SPU post skipped in VR |
 | Jak and Daxter Collection | BCUS98281 | `vr-non-working/` + untracked `bin/` copies | Jak 1 **no**: looks 1.5x at 90 in the headset (the desktop clock/displacement check said real-time); Jak II unchecked by eye; Jak 3 no (74-85 flat in Spargus) | Jak 1 72; Jak II below 72 (69); Jak 3 below 72 (43) | **Jak 1 broken**: HUD head-locked, wrong stereo depth on many objects, 1.5x speed at 90 | HUD unchecked |
 | Asura's Wrath | BLUS30721 | `vr-non-working/` + untracked `bin/` copy | yes (community Unlock FPS, real-time) | **120 Hz** (Episode 1 space battle) | **works well**; cutscene letterbox box/bars to remove | QTE mashing at 90 untested |
-| Anarchy Reigns | BLUS30632 | `vr-non-working/` + untracked `bin/` copies (profile, patch) | yes (fork patch, real-time verified) | 90 | not played | campaign unchecked; HUD timers 3x |
+| Anarchy Reigns | BLUS30632 | `vr-non-working/` + untracked `bin/` copies (profile, patch) | yes (fork patch, real-time verified) | 90 (Training only) | **parked**: splash/intro head-locked, HUD culled by depth; bad performance and graphics issues in gameplay | campaign unchecked; HUD timers 3x |
 | Dante's Inferno | BLUS30405 | `vr-non-working/` + untracked `bin/` copy | yes (profile `game_frame_ms_f32`, no patch; 0.99x at 90) | 120 | not played | sky is a screen card; world scale unchecked |
 | God of War Collection (GOW1, GOW2) | BCES00800 | tracked in `bin/` | yes (profile, no patch) | 120 (GoW 1) | **GoW 1 issues**: main menu 2D/3D at the wrong depth; Kratos's edges blurred in gameplay; performance good | 5% black border |
 | Killzone 2 | BCUS98116 | tracked in `bin/` | no: default 45 | not measured | not played | RSX-bound; HUD and combat unchecked |
@@ -233,6 +234,10 @@ the community 60 FPS) routes the characters' fixed 1/30 step through a word the 
 walk and run speed equal to 60 FPS (1.5x without it). Scene at 1024x720; generated profile (after generator fixes)
 `row_vectors [4, 24]`, HUD `c[54]` after the shader. Stereo, audit and the fake-headset HUD box are right in
 Practice. Open: campaign, HUD sprite timers at 3x, headset run.
+- **Headset (Matt, 2026-10-01): parked.** Splash screens and the intro are tied to the head, with HUD elements
+  culled by depth; the intro is very long and cannot be skipped. In gameplay: bad performance and lots of graphics
+  issues (the desktop checks only covered Training > Practice). Matt's savestate at the start of gameplay:
+  `vrtest_anarchy_matt_gameplay` (`BLUS30632_1_2`, 18:36); also `vrtest_anarchy_matt_1834` (`_1_1`).
 
 ## Dante's Inferno (BLUS30405, disc 01.00)
 
