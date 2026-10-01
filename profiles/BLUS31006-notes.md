@@ -61,3 +61,16 @@ The first battle is well into the story (not reached by scripted input).
   off the HUD box); the outlines and blur look like a screen-space pass (edge detect / DoF / bloom) that samples the
   scene at the flat-screen position instead of the headset view. Desktop stereo and the fixed-pose fake headset
   showed none of this; next step: OpenXR Simulator (Dream Air, 90 Hz) with `pose_sweep_command.json`, in the field.
+
+## 2026-10-01 evening: OpenXR Simulator findings
+
+- **Fixed: boxed scene copies.** `fc3fabcf3cb724b2` (identity blit) copies the 2560x720 double-width scene buffer
+  (`0xc0800000`) to the scene target `0xc1ae0000` and to a main-memory buffer `0x31f00000`. That texture is not
+  recognised as a render target, so with the identity matrix as the HUD block (`orthographic_block 0`) the copies
+  were boxed (probe `why=` showed `box 1`): a smaller copy of the scene blended over the frame, a dark rectangle with
+  a ghost of the player on the floor in the headset view. Profile `unboxed_draws` [`fc3fabcf3cb724b2`, 2560x720].
+  Likely Matt's "screen effects in the wrong place" and part of the outlines.
+- Not the cause: the half-resolution scene re-render (`fc1069a6fd0ec49a` into 640x360, then blurred and blended) is
+  classified as a camera draw and transformed like the main pass; the shadow maps (64x64, 128x128) stay as drawn.
+- Field minimap: world-fixed in the HUD box (a 25-degree turn moves it as far as the scene, image registration).
+  "HUDs all over the place" must be other screens (battles, menus, pop-ups): not reachable from the savestate.

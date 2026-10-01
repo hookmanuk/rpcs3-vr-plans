@@ -89,3 +89,11 @@ takes ~10 s before the screen changes). Keyboard pad: template plus right stick;
 - Main menu looks wrong: 2D and 3D elements combined at the wrong depth.
 - In gameplay the main character has blurred edges. Savestate: `bin/savestates/BCES00800/vrtest_gow1_matt_blur.SAVESTAT.zst`
   (hard link to `BCES00800_1_2`, 18:14). Reproduce on the OpenXR Simulator with a head sweep from it.
+
+## 2026-10-01 evening: Kratos's blurred edges fixed
+
+- The MSAA resolve (vertex program `c4882b95379447a8`, draw 322: scene copy from the 2432x684 double-width buffer)
+  averages two samples one pixel apart; the offsets are texture-coordinate fractions in `c[466..467]`, so at 300% they
+  spanned ~3 pixels and left a light halo along every silhouette. `resolution_scaled_constants` [`c4882b95379447a8`,
+  466, 467] in `BCES00800.gow1.json` (as Ridge Racer 7): halo gone on Matt's savestate (desktop stereo, 300%).
+- Open: the main menu's 2D/3D depth (not looked at yet); GoW 2 probably has the same resolve.
