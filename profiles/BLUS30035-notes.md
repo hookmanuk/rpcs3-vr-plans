@@ -52,6 +52,14 @@ fragment constant that the shear does not update).
   to isolate the stencil shadow volumes (z-only `6ae71959` storage variant), then compare stencil per eye with RTDUMP
   (depth-stencil dumps work, `prog=` trigger). The opening car scene sits still at the "View tutorial help" prompt,
   which makes a good static test frame.
+- Probe `gamecam=<hash>@nocolor` (new) keeps only that program's colour-less draws on the game camera: the stencil
+  volumes alone on the game camera do not fix it. Pipeline at the test frame (capture `f14700`): z pre-pass with
+  `83cbe322b3b9c82a` (no colour target), stencil volumes (`7053e6a262fcd712`, colour off), light passes with depth
+  EQUAL (`7167d3a00432a346`, `3d4018ba3c70c07c`, blend), unlit/emissive LEQUAL passes, then post quads and the
+  composite. RTDUMP before the first light pass: the pre-pass depth is complete in the headset view and the stencil
+  holds shadow counts 0-9 (`evidence/darkness/depth-before-light-pass-fakehmd-vs-flat.png`). Next: dump depth +
+  stencil right before and after one light pass in both modes and check whether its EQUAL test or its stencil test
+  rejects (e.g. make a probe option that forces the light passes to depth LEQUAL / stencil ALWAYS to see which).
 
 ## Boot
 
