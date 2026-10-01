@@ -34,7 +34,10 @@ while [ $n -le $shots ]; do
   n=$((n + 1))
 done
 grep -a "VR: frames without camera draws\|VR: camera draws again\|OpenXR: Headset" /f/rpsc3/source/rpcs3/bin/log/RPCS3.log | cut -c1-140 | head -12
-powershell -c "Get-Process rpcs3 -ErrorAction SilentlyContinue | Stop-Process -Force"; sleep 2
+powershell -c "Get-Process rpcs3 -ErrorAction SilentlyContinue | Stop-Process -Force; while (Get-Process rpcs3 -ErrorAction SilentlyContinue) { Start-Sleep -Milliseconds 200 }"; sleep 1
 if [ $had = 1 ]; then mv -f "$C.simscreen.bak" "$C"; else rm -f "$C"; fi
 [ $padhad = 0 ] && rm -r "${P:?}"
+# Verify the clean-up: a leftover temporary config once survived a failed removal.
+[ $had = 0 ] && [ -f "$C" ] && echo "WARNING: temporary $C still present"
+[ $padhad = 0 ] && [ -d "$P" ] && echo "WARNING: temporary pad $P still present"
 true

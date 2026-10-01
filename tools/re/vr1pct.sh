@@ -56,6 +56,8 @@ avg=$(echo "$lines" | grep -o "avg [0-9.]* FPS" | grep -o "[0-9.]*" | med)
 rsx=$(echo "$lines" | grep -o "RSX thread [0-9.]* ms" | grep -o "[0-9.]* ms" | grep -o "[0-9.]*" | med)
 n=$(echo "$lines" | grep -c "frames over")
 if [ -n "$low" ]; then echo "   => median of $n windows: avg $avg FPS, 1% low $low, late frames $late%${rsx:+, RSX thread $rsx ms/frame}"; else echo "   => no frame stats (did not run)"; fi
+powershell -c "Get-Process rpcs3 -ErrorAction SilentlyContinue | Stop-Process -Force; while (Get-Process rpcs3 -ErrorAction SilentlyContinue) { Start-Sleep -Milliseconds 200 }"
 if [ $had = 1 ]; then mv -f "$C.vr1pct.bak" "$C"; else rm -f "$C"; fi
+[ $had = 0 ] && [ -f "$C" ] && echo "   WARNING: temporary $C still present"
 [ $padhad = 0 ] && [ $pad = 1 ] && rm -r "${P:?}"
 true
