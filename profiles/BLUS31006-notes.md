@@ -55,3 +55,9 @@ The first battle is well into the story (not reached by scripted input).
   screen**. Without pressing anything the game boots normally: in the headset, in desktop stereo at Vblank 90 and on
   the OpenXR Simulator at 90 (no `cellVdec ... waiting for a consumer` warnings in the log).
 - Open: does pressing Start on the splash also do it flat at 60 (upstream behaviour) or only with VR? Compare logs.
+- **In game: performance great, image broken.** HUDs all over the place (some tied to the head, some offscreen);
+  screen effects in the wrong place; edge outlines around characters and blur outside those edges. Leads, unverified:
+  the HUD uses `c[0]` + `hud_skips_passes` (HUD elements outside that path stay full-view and follow the head or land
+  off the HUD box); the outlines and blur look like a screen-space pass (edge detect / DoF / bloom) that samples the
+  scene at the flat-screen position instead of the headset view. Desktop stereo and the fixed-pose fake headset
+  showed none of this; next step: OpenXR Simulator (Dream Air, 90 Hz) with `pose_sweep_command.json`, in the field.

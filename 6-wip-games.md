@@ -28,7 +28,7 @@ screens, menus and intro videos at the headset rate were never seen in a headset
 |---|---|
 | Dragon's Dogma | All the initial screens are tied to the face (head-locked), not fixed in place. Performance is bad in Matt's save: savestate `bin/savestates/BLUS31155/vrtest_ddda_matt_slow.SAVESTAT.zst` (hard link to `BLUS31155_1_1`, 2026-10-01 17:01; in-game save `BLUS311550` 17:00). Needs improving. |
 | Ratchet & Clank Collection | The collection loader and R&C 1's initial screens are head-locked. **R&C 1 unplayable:** gameplay appears on a fixed 2D window, with depth problems (things appearing and disappearing) as the head moves. Matt suspects R&C 2 and 3 break the same way (not tried). |
-| Tales of Xillia | Does not work at all: after the first Namco splash screen the view stays white forever (not frozen, but no game). **Later the same day: it only happens when Start is pressed on the first splash screen.** Left alone, it boots normally in the headset, in desktop stereo at 90 and on the OpenXR Simulator at 90 (no video-decoder stalls in the log). |
+| Tales of Xillia | Does not work at all: after the first Namco splash screen the view stays white forever (not frozen, but no game). **Later the same day: it only happens when Start is pressed on the first splash screen.** Left alone, it boots normally in the headset, in desktop stereo at 90 and on the OpenXR Simulator at 90 (no video-decoder stalls in the log). **In game (headset): performance great, but the HUDs are all over the place** (some tied to the head, some offscreen), screen effects in the wrong place, edge outlines around characters and blur outside those edges. |
 | The Darkness | Broken after the splash screen. Later the same day: not a hang. After the intro's fire video the screen stays black for a long time (the old desktop boot script pressed Start there, so it never showed); waited out in the headset, the intro's videos are missing. **Parked: performance is terrible**, under 60 FPS in Matt's savestate `bin/savestates/BLUS30035/vrtest_darkness_matt_slow.SAVESTAT.zst` (hard link to `BLUS30035_1_1`, 2026-10-01 17:42). |
 
 **The simulated headset is not the headset.** `RPCS3_VR_FAKE_HMD` renders the headset image on the desktop (same
@@ -77,7 +77,7 @@ pass mark** for fully compatible.
 |---|---|---|---|---|---|---|
 | Dragon's Dogma: Dark Arisen | BLUS31155 | `vr-non-working/` + untracked `bin/` copy | yes (community Unlock FPS, real-time) | **72 Hz** (prologue; 68 before the 2026-10-01 renderer work and `zcull_approximate`) | **broken** (boot screens head-locked; slow in Matt's save) | open-world frame rate and outdoor flares with `zcull_approximate` unchecked; headset frame rate (risk); needs update 01.02 |
 | Ratchet & Clank Collection | BCUS98282 | `vr-non-working/` + untracked `bin/` copies (base + rc1/rc2/rc3 executable profiles) | R&C 1, 2, 3 yes (profile frame-time values, run speed verified) | **R&C 1 72 Hz** (71.5, tightest); **R&C 3 72 Hz**; **R&C 2 120 Hz** (Aranos hall; outdoor levels unmeasured) | **broken** (R&C 1 unplayable: scene as a fixed 2D window; loader and menus head-locked) | R&C 1 has little margin at 72; R&C 1 pause menu |
-| Tales of Xillia | BLUS31006 | `vr-non-working/` + untracked `bin/` copy | yes (community 60 FPS + fork patch) | 90 | boots; **white screen if Start is pressed on the first splash** | battles unchecked |
+| Tales of Xillia | BLUS31006 | `vr-non-working/` + untracked `bin/` copy | yes (community 60 FPS + fork patch) | 90 | **broken**: HUDs head-locked/offscreen, screen effects misplaced, character edge outlines and blur (performance great); white screen if Start is pressed on the first splash | battles unchecked |
 | The Darkness | BLUS30035 | `vr-non-working/` + untracked `bin/` copy | yes (community 60 FPS patch, real-time) | below 72 (48 at 72) | **parked**: under 60 FPS in Matt's save; intro black for a long time, videos missing | too slow at 300% (48 at 72); stereo and headset view fixed in the opening |
 | Dynasty Warriors 6 Empires | BLUS30306 | `vr-non-working/` + untracked `bin/` copy | no: frame-locked, profile at 60 (180 flat possible) | 120, but frame-locked: plays at 60 | not played | 90 FPS needs a logic-step patch |
 | Puppeteer | BCUS98227 | `vr-non-working/` + untracked `bin/` copy | yes (profile frame time, Vblank 180 = 90 FPS, real-time) | 72 | not played | stage small in the headset view; SPU post skipped in VR |
@@ -161,6 +161,10 @@ Notes: `profiles/BLUS31006-notes.md`. Evidence: `evidence/xillia/`.
 - **Headset (Matt, 2026-10-01):** white screen forever after the first Namco splash, **only when Start is pressed on
   that splash screen**. Left alone it boots normally (headset, desktop stereo at 90, OpenXR Simulator at 90). Not yet
   known whether flat play at 60 does the same; next: press Start on the splash flat, then in stereo, and compare logs.
+- **In game in the headset (Matt, 2026-10-01): performance great, image broken.** HUDs all over the place (some tied to
+  the head, some offscreen); screen effects in the wrong place; edge outlines around characters with blur outside
+  those edges (a post-process edge/outline or depth-of-field pass misaligned with the scene). Desktop stereo and the
+  fixed-pose fake headset looked right, so reproduce on the OpenXR Simulator with a head sweep first.
 - **Open:** battles; world scale.
 
 ## The Darkness (BLUS30035, disc 01.03)
