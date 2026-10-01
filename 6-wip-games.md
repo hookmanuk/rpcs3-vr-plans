@@ -59,6 +59,15 @@ at 90 and 60, and `tools/re/dk_boot.ps1` (Start + Cross at 25 s) gets through it
 Next: the same boot at Vblank 60 with the headset, and at 90 without it (`RPCS3_OPENXR=0`), to split "90 Hz" from
 "headset session". Capture: `evidence/headsetsim/darkness_sim_90hz.png`.
 
+**Fix in progress (2026-10-01 evening, fork c7b092610, local): boot screens no longer follow the head.** Frames
+without 3D now go on the fixed screen by default (render targets carry `vr_has_3d`; a frame with no camera draws
+whose displayed buffer holds no 3D is 2D; a paused game re-showing its 3D frame stays in the headset view). The
+released profiles that were not opted in set `frames_without_3d_as_screen: false` (unchanged for them). Checked on
+the OpenXR Simulator (head straight vs turned 25 degrees): Dante's Inferno (splash, title, intro movie), Dragon's
+Dogma (notices, title), the R&C collection (logos, game-select menu), Anarchy Reigns (SEGA, intro text) are
+world-fixed; Dante's gameplay returns to the headset view. Still head-locked: Dante's pause menu (drawn over a copy
+of the 3D frame, so it counts as 3D). Cost 0.4% of the RSX thread.
+
 **First question when continuing: did the 2026-10-01 renderer changes cause any of this?** Not known yet. A/B each
 game in the fake headset view (`-FakeHmd 100`, Vblank 90, boot from the disc, not a savestate) on the current build
 and on the last committed build (`openxr` 90640f92d), then in the headset. Leads, unverified:
