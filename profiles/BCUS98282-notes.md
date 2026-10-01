@@ -30,6 +30,25 @@ lead for later: start from those four constants and check animation, enemies and
 `column_vectors`, camera `c[0]` (100% of depth-tested draws), HUD `c[4]`, near plane 0.1 -> metres, `eye_baseline`
 0.064. Stereo and the yaw-25 audit on the title and in gameplay are clean.
 
+## 2026-10-01: R&C 1 at the headset rate (desktop)
+
+- **Timing:** R&C 1 (`RC1.ppu.self`, PPU-3de6ba93...) keeps constant frame times in data: block `0x770300` =
+  {1.0, 1/60, 1/3600, 1/216000, 5, 1/60} (never written at run time; read by dozens of systems, found with a PPU read
+  watch under the interpreter) plus 1/60 at `0x112c078`, `0x112c080` (bss). Executable profile
+  `bin/vr_profiles/BCUS98282.rc1.ppu.json` drives them: `game_frame_time_f32` [0x770304, 0x770314, 0x112c078,
+  0x112c080], new keys `game_frame_time_sq_f32` [0x770308] and `game_frame_time_cube_f32` [0x77030c]; `max_fps 0`.
+  No patch needed.
+- **Verified:** Ratchet's run speed (position `0x95db10`, per-frame `RPCS3_VR_PEEK`, `tools/re/rc_phys.sh`): 60 FPS
+  6.10 u/s, 90 unpatched 9.22, 90 with the frame-time values 6.27. Scaling the leading 1.0 (`0x770300`) changed
+  nothing measurable. Not verified: animation, enemies, jump arcs (the HelpDesk pop-ups eat scripted X presses).
+- **Stereo frame rate:** 75-80 at Vblank 90 on Veldin (RSX thread ~5 ms of 13 ms per frame; the limit is elsewhere,
+  not yet profiled).
+- **Pause menu:** new profile key `screen_space.boxed_camera_programs` (`ef49d731f4b4551b`, `d032c3b0051293db`) is
+  meant to put the 3D menu panels into the HUD box. Tested with the new desktop fake headset (`RPCS3_VR_FAKE_HMD=100`,
+  `launch.ps1 -FakeHmd 100`): the head transform works in gameplay (wobble), but the pause-menu frames are not
+  boxed and get no head motion. Unresolved.
+- Boot crash at the executable switch (`vk::swapchain_WSI::init`), 1 in ~10 boots; retry.
+
 ## Open
 
 - **Pause menu:** its button frames are 3D panels drawn with their own perspective camera (`ef49d731f4b4551b`,

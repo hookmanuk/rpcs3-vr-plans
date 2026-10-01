@@ -1,13 +1,16 @@
 # Boot Ratchet & Clank Collection (BCUS98282) (needs the temporary keyboard pad).
-param([switch]$Headset, [string]$Probe = '', [string]$Audit = '')
+param([switch]$Headset, [string]$Probe = '', [string]$Audit = '', [int]$FakeHmd = 0)
 $w = "$env:TEMP\rpcs3-vrprofile"
 $env:RPCS3_VR_GEN_TRIGGER = "$w\GEN"
 $env:RPCS3_VR_MEMDUMP = "$w\rc_dump"
 $env:RPCS3_VR_POKE = "$w\POKE"
+$env:RPCS3_PPU_WATCH_FILE = "$w\WATCH"
+if ($env:RC_PEEK) { Set-Content "$w\peek.txt" $env:RC_PEEK -NoNewline; $env:RPCS3_VR_PEEK = "$w\peek.txt" } else { Remove-Item Env:RPCS3_VR_PEEK -ErrorAction SilentlyContinue }
 $a = @{ Game = "F:/rpsc3/games/Ratchet & Clank Collection (USA) (En,Fr,Es).iso" }
 if (-not $Headset) { $a.NoHeadset = $true }
 if ($Probe) { $a.Probe = $Probe }
 if ($Audit) { $a.Audit = $Audit }
+if ($FakeHmd) { $a.FakeHmd = $FakeHmd }
 & F:\rpsc3\source\plans\tools\launch.ps1 @a
 "launched"
 # Logos -> collection menu (R&C1) -> title -> New Game -> new save slot -> skip the opening cutscenes -> Veldin.
