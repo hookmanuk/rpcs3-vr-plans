@@ -210,3 +210,12 @@ fragment ucode lands in a GPU surface instead of memory. Workaround: any scale b
 Fork change: the unimplemented FP opcodes (POW, BEM class, TIMESWTEX) now log an error instead of throwing.
 That alone doesn't save the race at 200% (the garbage shaders then hang the GPU: device lost), but the garbage
 programs had already been written to the shader cache, and a throw there would end the RSX thread at boot.
+
+## 2026-10-01: fake headset on the desktop
+
+- `-FakeHmd 100` now renders the headset path without SteamVR. At car selection (`BCUS98114_1_0`) the desktop view
+  shows the UI boxed but the showroom background black around a small car; RTDUMP of the display buffer
+  `0xc0880000` at the flip has the full gradient background, the car and the boxed UI, so the frame itself is right
+  and the black is in the fake headset's desktop presentation (not investigated further). With
+  `RPCS3_VR_HEAD_OFFSET=0,0,0.3` the box just gets smaller; the arcade card-stack clipping was not on this screen.
+- Not a 90 FPS game at race start (~42 flat), so the remaining GT5 items stay parked.
