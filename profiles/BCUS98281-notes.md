@@ -51,3 +51,16 @@ Savestates: `BCUS98281_1_0` (Jak 1, Samos' hut after the intro), `BCUS98281_1_1`
   eye at 60 vs 90 (animations, effects, NPC movement) and find the per-frame step; Jak II's result is suspect too.
 - Matt's gameplay savestate: `bin/savestates/BCUS98281/vrtest_jak1_matt_gameplay.SAVESTAT.zst` (hard link to
   `BCUS98281_1_5`, 18:08); also `vrtest_jak1_matt_1804` (`_1_4`, 18:04).
+
+## 2026-10-01 evening: Jak 1 fixes (fork fa2cea1ac, plus the max_fps commit)
+
+- **HUD:** the HUD/menu program `2f8d9792dfd8eb59` reads a pixel ortho in `c[0..3]` (2/512, -2/224: the PS2's 512x448
+  screen) — the camera's own slots. `screen_space.orthographic_block: 0` boxes it: the camera match runs first and
+  rejects a non-perspective block. OpenXR Simulator: the pause menu stays world-fixed while the head turns; gameplay
+  unchanged.
+- **Speed:** memory dumps at 60 and 90 FPS (savestate `vrtest_jak1_matt_gameplay`, `tools/re/memcount.py`): no
+  frame-time value changes with the rate (no 1/90 or 90.0 anywhere; 1/60 only as literals in constant pools at
+  `0x688d3c`, `0x10b57ec`, `0x753828`). The game steps a fixed 1/60 per frame, so it runs 1.5x at 90, as Matt saw.
+  The earlier "real-time" result (walk displacement) was wrong. Fix for now: `max_fps 60`, `default_fps 60` (runs
+  at its native 60 with the headset at 90, reprojected), verified 60.0 FPS on the simulator. A real VR-rate fix needs
+  the frame step found and driven from the profile, as for R&C. Jak II uses the same engine: probably the same.
