@@ -225,3 +225,14 @@ programs had already been written to the shader cache, and a throw there would e
 - Still about **40 FPS** in the headset; **at least 60 is needed** for the game to work. Build: 2026-10-01 RSX-thread
   optimisations (uncommitted). The regression's "90 Hz (race start)" (grid savestate, 40 s settle) does not reflect
   racing: re-measure in a race.
+
+## 2026-10-01 night: measured on the current build
+
+- Matt's GT5 config has the VR **Frame Rate: 30**; his ~40 FPS was presumably with a higher setting.
+- `vrtest_gt5_race_start` at 60 (desktop stereo, 300%): 60.0 FPS, 0% late, RSX thread 7.0 ms/frame, idle 55%.
+  OpenXR Simulator (headset path, VR Frame Rate 60 temporarily, Vblank 90): 60.0 FPS, 0% late, RSX 7.4 ms — but the
+  car did not move (R2 is not accelerate in this setup) and after the 40 s settle the pack had left: not the slow
+  case. The grid state is not representative of racing.
+- Profile of the grid at 60: 11% of the RSX thread in `texture_cache` flushes (`imp_flush` -> `wait_for_event`, a
+  GPU readback), the rest mostly idle.
+- Next: a savestate from Matt where it drops (mid-pack), then `RPCS3_RSX_SAMPLE=2` and frame stats there.
