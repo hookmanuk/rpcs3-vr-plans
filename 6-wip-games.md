@@ -25,6 +25,7 @@ are **tracked in `bin/`**, so the next release will ship them unless they are mo
 | Ratchet & Clank Collection | BCUS98282 | `vr-non-working/` + untracked `bin/` copy | R&C 1 yes (profile frame-time values) | not played | R&C 1 pause menu; stereo 75-80; R&C 2/3 untried |
 | Tales of Xillia | BLUS31006 | `vr-non-working/` + untracked `bin/` copy | yes (community 60 FPS + fork patch) | not played | battles unchecked |
 | The Darkness | BLUS30035 | `vr-non-working/` + untracked `bin/` copy | yes (community 60 FPS patch, real-time) | not played | stereo breaks the lighting (red leaks, dark bands) |
+| Dynasty Warriors 6 Empires | BLUS30306 | `vr-non-working/` + untracked `bin/` copy | no: frame-locked, profile at 60 (180 flat possible) | not played | 90 FPS needs a logic-step patch |
 | God of War Collection (GOW1, GOW2) | BCES00800 | tracked in `bin/` | yes (profile, no patch) | not played | 5% black border |
 | Killzone 2 | BCUS98116 | tracked in `bin/` | no: default 45 | not played | RSX-bound; HUD and combat unchecked |
 | Gran Turismo 5 | BCUS98114 | `vr-non-working/` + untracked `bin/` copy | yes (patch) | tested, broken | menu clipping, race-start frame rate |
@@ -94,6 +95,11 @@ Notes: `profiles/BLUS30035-notes.md`. Evidence: `evidence/darkness/`.
 - **Profile:** generated (`column_vectors c[0]`, 100% coverage).
 - **Blocker:** any stereo shear breaks the multi-pass lighting (red light leaking, dark bands), even in a single
   sheared view. Needs a stationary scene to bisect (the opening is scripted and animated).
+
+## Dynasty Warriors 6 Empires (BLUS30306, disc 01.00)
+
+Notes: `profiles/BLUS30306-notes.md`. Evidence: `evidence/dw6e/`. Generated profile, stereo and yaw audit clean,
+180 FPS flat in battle, but frame-locked (3.4x at 180, no dt found): runs at 60 with reprojection for now.
 
 ## God of War Collection (BCES00800 v01.00, UK disc)
 

@@ -1,0 +1,29 @@
+# Dynasty Warriors 6 Empires (BLUS30306, disc 01.00)
+
+Added 2026-10-01. Profile `bin/vr_profiles/BLUS30306.json` (generated in a battle), copy in `rpcs3/vr-non-working/`.
+No patch. Desktop only. Savestate `bin/savestates/BLUS30306/BLUS30306_1_0.SAVESTAT.zst`: start of the first
+mercenary battle (Empire Mode > New > Normal > Yellow Turban Rebellion > Ahui Nan > Battle > Mercenary > Shao Hua
+Bandits).
+
+## Frame rate
+
+- The intro movie stalls at a raised Vblank (`cellVdec ... waiting for a consumer`); boot at 60 (or use the savestate).
+- In battle: 60 at Vblank 60; **180** at Vblank 180 (RSX thread ~29%, main PPU thread busy): lots of headroom.
+- **Frame-locked:** the player walks 307.9 units in a 0.6 s hold at 60 and 1036.8 at 180 (3.4x). No dt: the 1/60 and
+  1/30 floats in data (`0x7e1884`, `0x7e8d70`, `0x7e9160`, `0x7f1b68`, `0x7f24f0`, `0x7df6c8`, `0x7e16a8`) poked
+  to 1/180 changed nothing. The game imports `cellGcmSetVBlankHandler`, `cellGcmSetVBlankFrequency`,
+  `cellGcmGetLastFlipTime` and `sys_time_get_system_time`. Player position (copy) at `0x8407d0`, written by a copy
+  at `0x44c9e8` from the physics solver around `0x32614`. Profile runs it at **60** (`max_fps 60`); the headset
+  reprojects. A 90 FPS fix needs the RR7 method (counter caves) or the logic step found from the vblank handler.
+
+## VR profile (generated)
+
+`row_vectors`, camera `c[0, 264, 262, 263, 16, 256, 261]` (overlapping bases: `require_camera_aspect`),
+`require_rigid_camera`, `nonrigid_camera_blocks [256]`, `camera_slots_read_directly`, camera position `c[104]` (2004 of
+4696 eye points), HUD `c[256]` + `hud_skips_passes`, near 32 units -> 200 units/m (`eye_baseline` 12.8, unchecked).
+96% of depth-tested draws covered. Desktop stereo and yaw-25 audit: world turns coherently, HUD and minimap stay
+(`evidence/dw6e/stereo-and-audit-yaw25.png`).
+
+## Open
+
+- 90 FPS (frame lock); world scale; menus (2D, full-screen) and the strategy map in the headset.
