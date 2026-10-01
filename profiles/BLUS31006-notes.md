@@ -86,3 +86,15 @@ The first battle is well into the story (not reached by scripted input).
 - **White screen after Start on the splash: not reproduced.** Start pressed while the Namco splash shows: flat at 60
   and on the simulator at 90 the game continues to the Options screen. Matt's white screen was probably that Options
   screen drawn full-view over the headset (fixed above). Recheck in the headset.
+
+## 2026-10-01 late: walking ripples at the wrong depth
+
+Matt's savestate `vrtest_tox_matt_puddles` (= `BLUS31006_1_1`, Laforte Research Center sewer). The ripple rings and
+other effect quads (`387450c1b505f028`, 64x64 / 128x128 textures, 4-vertex quads) are drawn with per-object MVPs in
+`c[0..3]` that include the ring's own scale: w-row lengths from 0.05 to 11.6 in one frame (the scene's own draws 1.0),
+all with |x row| / |w row| = 1.358 (the projection). With `eye_offset: baseline` the eye offset scales with the ring,
+so a ring grown to 11x got 11x the parallax and floated in front of everything. **Fix: `"eye_offset":
+"baseline_per_w"`** (offset per unit of w, as Jak 1): every draw with |w| = 1 is unchanged. Not yet seen in the
+headset; a few stretched particles (|x|/|w| 0.82-1.47) keep a slightly wrong offset.
+Blue floor lights brighter in one eye (Milla's intro): Matt saw it correct on the OpenXR Simulator; he rechecks
+in the headset.
