@@ -21,7 +21,7 @@ are **tracked in `bin/`**, so the next release will ship them unless they are mo
 
 | Game | ID | Profile | 90 FPS | Headset | Blocker |
 |---|---|---|---|---|---|
-| Dragon's Dogma: Dark Arisen | BLUS31155 | `vr-non-working/` + untracked `bin/` copy | yes (community Unlock FPS, real-time) | not played | open-world frame rate unmeasured; needs update 01.02 |
+| Dragon's Dogma: Dark Arisen | BLUS31155 | `vr-non-working/` + untracked `bin/` copy | yes (community Unlock FPS, real-time) | not played | open-world frame rate unmeasured; headset frame rate (risk); needs update 01.02 |
 | Ratchet & Clank Collection | BCUS98282 | `vr-non-working/` + untracked `bin/` copy | R&C 1 yes (profile frame-time values) | not played | R&C 1 pause menu; stereo 75-80; R&C 2/3 untried |
 | Tales of Xillia | BLUS31006 | `vr-non-working/` + untracked `bin/` copy | yes (community 60 FPS + fork patch) | not played | battles unchecked |
 | The Darkness | BLUS30035 | `vr-non-working/` + untracked `bin/` copy | yes (community 60 FPS patch, real-time) | not played | stereo breaks the lighting (red leaks, dark bands) |

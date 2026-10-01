@@ -71,9 +71,27 @@ audits, one inspector capture).
 
 - Open-world frame rate (the prologue is a small dungeon).
 - NPC name tags are screen-space HUD: in the headset they stay in the HUD box instead of over the NPC.
+- Open world still unmeasured: the only save is at the prologue start (prologue, Hydra, character creation, then
+  Cassardis); not reached by scripted input in this session.
 - World scale (cm assumption) and the HUD box, in the headset.
 - 14 uncovered programs in the generator log are full-screen passes and the HUD text (`92f9a341`); not individually
   checked in other scenes.
+
+## 2026-10-01: headset view (desktop, `-FakeHmd 100`)
+
+- The HUD was not boxed: the HUD text and bars (`38bca07d9ce9033e`) take an object transform in `c[0..3]` and a
+  packed ortho in `c[4]` (scale x/y, offset x/y), so neither the ortho-block path nor the matrix-less test finds
+  them, and they draw into the scene's own 1280x720 target. The minimap (`a6629f97bf957a04`) is drawn into a
+  256x256 target, then into the scene target sampling it. Profile: `passthrough_hud` with `hud_programs`
+  [both] (the after-shader box). Fork: the passthrough HUD now accepts draws sampling a small render target
+  (not view-shaped). Result: HUD, bars and minimap boxed (`evidence/ddda/fakehmd100-hud-boxed.png`), 86-88 FPS.
+- The fake headset never recorded camera targets, so the passthrough HUD could not be tested with it; it does now
+  (only the target list, not the headset's pose stamping: running the full pose bookkeeping with the fake headset
+  dropped Dragon's Dogma to 6 FPS and Anarchy Reigns to 60, cause not found). **Risk:** check Dragon's Dogma's
+  frame rate in a real headset session.
+- Dev probe `why=<vertex hash>` logs each distinct VR classification of that program's draws (camera, HUD,
+  passthrough, texture kinds, target, in-scene).
+- Savestate `bin/savestates/BLUS31155/dd_prologue.SAVESTAT.zst` (prologue, start).
 
 ## Driving it unattended
 
