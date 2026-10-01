@@ -41,3 +41,11 @@ Savestates: `BCUS98281_1_0` (Jak 1, Samos' hut after the intro), `BCUS98281_1_1`
 - HUD check in both; stereo frame rates on the headset path.
 - Jak 3: below 90 flat in Spargus (above).
 - The launcher's attract scenes are 3D (30 FPS) with the base profile = Jak 1's.
+
+## 2026-10-01: first headset run, Jak 1 (Matt, 90 Hz)
+
+- All HUD elements tied to the face (no HUD block in the profile).
+- Stereo broken on lots of objects: at the wrong depth, hurts the eyes.
+- Performs well, but **everything looks 1.5x speed at 90 FPS**. This contradicts the "Real-time" result above (float
+  clocks 1.00x, matching walk displacement at 60 and 180): that test did not cover what runs per frame. Re-check by
+  eye at 60 vs 90 (animations, effects, NPC movement) and find the per-frame step; Jak II's result is suspect too.
