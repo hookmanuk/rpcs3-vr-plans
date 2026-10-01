@@ -114,3 +114,12 @@ screenshot and press X again if it stopped at a menu. The first boot compiles PP
   user's setting untouched). With it: **72.0 FPS, 0% late, RSX thread 7.80 ms** (`evidence/vrperf/`).
 - Not checked: outdoors (sun/lens flares could scale with the visible pixel count; with Approximate any visible
   pixel counts as fully visible).
+
+## 2026-10-01 evening: Matt's slow save on the OpenXR Simulator
+
+- `vrtest_ddda_matt_slow` on the simulator (Pimax Dream Air profile, 90 Hz, Vblank 90, Matt's settings: no custom
+  config, so Resolution Scale 100 and 1280x720 eye swapchains): **89.9-90.0 FPS, 0% late**, RSX thread 8.0-9.2 ms per
+  frame (idle ~20%), GPU ~41%; the same with a continuous head sweep (yaw +-30, pitch +-15 degrees at 0.25 Hz).
+- So the slowdown Matt saw is not reproduced. Differences left: his real runtime and compositor, or what he read as
+  slow (FPS counter, judder). His headset run's RPCS3.log was overwritten; next time keep that log (or note the FPS
+  in the title bar).
