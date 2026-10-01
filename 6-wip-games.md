@@ -275,7 +275,15 @@ FFX draws one frame every two vblanks (30 at 60, 45 at Vblank 90). In the openin
 reached 86-90 FPS with game clocks at 1.0x real time (memory dumps; a voiced cutscene, so gameplay timing is
 unchecked). At Vblank 240 (cap 120) the ceiling was only **80-91 FPS flat**, with the RSX thread and the game's
 `PhyreEngineRenderThread` both at ~100%: no headroom for stereo. The first boot compiles ~2,100 PPU modules
-(~8 minutes). Evidence: `evidence/ffx/`. FFX-2 uses the same engine and was not tried.
+(~8 minutes). Evidence: `evidence/ffx/`.
+
+2026-10-01 re-check: the "RSX thread at 100%" reading was spin-waiting. Sampled properly (`tools/rsx_sample.py`), at
+~90 FPS in the FFX intro (Vblank 240) the RSX thread sleeps 80% and the `PhyreEngineRenderThread` waits on lv2 objects
+86%; the main thread polls a render-thread flag with 1 ms usleeps (`0x54cd8c`, 720 calls/s). So the ceiling is the
+game's own render/SPU job pipeline, about 88-95 in the intro and 120 in menus: still no headroom for stereo.
+**FFX-2** (launcher 3rd entry): its opening movie (cellSail) stalls black at a raised Vblank (plays at 60, then
+in-engine battle at 30 FPS); same engine and pipeline as FFX, not pursued further. FFX-2 Last Mission and Eternal
+Calm (short extras) not tried.
 
 ## Uncharted: Drake's Fortune (BCUS98103 v01.00)
 
