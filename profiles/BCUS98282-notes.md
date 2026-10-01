@@ -74,6 +74,18 @@ Each game of the collection is its own executable, so each has an executable pro
   does not, and frames miss a vblank. Lead: cut the RSX thread's per-draw cost in stereo (3,300 draws, 19 right-eye
   batches), or find the game's wait (a label poll) and check whether it can run a frame ahead.
 
+## 2026-10-01: why stereo misses 90 (R&C 3 Veldin battle)
+
+- Flat uncapped (Vblank 180): **150-164 FPS**. Stereo uncapped: 85-94. GPU ~14% busy (nvidia-smi), Multithreaded
+  RSX no help.
+- `RPCS3_PPU_SAMPLE` + `RPCS3_USLEEP_STATS`: in stereo the main thread spends **87%** of its time in a 50 us
+  `sys_timer_usleep` loop at `0x96f1a8` (RC3.self) waiting until `[[0x15c6528]+8]` = the GCM control register's
+  **ref** (`0x50100048`) reaches a value it set: it waits for the RSX to process its command buffer up to a
+  reference, i.e. the frame is fully serial (game work, then RSX work). So the frame time is game time + RSX
+  thread time, and the RSX thread's stereo cost (the right-eye replay; the GPU profile's per-category RSX times
+  miss part of it, the RSX thread is ~53% of a core) pushes it past 11.1 ms. A real fix is cheaper right-eye
+  submission on the RSX thread (multiview, the standing plan item), not a game patch.
+
 ## Open
 
 - **Pause menu:** its button frames are 3D panels drawn with their own perspective camera (`ef49d731f4b4551b`,
