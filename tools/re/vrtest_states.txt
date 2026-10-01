@@ -1,0 +1,22 @@
+# VR regression savestates: bin/savestates/<ID>/<STATE>.SAVESTAT.zst (hard links to the originals).
+# ID        STATE                       VPF WALK SETTLE  scene
+BCUS98282   vrtest_rc1_veldin            1  1    10     Ratchet & Clank 1: Veldin, start (HelpDesk tip on screen)
+BCUS98282   vrtest_rc2_aranos            1  1    10     Ratchet & Clank 2: Aranos interior (light scene)
+BCUS98282   vrtest_rc3_veldin_battle     1  1    10     Ratchet & Clank 3: Veldin battle
+BLUS30632   vrtest_anarchy_practice      2  1    10     Anarchy Reigns: Training > Practice
+BLUS30405   vrtest_dante_acre            1  1    10     Dante's Inferno: Acre, first fight
+BLUS30035   vrtest_darkness_opening      1  0    10     The Darkness: opening car scene ("View tutorial help")
+BCUS98227   vrtest_puppeteer_cage        2  1    10     Puppeteer: first control, Kutaro in the cage
+BLUS31006   vrtest_xillia_field          1  1    10     Tales of Xillia: first field (academy)
+BLUS31155   vrtest_ddda_prologue         1  1    10     Dragon's Dogma DA: prologue start
+BCUS98281   vrtest_jak1_hut              1  1    10     Jak 1: Samos' hut / Sandover
+BCUS98281   vrtest_jak2_prison           1  1    10     Jak II: prison / escape area
+BCUS98281   vrtest_jak3_spargus          1  1    10     Jak 3: Spargus palace, first control
+BLUS30306   vrtest_dw6e_battle           1  1    10     Dynasty Warriors 6 Empires: first mercenary battle
+BCES00664   vrtest_wipeout_race          1  0    10     WipEout HD (released): in a race, ship at speed
+BCES00800   vrtest_gowc_boat             1  1    10     God of War Collection (released): GoW 1, the boat, first fight
+BCUS98259   vrtest_icosotc_1             1  1    10     ICO & SotC Collection (released): SotC, a valley
+BLUS30443   vrtest_demons_1              1  1    10     Demon's Souls (released): tutorial corridor
+BLUS30367   vrtest_bayonetta_play        1  1    10     Bayonetta: graveyard fight, Prologue (continued from the chapter menu)
+BCUS98114   vrtest_gt5_race_start        1  0    40     Gran Turismo 5: race start
+# BLUS31010 vrtest_nfsmw_1  1 0 10  Need for Speed Most Wanted: disc image no longer in F:/rpsc3/games (2026-10-01), skipped

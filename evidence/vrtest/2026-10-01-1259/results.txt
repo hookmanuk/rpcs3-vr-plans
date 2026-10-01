@@ -1,0 +1,260 @@
+# BCUS98282 vrtest_rc1_veldin: Ratchet & Clank 1: Veldin, start (HelpDesk tip on screen)
+BCUS98282 vrtest_rc1_veldin vblank 72 scale 300%:
+   530 frames over 8.0 s: avg 66.2 FPS, 1% low 45.9, 0.1% low 43.4 (worst frame 23.0 ms), median 14.52 ms, late 0.94%
+   534 frames over 8.0 s: avg 66.7 FPS, 1% low 46.0, 0.1% low 45.1 (worst frame 22.2 ms), median 14.44 ms, late 1.69%
+   539 frames over 8.0 s: avg 67.3 FPS, 1% low 46.2, 0.1% low 45.0 (worst frame 22.2 ms), median 14.31 ms, late 2.04%
+   => median of 3 windows: avg 66.7 FPS, 1% low 46.0, late frames 1.69%
+SUSTAINABLE BCUS98282 vrtest_rc1_veldin: none Hz
+# BCUS98282 vrtest_rc2_aranos: Ratchet & Clank 2: Aranos interior (light scene)
+BCUS98282 vrtest_rc2_aranos vblank 72 scale 300%:
+   577 frames over 8.0 s: avg 72.0 FPS, 1% low 64.6, 0.1% low 63.3 (worst frame 15.8 ms), median 13.94 ms, late 0.00%
+   576 frames over 8.0 s: avg 72.0 FPS, 1% low 64.6, 0.1% low 63.0 (worst frame 15.9 ms), median 13.95 ms, late 0.00%
+   577 frames over 8.0 s: avg 72.0 FPS, 1% low 64.1, 0.1% low 39.8 (worst frame 25.1 ms), median 13.94 ms, late 0.17%
+   => median of 3 windows: avg 72.0 FPS, 1% low 64.6, late frames 0.00%
+BCUS98282 vrtest_rc2_aranos vblank 90 scale 300%:
+   721 frames over 8.0 s: avg 90.0 FPS, 1% low 78.9, 0.1% low 76.4 (worst frame 13.1 ms), median 11.05 ms, late 0.00%
+   721 frames over 8.0 s: avg 90.0 FPS, 1% low 78.3, 0.1% low 73.8 (worst frame 13.6 ms), median 11.05 ms, late 0.00%
+   720 frames over 8.0 s: avg 90.0 FPS, 1% low 78.3, 0.1% low 45.2 (worst frame 22.1 ms), median 11.03 ms, late 0.14%
+   => median of 3 windows: avg 90.0 FPS, 1% low 78.3, late frames 0.00%
+BCUS98282 vrtest_rc2_aranos vblank 120 scale 300%:
+   961 frames over 8.0 s: avg 120.0 FPS, 1% low 99.8, 0.1% low 94.8 (worst frame 10.5 ms), median 8.41 ms, late 0.00%
+   960 frames over 8.0 s: avg 120.0 FPS, 1% low 99.9, 0.1% low 96.8 (worst frame 10.3 ms), median 8.42 ms, late 0.00%
+   960 frames over 8.0 s: avg 119.9 FPS, 1% low 101.2, 0.1% low 51.7 (worst frame 19.3 ms), median 8.41 ms, late 0.10%
+   => median of 3 windows: avg 120.0 FPS, 1% low 99.9, late frames 0.00%
+SUSTAINABLE BCUS98282 vrtest_rc2_aranos: 120 Hz
+# BCUS98282 vrtest_rc3_veldin_battle: Ratchet & Clank 3: Veldin battle
+BCUS98282 vrtest_rc3_veldin_battle vblank 72 scale 300%:
+   554 frames over 8.0 s: avg 69.2 FPS, 1% low 47.0, 0.1% low 46.4 (worst frame 21.6 ms), median 14.19 ms, late 1.26%
+   565 frames over 8.0 s: avg 70.6 FPS, 1% low 48.8, 0.1% low 47.3 (worst frame 21.1 ms), median 14.06 ms, late 0.18%
+   563 frames over 8.0 s: avg 70.3 FPS, 1% low 49.3, 0.1% low 48.7 (worst frame 20.5 ms), median 14.19 ms, late 0.00%
+   => median of 3 windows: avg 70.3 FPS, 1% low 48.8, late frames 0.18%
+BCUS98282 vrtest_rc3_veldin_battle vblank 90 scale 300%:
+   651 frames over 8.0 s: avg 81.4 FPS, 1% low 54.6, 0.1% low 52.2 (worst frame 19.2 ms), median 11.65 ms, late 3.69%
+   648 frames over 8.0 s: avg 81.0 FPS, 1% low 55.7, 0.1% low 54.0 (worst frame 18.5 ms), median 11.60 ms, late 3.55%
+   650 frames over 8.0 s: avg 81.2 FPS, 1% low 56.5, 0.1% low 54.7 (worst frame 18.3 ms), median 11.70 ms, late 1.69%
+   => median of 3 windows: avg 81.2 FPS, 1% low 55.7, late frames 3.55%
+SUSTAINABLE BCUS98282 vrtest_rc3_veldin_battle: 72 Hz
+# BLUS30632 vrtest_anarchy_practice: Anarchy Reigns: Training > Practice
+BLUS30632 vrtest_anarchy_practice vblank 144 scale 300%:
+   576 frames over 8.0 s: avg 72.0 FPS, 1% low 67.9, 0.1% low 53.5 (worst frame 18.7 ms), median 13.95 ms, late 0.00%
+   577 frames over 8.0 s: avg 72.0 FPS, 1% low 67.0, 0.1% low 64.4 (worst frame 15.5 ms), median 13.94 ms, late 0.00%
+   => median of 2 windows: avg 72.0 FPS, 1% low 67.0, late frames 0.00%
+BLUS30632 vrtest_anarchy_practice vblank 180 scale 300%:
+   749 frames over 8.0 s: avg 93.6 FPS, 1% low 75.9, 0.1% low 54.5 (worst frame 18.4 ms), median 10.89 ms, late 0.40%
+   756 frames over 8.0 s: avg 94.4 FPS, 1% low 78.2, 0.1% low 53.8 (worst frame 18.6 ms), median 10.90 ms, late 0.40%
+   => median of 2 windows: avg 93.6 FPS, 1% low 75.9, late frames 0.40%
+BLUS30632 vrtest_anarchy_practice vblank 240 scale 300%:
+   844 frames over 8.0 s: avg 105.5 FPS, 1% low 73.0, 0.1% low 53.0 (worst frame 18.9 ms), median 9.92 ms, late 0.59%
+   848 frames over 8.0 s: avg 106.0 FPS, 1% low 71.2, 0.1% low 53.9 (worst frame 18.6 ms), median 9.86 ms, late 0.71%
+   => median of 2 windows: avg 105.5 FPS, 1% low 71.2, late frames 0.59%
+SUSTAINABLE BLUS30632 vrtest_anarchy_practice: 90 Hz
+# BLUS30405 vrtest_dante_acre: Dante's Inferno: Acre, first fight
+BLUS30405 vrtest_dante_acre vblank 72 scale 300%:
+   577 frames over 8.0 s: avg 72.0 FPS, 1% low 64.8, 0.1% low 61.2 (worst frame 16.3 ms), median 13.92 ms, late 0.00%
+   577 frames over 8.0 s: avg 72.0 FPS, 1% low 64.5, 0.1% low 61.8 (worst frame 16.2 ms), median 13.90 ms, late 0.00%
+   576 frames over 8.0 s: avg 72.0 FPS, 1% low 64.3, 0.1% low 41.3 (worst frame 24.2 ms), median 13.91 ms, late 0.17%
+   => median of 3 windows: avg 72.0 FPS, 1% low 64.5, late frames 0.00%
+BLUS30405 vrtest_dante_acre vblank 90 scale 300%:
+   721 frames over 8.0 s: avg 90.0 FPS, 1% low 79.3, 0.1% low 72.8 (worst frame 13.7 ms), median 11.06 ms, late 0.00%
+   721 frames over 8.0 s: avg 90.0 FPS, 1% low 78.4, 0.1% low 70.9 (worst frame 14.1 ms), median 11.08 ms, late 0.00%
+   720 frames over 8.0 s: avg 90.0 FPS, 1% low 78.6, 0.1% low 47.1 (worst frame 21.2 ms), median 11.09 ms, late 0.14%
+   => median of 3 windows: avg 90.0 FPS, 1% low 78.6, late frames 0.00%
+BLUS30405 vrtest_dante_acre vblank 120 scale 300%:
+   961 frames over 8.0 s: avg 120.0 FPS, 1% low 102.5, 0.1% low 96.6 (worst frame 10.3 ms), median 8.35 ms, late 0.00%
+   961 frames over 8.0 s: avg 120.0 FPS, 1% low 102.3, 0.1% low 89.7 (worst frame 11.2 ms), median 8.36 ms, late 0.00%
+   960 frames over 8.0 s: avg 119.9 FPS, 1% low 101.9, 0.1% low 56.0 (worst frame 17.8 ms), median 8.31 ms, late 0.10%
+   => median of 3 windows: avg 120.0 FPS, 1% low 102.3, late frames 0.00%
+SUSTAINABLE BLUS30405 vrtest_dante_acre: 120 Hz
+# BLUS30035 vrtest_darkness_opening: The Darkness: opening car scene ("View tutorial help")
+BLUS30035 vrtest_darkness_opening vblank 72 scale 300%:
+   386 frames over 8.0 s: avg 48.2 FPS, 1% low 45.3, 0.1% low 44.2 (worst frame 22.6 ms), median 20.68 ms, late 0.00%
+   388 frames over 8.0 s: avg 48.4 FPS, 1% low 43.6, 0.1% low 41.7 (worst frame 24.0 ms), median 20.53 ms, late 0.00%
+   388 frames over 8.0 s: avg 48.4 FPS, 1% low 44.5, 0.1% low 29.9 (worst frame 33.5 ms), median 20.54 ms, late 0.26%
+   => median of 3 windows: avg 48.4 FPS, 1% low 44.5, late frames 0.00%
+SUSTAINABLE BLUS30035 vrtest_darkness_opening: none Hz
+# BCUS98227 vrtest_puppeteer_cage: Puppeteer: first control, Kutaro in the cage
+BCUS98227 vrtest_puppeteer_cage vblank 144 scale 300%:
+   576 frames over 8.0 s: avg 71.9 FPS, 1% low 66.7, 0.1% low 62.9 (worst frame 15.9 ms), median 14.00 ms, late 0.00%
+   576 frames over 8.0 s: avg 72.0 FPS, 1% low 68.0, 0.1% low 65.8 (worst frame 15.2 ms), median 13.99 ms, late 0.00%
+   576 frames over 8.0 s: avg 71.9 FPS, 1% low 68.5, 0.1% low 40.1 (worst frame 25.0 ms), median 14.00 ms, late 0.17%
+   => median of 3 windows: avg 71.9 FPS, 1% low 68.0, late frames 0.00%
+BCUS98227 vrtest_puppeteer_cage vblank 180 scale 300%:
+   690 frames over 8.0 s: avg 86.2 FPS, 1% low 68.4, 0.1% low 58.7 (worst frame 17.0 ms), median 11.39 ms, late 0.00%
+   686 frames over 8.0 s: avg 85.7 FPS, 1% low 73.3, 0.1% low 60.9 (worst frame 16.4 ms), median 11.55 ms, late 0.00%
+   694 frames over 8.0 s: avg 86.7 FPS, 1% low 77.0, 0.1% low 42.1 (worst frame 23.8 ms), median 11.43 ms, late 0.14%
+   => median of 3 windows: avg 86.2 FPS, 1% low 73.3, late frames 0.00%
+SUSTAINABLE BCUS98227 vrtest_puppeteer_cage: 72 Hz
+# BLUS31006 vrtest_xillia_field: Tales of Xillia: first field (academy)
+BLUS31006 vrtest_xillia_field vblank 72 scale 300%:
+   577 frames over 8.0 s: avg 72.0 FPS, 1% low 68.5, 0.1% low 65.2 (worst frame 15.3 ms), median 13.99 ms, late 0.00%
+   576 frames over 8.0 s: avg 72.0 FPS, 1% low 60.1, 0.1% low 59.7 (worst frame 16.8 ms), median 13.99 ms, late 0.00%
+   576 frames over 8.0 s: avg 72.0 FPS, 1% low 63.2, 0.1% low 57.3 (worst frame 17.4 ms), median 13.99 ms, late 0.00%
+   => median of 3 windows: avg 72.0 FPS, 1% low 63.2, late frames 0.00%
+BLUS31006 vrtest_xillia_field vblank 90 scale 300%:
+   720 frames over 8.0 s: avg 90.0 FPS, 1% low 86.0, 0.1% low 83.2 (worst frame 12.0 ms), median 11.02 ms, late 0.00%
+   720 frames over 8.0 s: avg 90.0 FPS, 1% low 70.1, 0.1% low 67.2 (worst frame 14.9 ms), median 11.03 ms, late 0.00%
+   721 frames over 8.0 s: avg 90.0 FPS, 1% low 67.9, 0.1% low 65.3 (worst frame 15.3 ms), median 11.04 ms, late 0.00%
+   => median of 3 windows: avg 90.0 FPS, 1% low 70.1, late frames 0.00%
+BLUS31006 vrtest_xillia_field vblank 120 scale 300%:
+   958 frames over 8.0 s: avg 119.6 FPS, 1% low 84.1, 0.1% low 72.7 (worst frame 13.7 ms), median 8.34 ms, late 0.21%
+   899 frames over 8.0 s: avg 112.3 FPS, 1% low 79.6, 0.1% low 72.9 (worst frame 13.7 ms), median 8.60 ms, late 0.44%
+   935 frames over 8.0 s: avg 116.7 FPS, 1% low 84.4, 0.1% low 77.2 (worst frame 12.9 ms), median 8.50 ms, late 0.11%
+   => median of 3 windows: avg 116.7 FPS, 1% low 84.1, late frames 0.21%
+SUSTAINABLE BLUS31006 vrtest_xillia_field: 120 Hz
+# BLUS31155 vrtest_ddda_prologue: Dragon's Dogma DA: prologue start
+BLUS31155 vrtest_ddda_prologue vblank 72 scale 300%:
+   544 frames over 8.0 s: avg 67.9 FPS, 1% low 55.9, 0.1% low 54.8 (worst frame 18.2 ms), median 14.65 ms, late 0.00%
+   548 frames over 8.0 s: avg 68.4 FPS, 1% low 55.1, 0.1% low 54.0 (worst frame 18.5 ms), median 14.63 ms, late 0.00%
+   533 frames over 8.0 s: avg 66.5 FPS, 1% low 53.0, 0.1% low 22.3 (worst frame 44.8 ms), median 14.86 ms, late 0.19%
+   => median of 3 windows: avg 67.9 FPS, 1% low 55.1, late frames 0.00%
+SUSTAINABLE BLUS31155 vrtest_ddda_prologue: none Hz
+# BCUS98281 vrtest_jak1_hut: Jak 1: Samos' hut / Sandover
+BCUS98281 vrtest_jak1_hut vblank 72 scale 300%:
+   576 frames over 8.0 s: avg 72.0 FPS, 1% low 58.2, 0.1% low 56.8 (worst frame 17.6 ms), median 13.88 ms, late 0.00%
+   576 frames over 8.0 s: avg 71.9 FPS, 1% low 52.8, 0.1% low 45.3 (worst frame 22.1 ms), median 13.84 ms, late 0.17%
+   571 frames over 8.0 s: avg 71.3 FPS, 1% low 53.1, 0.1% low 26.0 (worst frame 38.5 ms), median 13.97 ms, late 0.18%
+   => median of 3 windows: avg 71.9 FPS, 1% low 53.1, late frames 0.17%
+BCUS98281 vrtest_jak1_hut vblank 90 scale 300%:
+   719 frames over 8.0 s: avg 89.8 FPS, 1% low 68.7, 0.1% low 64.1 (worst frame 15.6 ms), median 11.02 ms, late 0.00%
+   698 frames over 8.0 s: avg 87.2 FPS, 1% low 61.1, 0.1% low 56.9 (worst frame 17.6 ms), median 11.18 ms, late 0.29%
+   705 frames over 8.0 s: avg 88.0 FPS, 1% low 63.8, 0.1% low 52.1 (worst frame 19.2 ms), median 11.09 ms, late 0.14%
+   => median of 3 windows: avg 88.0 FPS, 1% low 63.8, late frames 0.14%
+BCUS98281 vrtest_jak1_hut vblank 120 scale 300%:
+   911 frames over 8.0 s: avg 113.8 FPS, 1% low 82.9, 0.1% low 78.5 (worst frame 12.7 ms), median 8.68 ms, late 0.00%
+   875 frames over 8.0 s: avg 109.3 FPS, 1% low 76.5, 0.1% low 73.0 (worst frame 13.7 ms), median 8.95 ms, late 0.23%
+   849 frames over 8.0 s: avg 106.0 FPS, 1% low 74.7, 0.1% low 52.5 (worst frame 19.1 ms), median 9.16 ms, late 0.71%
+   => median of 3 windows: avg 109.3 FPS, 1% low 76.5, late frames 0.23%
+SUSTAINABLE BCUS98281 vrtest_jak1_hut: 90 Hz
+# BCUS98281 vrtest_jak2_prison: Jak II: prison / escape area
+BCUS98281 vrtest_jak2_prison vblank 72 scale 300%:
+   553 frames over 8.0 s: avg 69.0 FPS, 1% low 50.6, 0.1% low 46.6 (worst frame 21.4 ms), median 14.37 ms, late 0.00%
+   554 frames over 8.0 s: avg 69.2 FPS, 1% low 50.3, 0.1% low 49.1 (worst frame 20.4 ms), median 14.34 ms, late 0.00%
+   => median of 2 windows: avg 69.0 FPS, 1% low 50.3, late frames 0.00%
+SUSTAINABLE BCUS98281 vrtest_jak2_prison: none Hz
+# BCUS98281 vrtest_jak3_spargus: Jak 3: Spargus palace, first control
+BCUS98281 vrtest_jak3_spargus vblank 72 scale 300%:
+   341 frames over 8.0 s: avg 42.5 FPS, 1% low 31.9, 0.1% low 29.7 (worst frame 33.6 ms), median 22.80 ms, late 0.00%
+   341 frames over 8.0 s: avg 42.6 FPS, 1% low 33.4, 0.1% low 32.1 (worst frame 31.1 ms), median 22.71 ms, late 0.00%
+   328 frames over 8.0 s: avg 40.9 FPS, 1% low 31.2, 0.1% low 26.0 (worst frame 38.5 ms), median 23.90 ms, late 0.61%
+   => median of 3 windows: avg 42.5 FPS, 1% low 31.9, late frames 0.00%
+SUSTAINABLE BCUS98281 vrtest_jak3_spargus: none Hz
+# BLUS30306 vrtest_dw6e_battle: Dynasty Warriors 6 Empires: first mercenary battle
+BLUS30306 vrtest_dw6e_battle vblank 72 scale 300%:
+   577 frames over 8.0 s: avg 72.0 FPS, 1% low 68.5, 0.1% low 68.1 (worst frame 14.7 ms), median 13.98 ms, late 0.00%
+   576 frames over 8.0 s: avg 72.0 FPS, 1% low 68.3, 0.1% low 68.0 (worst frame 14.7 ms), median 13.98 ms, late 0.00%
+   577 frames over 8.0 s: avg 72.0 FPS, 1% low 68.4, 0.1% low 68.1 (worst frame 14.7 ms), median 13.97 ms, late 0.00%
+   => median of 3 windows: avg 72.0 FPS, 1% low 68.4, late frames 0.00%
+BLUS30306 vrtest_dw6e_battle vblank 90 scale 300%:
+   720 frames over 8.0 s: avg 90.0 FPS, 1% low 85.7, 0.1% low 84.4 (worst frame 11.8 ms), median 11.05 ms, late 0.00%
+   721 frames over 8.0 s: avg 90.0 FPS, 1% low 85.8, 0.1% low 85.0 (worst frame 11.8 ms), median 11.04 ms, late 0.00%
+   720 frames over 8.0 s: avg 90.0 FPS, 1% low 85.7, 0.1% low 82.7 (worst frame 12.1 ms), median 11.03 ms, late 0.00%
+   => median of 3 windows: avg 90.0 FPS, 1% low 85.7, late frames 0.00%
+BLUS30306 vrtest_dw6e_battle vblank 120 scale 300%:
+   961 frames over 8.0 s: avg 120.0 FPS, 1% low 105.3, 0.1% low 100.8 (worst frame 9.9 ms), median 8.39 ms, late 0.00%
+   960 frames over 8.0 s: avg 120.0 FPS, 1% low 106.6, 0.1% low 103.5 (worst frame 9.7 ms), median 8.32 ms, late 0.00%
+   961 frames over 8.0 s: avg 120.0 FPS, 1% low 108.4, 0.1% low 104.6 (worst frame 9.6 ms), median 8.41 ms, late 0.00%
+   => median of 3 windows: avg 120.0 FPS, 1% low 106.6, late frames 0.00%
+SUSTAINABLE BLUS30306 vrtest_dw6e_battle: 120 Hz
+# BCES00664 vrtest_wipeout_race: WipEout HD (released): in a race, ship at speed
+BCES00664 vrtest_wipeout_race vblank 72 scale 300%:
+   577 frames over 8.0 s: avg 72.0 FPS, 1% low 68.3, 0.1% low 68.1 (worst frame 14.7 ms), median 13.97 ms, late 0.00%
+   576 frames over 8.0 s: avg 72.0 FPS, 1% low 68.4, 0.1% low 68.1 (worst frame 14.7 ms), median 13.98 ms, late 0.00%
+   576 frames over 8.0 s: avg 72.0 FPS, 1% low 68.5, 0.1% low 68.3 (worst frame 14.6 ms), median 13.97 ms, late 0.00%
+   => median of 3 windows: avg 72.0 FPS, 1% low 68.4, late frames 0.00%
+BCES00664 vrtest_wipeout_race vblank 90 scale 300%:
+   721 frames over 8.0 s: avg 90.0 FPS, 1% low 85.9, 0.1% low 83.1 (worst frame 12.0 ms), median 11.03 ms, late 0.00%
+   720 frames over 8.0 s: avg 90.0 FPS, 1% low 86.0, 0.1% low 82.7 (worst frame 12.1 ms), median 11.04 ms, late 0.00%
+   721 frames over 8.0 s: avg 90.0 FPS, 1% low 85.9, 0.1% low 83.0 (worst frame 12.0 ms), median 11.04 ms, late 0.00%
+   => median of 3 windows: avg 90.0 FPS, 1% low 85.9, late frames 0.00%
+BCES00664 vrtest_wipeout_race vblank 120 scale 300%:
+   800 frames over 8.0 s: avg 100.0 FPS, 1% low 90.4, 0.1% low 88.4 (worst frame 11.3 ms), median 10.00 ms, late 0.00%
+   801 frames over 8.0 s: avg 100.0 FPS, 1% low 92.6, 0.1% low 88.4 (worst frame 11.3 ms), median 10.00 ms, late 0.00%
+   801 frames over 8.0 s: avg 100.0 FPS, 1% low 91.4, 0.1% low 81.7 (worst frame 12.2 ms), median 9.99 ms, late 0.00%
+   => median of 3 windows: avg 100.0 FPS, 1% low 91.4, late frames 0.00%
+SUSTAINABLE BCES00664 vrtest_wipeout_race: 90 Hz
+# BCES00800 vrtest_gowc_boat: God of War Collection (released): GoW 1, the boat, first fight
+BCES00800 vrtest_gowc_boat vblank 72 scale 300%:
+   577 frames over 8.0 s: avg 72.0 FPS, 1% low 63.2, 0.1% low 61.4 (worst frame 16.3 ms), median 13.89 ms, late 0.00%
+   577 frames over 8.0 s: avg 72.0 FPS, 1% low 66.0, 0.1% low 65.3 (worst frame 15.3 ms), median 13.96 ms, late 0.00%
+   => median of 2 windows: avg 72.0 FPS, 1% low 63.2, late frames 0.00%
+BCES00800 vrtest_gowc_boat vblank 90 scale 300%:
+   721 frames over 8.0 s: avg 90.0 FPS, 1% low 76.2, 0.1% low 75.1 (worst frame 13.3 ms), median 11.06 ms, late 0.00%
+   721 frames over 8.0 s: avg 90.0 FPS, 1% low 80.7, 0.1% low 79.2 (worst frame 12.6 ms), median 11.11 ms, late 0.00%
+   => median of 2 windows: avg 90.0 FPS, 1% low 76.2, late frames 0.00%
+BCES00800 vrtest_gowc_boat vblank 120 scale 300%:
+   960 frames over 8.0 s: avg 120.0 FPS, 1% low 105.2, 0.1% low 103.8 (worst frame 9.6 ms), median 8.40 ms, late 0.00%
+   960 frames over 8.0 s: avg 120.0 FPS, 1% low 107.2, 0.1% low 103.7 (worst frame 9.6 ms), median 8.40 ms, late 0.00%
+   => median of 2 windows: avg 120.0 FPS, 1% low 105.2, late frames 0.00%
+SUSTAINABLE BCES00800 vrtest_gowc_boat: 120 Hz
+# BCUS98259 vrtest_icosotc_1: ICO & SotC Collection (released): SotC, a valley
+BCUS98259 vrtest_icosotc_1 vblank 72 scale 300%:
+   576 frames over 8.0 s: avg 72.0 FPS, 1% low 62.8, 0.1% low 56.2 (worst frame 17.8 ms), median 14.01 ms, late 0.00%
+   576 frames over 8.0 s: avg 72.0 FPS, 1% low 64.0, 0.1% low 62.4 (worst frame 16.0 ms), median 14.01 ms, late 0.00%
+   576 frames over 8.0 s: avg 71.9 FPS, 1% low 64.9, 0.1% low 35.7 (worst frame 28.0 ms), median 14.00 ms, late 0.17%
+   => median of 3 windows: avg 72.0 FPS, 1% low 64.0, late frames 0.00%
+BCUS98259 vrtest_icosotc_1 vblank 90 scale 300%:
+   714 frames over 8.0 s: avg 89.1 FPS, 1% low 70.4, 0.1% low 44.4 (worst frame 22.5 ms), median 11.02 ms, late 0.98%
+   719 frames over 8.0 s: avg 89.8 FPS, 1% low 77.0, 0.1% low 45.4 (worst frame 22.0 ms), median 11.02 ms, late 0.28%
+   717 frames over 8.0 s: avg 89.6 FPS, 1% low 74.2, 0.1% low 41.1 (worst frame 24.4 ms), median 11.02 ms, late 0.42%
+   => median of 3 windows: avg 89.6 FPS, 1% low 74.2, late frames 0.42%
+BCUS98259 vrtest_icosotc_1 vblank 120 scale 300%:
+   805 frames over 8.0 s: avg 100.5 FPS, 1% low 52.1, 0.1% low 50.4 (worst frame 19.8 ms), median 8.51 ms, late 19.38%
+   778 frames over 8.0 s: avg 97.1 FPS, 1% low 52.2, 0.1% low 50.3 (worst frame 19.9 ms), median 8.52 ms, late 23.52%
+   798 frames over 8.0 s: avg 99.6 FPS, 1% low 52.6, 0.1% low 51.0 (worst frame 19.6 ms), median 8.52 ms, late 20.43%
+   => median of 3 windows: avg 99.6 FPS, 1% low 52.2, late frames 20.43%
+SUSTAINABLE BCUS98259 vrtest_icosotc_1: 90 Hz
+# BLUS30443 vrtest_demons_1: Demon's Souls (released): tutorial corridor
+BLUS30443 vrtest_demons_1 vblank 72 scale 300%:
+   577 frames over 8.0 s: avg 72.0 FPS, 1% low 66.5, 0.1% low 65.2 (worst frame 15.3 ms), median 13.95 ms, late 0.00%
+   576 frames over 8.0 s: avg 72.0 FPS, 1% low 65.9, 0.1% low 64.8 (worst frame 15.4 ms), median 13.92 ms, late 0.00%
+   => median of 2 windows: avg 72.0 FPS, 1% low 65.9, late frames 0.00%
+BLUS30443 vrtest_demons_1 vblank 90 scale 300%:
+   721 frames over 8.0 s: avg 90.0 FPS, 1% low 74.1, 0.1% low 69.4 (worst frame 14.4 ms), median 11.06 ms, late 0.00%
+   721 frames over 8.0 s: avg 90.0 FPS, 1% low 70.8, 0.1% low 68.7 (worst frame 14.6 ms), median 11.09 ms, late 0.00%
+   => median of 2 windows: avg 90.0 FPS, 1% low 70.8, late frames 0.00%
+BLUS30443 vrtest_demons_1 vblank 120 scale 300%:
+   961 frames over 8.0 s: avg 120.0 FPS, 1% low 106.2, 0.1% low 101.4 (worst frame 9.9 ms), median 8.37 ms, late 0.00%
+   960 frames over 8.0 s: avg 120.0 FPS, 1% low 105.9, 0.1% low 102.9 (worst frame 9.7 ms), median 8.40 ms, late 0.00%
+   => median of 2 windows: avg 120.0 FPS, 1% low 105.9, late frames 0.00%
+SUSTAINABLE BLUS30443 vrtest_demons_1: 120 Hz
+# BLUS30367 vrtest_bayonetta_play: Bayonetta: graveyard fight, Prologue (continued from the chapter menu)
+BLUS30367 vrtest_bayonetta_play vblank 72 scale 300%:
+   577 frames over 8.0 s: avg 72.0 FPS, 1% low 68.6, 0.1% low 68.3 (worst frame 14.6 ms), median 13.99 ms, late 0.00%
+   575 frames over 8.0 s: avg 71.9 FPS, 1% low 68.6, 0.1% low 40.4 (worst frame 24.8 ms), median 13.99 ms, late 0.17%
+   575 frames over 8.0 s: avg 71.9 FPS, 1% low 68.2, 0.1% low 36.1 (worst frame 27.7 ms), median 14.00 ms, late 0.17%
+   => median of 3 windows: avg 71.9 FPS, 1% low 68.6, late frames 0.17%
+BLUS30367 vrtest_bayonetta_play vblank 90 scale 300%:
+   720 frames over 8.0 s: avg 90.0 FPS, 1% low 85.6, 0.1% low 84.4 (worst frame 11.8 ms), median 11.03 ms, late 0.00%
+   720 frames over 8.0 s: avg 89.9 FPS, 1% low 85.4, 0.1% low 43.8 (worst frame 22.8 ms), median 11.03 ms, late 0.14%
+   720 frames over 8.0 s: avg 89.9 FPS, 1% low 86.1, 0.1% low 44.8 (worst frame 22.3 ms), median 11.03 ms, late 0.14%
+   => median of 3 windows: avg 89.9 FPS, 1% low 85.6, late frames 0.14%
+BLUS30367 vrtest_bayonetta_play vblank 120 scale 300%:
+   958 frames over 8.0 s: avg 119.7 FPS, 1% low 112.4, 0.1% low 58.5 (worst frame 17.1 ms), median 8.46 ms, late 0.21%
+   958 frames over 8.0 s: avg 119.6 FPS, 1% low 110.4, 0.1% low 58.4 (worst frame 17.1 ms), median 8.47 ms, late 0.31%
+   948 frames over 8.0 s: avg 118.4 FPS, 1% low 61.2, 0.1% low 40.4 (worst frame 24.8 ms), median 8.46 ms, late 1.27%
+   => median of 3 windows: avg 119.6 FPS, 1% low 110.4, late frames 0.31%
+SUSTAINABLE BLUS30367 vrtest_bayonetta_play: 120 Hz
+# BCUS98114 vrtest_gt5_race_start: Gran Turismo 5: race start
+BCUS98114 vrtest_gt5_race_start vblank 72 scale 300%:
+   577 frames over 8.0 s: avg 72.0 FPS, 1% low 61.2, 0.1% low 59.0 (worst frame 17.0 ms), median 13.88 ms, late 0.00%
+   577 frames over 8.0 s: avg 72.0 FPS, 1% low 60.4, 0.1% low 56.6 (worst frame 17.7 ms), median 13.91 ms, late 0.00%
+   => median of 2 windows: avg 72.0 FPS, 1% low 60.4, late frames 0.00%
+BCUS98114 vrtest_gt5_race_start vblank 90 scale 300%:
+   720 frames over 8.0 s: avg 89.9 FPS, 1% low 69.8, 0.1% low 66.6 (worst frame 15.0 ms), median 11.18 ms, late 0.00%
+   720 frames over 8.0 s: avg 89.9 FPS, 1% low 71.4, 0.1% low 52.9 (worst frame 18.9 ms), median 11.15 ms, late 0.14%
+   720 frames over 8.0 s: avg 90.0 FPS, 1% low 73.3, 0.1% low 68.4 (worst frame 14.6 ms), median 11.11 ms, late 0.00%
+   => median of 3 windows: avg 89.9 FPS, 1% low 71.4, late frames 0.00%
+BCUS98114 vrtest_gt5_race_start vblank 120 scale 300%:
+   894 frames over 8.0 s: avg 111.7 FPS, 1% low 82.1, 0.1% low 76.2 (worst frame 13.1 ms), median 8.84 ms, late 0.00%
+   919 frames over 8.0 s: avg 114.8 FPS, 1% low 84.7, 0.1% low 77.5 (worst frame 12.9 ms), median 8.61 ms, late 0.00%
+   854 frames over 8.0 s: avg 106.7 FPS, 1% low 74.1, 0.1% low 39.7 (worst frame 25.2 ms), median 9.07 ms, late 0.94%
+   => median of 3 windows: avg 111.7 FPS, 1% low 82.1, late frames 0.00%
+SUSTAINABLE BCUS98114 vrtest_gt5_race_start: 90 Hz
+DONE /f/rpsc3/source/plans/evidence/vrtest/2026-10-01-1259
+
+# Re-judged with the final criterion (avg >= 99% of the rate and < 1% late frames; the run above used avg >= 97%):
+# R&C 1 below 72 (66.7 at 72) | R&C 2 Aranos interior 120 (light scene) | R&C 3 Veldin battle below 72 (70.3 at 72)
+# Anarchy Reigns 90 | Dante's Inferno 120 | The Darkness below 72 (48.4 at 72) | Puppeteer 72 | Tales of Xillia 90 (116.7 at 120)
+# Dragon's Dogma below 72 (67.9) | Jak 1 72 (88.0 at 90) | Jak II below 72 (69.0) | Jak 3 below 72 (42.5) | DW6E 120 (frame-locked: plays at 60)
+# WipEout 90 | God of War (boat) 120 | SotC 90 | Demon's Souls 120 | Bayonetta 120 | GT5 race start 90
+# Machine: Ryzen 7 9800X3D, RTX 5090, Resolution Scale 300% (3840x2160 per eye), desktop stereo (render=1).

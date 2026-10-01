@@ -19,32 +19,37 @@ are **tracked in `bin/`**, so the next release will ship them unless they are mo
 
 ## Summary
 
-| Game | ID | Profile | 90 FPS | Headset | Blocker |
-|---|---|---|---|---|---|
-| Dragon's Dogma: Dark Arisen | BLUS31155 | `vr-non-working/` + untracked `bin/` copy | yes (community Unlock FPS, real-time) | not played | open-world frame rate unmeasured; headset frame rate (risk); needs update 01.02 |
-| Ratchet & Clank Collection | BCUS98282 | `vr-non-working/` + untracked `bin/` copies (base + rc1/rc2/rc3 executable profiles) | R&C 1, 2, 3 yes (profile frame-time values, run speed verified) | not played | stereo 75-85 (RSX work in series with the game); R&C 1 pause menu |
-| Tales of Xillia | BLUS31006 | `vr-non-working/` + untracked `bin/` copy | yes (community 60 FPS + fork patch) | not played | battles unchecked |
-| The Darkness | BLUS30035 | `vr-non-working/` + untracked `bin/` copy | yes (community 60 FPS patch, real-time) | not played | stereo and headset view fixed in the opening; rest of the game unchecked |
-| Dynasty Warriors 6 Empires | BLUS30306 | `vr-non-working/` + untracked `bin/` copy | no: frame-locked, profile at 60 (180 flat possible) | not played | 90 FPS needs a logic-step patch |
-| Puppeteer | BCUS98227 | `vr-non-working/` + untracked `bin/` copy | yes (profile frame time, Vblank 180 = 90 FPS, real-time) | not played | stage small in the headset view; SPU post skipped in VR |
-| Jak and Daxter Collection | BCUS98281 | `vr-non-working/` + untracked `bin/` copies | Jak 1, Jak II yes (real-time, no patch); Jak 3 no (74-85 flat in Spargus) | not played | HUD unchecked |
-| Asura's Wrath | BLUS30721 | `vr-non-working/` + untracked `bin/` copy | yes (community Unlock FPS, real-time) | not played | QTE mashing at 90 untested |
-| Anarchy Reigns | BLUS30632 | `vr-non-working/` + untracked `bin/` copies (profile, patch) | yes (fork patch, real-time verified) | not played | campaign unchecked; HUD timers 3x |
-| Dante's Inferno | BLUS30405 | `vr-non-working/` + untracked `bin/` copy | yes (profile `game_frame_ms_f32`, no patch; 0.99x at 90) | not played | sky is a screen card; world scale unchecked |
-| God of War Collection (GOW1, GOW2) | BCES00800 | tracked in `bin/` | yes (profile, no patch) | not played | 5% black border |
-| Killzone 2 | BCUS98116 | tracked in `bin/` | no: default 45 | not played | RSX-bound; HUD and combat unchecked |
-| Gran Turismo 5 | BCUS98114 | `vr-non-working/` + untracked `bin/` copy | yes (patch) | tested, broken | menu clipping, race-start frame rate |
-| MotorStorm: Pacific Rift | BCUS98155 | `vr-non-working/` + untracked `bin/` copy | yes (patch) | not played | stereo 50-70 at race start (needs multiview) |
-| Blur | BLUS30295 | `vr-non-working/` | yes (patch) | not played | 45-50 FPS stereo |
-| Need for Speed Most Wanted | BLUS31010 | `vr-non-working/` | yes (patch, fixed per rate) | not played | in-race speed at 90 unconfirmed |
-| inFamous 2 | BCUS98125 | `vr-non-working/` | no patch needed | not played | 52-72 stereo; SPU layer left-eye only |
-| Metal Gear Solid 4 | BLUS30109 | `vr-non-working/` | yes (patch) | not played | ~35 stereo in Act 1; one hang |
-| inFamous | BCUS98119 | `vr-non-working/` + untracked `bin/` copy | no patch needed | not played | ~25 stereo: too slow |
-| Split/Second | BLUS30300 | `vr-non-working/` | yes (patch) | not played | race load-bound |
-| God of War III | BCUS98111 | `vr-non-working/` + untracked `bin/` copy | no (`max_fps 36`) | not played | early experimental; no notes |
-| MX vs ATV Reflex | BLUS30321 | untracked `bin/` only | no (`max_fps 30`) | not played | generated 2026-09-28; no notes |
-| Uncharted: Drake's Fortune | BCUS98103 | none | no: 42-46 flat | - | SPU/PPU-bound; not pursued |
-| Final Fantasy X/X-2 HD Remaster | BLUS31211 | none | no: 80-91 flat | - | RSX-bound flat; not pursued |
+**Sustained in VR, 300%** = the highest headset rate (72 / 90 / 120 Hz) the game holds in desktop stereo at
+Resolution Scale 300% (3840x2160 per eye) on a Ryzen 7 9800X3D + RTX 5090, with under 1% missed frames, from its
+regression savestate (`tools/re/vrtest_states.txt`, run 2026-10-01 `evidence/vrtest/2026-10-01-1259/`). **72 is the
+pass mark** for fully compatible.
+
+| Game | ID | Profile | Real-time above 60 | Sustained in VR, 300% | Headset | Blocker |
+|---|---|---|---|---|---|---|
+| Dragon's Dogma: Dark Arisen | BLUS31155 | `vr-non-working/` + untracked `bin/` copy | yes (community Unlock FPS, real-time) | below 72 (68 at 72, prologue) | not played | open-world frame rate unmeasured; headset frame rate (risk); needs update 01.02 |
+| Ratchet & Clank Collection | BCUS98282 | `vr-non-working/` + untracked `bin/` copies (base + rc1/rc2/rc3 executable profiles) | R&C 1, 2, 3 yes (profile frame-time values, run speed verified) | R&C 1 below 72 (67); R&C 3 below 72 (70, Veldin battle); R&C 2 120 (light interior only) | not played | below 72 in heavy scenes at 300% (the right eye's RSX-thread cost); R&C 1 pause menu |
+| Tales of Xillia | BLUS31006 | `vr-non-working/` + untracked `bin/` copy | yes (community 60 FPS + fork patch) | 90 | not played | battles unchecked |
+| The Darkness | BLUS30035 | `vr-non-working/` + untracked `bin/` copy | yes (community 60 FPS patch, real-time) | below 72 (48 at 72) | not played | too slow at 300% (48 at 72); stereo and headset view fixed in the opening |
+| Dynasty Warriors 6 Empires | BLUS30306 | `vr-non-working/` + untracked `bin/` copy | no: frame-locked, profile at 60 (180 flat possible) | 120, but frame-locked: plays at 60 | not played | 90 FPS needs a logic-step patch |
+| Puppeteer | BCUS98227 | `vr-non-working/` + untracked `bin/` copy | yes (profile frame time, Vblank 180 = 90 FPS, real-time) | 72 | not played | stage small in the headset view; SPU post skipped in VR |
+| Jak and Daxter Collection | BCUS98281 | `vr-non-working/` + untracked `bin/` copies | Jak 1, Jak II yes (real-time, no patch); Jak 3 no (74-85 flat in Spargus) | Jak 1 72; Jak II below 72 (69); Jak 3 below 72 (43) | not played | HUD unchecked |
+| Asura's Wrath | BLUS30721 | `vr-non-working/` + untracked `bin/` copy | yes (community Unlock FPS, real-time) | not measured (savestates fail) | not played | QTE mashing at 90 untested |
+| Anarchy Reigns | BLUS30632 | `vr-non-working/` + untracked `bin/` copies (profile, patch) | yes (fork patch, real-time verified) | 90 | not played | campaign unchecked; HUD timers 3x |
+| Dante's Inferno | BLUS30405 | `vr-non-working/` + untracked `bin/` copy | yes (profile `game_frame_ms_f32`, no patch; 0.99x at 90) | 120 | not played | sky is a screen card; world scale unchecked |
+| God of War Collection (GOW1, GOW2) | BCES00800 | tracked in `bin/` | yes (profile, no patch) | 120 (GoW 1) | not played | 5% black border |
+| Killzone 2 | BCUS98116 | tracked in `bin/` | no: default 45 | not measured | not played | RSX-bound; HUD and combat unchecked |
+| Gran Turismo 5 | BCUS98114 | `vr-non-working/` + untracked `bin/` copy | yes (patch) | 90 (race start) | tested, broken | menu clipping, race-start frame rate |
+| MotorStorm: Pacific Rift | BCUS98155 | `vr-non-working/` + untracked `bin/` copy | yes (patch) | not measured | not played | stereo 50-70 at race start (needs multiview) |
+| Blur | BLUS30295 | `vr-non-working/` | yes (patch) | not measured | not played | 45-50 FPS stereo |
+| Need for Speed Most Wanted | BLUS31010 | `vr-non-working/` | yes (patch, fixed per rate) | not measured | not played | in-race speed at 90 unconfirmed |
+| inFamous 2 | BCUS98125 | `vr-non-working/` | no patch needed | not measured | not played | 52-72 stereo; SPU layer left-eye only |
+| Metal Gear Solid 4 | BLUS30109 | `vr-non-working/` | yes (patch) | not measured | not played | ~35 stereo in Act 1; one hang |
+| inFamous | BCUS98119 | `vr-non-working/` + untracked `bin/` copy | no patch needed | not measured | not played | ~25 stereo: too slow |
+| Split/Second | BLUS30300 | `vr-non-working/` | yes (patch) | not measured | not played | race load-bound |
+| God of War III | BCUS98111 | `vr-non-working/` + untracked `bin/` copy | no (`max_fps 36`) | not measured | not played | early experimental; no notes |
+| MX vs ATV Reflex | BLUS30321 | untracked `bin/` only | no (`max_fps 30`) | not measured | not played | generated 2026-09-28; no notes |
+| Uncharted: Drake's Fortune | BCUS98103 | none | no: 42-46 flat | not measured | - | SPU/PPU-bound; not pursued |
+| Final Fantasy X/X-2 HD Remaster | BLUS31211 | none | no: 80-91 flat | not measured | - | RSX-bound flat; not pursued |
 
 ## Testing in the headset (applies to all)
 

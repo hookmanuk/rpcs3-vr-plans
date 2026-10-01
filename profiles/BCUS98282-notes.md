@@ -92,6 +92,16 @@ Each game of the collection is its own executable, so each has an executable pro
   11.1 ms needs ~0.5-1 ms off the RSX thread: reuse the left eye's classification for the right eye, one upload
   for both eyes, or multiview.
 
+## 2026-10-01: at 72 Hz, 4K per eye (pass mark 72)
+
+- Regression states `vrtest_rc1_veldin`, `vrtest_rc2_aranos`, `vrtest_rc3_veldin_battle` (`tools/re/vrtest_states.txt`).
+  At Vblank 72, 300%, walking: R&C 1 averages 66.7 (1.7% late frames), R&C 3 70.3 (frames that miss present at
+  ~20 ms): neither sustains 72. R&C 2's state is a light interior (120). Uncapped R&C 3 averages ~105 but its frame
+  times vary too much to hold a fixed 72.
+- **Frame-counted camera behaviour (R&C 3):** standing still, the camera tips down toward Ratchet after a delay that
+  shortens with the frame rate (within 0.5 s at 240 FPS, >14 s at 72), so some idle/camera timer counts frames, not
+  time. Not fixed; it only matters when idle.
+
 ## Open
 
 - **Pause menu:** its button frames are 3D panels drawn with their own perspective camera (`ef49d731f4b4551b`,

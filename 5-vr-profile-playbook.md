@@ -272,6 +272,31 @@ Every problem found here should become a Step 7 reproduction on the desktop befo
 
 ---
 
+## VR frame-rate measurement (2026-10-01)
+
+**Pass mark: 72 Hz.** A game is fully VR compatible when it **sustains 72** in stereo at **Resolution Scale
+300%**: run at a fixed rate like a headset (Vblank = rate x vblanks per frame) while the player moves, after the
+game has settled, with **under 1% late frames** (a late frame takes over 1.5x the median frame time) and an **average of at least
+99% of the rate** (in RPCS3 a frame that misses its vblank is presented as soon as it is ready, ~20 ms at 72 Hz,
+so it does not always count as late; the average catches it). The game's **sustainable rate** is the highest of 72 / 90 / 120
+that passes; record it in `6-wip-games.md`.
+
+Why not uncapped 1% lows: games that wait for whole numbers of vblanks (WipEout) show their pacing steps instead
+(uncapped at Vblank 240: average 100.0, 1% low 45; at 72: 0% late). Capped 1% lows also mislead: the limiter's
+jitter shows ~64 while every frame is on time, hence the late-frame count.
+
+- Fork hook `RPCS3_VR_FRAMESTATS=<seconds>` logs per window: frames, average, 1% low, 0.1% low, worst frame,
+  median frame time, late %.
+- `tools/re/vr1pct.sh ID STATE VBLANK [WALK]` (env `SCALE` default 300, `SETTLE` default 10 s): one run from a
+  savestate in desktop stereo with a temporary pad; merges only Vblank and Resolution Scale into the game's config;
+  walks ~25 s; prints the windows after the settle and their median.
+- `tools/re/vr_regress.sh [filter]`: every state in `tools/re/vrtest_states.txt`, climbing 72 -> 90 -> 120 and
+  stopping at the first failing rate; writes `evidence/vrtest/<date-time>/results.txt` (+ screenshots).
+- Results move by ~10% between runs; re-run borderline games. Desktop stereo approximates the headset path.
+- **Regression set:** one named savestate per game (`bin/savestates/<ID>/vrtest_<game>_<scene>.SAVESTAT.zst`).
+  Run `vr_regress.sh` after renderer changes and compare with the previous run. Add a state for every new game.
+  How to recreate the set on another PC: `7-vr-regression.md`.
+
 ## In-emulator generation (implemented 2026-09-23)
 
 In a game without a profile, **home menu > Settings > VR** shows one button, **Generate VR Profile**.
