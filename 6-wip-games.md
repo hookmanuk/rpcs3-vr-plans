@@ -17,6 +17,33 @@ untracked in `bin/` for testing without being released. Unreleased profiles and 
 `rpcs3/vr-non-working/` (see its README). An exception is flagged below: God of War Collection and Killzone 2
 are **tracked in `bin/`**, so the next release will ship them unless they are moved or finished first.
 
+## First headset test (Matt, 90 Hz, 2026-10-01): continue here
+
+Matt's first real-headset run of four WIP games, on the uncommitted build with the 2026-10-01 RSX-thread changes
+(Gate 6 entry in `4-next-steps.md`). Until then none of these games had been run in a headset: they were checked
+in desktop stereo and in the simulated headset view (`RPCS3_VR_FAKE_HMD`), from gameplay savestates, so boot
+screens, menus and intro videos at the headset rate were never seen in a headset view.
+
+| Game | What Matt saw |
+|---|---|
+| Dragon's Dogma | All the initial screens are tied to the face (head-locked), not fixed in place. Performance is bad in Matt's save: savestate `bin/savestates/BLUS31155/vrtest_ddda_matt_slow.SAVESTAT.zst` (hard link to `BLUS31155_1_1`, 2026-10-01 17:01; in-game save `BLUS311550` 17:00). Needs improving. |
+| Ratchet & Clank Collection | The collection loader and R&C 1's initial screens are head-locked. **R&C 1 unplayable:** gameplay appears on a fixed 2D window, with depth problems (things appearing and disappearing) as the head moves. Matt suspects R&C 2 and 3 break the same way (not tried). |
+| Tales of Xillia | Does not work at all: after the first Namco splash screen the view stays white forever (not frozen, but no game). |
+| The Darkness | Broken after the splash screen. |
+
+**First question when continuing: did the 2026-10-01 renderer changes cause any of this?** Not known yet. A/B each
+game in the fake headset view (`-FakeHmd 100`, Vblank 90, boot from the disc, not a savestate) on the current build
+and on the last committed build (`openxr` 90640f92d), then in the headset. Leads, unverified:
+- Head-locked boot screens and menus: these screens are drawn without anything the profile boxes (no ortho block or
+  HUD program it names), so they are drawn full-view and follow the head. Never tested; the gameplay HUD was.
+- Tales of Xillia and The Darkness: both play an intro video after the splash. At the headset rate (vblank 90)
+  Killzone HD's movie player stopped taking frames (black intro) and needed `video_vblank_rate: 60`. The desktop
+  tests always skipped the intros or started from savestates.
+- R&C 1 "fixed 2D window": the whole scene behaving like a boxed screen suggests the final composite (or the scene)
+  is treated as HUD/screen space in the headset path (`passthrough_hud`, `hud_programs ["007f5efab1d12ef7"]`,
+  `boxed_camera_programs`), or the camera draws are not classified there. Dump both eyes with `RPCS3_VR_RTDUMP` and
+  check `probe why=<hash>` for the scene and composite programs in the headset view.
+
 ## Summary
 
 **Sustained in VR, 300%** = the highest headset rate (72 / 90 / 120 Hz) the game holds in desktop stereo at
@@ -27,10 +54,10 @@ pass mark** for fully compatible.
 
 | Game | ID | Profile | Real-time above 60 | Sustained in VR, 300% | Headset | Blocker |
 |---|---|---|---|---|---|---|
-| Dragon's Dogma: Dark Arisen | BLUS31155 | `vr-non-working/` + untracked `bin/` copy | yes (community Unlock FPS, real-time) | **72 Hz** (prologue; 68 before the 2026-10-01 renderer work and `zcull_approximate`) | not played | open-world frame rate and outdoor flares with `zcull_approximate` unchecked; headset frame rate (risk); needs update 01.02 |
-| Ratchet & Clank Collection | BCUS98282 | `vr-non-working/` + untracked `bin/` copies (base + rc1/rc2/rc3 executable profiles) | R&C 1, 2, 3 yes (profile frame-time values, run speed verified) | **R&C 1 72 Hz** (71.5, tightest); **R&C 3 72 Hz**; **R&C 2 120 Hz** (Aranos hall; outdoor levels unmeasured) | not played | R&C 1 has little margin at 72; R&C 1 pause menu |
-| Tales of Xillia | BLUS31006 | `vr-non-working/` + untracked `bin/` copy | yes (community 60 FPS + fork patch) | 90 | not played | battles unchecked |
-| The Darkness | BLUS30035 | `vr-non-working/` + untracked `bin/` copy | yes (community 60 FPS patch, real-time) | below 72 (48 at 72) | not played | too slow at 300% (48 at 72); stereo and headset view fixed in the opening |
+| Dragon's Dogma: Dark Arisen | BLUS31155 | `vr-non-working/` + untracked `bin/` copy | yes (community Unlock FPS, real-time) | **72 Hz** (prologue; 68 before the 2026-10-01 renderer work and `zcull_approximate`) | **broken** (boot screens head-locked; slow in Matt's save) | open-world frame rate and outdoor flares with `zcull_approximate` unchecked; headset frame rate (risk); needs update 01.02 |
+| Ratchet & Clank Collection | BCUS98282 | `vr-non-working/` + untracked `bin/` copies (base + rc1/rc2/rc3 executable profiles) | R&C 1, 2, 3 yes (profile frame-time values, run speed verified) | **R&C 1 72 Hz** (71.5, tightest); **R&C 3 72 Hz**; **R&C 2 120 Hz** (Aranos hall; outdoor levels unmeasured) | **broken** (R&C 1 unplayable: scene as a fixed 2D window; loader and menus head-locked) | R&C 1 has little margin at 72; R&C 1 pause menu |
+| Tales of Xillia | BLUS31006 | `vr-non-working/` + untracked `bin/` copy | yes (community 60 FPS + fork patch) | 90 | **broken** (white after the Namco splash) | battles unchecked |
+| The Darkness | BLUS30035 | `vr-non-working/` + untracked `bin/` copy | yes (community 60 FPS patch, real-time) | below 72 (48 at 72) | **broken** (after the splash screen) | too slow at 300% (48 at 72); stereo and headset view fixed in the opening |
 | Dynasty Warriors 6 Empires | BLUS30306 | `vr-non-working/` + untracked `bin/` copy | no: frame-locked, profile at 60 (180 flat possible) | 120, but frame-locked: plays at 60 | not played | 90 FPS needs a logic-step patch |
 | Puppeteer | BCUS98227 | `vr-non-working/` + untracked `bin/` copy | yes (profile frame time, Vblank 180 = 90 FPS, real-time) | 72 | not played | stage small in the headset view; SPU post skipped in VR |
 | Jak and Daxter Collection | BCUS98281 | `vr-non-working/` + untracked `bin/` copies | Jak 1, Jak II yes (real-time, no patch); Jak 3 no (74-85 flat in Spargus) | Jak 1 72; Jak II below 72 (69); Jak 3 below 72 (43) | not played | HUD unchecked |
@@ -79,6 +106,8 @@ Notes: `profiles/BLUS31155-notes.md`. Evidence: `evidence/ddda/`. Profile `BLUS3
 - **Frame rate at 4K per eye (2026-10-01):** 68-69 at 72 Hz until the RSX thread was profiled: 41% of it waited
   for exact occlusion-query counts (both eyes' GPU work per wait). Profile key `zcull_approximate: true` (ZCULL
   Accuracy "Approximate" while VR renders only): **72.0 FPS, 0% late**, RSX thread 13.9 -> 7.8 ms per frame.
+- **Headset (Matt, 2026-10-01): broken.** Boot screens head-locked; performance bad in his save
+  (`vrtest_ddda_matt_slow`). See "First headset test" above.
 - **Open:** open-world frame rate; outdoor flares with `zcull_approximate` (any visible pixel reports as fully
   visible); NPC name tags stay in the HUD box; world scale and HUD in the headset.
 
@@ -95,6 +124,8 @@ profile `BCUS98282.rc1/rc2/rc3.ppu.json`).
   in Matt's `vrtest_rc2_aranos_hall` (the hangar state is too light to show anything).
 - **Profile:** generated, `column_vectors c[0]`, HUD `c[4]`, metres, 100% coverage; stereo and yaw audits clean;
   HUD sprites boxed in the headset view via `passthrough_hud` + `hud_programs`.
+- **Headset (Matt, 2026-10-01): R&C 1 unplayable.** Gameplay on a fixed 2D window with depth popping as the head
+  moves; loader and R&C 1 menus head-locked. See "First headset test" above.
 - **Open:** R&C 1 has little margin at 72 (busier scenes may drop); R&C 2 outdoor levels unmeasured; R&C 1
   pause-menu button frames use their own perspective camera and turn with the head.
 
@@ -106,6 +137,8 @@ Notes: `profiles/BLUS31006-notes.md`. Evidence: `evidence/xillia/`.
   60/fps; profile `game_frame_time_f32`). Walking speed measured equal at 60 and 90 (1.43x without the fork patch).
   Headroom: 180 flat, 130-150 stereo at Vblank 180.
 - **Profile:** generated, `row_vectors c[0, 47]`, HUD `c[0]` + `hud_skips_passes`; stereo and yaw audit clean.
+- **Headset (Matt, 2026-10-01): broken.** White after the first Namco splash (not frozen). Likely lead: the intro
+  video at the headset rate (see "First headset test" above).
 - **Open:** battles; world scale.
 
 ## The Darkness (BLUS30035, disc 01.03)
@@ -116,6 +149,7 @@ Notes: `profiles/BLUS30035-notes.md`. Evidence: `evidence/darkness/`.
 - **Profile:** generated (`column_vectors c[0]`, 100% coverage).
 - **Blocker:** any stereo shear breaks the multi-pass lighting (red light leaking, dark bands), even in a single
   sheared view. Needs a stationary scene to bisect (the opening is scripted and animated).
+- **Headset (Matt, 2026-10-01): broken after the splash screen.** See "First headset test" above.
 
 ## Dynasty Warriors 6 Empires (BLUS30306, disc 01.00)
 
