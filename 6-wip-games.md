@@ -17,7 +17,24 @@ untracked in `bin/` for testing without being released. Unreleased profiles and 
 `rpcs3/vr-non-working/` (see its README). An exception is flagged below: God of War Collection and Killzone 2
 are **tracked in `bin/`**, so the next release will ship them unless they are moved or finished first.
 
-## First headset test (Matt, 90 Hz, 2026-10-01): continue here
+## Second headset test (Matt, 90 Hz, 2026-10-01 late): continue here
+
+Matt's recheck after the evening fixes (fork up to 03abf3550). New savestates (hard links):
+`BCUS98282/vrtest_rc1_matt_shear` (= `_1_3`, 23:03), `BLUS31006/vrtest_tox_matt_puddles` (= `_1_1`, 23:09),
+`BLUS30721/vrtest_asura_matt_letterbox` (= `_1_1`, 23:19).
+
+| Game | What Matt saw |
+|---|---|
+| God of War Collection (game selector) | The intro movie is not visible, or at a very odd angle. |
+| God of War 1 | The pause Power Up screen flickers between the fixed HUD and stuck to the face. All the characters look very small: change the scale so they seem human-sized. |
+| R&C 1 | On the start menu a flat 2D plane is sheared off depending on the headset angle (right of the title, the tower is cut along a rectangle). The same happens in game (sky/planet region): `vrtest_rc1_matt_shear`. |
+| Tales of Xillia | In the intro in-engine scene the blue floor lights render differently in each eye (bright bloom in the right eye only). In `vrtest_tox_matt_puddles`, walking makes circular puddles that render at the wrong depth, in front of everything else. |
+| Dante's Inferno | The intro movie after New Game is still stuck to the head. |
+| Asura's Wrath | `vrtest_asura_matt_letterbox`: the letterbox bars and a subtle grey 16:9 background box are visible. |
+
+Also asked: full VR profiles for two new games, **Super Stardust HD** and **Resogun**.
+
+## First headset test (Matt, 90 Hz, 2026-10-01)
 
 Matt's first real-headset run of four WIP games, on the uncommitted build with the 2026-10-01 RSX-thread changes
 (Gate 6 entry in `4-next-steps.md`). Until then none of these games had been run in a headset: they were checked
