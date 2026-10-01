@@ -95,3 +95,12 @@ fragment constant that the shear does not update).
 ## Boot
 
 `tools/re/dk_boot.ps1`: intro video (X), autosave notice (X), New Game, Medium, then the opening car scene.
+
+## 2026-10-01: first headset run (Matt, 90 Hz): parked
+
+- After the copyright splash and the intro's fire video the screen stays black for a long time; Start/Cross at
+  ~25 s (`tools/re/dk_boot.ps1`) gets past it. Same in desktop stereo at 90 and 60 and on the OpenXR Simulator, so it
+  is the game's intro, not the headset path. Waited out in the headset, the intro's videos are missing.
+- Performance is terrible in the headset: under 60 FPS in Matt's savestate
+  `bin/savestates/BLUS30035/vrtest_darkness_matt_slow.SAVESTAT.zst` (hard link to `BLUS30035_1_1`, 17:42).
+  Already below 72 at 4K per eye on the desktop (48 at 72). **Parked** by Matt.
