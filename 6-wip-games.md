@@ -175,7 +175,7 @@ pass mark** for fully compatible.
 | Jak and Daxter Collection | BCUS98281 | `vr-non-working/` + untracked `bin/` copies | Jak 1 **no**: steps a fixed 1/60 per frame (1.5x at 90): capped at 60 in VR for now; Jak II probably the same; Jak 3 no (74-85 flat in Spargus) | Jak 1 120 (renderer; the game is capped at 60); Jak II 72 (2026-10-02); Jak 3 below 72 | **Jak 1**: HUD boxed, speed fixed (capped at 60, reprojected) and stereo depth fixed 2026-10-01 late, simulator-checked; to recheck in the headset | HUD unchecked |
 | Asura's Wrath | BLUS30721 | `vr-non-working/` + untracked `bin/` copy | yes (community Unlock FPS, real-time) | **120 Hz** (Episode 1 space battle) | **works well**; cutscene letterbox box/bars to remove; to do (Matt 2026-10-02): head-locked intro video, shadows sliding with the head, TV screens turning with the head | QTE mashing at 90 untested |
 | Anarchy Reigns | BLUS30632 | `vr-non-working/` + untracked `bin/` copies (profile, patch) | yes (fork patch, real-time verified) | 90 (Training only) | **parked**: splash/intro head-locked, HUD culled by depth; bad performance and graphics issues in gameplay | campaign unchecked; HUD timers 3x |
-| Dante's Inferno | BLUS30405 | `vr-non-working/` + untracked `bin/` copy | yes (profile `game_frame_ms_f32`, no patch; 0.99x at 90) | 120 | gameplay performs really well; splash, menus, intro movie and pause menu world-fixed since 2026-10-01 evening (simulator); objects culled at the edges of the headset view | sky is a screen card; world scale unchecked |
+| Dante's Inferno | BLUS30405 | `vr-non-working/` + untracked `bin/` copy | yes (profile `game_frame_ms_f32`, no patch; 0.99x at 90) | 120 | gameplay performs really well; splash, menus, intro movie and pause menu world-fixed since 2026-10-01 evening (simulator); objects culled at the edges of the headset view; to do (Matt 2026-10-02): screen shake on hits, empty tooltip banner (text missing) | sky is a screen card; world scale unchecked |
 | God of War Collection (GOW1, GOW2) | BCES00800 | tracked in `bin/` | yes (profile, no patch) | 120 (GoW 1 boat, GoW II Rhodes) | **GoW 1**: main menu on the fixed screen and Kratos's blurred edges fixed 2026-10-01 evening (simulator / desktop checked); performance good; GoW 2 unchecked | 5% black border |
 | Killzone 2 | BCUS98116 | tracked in `bin/` | no: default 45 | not measured | not played | RSX-bound; HUD and combat unchecked |
 | Gran Turismo 5 | BCUS98114 | `vr-non-working/` + untracked `bin/` copy | yes (patch) | ~~90 (race start)~~ ~40 FPS in the headset (Matt) | tested, broken: **~40 FPS, needs 60 minimum** | menu clipping, race-start frame rate |
@@ -348,6 +348,15 @@ Generated profile (row vectors, five camera blocks, HUD `c[0]`); the HUD vanishe
   to the head (screens with nothing the profile boxes). Needs culling/FOV work: the game culls to its own narrower
   frustum, so objects in the wider headset view are missing (a culling-widening patch, as ICO's "Wider view (VR
   culling)").
+- **Headset (Matt, 2026-10-02): to do, not started.**
+  1. **Screen shake on hits** (savestate `BLUS30405_1_2`, 13:09): attacking with Square and hitting enemies shakes
+     the whole screen, which is very off-putting in VR. Disable it: find the shake (a camera offset the game adds
+     on hit, e.g. a decaying shake amplitude or offset written each frame; memory dumps or PEEK of the camera
+     position while hitting vs. not) and patch it out (a fork patch, on by default) or zero it from the profile.
+  2. **Empty tooltip banner** (savestate `BLUS30405_1_3`, 13:14): right at the start a tooltip banner shows at the
+     bottom for about 2 seconds with no text on it. The text is missing in VR (check desktop stereo and flat to see
+     which). Matt: **make sure all text everywhere is visible** (tooltips, subtitles, prompts, menus): check every
+     text drawing program against the HUD/camera rules (`require_rigid_camera`, HUD block `c[0]`).
 
 ## God of War Collection (BCES00800 v01.00, UK disc)
 

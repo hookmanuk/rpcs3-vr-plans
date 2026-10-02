@@ -85,3 +85,11 @@ use the same player and should follow. No save data created.
   black at the top (vertical 93 degrees is the narrow axis). A larger factor needs a code cave (a constant multiply).
 - Cost: stereo at 300% (`vr1pct.sh`), 120 Hz sustained with and without (0% late); RSX thread 3.75 -> 4.09 ms at 90.
 - Savestate with the patch: `vrtest_dante_acre_wide` (= `_1_1`; the regression entry now uses it).
+
+## 2026-10-02: Matt's headset run, to do (not started)
+
+- Savestate `BLUS30405_1_2` (13:09): attacking with Square and hitting enemies shakes the whole screen; very
+  off-putting in VR. Disable the shake.
+- Savestate `BLUS30405_1_3` (13:14): right at the start a tooltip banner shows at the bottom for ~2 s with no text.
+  All text everywhere must be visible.
+- Plan: `6-wip-games.md` > Dante's Inferno.
