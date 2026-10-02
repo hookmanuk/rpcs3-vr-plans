@@ -53,7 +53,24 @@ Generated in the emulator from gameplay (`evidence/sshd/generated-in-emulator-NP
 - Desktop stereo: matches the flat game (planet, asteroids, nebula, HUD).
 - Head straight / turned 25 degrees: gameplay, HUD, pause menu, title screen and attract mode all stay fixed in the
   world. The chrome title logo changes colour with the head turn (environment-mapped reflection: expected).
-- **Open: the boot loading screen** (comet and "This game saves data automatically" text, ~2-8 s after boot): with
-  the head turned, some frames show it where it would be with the head straight (`sim-loading-yaw25-ghost.png`).
-  Only on that screen. Probably loading-time frames composited with a stale pose. Check in the headset.
-- Not checked in the headset (the simulator is not headset testing).
+- The boot loading screen (comet, autosave notice) showed some frames at the straight-ahead position with the head
+  turned. Since the menu fix below it is front end (state 8) and goes on the fixed screen: recheck.
+- Matt's first headset test (2026-10-02): "nearly perfect"; gameplay fine.
+
+## Menus on the fixed screen (2026-10-02, fork b9568756d)
+
+Matt in the headset: the main menu's 3D text was uncomfortable and looked wrong, and the menu "rotated slowly". The
+menu background rolls continuously (the skybox block's x/y rows turn a little every frame: the game's camera
+roll); in the headset that is the world rolling around you. The chrome menu letters are flat 3x3-vertex quads at the
+planet's depth (34 units, ~0.7 m) with environment-mapped shading, which differs between the eyes.
+
+- No draw marks the front end: by vertex program + texture 0 every menu draw also occurs in play (inspector captures
+  of 5 menu frames against 4 gameplay frames), so `screen_frame_draws` cannot be used.
+- **State word `0x332b7ec0`** (user memory): 8 from boot (warnings, intro, title, attract demo, menus, help, the
+  controls and tips screens) and on game over; 9 from the first frame of play, pause included. Found with
+  `tools/re/statevar.py` over 8 front-end and 4 gameplay dumps (174 candidates), then logged every 20 frames through a
+  fresh boot (menus, help, play, pause, resume, game over): only this word switched exactly there. Same address in
+  two boots and in the savestate.
+- New profile key `screen_space.screen_frames_when: [{ "address": "0x332b7ec0", "values": [8] }]`: those frames go on
+  the fixed screen whole. Checked on the simulator: intro, attract demo, main menu, info screens and game over on the
+  fixed screen (world-fixed panel); play and the pause menu in the 3D headset view; the savestate starts in 3D.
