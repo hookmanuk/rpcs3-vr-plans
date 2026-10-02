@@ -93,3 +93,12 @@ use the same player and should follow. No save data created.
 - Savestate `BLUS30405_1_3` (13:14): right at the start a tooltip banner shows at the bottom for ~2 s with no text.
   All text everywhere must be visible.
 - Plan: `6-wip-games.md` > Dante's Inferno.
+
+## 2026-10-02 afternoon: shake, tooltip, wider view 2.0 (fork e0a6d501e, 2aaf72b50, f4b730b01)
+
+- Shake: patch "Disable camera shake (VR)": the camera modifier apply at `0x663d8` returns at once (Matt: shake gone).
+- Tooltip text: `screen_space.hud_block_programs: [{ "program": "2f7541c34fd0c5d7", "block": 256 }]`.
+- Wider view 2.0: the field of view at the setter call (`0x452f1c`, radians, 1.0808 = 61.9 degrees across in play)
+  is multiplied by the dropdown scale and clamped to 170 degrees by code at `0x663e0` (`bl` from `0x452f1c`; r9, f0,
+  f13 are dead there; the function restores LR from its stack frame). Default 2.75. Matt's savestate
+  `BLUS30405_1_4` has it. Plan in `6-wip-games.md`.

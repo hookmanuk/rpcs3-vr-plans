@@ -62,3 +62,9 @@ OpenXR Simulator with an inspector capture (`f1860`):
   in-game TV screens show misaligned footage that turns with the head (they should be fixed 2D videos in each
   screen).
 - Plan and leads: `6-wip-games.md` > Asura's Wrath.
+
+## 2026-10-02 afternoon (fork 7858b2956)
+
+- Intro video: `screen_frame_draws` with the movie draw `487364b5ccf9cbc2` (1280x720).
+- TV screens: `game_camera_aspects: [1.7647]` (new key): the 720/408 feed cameras keep the game camera.
+- Character shadows: not reproduced (audit through the `_1_5` cutscene). See `6-wip-games.md`.

@@ -173,9 +173,9 @@ pass mark** for fully compatible.
 | Dynasty Warriors 6 Empires | BLUS30306 | `vr-non-working/` + untracked `bin/` copy | no: frame-locked, profile at 60 (180 flat possible) | 120, but frame-locked: plays at 60 | not played | 90 FPS needs a logic-step patch |
 | Puppeteer | BCUS98227 | `vr-non-working/` + untracked `bin/` copy | yes (profile frame time, Vblank 180 = 90 FPS, real-time) | 90 (2026-10-02; 72 before) | **barely works**: graphics trails, very dark, world far away and small; the head-locked intro light fixed 2026-10-01 evening | stage small in the headset view; SPU post skipped in VR |
 | Jak and Daxter Collection | BCUS98281 | `vr-non-working/` + untracked `bin/` copies | Jak 1 **no**: steps a fixed 1/60 per frame (1.5x at 90): capped at 60 in VR for now; Jak II probably the same; Jak 3 no (74-85 flat in Spargus) | Jak 1 120 (renderer; the game is capped at 60); Jak II 72 (2026-10-02); Jak 3 below 72 | **Jak 1**: HUD boxed, speed fixed (capped at 60, reprojected) and stereo depth fixed 2026-10-01 late, simulator-checked; to recheck in the headset | HUD unchecked |
-| Asura's Wrath | BLUS30721 | `vr-non-working/` + untracked `bin/` copy | yes (community Unlock FPS, real-time) | **120 Hz** (Episode 1 space battle) | **works well**; cutscene letterbox box/bars to remove; to do (Matt 2026-10-02): head-locked intro video, shadows sliding with the head, TV screens turning with the head | QTE mashing at 90 untested |
+| Asura's Wrath | BLUS30721 | `vr-non-working/` + untracked `bin/` copy | yes (community Unlock FPS, real-time) | **120 Hz** (Episode 1 space battle) | **works well**; cutscene letterbox box/bars to remove; Matt 2026-10-02: intro video and TV screens fixed (simulator); character shadows not reproduced | QTE mashing at 90 untested |
 | Anarchy Reigns | BLUS30632 | `vr-non-working/` + untracked `bin/` copies (profile, patch) | yes (fork patch, real-time verified) | 90 (Training only) | **parked**: splash/intro head-locked, HUD culled by depth; bad performance and graphics issues in gameplay | campaign unchecked; HUD timers 3x |
-| Dante's Inferno | BLUS30405 | `vr-non-working/` + untracked `bin/` copy | yes (profile `game_frame_ms_f32`, no patch; 0.99x at 90) | 120 | gameplay performs really well; splash, menus, intro movie and pause menu world-fixed since 2026-10-01 evening (simulator); objects culled at the edges of the headset view; to do (Matt 2026-10-02): screen shake on hits, empty tooltip banner (text missing) | sky is a screen card; world scale unchecked |
+| Dante's Inferno | BLUS30405 | `vr-non-working/` + untracked `bin/` copy | yes (profile `game_frame_ms_f32`, no patch; 0.99x at 90) | 120 | gameplay performs really well; splash, menus, intro movie and pause menu world-fixed since 2026-10-01 evening (simulator); objects culled at the edges of the headset view (Wider view 2.0: up to 170 degrees, default); hit shake off (patch, Matt confirmed); tooltip text fixed (simulator) | sky is a screen card; world scale unchecked |
 | God of War Collection (GOW1, GOW2) | BCES00800 | `vr-non-working/` + untracked `bin/` copies | yes (profile, no patch) | 120 (GoW 1 boat, GoW II Rhodes) | **GoW 1**: main menu on the fixed screen and Kratos's blurred edges fixed 2026-10-01 evening (simulator / desktop checked); performance good; GoW 2 unchecked | 5% black border |
 | Killzone 2 | BCUS98116 | `vr-non-working/` + untracked `bin/` copy | no: default 45 | not measured | not played | RSX-bound; HUD and combat unchecked |
 | Gran Turismo 5 | BCUS98114 | `vr-non-working/` + untracked `bin/` copy | yes (patch) | ~~90 (race start)~~ ~40 FPS in the headset (Matt) | tested, broken: **~40 FPS, needs 60 minimum** | menu clipping, race-start frame rate |
@@ -294,20 +294,16 @@ frames; savestate `vrtest_asura_space`, made with Compatible Savestate Mode).
   the cutscene shows the 3D world with the HUD elements (subtitles, prompts) on top. Find the bar and background
   draws with probe `hide=<vertex hash>[@<target>]` (and `why=`) in a cutscene, then `hidden_draws` (program + texture
   size) or an unboxed/passthrough rule; check subtitles and QTE prompts stay.
-- **Headset (Matt, 2026-10-02): to do, not started.**
-  1. **Intro video tied to the head:** the short video right after starting the game is head-locked. It should go on
-     the fixed screen like other videos (check how its frames are classified: camera draws, HUD box, or
-     `frames_without_3d_as_screen`).
-  2. **Shadows slide over the characters when the head turns** (savestate `BLUS30721_1_5`, 13:01). The shadow lookup
-     probably uses the game's own view (or its inverse) beside the camera, which the head transform does not reach.
-     Look for a second view or inverse-view block in the character programs: `linked_camera_blocks`, or a shadow
-     matrix to correct (as with Bayonetta's velocity blocks).
-  3. **In-game TV screens** (`BLUS30721_1_5`): their footage is misaligned and turns with the head. They should
-     show fixed 2D video in each screen. Likely the screens sample their video in screen space or through a
-     camera-derived projection; find the TV draw (inspector capture, probe `why=`) and keep its texture mapping on
-     the game's camera.
-  Matt's other savestates from that session: `BLUS30721_1_2` (12:53), `_1_3` and `_1_4` (12:57); contents not
-  recorded. Loading `_1_5` builds the SPU cache first (about a minute).
+- **Headset (Matt, 2026-10-02):**
+  1. **Intro video tied to the head: fixed on the simulator.** The title/intro video draw `487364b5` (1280x720) is a
+     `screen_frame_draws` entry: those frames go on the fixed screen.
+  2. **TV screens (`BLUS30721_1_5`): fixed on the simulator.** The hologram feeds are rendered by separate cameras at
+     720/408 (projection aspect 1.765) into the scene target and copied to 720x408 textures; the head transform turned
+     those cameras with the head. New profile key `game_camera_aspects: [1.7647]` keeps them on the game camera:
+     feed identical in both eyes (mean diff 0.00) and unchanged by a head turn (before: 20.8 at 25 degrees, mostly black).
+  3. **Shadows sliding over the characters: not reproduced.** Rotation audit (right eye yawed 12/15 degrees, same
+     frame) through the `_1_5` cutscene: the character shading matches in both eyes. No shadow map is rendered; the
+     only shadow-like draws are 7 stencil boxes (`2ebaa6ed`, main camera). Need Matt's screenshot or the exact shot.
 
 ## Anarchy Reigns (BLUS30632, disc 01.00)
 
@@ -331,15 +327,21 @@ Generated profile (row vectors, five camera blocks, HUD `c[0]`); the HUD vanishe
   to the head (screens with nothing the profile boxes). Needs culling/FOV work: the game culls to its own narrower
   frustum, so objects in the wider headset view are missing (a culling-widening patch, as ICO's "Wider view (VR
   culling)").
-- **Headset (Matt, 2026-10-02): to do, not started.**
-  1. **Screen shake on hits** (savestate `BLUS30405_1_2`, 13:09): attacking with Square and hitting enemies shakes
-     the whole screen, which is very off-putting in VR. Disable it: find the shake (a camera offset the game adds
-     on hit, e.g. a decaying shake amplitude or offset written each frame; memory dumps or PEEK of the camera
-     position while hitting vs. not) and patch it out (a fork patch, on by default) or zero it from the profile.
-  2. **Empty tooltip banner** (savestate `BLUS30405_1_3`, 13:14): right at the start a tooltip banner shows at the
-     bottom for about 2 seconds with no text on it. The text is missing in VR (check desktop stereo and flat to see
-     which). Matt: **make sure all text everywhere is visible** (tooltips, subtitles, prompts, menus): check every
-     text drawing program against the HUD/camera rules (`require_rigid_camera`, HUD block `c[0]`).
+- **Headset (Matt, 2026-10-02): fixed the same day.**
+  1. **Screen shake on hits** (`BLUS30405_1_2`): **fixed, confirmed by Matt.** The shake is a camera modifier
+     (class vtable `0xea3e50`, apply `0x663d8`: noise from a random table) in the camera manager's 12 modifier slots
+     (`+0x170`, stride `0x18`; manager at `0x30f1fdc0` in that save). Patch "Disable camera shake (VR)" (on by
+     default) makes the apply function return at once. Found from the shaken camera position (`0x11a19a0`, jitter
+     while attacking) -> write watch -> the view setter `0x452da0` -> its caller's camera record -> the modifier loop
+     (`0x452244`, virtual apply call at `0x452b38`).
+  2. **Empty tooltip banner** (`BLUS30405_1_3`): **fixed on the simulator** (fork e0a6d501e). The banner draw reads
+     the HUD block `c[0]` (boxed), but its text (program `2f7541c3`) reads a unit-square matrix from `c[256]`, so it
+     stayed at its full-view place. New profile key `screen_space.hud_block_programs` gives listed programs their
+     own HUD block (`2f7541c3` -> 256). Matt asked for all text everywhere to be visible: check other text screens.
+  3. **Wider view 2.0 (Matt: "near maximum", selectable):** scale dropdown 1.0-2.75 (62-170 degrees across), default
+     2.75 (170, the clamp), in a code cave in the dead body of the shake modifier. Matt: looks good on the desktop;
+     his savestate `BLUS30405_1_4` (17:15) has the 2.0 code. To do: VR frame rate at 300% with it (the old wide
+     state held 120 Hz with the 2x scale), and a regression state from `_1_4`.
 
 ## God of War Collection (BCES00800 v01.00, UK disc)
 
