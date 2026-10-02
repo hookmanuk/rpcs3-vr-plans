@@ -474,3 +474,66 @@ The goal is performance; nothing else motivates the change.
    ceiling is flat's own RSX-bound ~42 FPS dip at the race start; multiview removes the stereo extra
    (~40% RSX time), it cannot lift the flat dip.
 5. Headset testing goes title by title as each passes the desktop comparison, GT5 first.
+
+## 9. Implementation status (2026-10-02)
+
+M0 to M3 are written on branch `claude/multiview-vr-emulator-plan-qlxggp` of hookmanuk/rpcs3 (one commit on
+top of `openxr` at vr5) and compile. They have **not run anywhere yet**: this container has no GPU, so the
+first run, the validation layer pass and every gate in section 4 happen on Matt's PC. Build it with the usual
+`rpcs3.vcxproj` incremental command from [1-structure.md](1-structure.md) after a full `emucore` /
+`VKGSRender` rebuild (shader generator, texture cache and surface cache headers changed).
+
+### What is in the commit
+
+- Device: multiview and `VK_EXT_shader_viewport_index_layer` are queried and enabled (`vkutils/device.*`).
+  The log line `VR: multiview stereo available (device multiview 1, per-view scissor 1)` at boot says both
+  are there; `unavailable: two-draw stereo` means the old path is used.
+- Switch: multiview is on whenever the device supports it and the stereo renderer is on
+  (`camera_probe::render_enabled()`); `RPCS3_VR_MULTIVIEW=0` forces the two-draw path for A/B runs on the same
+  build. The mode change drops every render target (`vr_update_multiview_mode`), which at boot happens before
+  any exists. Log: `VR: multiview stereo on (both eyes in one draw)`.
+- Render passes carry a view mask in their key (bits 42-43), framebuffers take two-layer views, multiview
+  pipelines have two viewports and scissors, every render target and MSAA resolve target has two layers
+  (`vk::g_vr_stereo_layers`), and the stereo flag on an image (`vk::image::stereo_layers`) drives the rest:
+  default views see layer 0, guest shaders get `image_view::as_array()`, blits (`blitter::scale_image`),
+  surface inheritance, clears, resolves, memory reloads and deferred texture-cache copies write or read
+  layer 1 as section 3.7 lists.
+- Shaders: `RSX_SHADER_CONTROL_VR_MULTIVIEW` (0x40000000) on both programs while multiview is active, so
+  the shader cache holds VR and flat variants side by side. The vertex shader reads
+  `draw_parameters[offset + gl_ViewIndex]` and writes `gl_ViewportIndex`; 2D samplers are array samplers
+  in the fragment and vertex stages, including the MSAA helpers, the depth-as-colour reads, the ROP depth
+  input and the stencil mirrors.
+- `emit_geometry`: `bind_vr_eye_constants_pair` fills both eyes' constants into one allocation and records
+  both HUD-box scissors; two draw-parameter entries per subdraw; one draw. The batch and replay code is
+  untouched and runs when multiview is off.
+- Queries: begun inside the multiview pass as a pair of slots and ended by the pre-end render pass hook
+  (`vr_mv_begin_query_segment` / `vr_mv_end_query_segment`); the guest sees the average of both slots.
+- Present: layer 1 of the display surface is copied into a scratch image that takes the place of the
+  right-eye surface, so the side-by-side desktop view, screenshots and OpenXR need no change.
+
+### Known limits of this first cut (M4 material)
+
+- The shader interpreter (the async fallback while real shaders compile) is not multiview-aware: its draws
+  show the left eye in both views until the real shader is ready.
+- Instanced draws share one set of constants between the eyes (no parallax on them).
+- ICO's older-frame realignment warps (`vr_realign_blend_targets`) and the `m_vr_staged` memory bounce
+  are still written for the second surface cache; with multiview they act on layer 0 only.
+- A surface spilled under VRAM pressure comes back with layer 1 lost until it is redrawn.
+- A sub-viewport clear with a partial colour mask (the `attachment_clear_pass` route) clears the left
+  eye's rectangle in both views.
+
+### First things to check on the PC
+
+1. Boot WipEout with `Video > Debug output` on (validation layer) and read the log for `VK_ERROR`,
+   `VUID` and the two `VR: multiview` lines.
+2. Desktop side-by-side: both eyes present, HUD at zero disparity, the Gate 5 disparity table.
+3. `RPCS3_VR_GPUPROF=1`: right-eye batches 0, rebuilt copies 0.
+4. GT5 race start: FPS against the two-draw path (`RPCS3_VR_MULTIVIEW=0`) on the same savestate.
+
+### Compiling the core on Linux (what this container did)
+
+Ubuntu 24.04 lacks Qt 6.7, so the GUI is skipped: `-DBUILD_RPCS3_GUI=OFF` (added to `rpcs3/CMakeLists.txt`)
+with `-DWITH_LLVM=OFF -DUSE_SDL=OFF -DUSE_FAUDIO=OFF`, GCC 13, Ninja, the Vulkan 1.4.341 headers cloned from
+GitHub (`-DVulkan_INCLUDE_DIR`), then `ninja rpcs3_emu`. Two fork sources needed portability fixes to get
+there (`_dupenv_s` in `VKGSRender.cpp`, and `-Wno-old-style-cast` for `VKOpenXR.cpp` because of the vendored
+OpenXR macros); both are in the commit and change nothing on Windows.
