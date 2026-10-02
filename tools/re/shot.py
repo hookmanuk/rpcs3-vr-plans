@@ -14,7 +14,7 @@ os.makedirs(d, exist_ok=True)
 before = set(glob.glob(d + r'\*.png'))
 open(os.path.join(os.environ['TEMP'], 'rpcs3-vrprofile', 'SHOT'), 'w').close()
 new = None
-for _ in range(80):
+for _ in range(240):  # a screenshot can take ~20 s while shaders compile
     n = set(glob.glob(d + r'\*.png')) - before
     if n:
         new = max(n, key=os.path.getmtime)
