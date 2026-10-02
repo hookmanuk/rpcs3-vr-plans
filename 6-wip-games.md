@@ -175,7 +175,7 @@ pass mark** for fully compatible.
 | Jak and Daxter Collection | BCUS98281 | `vr-non-working/` + untracked `bin/` copies | Jak 1 **no**: steps a fixed 1/60 per frame (1.5x at 90): capped at 60 in VR for now; Jak II probably the same; Jak 3 no (74-85 flat in Spargus) | Jak 1 120 (renderer; the game is capped at 60); Jak II 72 (2026-10-02); Jak 3 below 72 | **Jak 1**: HUD boxed, speed fixed (capped at 60, reprojected) and stereo depth fixed 2026-10-01 late, simulator-checked; to recheck in the headset | HUD unchecked |
 | Asura's Wrath | BLUS30721 | `vr-non-working/` + untracked `bin/` copy | yes (community Unlock FPS, real-time) | **120 Hz** (Episode 1 space battle) | **works well**; cutscene letterbox box/bars to remove; Matt 2026-10-02: intro video and TV screens fixed (simulator); character shadows not reproduced | QTE mashing at 90 untested |
 | Anarchy Reigns | BLUS30632 | `vr-non-working/` + untracked `bin/` copies (profile, patch) | yes (fork patch, real-time verified) | 90 (Training only) | **parked**: splash/intro head-locked, HUD culled by depth; bad performance and graphics issues in gameplay | campaign unchecked; HUD timers 3x |
-| Dante's Inferno | BLUS30405 | `vr-non-working/` + untracked `bin/` copy | yes (profile `game_frame_ms_f32`, no patch; 0.99x at 90) | 120 | gameplay performs really well; splash, menus, intro movie and pause menu world-fixed since 2026-10-01 evening (simulator); objects culled at the edges of the headset view (Wider view 2.0: up to 170 degrees, default); hit shake off (patch, Matt confirmed); tooltip text fixed (simulator) | sky is a screen card; world scale unchecked |
+| Dante's Inferno | BLUS30405 | `vr-non-working/` + untracked `bin/` copy | yes (profile `game_frame_ms_f32`, no patch; 0.99x at 90) | 120 | gameplay performs really well; splash, menus, intro movie and pause menu world-fixed since 2026-10-01 evening (simulator); edges of the headset view filled (Wider view 3.0: 170 degrees by default, full detail; simulator); hit shake off (patch, Matt confirmed); tooltip text fixed (simulator) | sky is a screen card; world scale unchecked |
 | God of War Collection (GOW1, GOW2) | BCES00800 | `vr-non-working/` + untracked `bin/` copies | yes (profile, no patch) | 120 (GoW 1 boat, GoW II Rhodes) | **GoW 1**: main menu on the fixed screen and Kratos's blurred edges fixed 2026-10-01 evening (simulator / desktop checked); performance good; GoW 2 unchecked | 5% black border |
 | Killzone 2 | BCUS98116 | `vr-non-working/` + untracked `bin/` copy | no: default 45 | not measured | not played | RSX-bound; HUD and combat unchecked |
 | Gran Turismo 5 | BCUS98114 | `vr-non-working/` + untracked `bin/` copy | yes (patch) | ~~90 (race start)~~ ~40 FPS in the headset (Matt) | tested, broken: **~40 FPS, needs 60 minimum** | menu clipping, race-start frame rate |
@@ -339,9 +339,16 @@ Generated profile (row vectors, five camera blocks, HUD `c[0]`); the HUD vanishe
      stayed at its full-view place. New profile key `screen_space.hud_block_programs` gives listed programs their
      own HUD block (`2f7541c3` -> 256). Matt asked for all text everywhere to be visible: check other text screens.
   3. **Wider view 2.0 (Matt: "near maximum", selectable):** scale dropdown 1.0-2.75 (62-170 degrees across), default
-     2.75 (170, the clamp), in a code cave in the dead body of the shake modifier. Matt: looks good on the desktop;
-     his savestate `BLUS30405_1_4` (17:15) has the 2.0 code. To do: VR frame rate at 300% with it (the old wide
-     state held 120 Hz with the 2x scale), and a regression state from `_1_4`.
+     2.75 (170, the clamp), in a code cave in the dead body of the shake modifier. Matt in the headset: "the gfx are all
+     corrupted, especially the people".
+  4. **Wider view 3.0: full detail at 170 degrees (simulator, 2026-10-02 evening).** The corruption was EDGE's SPU
+     triangle culling: it drops triangles that cover no pixel of the game's viewport, and the widened projection made
+     everything 19x smaller there (characters kept ~1/5 of their triangles). The patch now scales EDGE's culling
+     viewport and scissor by 20 (setters `0x5ef390`, `0x5ef250`) and gives the small-object/effect size metric
+     (`0x65e8f0`) the unwidened FOV. At 2.75: character vertices and effect draws as at the normal FOV, heads turned 45
+     degrees whole; 120 FPS sustained in desktop stereo at 300%. New regression state `vrtest_dante_acre_v3`. Details
+     in the notes. **Next:** Matt's headset check. Open: the sun's lens flare is missing with the wide view (it was
+     before 3.0 too).
 
 ## God of War Collection (BCES00800 v01.00, UK disc)
 

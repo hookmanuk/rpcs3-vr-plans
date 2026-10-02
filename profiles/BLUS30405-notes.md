@@ -102,3 +102,42 @@ use the same player and should follow. No save data created.
   is multiplied by the dropdown scale and clamped to 170 degrees by code at `0x663e0` (`bl` from `0x452f1c`; r9, f0,
   f13 are dead there; the function restores LR from its stack frame). Default 2.75. Matt's savestate
   `BLUS30405_1_4` has it. Plan in `6-wip-games.md`.
+
+## 2026-10-02 evening: Wider view 3.0, full detail at 170 degrees (simulator)
+
+Matt (headset, Wider view 2.0 at 2.75): "the gfx are all corrupted, especially the people". Measured on the simulator
+(inspector, character program `c015ac8e`, 10 draws): vertices ~13k at 1.0, 10.9k at 2.0, 6.9k at 2.5, ~2.2k at
+2.75. Draws unchanged, so not a model LOD switch: triangles were being removed.
+
+- **Cause: EDGE geometry culling (SPU).** The PPU fills an `EdgeGeomViewportInfo` template at `0x1342e00` (+0 scissor
+  u16 x, y, w, h; +8 depth range; +0x10 the transposed view-projection; +0x50 viewport scales; +0x60 offsets; +0x70
+  sample flavour) and copies it into each job (`0x5f6e10`..`0x5f6fac`, a ring at `[r27+0x125480]`). EDGE culls
+  triangles that cover no pixel of that viewport. With the widened projection everything is 19x smaller on it (at
+  2.75: tan(85)/tan(30.95)), so most character triangles covered no pixel: holes in the headset, where the image is
+  shown at the normal scale. Setters: viewport `0x5ef390` (f1, f2 depth; r5 scales, r6 offsets), scissor `0x5ef250`
+  (r3..r6), each a few instructions. (`0x1342e00` was the "render VP" in earlier notes: it is EDGE's culling VP.)
+- **Fix:** both setters branch to code that multiplies the scales, offsets and scissor by 20 (the screen grows
+  20x about the origin: the frustum and scissor tests are unchanged; the no-pixel test runs at the normal view's
+  pixel size or finer). Scissor 1280 x 20 = 25600 fits its u16.
+- **Effects (fire, torches):** a separate size metric `0x65e6c8` (from the scene walk `0x65eb24` and `0x65f1f8`):
+  radius / (tan(cam+0x1ac / 2) x 1.5 x distance + c), clamped at 1024, compared with a per-type threshold (and stored
+  at object +0x90). It reads the camera's stored (widened) FOV, so effects were culled as too small (`30e80c75`
+  0-7 draws of 17-30). `0x65e8f0` now calls code that loads the FOV and divides it by the Scale.
+- Dead ends, for the record: the view record ring (`0x696a50`: camera +0x40 view, +0 world, projection from
+  +0x1ac) and the flare/billboard focal (`0x66a2d8`, `+0x78` of its object) do not drive detail; restoring +0x1ac
+  after the setter's last rebuild (poke `0x452f44`) brought the effects back but not the characters; the plane
+  builder's multipliers (`0x4202dc`) kept detail but barely widened culling.
+- **Patch "Wider view (VR culling)" 3.0** (`bin/patches/BLUS30405_patch.yml`, copy in `vr-non-working/`): code in the
+  dead shake-modifier body: FOV `0x663e0`, data `0x66400` Scale, `0x66404` 170 degrees, `0x66408`/`0x6640c` 20.0/20,
+  viewport `0x66410`, scissor `0x6647c`, size metric `0x664b0`; branches at `0x5ef390`, `0x5ef250`, `0x65e8f0`,
+  `0x452f1c`. Default Scale 2.75 (170 degrees); the dropdown no longer warns about detail.
+- **Results (simulator, Acre):** at 2.75, `c015ac8e` 11.7-14.2k vertices (base 11.9-13.9k), `30e80c75` 15-37 draws
+  (base 24-32), `2a5dce5d` 17 (base 14-17); more scene geometry than base (the wider frustum). Same from a disc boot
+  on the recompiler. Head turned 45 degrees either way: characters whole, the view filled except a small wedge
+  beyond ~85 degrees off the game camera's axis. Evidence `evidence/dante/wide3_*`.
+- **Cost:** desktop stereo at 300% (`vr1pct.sh`): 120 FPS sustained, 0.00% late (old 2x patch: 120, 0.00%); 90:
+  0.14% late. RSX thread 5.1 ms/frame at 120 (old: 4.7).
+- New regression state `vrtest_dante_acre_v3` (disc boot with 3.0 at 2.75, Acre first fight); it replaces
+  `vrtest_dante_acre_wide`.
+- **Open:** the sun's lens flare shows at the normal FOV and not with the wide view (seen before 3.0 too; probably
+  its visibility test, which uses the widened focal, `0x66a2d8`). Not checked in the headset by Matt yet.
