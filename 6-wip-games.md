@@ -32,9 +32,7 @@ Matt's recheck after the evening fixes (fork up to 03abf3550). New savestates (h
 | Dante's Inferno | The intro movie after New Game is still stuck to the head. |
 | Asura's Wrath | `vrtest_asura_matt_letterbox`: the letterbox bars and a subtle grey 16:9 background box are visible. |
 
-**Fixed overnight 2026-10-01/02 (fork local commits b16362394..cd9505230, not pushed; `bin
-pcs3.exe` built with them;
-checked on the OpenXR Simulator, Pimax Dream Air profile, 90 Hz). Recheck in the headset:**
+**Fixed overnight 2026-10-01/02 (fork local commits b16362394..cd9505230, not pushed; `bin/rpcs3.exe` built with them; checked on the OpenXR Simulator, Pimax Dream Air profile, 90 Hz). Recheck in the headset:**
 
 Headset recheck list, in order of what changed most:
 1. R&C 1: title, gameplay (was the flat window), pause menu. Also faster: 90 Hz sustained at 300% in the regression
@@ -58,10 +56,11 @@ Headset recheck list, in order of what changed most:
 | Puppeteer | **dark/small explained:** the lit stage is as bright as flat but covers 13% of the view (game FOV 45 x 26, stage 27 m away): `eye_baseline` 0.064 -> 0.64 (diorama ~2.7 m away); try **Camera Depth Offset +2 m** in the VR menu to enlarge it. Velocity buffer fixed (`linked_camera_blocks [264]`), a likely cause of the trails | trails (recheck), deferred lights rebuild rays with the game's projection (shapes unchecked) |
 | KH 1.5 (KH Final Mix) | **new profile** (generated + hand-fixed): new key `camera_palette` (characters were head-locked: rigid skinning with full clip matrices per bone), GS-projected effects, scale 6.4. **Unlocked frame rate patch v2 (2026-10-02): real time at 72/90/120 (measured); VR 120 Hz sustained at 300%** | HUD rule unverified (no HUD seen yet) |
 | KH 2.5 (KH II Final Mix) | **new profile** (generated + hand-fixed): HUD box (tutorial box, portrait) world-fixed, GS-projected effects, scale 6.4. **Unlocked frame rate patch v2 (2026-10-02): real time at 72/90/120, jump unchanged (measured); VR 72 Hz sustained at 300%** | the game's fixed-step mode (never seen yet) |
-| Super Stardust HD, Resogun | | **need the .rap licenses** |
+| Super Stardust HD | **new profile (2026-10-02, licence added by Matt)**: generated + one hand fix (no `depth_offset_projection`: the whole game is drawn in camera space around the planet, a ~0.7 m tabletop diorama). **Real time at 72/90 (measured), no patch; max_fps 0. VR 120 Hz sustained at 300%.** Gameplay, HUD, pause menu, title world-fixed on the simulator; savestate `vrtest_ssd_lave` | boot loading screen: some frames at the straight-ahead position with the head turned (stale pose?), check in the headset |
+| Resogun | | **needs the .rap licence** |
 
 **New games to profile (Matt, 2026-10-01/02):** full VR profiles for
-- **Super Stardust HD** (PSN, installed: `dev_hdd0/game/NPUA80068`): **blocked, no license.** Boot fails: "Failed to locate the game license file `dev_hdd0/home/00000001/exdata/UP9000-NPUA80068_00-STARDUSTFULL0001.rap`". Needs Matt's .rap (from his PS3/PSN account; lowercase extension).
+- **Super Stardust HD** (PSN, `dev_hdd0/game/NPUA80068`): **done 2026-10-02** (profile, real time, VR 120 Hz; `profiles/NPUA80068-notes.md`).
 - **Resogun** (PSN, installed: `dev_hdd0/game/NPUA80900`): **blocked, no license** (`UP9000-NPUA80900_00-RESOGUN000000002.rap`).
 - **Kingdom Hearts HD 1.5 ReMIX** (`F:/rpsc3/games/Kingdom Hearts - HD 1.5 ReMIX (USA) (En,Fr,Es).iso`)
 - **Kingdom Hearts HD 2.5 ReMIX** (`F:/rpsc3/games/Kingdom Hearts - HD 2.5 ReMIX (USA) (En,Fr,Es).iso`)

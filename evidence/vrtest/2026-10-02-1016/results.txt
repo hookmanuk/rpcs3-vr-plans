@@ -1,0 +1,26 @@
+# BLUS31460 vrtest_kh2_twilight: Kingdom Hearts II Final Mix (KH 2.5): Twilight Town, first control (unlocked frame rate patch)
+BLUS31460 vrtest_kh2_twilight vblank 72 scale 300%:
+   569 frames over 8.0 s: avg 71.1 FPS, 1% low 58.4, 0.1% low 28.0 (worst frame 35.7 ms), median 13.96 ms, late 0.88%, RSX thread 7.61 ms/frame
+   574 frames over 8.0 s: avg 71.7 FPS, 1% low 64.9, 0.1% low 40.6 (worst frame 24.6 ms), median 13.97 ms, late 0.35%, RSX thread 7.95 ms/frame
+   573 frames over 8.0 s: avg 71.6 FPS, 1% low 63.7, 0.1% low 53.8 (worst frame 18.6 ms), median 13.97 ms, late 0.00%, RSX thread 11.85 ms/frame
+   => median of 3 windows: avg 71.6 FPS, 1% low 63.7, late frames 0.35%, RSX thread 7.95 ms/frame
+BLUS31460 vrtest_kh2_twilight vblank 90 scale 300%:
+   711 frames over 8.0 s: avg 88.8 FPS, 1% low 65.7, 0.1% low 43.9 (worst frame 22.8 ms), median 11.10 ms, late 0.42%, RSX thread 6.04 ms/frame
+   710 frames over 8.0 s: avg 88.7 FPS, 1% low 63.0, 0.1% low 43.9 (worst frame 22.8 ms), median 11.09 ms, late 0.56%, RSX thread 6.52 ms/frame
+   => median of 2 windows: avg 88.7 FPS, 1% low 63.0, late frames 0.42%, RSX thread 6.04 ms/frame
+SUSTAINABLE BLUS31460 vrtest_kh2_twilight: 72 Hz
+# BLUS31212 vrtest_kh1_dive: Kingdom Hearts Final Mix (KH 1.5): Dive to the Heart, first control (unlocked frame rate patch)
+BLUS31212 vrtest_kh1_dive vblank 72 scale 300%:
+   577 frames over 8.0 s: avg 72.0 FPS, 1% low 66.0, 0.1% low 64.2 (worst frame 15.6 ms), median 13.95 ms, late 0.00%, RSX thread 1.27 ms/frame
+   577 frames over 8.0 s: avg 72.0 FPS, 1% low 65.5, 0.1% low 64.6 (worst frame 15.5 ms), median 13.95 ms, late 0.00%, RSX thread 1.09 ms/frame
+   => median of 2 windows: avg 72.0 FPS, 1% low 65.5, late frames 0.00%, RSX thread 1.09 ms/frame
+BLUS31212 vrtest_kh1_dive vblank 90 scale 300%:
+   720 frames over 8.0 s: avg 90.0 FPS, 1% low 82.2, 0.1% low 78.7 (worst frame 12.7 ms), median 11.05 ms, late 0.00%, RSX thread 1.24 ms/frame
+   721 frames over 8.0 s: avg 90.0 FPS, 1% low 80.9, 0.1% low 77.6 (worst frame 12.9 ms), median 11.05 ms, late 0.00%, RSX thread 1.08 ms/frame
+   => median of 2 windows: avg 90.0 FPS, 1% low 80.9, late frames 0.00%, RSX thread 1.08 ms/frame
+BLUS31212 vrtest_kh1_dive vblank 120 scale 300%:
+   961 frames over 8.0 s: avg 120.0 FPS, 1% low 104.5, 0.1% low 99.3 (worst frame 10.1 ms), median 8.33 ms, late 0.00%, RSX thread 1.33 ms/frame
+   961 frames over 8.0 s: avg 120.0 FPS, 1% low 106.9, 0.1% low 96.3 (worst frame 10.4 ms), median 8.35 ms, late 0.00%, RSX thread 1.42 ms/frame
+   => median of 2 windows: avg 120.0 FPS, 1% low 104.5, late frames 0.00%, RSX thread 1.33 ms/frame
+SUSTAINABLE BLUS31212 vrtest_kh1_dive: 120 Hz
+DONE /f/rpsc3/source/plans/evidence/vrtest/2026-10-02-1016

@@ -1,0 +1,18 @@
+# NPUA80068 vrtest_ssd_lave: Super Stardust HD: Lave, Arcade (Easy), level start; fires in circles (vrtest_boot/vrtest_ssd_lave.walk)
+NPUA80068 vrtest_ssd_lave vblank 72 scale 300%:
+   577 frames over 8.0 s: avg 72.0 FPS, 1% low 67.3, 0.1% low 64.0 (worst frame 15.6 ms), median 13.92 ms, late 0.00%, RSX thread 1.46 ms/frame
+   577 frames over 8.0 s: avg 72.0 FPS, 1% low 67.0, 0.1% low 66.0 (worst frame 15.2 ms), median 13.92 ms, late 0.00%, RSX thread 1.49 ms/frame
+   577 frames over 8.0 s: avg 72.0 FPS, 1% low 66.5, 0.1% low 38.2 (worst frame 26.2 ms), median 13.91 ms, late 0.17%, RSX thread 1.12 ms/frame
+   => median of 3 windows: avg 72.0 FPS, 1% low 67.0, late frames 0.00%, RSX thread 1.46 ms/frame
+NPUA80068 vrtest_ssd_lave vblank 90 scale 300%:
+   721 frames over 8.0 s: avg 90.0 FPS, 1% low 81.9, 0.1% low 52.6 (worst frame 19.0 ms), median 11.07 ms, late 0.14%, RSX thread 1.49 ms/frame
+   721 frames over 8.0 s: avg 90.0 FPS, 1% low 80.8, 0.1% low 63.5 (worst frame 15.8 ms), median 11.06 ms, late 0.00%, RSX thread 1.08 ms/frame
+   720 frames over 8.0 s: avg 90.0 FPS, 1% low 80.3, 0.1% low 42.5 (worst frame 23.5 ms), median 11.09 ms, late 0.14%, RSX thread 1.07 ms/frame
+   => median of 3 windows: avg 90.0 FPS, 1% low 80.8, late frames 0.14%, RSX thread 1.08 ms/frame
+NPUA80068 vrtest_ssd_lave vblank 120 scale 300%:
+   961 frames over 8.0 s: avg 120.0 FPS, 1% low 106.3, 0.1% low 102.7 (worst frame 9.7 ms), median 8.37 ms, late 0.00%, RSX thread 1.46 ms/frame
+   961 frames over 8.0 s: avg 120.0 FPS, 1% low 103.7, 0.1% low 100.7 (worst frame 9.9 ms), median 8.38 ms, late 0.00%, RSX thread 1.49 ms/frame
+   960 frames over 8.0 s: avg 119.9 FPS, 1% low 107.1, 0.1% low 42.4 (worst frame 23.6 ms), median 8.41 ms, late 0.10%, RSX thread 1.14 ms/frame
+   => median of 3 windows: avg 120.0 FPS, 1% low 106.3, late frames 0.00%, RSX thread 1.46 ms/frame
+SUSTAINABLE NPUA80068 vrtest_ssd_lave: 120 Hz
+DONE /f/rpsc3/source/plans/evidence/vrtest/2026-10-02-1122

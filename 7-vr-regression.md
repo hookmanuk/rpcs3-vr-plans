@@ -25,7 +25,9 @@ compare runs on the same PC.
 6. Check it: `sh tools/re/vr_regress.sh <state name>` should boot it, walk, and print frame stats.
 
 Manifest columns (`tools/re/vrtest_states.txt`): `ID STATE VPF WALK SETTLE scene`. WALK is 1 (walk back and forth with
-the left stick), 0 (no input) or a pad key to hold for 25 s (`W` = R2, accelerate in Pure). A `rates=30` tag in the
+the left stick), 0 (no input), a pad key to hold for 25 s (`W` = R2, accelerate in Pure) or `script`: the key script
+`tools/re/vrtest_boot/<STATE>.walk`, played from the boot on (Super Stardust HD fires in circles to stay alive). The pad
+template maps the right stick to T/F/G/H. A `rates=30` tag in the
 scene text replaces the default rates 72/90/120 (frame-locked games). A game that cannot savestate gets a disc-boot
 key script `tools/re/vrtest_boot/<STATE>.keys` instead (Ridge Racer 7).
 
@@ -52,6 +54,7 @@ speed at. The other games read their frame time every frame.
 | `jak2_prison` | BCUS98281 | none | Collection menu: Down (Jak II), X; New Game; through the intro to the first control in the prison/escape area; Ctrl+S. |
 | `jak3_spargus` | BCUS98281 | none | Collection menu: Down x2 (Jak 3), X; the opening cutscene cannot be skipped (Start pauses it: wait ~2 min); title Return; New Game, Yes (create save, Left + X), slot 1; wait for the Spargus cutscene to end (X past the autosave notice); Ctrl+S at the first control in the palace. |
 | `dw6e_battle` | BLUS30306 | none | Boot at Vblank 60 (the intro movie stalls at a higher rate). Empire Mode > New > Normal > Yellow Turban Rebellion > Ahui Nan > Battle > Mercenary > Shao Hua Bandits; Ctrl+S at the start of the battle. |
+| `ssd_lave` | NPUA80068 | none (PSN 06.00) | Needs the game licence (.rap). Title Return; Single Player X; Arcade X; Up (Easy) X; Lave X; the controls and tips screens X, X; Ctrl+S (or the `RPCS3_VR_SAVESTATE` hook) in the first second of play. The ship dies without input: the run fires in circles (`vrtest_boot/vrtest_ssd_lave.walk`, SETTLE 5). |
 | released games | | | see below |
 
 ### Released and other games

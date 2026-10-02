@@ -5,8 +5,9 @@
 # settings for the run, "Key=value;Key=value" (e.g. "Relaxed ZCULL Sync=true").
 # Only Vblank Rate and Resolution Scale are merged into the game's custom config for the run (other settings kept;
 # the file is restored after). Walks back and forth ~25 s with a temporary keyboard pad (WALK=1), holds one pad key
-# for 25 s instead (WALK=<key>, e.g. W = R2 to accelerate in a racing game) or sends nothing (WALK=0); prints the
-# 8 s windows that start after the settle (load and warm-up excluded) and a summary: median avg FPS, 1% low and
+# for 25 s instead (WALK=<key>, e.g. W = R2 to accelerate in a racing game), plays vrtest_boot/STATE.walk (an
+# RPCS3_VR_KEYS script) from the boot on (WALK=script: Super Stardust HD fires in circles to stay alive) or sends
+# nothing (WALK=0); prints the 8 s windows that start after the settle (load and warm-up excluded) and a summary: median avg FPS, 1% low and
 # late (missed) frames = frames longer than 1.5x the median frame time. Screenshot: shot.py's p1_STATE_VBLANK.
 # Games that cannot savestate: if vrtest_boot/STATE.keys exists, the disc from games.yml is booted instead and that
 # RPCS3_VR_KEYS script is played from the start (it drives the menus; SETTLE must cover them).
@@ -36,12 +37,15 @@ if [ -f "$KS" ]; then
 else
   RPCS3_VR_FRAMESTATS=8 powershell -File gboot.ps1 -Iso "F:/rpsc3/source/rpcs3/bin/savestates/$1/$2.SAVESTAT.zst" -Probe "${PROBE:-render=1}" >/dev/null
 fi
+if [ "${4:-1}" = script ]; then
+  W="$TEMP/rpcs3-vrprofile"; grep -v '^#' "/f/rpsc3/source/plans/tools/re/vrtest_boot/$2.walk" > "$W/KEYS.tmp" && mv -f "$W/KEYS.tmp" "$W/KEYS"
+fi
 sleep "${SETTLE:-10}"
 L=/f/rpsc3/source/rpcs3/bin/log/RPCS3.log
 n0=$(grep -ac "VR frame stats" $L)
 if [ "${4:-1}" = 1 ]; then
   sh keys.sh 'I 1500 50\nK 1500 50\nI 1500 50\nK 1500 50\nI 1500 50\nK 1500 50\nI 1500 50\nK 1500 50\nI 1500 50\nK 1500 50\nI 1500 50\nK 1500 50\nI 1500 50\nK 1500 50\nI 1500 50\nK 1500 50\n'
-elif [ "${4:-1}" != 0 ]; then
+elif [ "${4:-1}" != 0 ] && [ "${4:-1}" != script ]; then
   sh keys.sh "$4 25000 50\n"
 fi
 sleep 26
