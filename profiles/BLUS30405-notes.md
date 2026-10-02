@@ -141,3 +141,23 @@ Matt (headset, Wider view 2.0 at 2.75): "the gfx are all corrupted, especially t
   `vrtest_dante_acre_wide`.
 - **Open:** the sun's lens flare shows at the normal FOV and not with the wide view (seen before 3.0 too; probably
   its visibility test, which uses the widened focal, `0x66a2d8`). Not checked in the headset by Matt yet.
+
+## 2026-10-02 evening: torch glows followed the head (simulator)
+
+Matt (headset, Wider view 3.0): orange lights that move when he turns his head, offset from the three wall torches.
+They are the torch glow sprites, program `54fba8b442f9fa7f` (64/128/256 px textures, ~24 draws a frame, blended,
+**depth test off**, into the scene target between camera draws). They came back with 3.0 (the size metric had culled
+them at the wide FOV). The shader reads no camera block: position = vertex xy x `c[1].w`, z = `c[1].z`, w = `c[1].w`
+(the light's clip z and w, set per draw), so the game projects each glow itself and the renderer drew it where the game
+put it in its own view: fixed to the head. `preprojected_programs` re-projects such draws per eye (B^-1 x B_eye), but
+only depth-tested ones (ICO's flame program also draws its pause menu). New entry form `{ "program": ..., "without_depth_test":
+true }` (fork, opt-in per program); Dante's profile lists `54fba8b442f9fa7f` so. Simulator: glows on their torches at
+yaw -0.25, 0 and 0.25 rad; Matt checked the captures ("looks fine"). ICO's profile still loads (its string entry is
+unchanged). The sun's lens flare (`575b73ec`, its own screen sprite, sized by the widened focal 55.99) is still open.
+
+Generator: it has no rule for game-projected sprites (ICO's entry was written by hand). A first rule (draws with no
+camera block into the scene target with more camera draws after them, no colour-target sampling) did not find
+`54fba8b4` and flagged two depth-tested programs (`811d6b04`, `de5634f5`, 20 draws each) instead; reverted. Notes for
+a second try: the glows read `c[0..2]`, which `matrix_less()` takes for a 3-row block; 54fba8b4 also draws into
+`0xc1d40000` (the 320x320 effect target, reused as the 1280x720 HUD target), which may have counted against it; check
+what it samples (a depth texture would read as a colour target).

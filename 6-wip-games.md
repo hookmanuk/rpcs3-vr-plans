@@ -349,6 +349,10 @@ Generated profile (row vectors, five camera blocks, HUD `c[0]`); the HUD vanishe
      degrees whole; 120 FPS sustained in desktop stereo at 300%. New regression state `vrtest_dante_acre_v3`. Details
      in the notes. **Next:** Matt's headset check. Open: the sun's lens flare is missing with the wide view (it was
      before 3.0 too).
+  5. **Torch glows followed the head** (Matt, after 3.0): the glow sprites (`54fba8b4`) are projected by the game and drawn
+     with depth test off; new `preprojected_programs` entry form `{ "program": ..., "without_depth_test": true }` puts them on
+     their torches (simulator; Matt OK'd the captures). The generator cannot find such programs yet (a first rule failed,
+     reverted; notes in the game's file).
 
 ## God of War Collection (BCES00800 v01.00, UK disc)
 
