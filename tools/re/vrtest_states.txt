@@ -4,7 +4,7 @@ BCUS98282   vrtest_rc1_veldin            1  1    10     Ratchet & Clank 1: Veldi
 BCUS98282   vrtest_rc2_aranos            1  1    10     Ratchet & Clank 2: Aranos interior (light scene)
 BCUS98282   vrtest_rc3_veldin_battle     1  1    10     Ratchet & Clank 3: Veldin battle
 BLUS30632   vrtest_anarchy_practice      2  1    10     Anarchy Reigns: Training > Practice
-BLUS30405   vrtest_dante_acre            1  1    10     Dante's Inferno: Acre, first fight
+BLUS30405   vrtest_dante_acre_wide       1  1    10     Dante's Inferno: Acre, first fight (Wider view patch applied, 2026-10-02)
 BLUS30035   vrtest_darkness_opening      1  0    10     The Darkness: opening car scene ("View tutorial help")
 BCUS98227   vrtest_puppeteer_cage        2  1    10     Puppeteer: first control, Kutaro in the cage
 BLUS31006   vrtest_xillia_field          1  1    10     Tales of Xillia: first field (academy)

@@ -67,3 +67,21 @@ already renders behind it (Acre's camera draws every frame), so the frame counte
 goes on the fixed screen. Checked on the OpenXR Simulator from the disc (head straight and turned 25 degrees: the
 movie moves as a world-fixed screen; after the movie gameplay returns to the headset view, HUD boxed). Other FMVs
 use the same player and should follow. No save data created.
+
+## 2026-10-02: culling at the headset's wide view: "Wider view (VR culling)" patch
+
+- The game projection is 61.9 x 37.3 degrees (tan 0.6 horizontal); the headset view is ~100 x 89, so objects at the
+  edges were culled even looking straight ahead.
+- Found live (pine + PPU write watch on the interpreter): the projection matrix (`-1.667, 2.963`, near 0.70, far 4096)
+  at `0x135fb50`, built each frame from a camera record (`+0x1a4..0x1b8`: near, far, **fov 1.0808 rad
+  horizontal**, aspect; copies at `0x11a1ad0`/`0x11a1cb0`) written by the perspective setter `0x420490`
+  (`stfs f1, 0x1ac(r31)`), called from the camera update `0x452da0` (fov in f31, from a camera struct `+0x30`, through
+  the vertical/horizontal FOV conversion `0x449738`); the matrix by `0x413b70` -> `0x609a60` (generic perspective).
+- Patch (`vr-non-working/patches/BLUS30405_patch.yml`, copy in `bin/patches/`, enabled by default): `0x452f1c`
+  `fmr f1,f31` -> `fadds f1,f31,f31` (FOV x2: 124 x 93 degrees). Camera position unchanged with and without (read
+  live while toggling the code under the interpreter). Flat play would show a wide-angle view.
+- OpenXR Simulator from the disc (`tools/re/dante_boot.ps1 -Headset`): straight ahead complete; yaw 40 degrees mostly
+  filled (beyond 90 degrees off the game camera's axis stays black: no frustum covers it); looking up 20 degrees still
+  black at the top (vertical 93 degrees is the narrow axis). A larger factor needs a code cave (a constant multiply).
+- Cost: stereo at 300% (`vr1pct.sh`), 120 Hz sustained with and without (0% late); RSX thread 3.75 -> 4.09 ms at 90.
+- Savestate with the patch: `vrtest_dante_acre_wide` (= `_1_1`; the regression entry now uses it).
