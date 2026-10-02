@@ -14,8 +14,10 @@ evidence in `plans/evidence/<game>/`.
 
 **Where the files are.** `package_release.py` ships only **git-tracked** `bin/` content, so a WIP profile can sit
 untracked in `bin/` for testing without being released. Unreleased profiles and patches are committed in
-`rpcs3/vr-non-working/` (see its README). An exception is flagged below: God of War Collection and Killzone 2
-are **tracked in `bin/`**, so the next release will ship them unless they are moved or finished first.
+`rpcs3/vr-non-working/` (see its README). God of War Collection and Killzone 2, once tracked in `bin/`, moved to
+`vr-non-working/` for vr7 (untracked copies stay in `bin/`).
+
+**Shipped in vr7 (2026-10-02): Tales of Xillia and Super Stardust HD** (sections removed; history in their notes files).
 
 ## Second headset test (Matt, 90 Hz, 2026-10-01 late): continue here
 
@@ -56,11 +58,10 @@ Headset recheck list, in order of what changed most:
 | Puppeteer | **dark/small explained:** the lit stage is as bright as flat but covers 13% of the view (game FOV 45 x 26, stage 27 m away): `eye_baseline` 0.064 -> 0.64 (diorama ~2.7 m away); try **Camera Depth Offset +2 m** in the VR menu to enlarge it. Velocity buffer fixed (`linked_camera_blocks [264]`), a likely cause of the trails | trails (recheck), deferred lights rebuild rays with the game's projection (shapes unchecked) |
 | KH 1.5 (KH Final Mix) | **new profile** (generated + hand-fixed): new key `camera_palette` (characters were head-locked: rigid skinning with full clip matrices per bone), GS-projected effects, scale 6.4. **Unlocked frame rate patch v2 (2026-10-02): real time at 72/90/120 (measured); VR 120 Hz sustained at 300%** | HUD rule unverified (no HUD seen yet) |
 | KH 2.5 (KH II Final Mix) | **new profile** (generated + hand-fixed): HUD box (tutorial box, portrait) world-fixed, GS-projected effects, scale 6.4. **Unlocked frame rate patch v2 (2026-10-02): real time at 72/90/120, jump unchanged (measured); VR 72 Hz sustained at 300%** | the game's fixed-step mode (never seen yet) |
-| Super Stardust HD | **new profile (2026-10-02, licence added by Matt)**: generated + one hand fix (no `depth_offset_projection`: the whole game is drawn in camera space around the planet, a ~0.7 m tabletop diorama). **Real time at 72/90 (measured), no patch; max_fps 0. VR 120 Hz sustained at 300%.** Gameplay, HUD, pause menu, title world-fixed on the simulator; savestate `vrtest_ssd_lave` | **Matt 2026-10-02: "nearly perfect"; menu 3D text uncomfortable, background slowly rotating -> fixed:** menus, title, attract demo and game over now on the fixed screen (new key `screen_frames_when`, game state word `0x332b7ec0`; fork b9568756d). Recheck the menus and the boot loading screen in the headset |
 | Resogun | | **needs the .rap licence** |
 
 **New games to profile (Matt, 2026-10-01/02):** full VR profiles for
-- **Super Stardust HD** (PSN, `dev_hdd0/game/NPUA80068`): **done 2026-10-02** (profile, real time, VR 120 Hz; `profiles/NPUA80068-notes.md`).
+- **Super Stardust HD**: **shipped in vr7** (`profiles/NPUA80068-notes.md`).
 - **Resogun** (PSN, installed: `dev_hdd0/game/NPUA80900`): **blocked, no license** (`UP9000-NPUA80900_00-RESOGUN000000002.rap`).
 - **Kingdom Hearts HD 1.5 ReMIX** (`F:/rpsc3/games/Kingdom Hearts - HD 1.5 ReMIX (USA) (En,Fr,Es).iso`)
 - **Kingdom Hearts HD 2.5 ReMIX** (`F:/rpsc3/games/Kingdom Hearts - HD 2.5 ReMIX (USA) (En,Fr,Es).iso`)
@@ -168,7 +169,6 @@ pass mark** for fully compatible.
 |---|---|---|---|---|---|---|
 | Dragon's Dogma: Dark Arisen | BLUS31155 | `vr-non-working/` + untracked `bin/` copy | yes (community Unlock FPS, real-time) | **120 Hz** (prologue, 2026-10-02 run; 72 on 2026-10-01) | **broken** (boot screens head-locked; slow in Matt's save) | open-world frame rate and outdoor flares with `zcull_approximate` unchecked; headset frame rate (risk); needs update 01.02 |
 | Ratchet & Clank Collection | BCUS98282 | `vr-non-working/` + untracked `bin/` copies (base + rc1/rc2/rc3 executable profiles) | R&C 1, 2, 3 yes (profile frame-time values, run speed verified) | **R&C 1 90 Hz**, **R&C 3 90 Hz** (2026-10-02 run; both 72 before), **R&C 2 120 Hz** (Aranos and the machinery hall) | **broken** (R&C 1 unplayable: scene as a fixed 2D window; loader and menus head-locked) | R&C 1 has little margin at 72; R&C 1 pause menu |
-| Tales of Xillia | BLUS31006 | `vr-non-working/` + untracked `bin/` copy | yes (community 60 FPS + fork patch) | 90 | **to recheck**: fixed 2026-10-01 night on the simulator: menus on the fixed screen, a boxed scene copy (misplaced effect); white screen after Start not reproduced (probably the menu fix); battles unchecked | battles unchecked |
 | The Darkness | BLUS30035 | `vr-non-working/` + untracked `bin/` copy | yes (community 60 FPS patch, real-time) | below 72 (48 at 72) | **parked**: under 60 FPS in Matt's save; intro black for a long time, videos missing | too slow at 300% (48 at 72); stereo and headset view fixed in the opening |
 | Dynasty Warriors 6 Empires | BLUS30306 | `vr-non-working/` + untracked `bin/` copy | no: frame-locked, profile at 60 (180 flat possible) | 120, but frame-locked: plays at 60 | not played | 90 FPS needs a logic-step patch |
 | Puppeteer | BCUS98227 | `vr-non-working/` + untracked `bin/` copy | yes (profile frame time, Vblank 180 = 90 FPS, real-time) | 90 (2026-10-02; 72 before) | **barely works**: graphics trails, very dark, world far away and small; the head-locked intro light fixed 2026-10-01 evening | stage small in the headset view; SPU post skipped in VR |
@@ -176,8 +176,8 @@ pass mark** for fully compatible.
 | Asura's Wrath | BLUS30721 | `vr-non-working/` + untracked `bin/` copy | yes (community Unlock FPS, real-time) | **120 Hz** (Episode 1 space battle) | **works well**; cutscene letterbox box/bars to remove; to do (Matt 2026-10-02): head-locked intro video, shadows sliding with the head, TV screens turning with the head | QTE mashing at 90 untested |
 | Anarchy Reigns | BLUS30632 | `vr-non-working/` + untracked `bin/` copies (profile, patch) | yes (fork patch, real-time verified) | 90 (Training only) | **parked**: splash/intro head-locked, HUD culled by depth; bad performance and graphics issues in gameplay | campaign unchecked; HUD timers 3x |
 | Dante's Inferno | BLUS30405 | `vr-non-working/` + untracked `bin/` copy | yes (profile `game_frame_ms_f32`, no patch; 0.99x at 90) | 120 | gameplay performs really well; splash, menus, intro movie and pause menu world-fixed since 2026-10-01 evening (simulator); objects culled at the edges of the headset view; to do (Matt 2026-10-02): screen shake on hits, empty tooltip banner (text missing) | sky is a screen card; world scale unchecked |
-| God of War Collection (GOW1, GOW2) | BCES00800 | tracked in `bin/` | yes (profile, no patch) | 120 (GoW 1 boat, GoW II Rhodes) | **GoW 1**: main menu on the fixed screen and Kratos's blurred edges fixed 2026-10-01 evening (simulator / desktop checked); performance good; GoW 2 unchecked | 5% black border |
-| Killzone 2 | BCUS98116 | tracked in `bin/` | no: default 45 | not measured | not played | RSX-bound; HUD and combat unchecked |
+| God of War Collection (GOW1, GOW2) | BCES00800 | `vr-non-working/` + untracked `bin/` copies | yes (profile, no patch) | 120 (GoW 1 boat, GoW II Rhodes) | **GoW 1**: main menu on the fixed screen and Kratos's blurred edges fixed 2026-10-01 evening (simulator / desktop checked); performance good; GoW 2 unchecked | 5% black border |
+| Killzone 2 | BCUS98116 | `vr-non-working/` + untracked `bin/` copy | no: default 45 | not measured | not played | RSX-bound; HUD and combat unchecked |
 | Gran Turismo 5 | BCUS98114 | `vr-non-working/` + untracked `bin/` copy | yes (patch) | ~~90 (race start)~~ ~40 FPS in the headset (Matt) | tested, broken: **~40 FPS, needs 60 minimum** | menu clipping, race-start frame rate |
 | MotorStorm: Pacific Rift | BCUS98155 | `vr-non-working/` + untracked `bin/` copy | yes (patch) | not measured | not played | stereo 50-70 at race start (needs multiview) |
 | Blur | BLUS30295 | `vr-non-working/` | yes (patch) | not measured | not played | 45-50 FPS stereo |
@@ -240,23 +240,6 @@ profile `BCUS98282.rc1/rc2/rc3.ppu.json`).
   moves; loader and R&C 1 menus head-locked. See "First headset test" above.
 - **Open:** R&C 1 has little margin at 72 (busier scenes may drop); R&C 2 outdoor levels unmeasured; R&C 1
   pause-menu button frames use their own perspective camera and turn with the head.
-
-## Tales of Xillia (BLUS31006, disc 01.00)
-
-Notes: `profiles/BLUS31006-notes.md`. Evidence: `evidence/xillia/`.
-
-- **Frame rate:** community *60 FPS* patch plus the fork's *Frame rate follows VR* (scales the game's tick count by
-  60/fps; profile `game_frame_time_f32`). Walking speed measured equal at 60 and 90 (1.43x without the fork patch).
-  Headroom: 180 flat, 130-150 stereo at Vblank 180.
-- **Profile:** generated, `row_vectors c[0, 47]`, HUD `c[0]` + `hud_skips_passes`; stereo and yaw audit clean.
-- **Headset (Matt, 2026-10-01):** white screen forever after the first Namco splash, **only when Start is pressed on
-  that splash screen**. Left alone it boots normally (headset, desktop stereo at 90, OpenXR Simulator at 90). Not yet
-  known whether flat play at 60 does the same; next: press Start on the splash flat, then in stereo, and compare logs.
-- **In game in the headset (Matt, 2026-10-01): performance great, image broken.** HUDs all over the place (some tied to
-  the head, some offscreen); screen effects in the wrong place; edge outlines around characters with blur outside
-  those edges (a post-process edge/outline or depth-of-field pass misaligned with the scene). Desktop stereo and the
-  fixed-pose fake headset looked right, so reproduce on the OpenXR Simulator with a head sweep first.
-- **Open:** battles; world scale.
 
 ## The Darkness (BLUS30035, disc 01.03)
 
@@ -369,8 +352,7 @@ so that OpenXR is prepared before the exitspawn into a game.
 - **Headset, GoW 1 (Matt, 2026-10-01):** performance good. The main menu looks wrong: its 2D and 3D elements are
   combined at the wrong depth. In gameplay the main character has blurred edges (a screen-space pass, e.g. motion
   blur or an outline/glow, misaligned with the head-transformed scene): Matt's savestate `vrtest_gow1_matt_blur`
-  (`BCES00800_1_2`, 18:14). GoW 2 not tried. **Note: this collection is tracked in `bin/` and would ship in the
-  next release as it is.**
+  (`BCES00800_1_2`, 18:14). GoW 2 not tried.
 - **Frame rate:** no patch. Profile `game_fps_u32` sets the engine's dt to 1/rate (GOW1 `0x531dd0`,
   GOW2 `0x5720f4`); game time measured at 1.0x at 90.
 - **HUD:** a 4:3 bare projection in the scene's slots. The new profile field
@@ -381,7 +363,7 @@ so that OpenXR is prepared before the exitspawn into a game.
   - One crash in 8 boots at the collection switch (`vkCreateSwapchainKHR` into an unloaded module); not
     reproduced.
   - Savestate restore then checkpoint restart kills the RSX thread: boot fresh.
-- **Release question:** the profiles are already tracked in `bin/`.
+- **Files:** `vr-non-working/vr_profiles/` (moved out of `bin/` for vr7), untracked copies in `bin/`.
 
 ## Killzone 2 (BCUS98116)
 
@@ -403,7 +385,7 @@ Notes: `profiles/BCUS98116-notes.md`. Evidence: `evidence/killzone2/`. Fork d12f
   - One occlusion-query hang in 5 boots (`get_occlusion_query_result`); log
     `%TEMP%\rpcs3-vrprofile\kz2_query_hang1.log`.
   - Movies at the raised vblank: does it need `video_vblank_rate: 60`, as Killzone HD did?
-- **Release question:** the profile is already tracked in `bin/`.
+- **Files:** `vr-non-working/vr_profiles/BCUS98116.json` (moved out of `bin/` for vr7), untracked copy in `bin/`.
 
 ## Gran Turismo 5 (BCUS98114 v02.11, XL Edition, US)
 
