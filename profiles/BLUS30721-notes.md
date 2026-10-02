@@ -54,3 +54,11 @@ OpenXR Simulator with an inspector capture (`f1860`):
 - Checked: the title (bars and rectangle gone, text kept, head straight and turned) and the Episode 1 space battle
   (reticle and "Rapid Fire" text still in the HUD box). Evidence: `tools/re/asl_m1.png` (before), `asl_m5.png` (after).
 - Not seen yet: an in-engine cutscene during gameplay (Matt's report); the bars there should be the same program.
+
+## 2026-10-02: Matt's headset run, to do (not started)
+
+- The short intro video after starting the game is tied to the head.
+- Savestate `BLUS30721_1_5` (13:01): shadows on the main characters move across them when the headset turns;
+  in-game TV screens show misaligned footage that turns with the head (they should be fixed 2D videos in each
+  screen).
+- Plan and leads: `6-wip-games.md` > Asura's Wrath.

@@ -173,7 +173,7 @@ pass mark** for fully compatible.
 | Dynasty Warriors 6 Empires | BLUS30306 | `vr-non-working/` + untracked `bin/` copy | no: frame-locked, profile at 60 (180 flat possible) | 120, but frame-locked: plays at 60 | not played | 90 FPS needs a logic-step patch |
 | Puppeteer | BCUS98227 | `vr-non-working/` + untracked `bin/` copy | yes (profile frame time, Vblank 180 = 90 FPS, real-time) | 90 (2026-10-02; 72 before) | **barely works**: graphics trails, very dark, world far away and small; the head-locked intro light fixed 2026-10-01 evening | stage small in the headset view; SPU post skipped in VR |
 | Jak and Daxter Collection | BCUS98281 | `vr-non-working/` + untracked `bin/` copies | Jak 1 **no**: steps a fixed 1/60 per frame (1.5x at 90): capped at 60 in VR for now; Jak II probably the same; Jak 3 no (74-85 flat in Spargus) | Jak 1 120 (renderer; the game is capped at 60); Jak II 72 (2026-10-02); Jak 3 below 72 | **Jak 1**: HUD boxed, speed fixed (capped at 60, reprojected) and stereo depth fixed 2026-10-01 late, simulator-checked; to recheck in the headset | HUD unchecked |
-| Asura's Wrath | BLUS30721 | `vr-non-working/` + untracked `bin/` copy | yes (community Unlock FPS, real-time) | **120 Hz** (Episode 1 space battle) | **works well**; cutscene letterbox box/bars to remove | QTE mashing at 90 untested |
+| Asura's Wrath | BLUS30721 | `vr-non-working/` + untracked `bin/` copy | yes (community Unlock FPS, real-time) | **120 Hz** (Episode 1 space battle) | **works well**; cutscene letterbox box/bars to remove; to do (Matt 2026-10-02): head-locked intro video, shadows sliding with the head, TV screens turning with the head | QTE mashing at 90 untested |
 | Anarchy Reigns | BLUS30632 | `vr-non-working/` + untracked `bin/` copies (profile, patch) | yes (fork patch, real-time verified) | 90 (Training only) | **parked**: splash/intro head-locked, HUD culled by depth; bad performance and graphics issues in gameplay | campaign unchecked; HUD timers 3x |
 | Dante's Inferno | BLUS30405 | `vr-non-working/` + untracked `bin/` copy | yes (profile `game_frame_ms_f32`, no patch; 0.99x at 90) | 120 | gameplay performs really well; splash, menus, intro movie and pause menu world-fixed since 2026-10-01 evening (simulator); objects culled at the edges of the headset view | sky is a screen card; world scale unchecked |
 | God of War Collection (GOW1, GOW2) | BCES00800 | tracked in `bin/` | yes (profile, no patch) | 120 (GoW 1 boat, GoW II Rhodes) | **GoW 1**: main menu on the fixed screen and Kratos's blurred edges fixed 2026-10-01 evening (simulator / desktop checked); performance good; GoW 2 unchecked | 5% black border |
@@ -311,6 +311,20 @@ frames; savestate `vrtest_asura_space`, made with Compatible Savestate Mode).
   the cutscene shows the 3D world with the HUD elements (subtitles, prompts) on top. Find the bar and background
   draws with probe `hide=<vertex hash>[@<target>]` (and `why=`) in a cutscene, then `hidden_draws` (program + texture
   size) or an unboxed/passthrough rule; check subtitles and QTE prompts stay.
+- **Headset (Matt, 2026-10-02): to do, not started.**
+  1. **Intro video tied to the head:** the short video right after starting the game is head-locked. It should go on
+     the fixed screen like other videos (check how its frames are classified: camera draws, HUD box, or
+     `frames_without_3d_as_screen`).
+  2. **Shadows slide over the characters when the head turns** (savestate `BLUS30721_1_5`, 13:01). The shadow lookup
+     probably uses the game's own view (or its inverse) beside the camera, which the head transform does not reach.
+     Look for a second view or inverse-view block in the character programs: `linked_camera_blocks`, or a shadow
+     matrix to correct (as with Bayonetta's velocity blocks).
+  3. **In-game TV screens** (`BLUS30721_1_5`): their footage is misaligned and turns with the head. They should
+     show fixed 2D video in each screen. Likely the screens sample their video in screen space or through a
+     camera-derived projection; find the TV draw (inspector capture, probe `why=`) and keep its texture mapping on
+     the game's camera.
+  Matt's other savestates from that session: `BLUS30721_1_2` (12:53), `_1_3` and `_1_4` (12:57); contents not
+  recorded. Loading `_1_5` builds the SPU cache first (about a minute).
 
 ## Anarchy Reigns (BLUS30632, disc 01.00)
 
