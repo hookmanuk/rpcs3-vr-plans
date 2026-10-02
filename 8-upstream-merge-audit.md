@@ -328,6 +328,52 @@ go, and a handful of small deliberate behaviour changes.
 - **Restart the fork version at vr1** after each upstream version bump, as 4-next-steps.md
   already says.
 
+## 6. Implementation (2026-10-02)
+
+Sections A to G and I were applied on branch `ccr-6db5810d-uriwc6` of `hookmanuk/rpcs3`, based on
+`openxr` at `90640f9`. The branch has not been compiled: the build machine is Windows and this was
+done in a container without Qt or the Vulkan SDK. Build it with the Visual Studio solution before
+merging it into `openxr`, then run the 7-vr-regression.md pass (the restructuring moves code, it
+does not change what the emulator does, but the hooks were re-plumbed by hand).
+
+Every modified upstream file was rebuilt from upstream's text plus one-line hooks, so the merge
+footprint is now:
+
+| | Before | After |
+|---|---:|---:|
+| Upstream files modified | 68 | 71 (the three new ones are append-only build lists) |
+| Fork lines in upstream files | 5,734 | 915 |
+| `VKDraw.cpp` / `VKGSRender.cpp` / `VKPresent.cpp` / `VKGSRender.h` | 1,397 / 1,306 / 685 / 224 | 39 / 57 / 47 / 4 |
+| `settings_dialog.ui` / `.cpp` | 372 / 138 | 9 / 5 |
+| `PPUThread.cpp` / `sys_timer.cpp` / `lv2.cpp` / `RSXThread.cpp` / `keyboard_pad_handler.cpp` | 272 / 173 / 43 / 226 / 91 | 2 / 3 / 2 / 22 / 1 |
+
+New fork-only files, where the moved code lives:
+
+| File | Holds |
+|---|---|
+| `rpcs3/Emu/RSX/VK/VKGSRenderVR.inl` | every VR member and declaration of `VKGSRender`, included inside the class body by one line |
+| `rpcs3/Emu/RSX/VK/VKGSRenderVR.h` | includes and the two dev-bit helpers for `decode_rsx_state` |
+| `rpcs3/Emu/RSX/VK/VKGSRenderVR.cpp` | the moved VR functions (verbatim) and the hook bodies: `vr_begin_draw`, `vr_setup_draw`, `vr_begin_right_eye`, `vr_end_right_eye`, `vr_after_clear`, `vr_prepare_right_rtts`, `vr_publish_frame`, ... |
+| `rpcs3/Emu/RSX/VK/VKGSRenderVRDev.cpp` | GPU profiler, `RPCS3_VR_RTDUMP`, the per-frame trace, the probe dev bits |
+| `rpcs3/Emu/RSX/VK/VKOverlaysVR.h/.cpp` | `ui_overlay_renderer_xr`, `vr_homography_warp_pass` |
+| `rpcs3/Emu/RSX/Capture/rsx_vr_hooks.h/.cpp` | the glue called from `RSXThread.cpp`, `sys_timer.cpp`, `lv2.cpp` and `System.cpp`, with the relocated dev hooks (`RPCS3_VR_MEMDUMP`, `PEEK`, `POKE`, `SHOT`, `FRAMESTATS`, `PPU_WATCH_FILE`, `PPU_SAMPLE`, `USLEEP_STATS`, `SYSCALL_PROFILE`, `DUMP_ELF`) |
+| `rpcs3/Emu/Cell/PPUDevHooks.inl` | the trace and watch breakpoints, textually included by `PPUThread.cpp` |
+| `rpcs3/Input/keyboard_pad_handler_vr.inl/.cpp` | `RPCS3_VR_KEYS` |
+| `rpcs3/rpcs3qt/vr_settings_widget.ui/.h/.cpp` | the VR group box of the GPU tab, a promoted widget in `settings_dialog.ui` |
+| `rpcs3/rpcs3_vr_version.h` | `RPCS3_VR_VERSION` (the per-release bump no longer touches an upstream file) |
+
+Behaviour kept as it was, with these deliberate exceptions: `flip()` is back in upstream's order
+(swapchain acquire before the screenshot capture), so a screenshot with a locked desktop is again
+subject to the driver crash the fork had worked around; the GPU profiler's "flip" and "waiting for
+older frames" timers now span the whole function and the whole cleanup rather than the exact
+upstream statements; the vblank-rate notice, the frame-end dev hooks and the syscall profiler log
+on the `VRDEV` channel instead of `RSX`, `sys_timer` and `PPU`. No dev hook was deleted: each is
+referenced by the playbook or tools, so all were relocated.
+
+Not done here: the upstream pull requests of section H, and the two `decode_rsx_state` dev bits,
+which the report suggested deleting, were kept as one-line helpers because the probe `dev=` key is
+still documented.
+
 ## Appendix: every modified upstream file
 
 Category: R renderer/RSX integration, U settings and UI, D development hooks, P policy and
