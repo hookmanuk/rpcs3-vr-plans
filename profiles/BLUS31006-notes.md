@@ -98,3 +98,6 @@ so a ring grown to 11x got 11x the parallax and floated in front of everything. 
 headset; a few stretched particles (|x|/|w| 0.82-1.47) keep a slightly wrong offset.
 Blue floor lights brighter in one eye (Milla's intro): Matt saw it correct on the OpenXR Simulator; he rechecks
 in the headset.
+- **Verified on the OpenXR Simulator (2026-10-02 05:20):** walking in `vrtest_tox_matt_puddles`, the ripple ring under
+  Milla measures R-L -165.6 px, her feet -165.3, the floor on either side -166.1 / -165.9 (`parallax.py` on a
+  simulator capture): the ring now lies on the floor.
