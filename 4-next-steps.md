@@ -528,7 +528,8 @@ draws, partial-clear mirroring, and an occlusion/convergence comparison beyond t
 ## Gate 6 - presentation and optimization
 
 - [x] Add OpenXR submission only after the generated eye images are correct.
-- [ ] Establish a correct render-twice implementation before considering Vulkan multiview.
+- [x] Establish a correct render-twice implementation before considering Vulkan multiview.
+- [ ] Vulkan multiview, both eyes from one draw: plan in [9-multiview-plan.md](9-multiview-plan.md).
 - [ ] Measure CPU/GPU cost, frame pacing, latency, and headset comfort.
 
 ### OpenXR first light (2026-09-21)
