@@ -909,7 +909,7 @@ the fixed screen". Note: `plans/tools/launch.ps1` without `-Probe 'render=1'` le
 
 **Release procedure.** Versions are upstream's plus a fork tag: `0.0.42-vrN-<commit> Alpha` in the app,
 GitHub release tag `v0.0.42-vrN`, zip `rpcs3-v0.0.42-vrN-<commit>_win64.zip`. For each release: bump
-`RPCS3_VR_VERSION` in `rpcs3/rpcs3/rpcs3_version.cpp` (vr7 tagged 2026-10-02; the next is vr8), commit,
+`RPCS3_VR_VERSION` in `rpcs3/rpcs3/rpcs3_vr_version.h` (a fork-only header since the merge-footprint restructuring; vr7 tagged 2026-10-02; the next is vr8), commit,
 build emucore/VKGSRender/rpcs3 so the exe carries that commit, run `plans/tools/package_release.py`, smoke-test
 the zip from a non-temporary folder, push `openxr` and the annotated tag; Matt tests the zip and publishes the GitHub release himself. After merging a newer upstream
 version, restart at vr1.
