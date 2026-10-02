@@ -136,3 +136,19 @@ pause-menu panels use a fixed axis-aligned menu camera, clip w = x - 256: `"boxe
 Checked on the OpenXR Simulator: gameplay at the shear state (no seam, rover and near ground back), the R&C 1 title
 from the disc (full 3D at 0 and -11 degrees), and the pause menu (panels line up with the text, world-fixed at
 +-20 degrees and looking up). Still open: the paused background (a copy of the last frame) follows the head.
+
+## 2026-10-02 early morning: pause menus (R&C 1, 2, 3) on the fixed screen
+
+All three draw the paused frame as a full-screen copy (`f780fac85cd9eba2` sampling a 1280x720 texture; gameplay's
+final composite samples the 2560x720 one) with the menu over it. In the headset view the copy followed the head
+(R&C 2, 3) and R&C 1's pause also flickered between the fixed screen and the headset view every frame or two (its
+menu panels are boxed cameras, and some frames still counted camera draws). `screen_frame_draws`
+`{f780fac85cd9eba2, 1280x720}` in each executable profile pins the whole pause frame to the fixed screen. OpenXR
+Simulator: R&C 1 0 switches in 5 s (was ~2 per frame), R&C 2 and 3 world-fixed at 0 and 25 degrees, gameplay back
+in the headset view on closing the menu (R&C 2 and 3 close with Triangle, not Start).
+Tried and reverted: `frames_without_3d_as_screen: true` (R&C 1): no change (the pause frames still had camera draws).
+
+## 2026-10-02: regression run after the night's changes (`evidence/vrtest/2026-10-02-0335`)
+
+Sustained at 300%: R&C 1 **90 Hz** (was 72; RSX thread 13 -> 8.5 ms: the level no longer took the HUD-box path),
+R&C 2 120, R&C 3 90 (was 72), R&C 2 machinery hall 120.
