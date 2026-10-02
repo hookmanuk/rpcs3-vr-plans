@@ -30,5 +30,11 @@ Final Mix, `PPU-f18bcdcc...`), `BBS.self` (Birth by Sleep Final Mix) or the Re:c
 
 ## Frame rate
 
-- Native 30 in gameplay and cutscenes. The patch's speed (gravity and timers) not yet measured; the profile keeps
-  `max_fps 30` until it is.
+- Native 30 in gameplay and cutscenes. Patch `bin/patches/BLUS31460_patch.yml` (copy in `vr-non-working/patches/`):
+  the community 60 FPS patch, **off by default**: with it, at Vblank 60 vs 30 from the same savestate
+  (`tools/re/kh2_speed.sh vrtest_kh2_twilight OUT RATE`), Roxas runs much further in the same 1.5 s press (the
+  community notes double gravity and double-speed objects). The game steps per frame; a real-time >30 needs its
+  step found (as Jak 1). The VR profile keeps `max_fps 30` (reprojected).
+- Savestates: `vrtest_kh2_twilight` (= `_1_2`, **patched** code, after the tutorial messages: Roxas can move; the
+  first messages freeze him) and `vrtest_kh2_twilight_30` (= `_1_0`, unpatched, during the tutorial messages).
+  Patches are not applied to savestates: a savestate keeps the code it was saved with.
