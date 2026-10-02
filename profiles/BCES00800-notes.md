@@ -75,6 +75,10 @@ pause menu, in-game cutscenes.
 - **The collection switch crashed once** (1 of ~8 boots): `vkCreateSwapchainKHR` jumped into an unloaded module
   while the renderer was rebuilt for GOW1 (`vk::swapchain_WSI::init`, VKGSRender constructor). Not reproduced.
 - **Savestates**: restoring one and restarting from a checkpoint killed the RSX thread (Dead FIFO). Boot fresh.
+- **QTEs not passable at 90 FPS (Matt, headset, 2026-10-02).** The QTE in Matt's savestate `BCES00800_1_4`
+  (2026-10-02 12:23) cannot be passed at 90 FPS. The `game_fps_u32` fix scales the logic dt, but the QTE timing
+  (button-mash counters or windows counted in frames) apparently does not follow it: QTEs need patching. Not
+  investigated yet.
 
 ## Driving it unattended
 
