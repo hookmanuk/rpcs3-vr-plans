@@ -32,6 +32,23 @@ Matt's recheck after the evening fixes (fork up to 03abf3550). New savestates (h
 | Dante's Inferno | The intro movie after New Game is still stuck to the head. |
 | Asura's Wrath | `vrtest_asura_matt_letterbox`: the letterbox bars and a subtle grey 16:9 background box are visible. |
 
+**Fixed overnight 2026-10-01/02 (fork local commits b16362394..3d9d75e12; checked on the OpenXR Simulator, Pimax
+Dream Air profile, 90 Hz). Recheck in the headset:**
+
+| Game | Fix | Still open |
+|---|---|---|
+| R&C 1 | **"Fixed 2D window" and the sheared plane found:** `boxed_camera_programs` named R&C 1's two world programs, so in the headset path most of the level went into the HUD box. New key `boxed_cameras` matches the pause-menu camera by its clip-w row instead. Title (from the disc), gameplay at the shear state and the pause menu checked. | the paused background follows the head |
+| Asura's Wrath | letterbox bars hidden (`fc13d36f`, untextured); grey 16:9 box = a full-screen pass boxed as HUD: `hud_skips_passes` | in-gameplay cutscenes not seen (same program expected); fades drawn with the same program would be hidden too |
+| Tales of Xillia | walking ripples at the wrong depth: per-object scale in the eye offset (rings scaled up to 11x): `eye_offset: baseline_per_w` | blue floor lights in one eye: Matt saw it right on the simulator, rechecks in the headset |
+| Dante's Inferno | intro movie after New Game: drawn over the first level, which renders behind it, so the frame counted as 3D: `screen_frame_draws` with the movie draw | culling at the wide FOV (game frustum 61.9 x 37.3 degrees, tan 0.6) |
+| God of War selector | the intro is a real-time 3D logo animation through a camera: its four programs are `screen_frame_draws` | |
+| God of War 1 | Power Up screen flicker (camera classification changed every ~3 frames): its menu-art draw pins the frame to the screen (180 -> 7 switches in 6 s); **world scale measured: 13.5 units/m, `eye_baseline` 3.2 -> 0.864** (characters ~3.7x bigger) | |
+| God of War II | same Power Up flicker (260 -> 7), same scale (0.864); savestate `vrtest_gow2_rhodes` | |
+| Puppeteer | darkness investigated, not fixed (see notes): the G-buffers are right, the scene target comes out darker; a forced fixed screen did not help (reverted) | trails, dark, small |
+| KH 1.5 (KH Final Mix) | **new profile** (generated + hand-fixed): new key `camera_palette` (characters were head-locked: rigid skinning with full clip matrices per bone), GS-projected effects, scale 6.4; 60 FPS community patch (fork patch file), savestate `vrtest_kh1_dive` | frame-locked above 60 (max 60); HUD rule unverified (no HUD seen yet) |
+| KH 2.5 (KH II Final Mix) | **new profile** (generated + hand-fixed): HUD box (tutorial box, portrait) world-fixed, GS-projected effects, scale 6.4; savestate `vrtest_kh2_twilight_30` (30 FPS) | the 60 FPS patch (doubles gravity per the community) not yet measured; max 30 |
+| Super Stardust HD, Resogun | | **need the .rap licenses** |
+
 **New games to profile (Matt, 2026-10-01/02):** full VR profiles for
 - **Super Stardust HD** (PSN, installed: `dev_hdd0/game/NPUA80068`): **blocked, no license.** Boot fails: "Failed to locate the game license file `dev_hdd0/home/00000001/exdata/UP9000-NPUA80068_00-STARDUSTFULL0001.rap`". Needs Matt's .rap (from his PS3/PSN account; lowercase extension).
 - **Resogun** (PSN, installed: `dev_hdd0/game/NPUA80900`): **blocked, no license** (`UP9000-NPUA80900_00-RESOGUN000000002.rap`).
