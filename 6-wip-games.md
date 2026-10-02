@@ -32,8 +32,18 @@ Matt's recheck after the evening fixes (fork up to 03abf3550). New savestates (h
 | Dante's Inferno | The intro movie after New Game is still stuck to the head. |
 | Asura's Wrath | `vrtest_asura_matt_letterbox`: the letterbox bars and a subtle grey 16:9 background box are visible. |
 
-**Fixed overnight 2026-10-01/02 (fork local commits b16362394..3d9d75e12; checked on the OpenXR Simulator, Pimax
-Dream Air profile, 90 Hz). Recheck in the headset:**
+**Fixed overnight 2026-10-01/02 (fork local commits b16362394..cd9505230, not pushed; `binpcs3.exe` built with them;
+checked on the OpenXR Simulator, Pimax Dream Air profile, 90 Hz). Recheck in the headset:**
+
+Headset recheck list, in order of what changed most:
+1. R&C 1: title, gameplay (was the flat window), pause menu. Also faster: 90 Hz sustained at 300% in the regression
+   run (was 72), probably because the level's draws no longer took the HUD-box path.
+2. God of War 1 and II: characters human-sized now? Power Up screen steady? The collection's intro animation.
+3. Dante's Inferno: the intro movie after New Game; edges of the view while fighting (new Wider view patch).
+4. Asura's Wrath: `vrtest_asura_matt_letterbox`, and an in-gameplay cutscene.
+5. Tales of Xillia: walking ripples at floor depth; the blue floor lights in Milla's intro.
+6. Puppeteer: trails gone? Try the VR menu's Camera Depth Offset (+1 to +3 m) to bring the stage closer.
+7. Kingdom Hearts 1.5 (Final Mix, 60) and 2.5 (KH II, 30): first look; scale, HUD box, effects (sparkles, beams).
 
 | Game | Fix | Still open |
 |---|---|---|
