@@ -85,3 +85,23 @@ On the OpenXR Simulator from `vrtest_puppeteer_matt_trails`, with RTDUMP of the 
 - Tried and reverted: a profile key forcing the fixed screen (`fixed_screen`); it did not fix the darkness.
 - Next: a paused moment (pause menu off, or the savestate with the game paused by the PS button) to compare
   flat and stereo at identical frames; then the depth packing and the light draw's fragment constants.
+
+## 2026-10-02 early morning: darkness explained, velocity fixed, diorama scale (fork cd9505230)
+
+- **Darkness is the small stage, not the lighting.** Same moment, same savestate, OpenXR Simulator: with the headset FOV
+  the lit stage averages 19.9 per lit pixel (14.0 with `RPCS3_OPENXR_FOV=game`), but covers 13% of the eye image
+  (65% with the game FOV). The game camera is 45 x 26 degrees, the stage ~27 units away; at `eye_baseline` 0.064
+  (1 unit = 1 m) that is a small lit box 27 m away in a black void. (The earlier frame means were misleading: the
+  savestate plays a dark intro, then the throne, then the cage, so runs a few seconds apart differ.)
+- The light pass (`30532bfcf0d877be`) does rebuild view position from `wpos` with fragment constants `fc0..fc3`
+  (game projection) and samples the shadow map: in the headset view the rebuilt rays are the game's, not the eye's.
+  The measurement above says the effect on brightness is small; light shapes may still sit wrong. Unchecked.
+- **Velocity buffer:** the G-buffer program (`e9dd0017`, `a10a18f7`, ...) outputs position from `c[256..258]` with w
+  from `c[267]`, and a velocity from the previous frame's `c[264]`, `c[265]`, `c[267]`/`c[259]`. Only the current
+  block got the eye transform, so the velocity target (`c0e90000`) was a red/green gradient across the screen in the
+  headset view. `linked_camera_blocks: [264]` makes it uniform. Likely the trails (unverified in the headset).
+- **Scale:** `eye_baseline` 0.064 -> 0.64: the stage reads as a puppet-theatre diorama ~2.7 m away. To make it
+  bigger, the VR menu's **Camera Depth Offset** (metres, +5 max; world units = metres x 10 at this scale): +2 m put
+  the viewer ~20 units closer and roughly doubled the stage's size on the simulator. Matt to judge in the headset;
+  if it suits, a profile default for the camera offset would need a new key.
+- Tried and reverted: a profile key forcing the fixed screen.
