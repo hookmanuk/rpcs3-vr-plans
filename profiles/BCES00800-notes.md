@@ -122,3 +122,17 @@ takes ~10 s before the screen changes). Keyboard pad: template plus right stick;
   (80 px) give 13-14 units per metre. **`eye_baseline` 0.864** (0.064 m x 13.5): Kratos's disparity became 15.2 px
   (predicted 15.4). The world in the headset should be ~3.7x larger than before. GoW 2 (same engine, also 3.20128)
   not measured yet.
+
+## 2026-10-02: God of War II checked (OpenXR Simulator)
+
+- Booted with `tools/re/gow_boot.ps1 -Game2` (new game, intro cutscene, Rhodes). Savestate
+  `bin/savestates/BCES00800/vrtest_gow2_rhodes.SAVESTAT.zst` (= `_1_3`; the first three Ctrl+S attempts failed with
+  "failed to lock SPU threads execution" mid-fight, the fourth worked). Loaded unattended, Kratos dies in the fight
+  after ~30 s: "Restart from last checkpoint" (the death menu is on the fixed screen).
+- 90 FPS flat at Vblank 90 in the fight.
+- **Power Up screen flickered as GoW 1's** (260 view switches in 6 s): same fix, `screen_frame_draws`
+  `{a3b1455d9ebdd381, 512x512}` (not drawn in three gameplay frames) -> 7 switches, world-fixed, gameplay returns to
+  the headset view with the HUD boxed.
+- **World scale:** `eye_baseline` 3.20128 -> 0.864 as GoW 1. With 3.2, Kratos's disparity against the frusta's
+  offset was 57.6 px (GoW 1: 56.9 px), assuming the same zero-separation offset (-615 px, same headset FOV): the same
+  camera distance, so GoW 1's measured 13.5 units/m is taken for GoW 2 (not measured on his height).

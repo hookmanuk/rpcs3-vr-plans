@@ -15,6 +15,7 @@ BCUS98281   vrtest_jak3_spargus          1  1    10     Jak 3: Spargus palace, f
 BLUS30306   vrtest_dw6e_battle           1  1    10     Dynasty Warriors 6 Empires: first mercenary battle
 BCES00664   vrtest_wipeout_race          1  0    10     WipEout HD (released): in a race, ship at speed
 BCES00800   vrtest_gowc_boat             1  1    10     God of War Collection (released): GoW 1, the boat, first fight
+BCES00800   vrtest_gow2_rhodes           1  1    10     God of War II: Rhodes, first fight (2026-10-02)
 BCUS98259   vrtest_icosotc_1             1  1    10     ICO & SotC Collection (released): SotC, a valley
 BLUS30443   vrtest_demons_1              1  1    10     Demon's Souls (released): tutorial corridor
 BLUS30367   vrtest_bayonetta_play        1  1    10     Bayonetta: graveyard fight, Prologue (continued from the chapter menu)
@@ -26,3 +27,4 @@ BCES01743   vrtest_kz_trench             1  1    10     Killzone HD (released): 
 BLUS30721   vrtest_asura_space           2  1    10     Asura's Wrath: Episode 1, space battle (rail shooter)
 BCUS98259   vrtest_ico_bridge            2  1    10     ICO (released): Old Bridge, from a save (Continue, file 1); frame-locked at 30 in VR, rates=30
 BCUS98282   vrtest_rc2_aranos_hall       1  1    10     Ratchet & Clank 2: Aranos, the machinery hall further in (made by Matt)
+BLUS31212   vrtest_kh1_dive              1  1    10     Kingdom Hearts Final Mix (KH 1.5): Dive to the Heart, first control (60 FPS patch)
