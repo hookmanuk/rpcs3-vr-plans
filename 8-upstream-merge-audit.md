@@ -382,6 +382,29 @@ Not done here: the upstream pull requests of section H, and the two `decode_rsx_
 which the report suggested deleting, were kept as one-line helpers because the probe `dev=` key is
 still documented.
 
+### Merged into `openxr` (2026-10-02, after vr7)
+
+Merged locally as fork 62c3367ab (not pushed until the regression passes). `openxr` had 31 commits since `90640f9`
+(the vr7 work); 8 files conflicted. The five upstream files (`VKDraw.cpp`, `VKGSRender.cpp/.h`, `VKPresent.cpp`,
+`RSXThread.cpp`) were taken from the branch and those commits' changes were ported into the fork files instead:
+`VKGSRenderVR.cpp/.inl` (3D-content tracking `vr_has_3d`, `screen_frame_draws`, `screen_frames_when`,
+`frames_without_3d_as_screen`, cached vertex program hash, eye-constant copies), `VKGSRenderVRDev.cpp` (profiler,
+RTDUMP poll) and `rsx_vr_hooks.cpp` (`RPCS3_RSX_SAMPLE`, dev trigger polling, `RPCS3_VR_SAVESTATE`, FRAMESTATS CPU
+time). The `zcull_approximate` helper `rsx::reports::precise_zpass_count` moved from `RSXZCULL.cpp` into
+`rsx_vr_hooks.cpp`: upstream keeps one declaration and three one-line call sites. Fork lines added to upstream files
+by the merge: 6, all one-line hooks marked `// VR fork`.
+
+Build fix: `rsx_vr_hooks.cpp` declared the PPU dev functions (`ppu_watch_install`, `ppu_rwatch_install`,
+`ppu_register_function_at`, `ppu_trace_breakpoint`) with block-scope `extern` inside `rsx::vr`, which names
+`rsx::vr::...`: six unresolved externals at link. They are declared at global scope now. With that the branch
+compiles and links (per-project builds; it had never been compiled). Ported fork lines were formatted with VS's
+clang-format 22.1.3 and the repository's `.clang-format`; it changed nothing outside them.
+
+Regression after the merge (`evidence/vrtest/2026-10-02-1415`, all 29 states, against the latest pre-merge run of
+each): every sustainable rate unchanged except Ridge Racer 7, 72 -> 90 Hz (its menu-video stall needed retries in
+both runs). RSX thread ms/frame over 77 state/rate pairs: median +1.7%, quartiles 0% and +4.3%; the large swings
+(Tales of Xillia, WipEout, Dynasty Warriors 6) move between rates within a run (scene variation).
+
 ## Appendix: every modified upstream file
 
 Category: R renderer/RSX integration, U settings and UI, D development hooks, P policy and
