@@ -68,3 +68,20 @@ Stereo and audits not yet checked (time-boxed).
   a brightening pass. Open.
 - Small and far away: the camera sits in the audience of a puppet theatre; try World Scale (VR settings) above 100%.
   `eye_baseline` 0.064 assumes metres; unchecked.
+
+## 2026-10-02 night: darkness investigated (no fix yet)
+
+On the OpenXR Simulator from `vrtest_puppeteer_matt_trails`, with RTDUMP of the targets (both eyes), flat vs stereo:
+- Pipeline: G-buffer MRT pass (draws 1-203) into `c0750000` (scene/emissive), `c0af0000` (normals), `c0e90000`
+  (packed depth), `c1230000` (albedo); depth `c17a0000` resolved to colour `c15d0000` (draw 205, `1c793403`); one
+  light draw (`30532bfcf0d877be`, 18 vertices) adds ~7 of the scene's mean 18 (flat); then the SPU post (blit after
+  draw 466 to `0x39600000`, SPU output at `0x399c0000`, redirected to `c0750000` in VR) and the composite.
+- The G-buffers are right in the headset view (normals, albedo, the stage smaller in the wider view). The packed
+  depth buffer is a left-to-right red/green gradient in the headset view (uniform yellow flat): the packed value
+  depends on screen x there. Lead: the G-buffer shader packs something from the transformed clip position.
+- The scene target is far darker in stereo, but frame means mislead: in the headset view the stage covers ~1/4 of
+  the frame, and the scene moved between runs (throne vs cage). Not settled: with the game camera (Fixed Screen
+  setting) 1.78 vs 18 flat; right-eye batching off 5.3 vs on 7.4 (different moments).
+- Tried and reverted: a profile key forcing the fixed screen (`fixed_screen`); it did not fix the darkness.
+- Next: a paused moment (pause menu off, or the savestate with the game paused by the PS button) to compare
+  flat and stereo at identical frames; then the depth packing and the light draw's fragment constants.
