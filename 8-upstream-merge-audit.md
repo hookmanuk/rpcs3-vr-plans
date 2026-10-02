@@ -370,6 +370,14 @@ upstream statements; the vblank-rate notice, the frame-end dev hooks and the sys
 on the `VRDEV` channel instead of `RSX`, `sys_timer` and `PPU`. No dev hook was deleted: each is
 referenced by the playbook or tools, so all were relocated.
 
+**Coding style.** The fork's code follows the RPCS3 coding style (github.com/RPCS3/rpcs3/wiki/Coding-Style):
+every fork-only source file is formatted with the repository's `.clang-format` (what the `pre-commit.readme`
+hook runs), and on the fork's lines inside upstream files clang-format changes nothing. The OpenXR frame
+thread and the sampling profiler are `named_thread`s. Three kinds of `#define` remain, each commented with why
+it must be a macro: the `openxr.h` configuration macros, the entry-point loader macros (token pasting and
+stringising) and `RPCS3_VR_VERSION` (string-literal concatenation with the generated git version). Before
+committing fork code, run `git clang-format --style=file` so that only the changed lines are formatted.
+
 Not done here: the upstream pull requests of section H, and the two `decode_rsx_state` dev bits,
 which the report suggested deleting, were kept as one-line helpers because the probe `dev=` key is
 still documented.
