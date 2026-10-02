@@ -21,6 +21,7 @@ $env:RPCS3_VR_SHOT = "$Work\SHOT"   # create this file for a screenshot (re/shot
 $env:RPCS3_VR_KEYS = "$Work\KEYS"  # key script, e.g. 'I 3000' (needs a keyboard pad profile)
 $env:RPCS3_VR_RTDUMP = "$Work\RTDUMP"  # write hex surface addresses into it: raw left/right dumps (empty: display buffer)
 $env:RPCS3_VR_PROFILE_RELOAD = '1'  # re-read bin\vr_profiles\<id>.json within 0.5 s of an edit
+$env:RPCS3_VR_SAVESTATE = "$Work\SAVESTATE"  # create it to save a savestate, as Ctrl+S (works with the desktop locked)
 if ($NoHeadset) { $env:RPCS3_OPENXR = '0' } else { Remove-Item Env:RPCS3_OPENXR -ErrorAction SilentlyContinue }
 if ($FakeHmd) { $env:RPCS3_VR_FAKE_HMD = "$FakeHmd" } else { Remove-Item Env:RPCS3_VR_FAKE_HMD -ErrorAction SilentlyContinue }
 if ($Audit) { $env:RPCS3_VR_AUDIT = $Audit } else { Remove-Item Env:RPCS3_VR_AUDIT -ErrorAction SilentlyContinue }

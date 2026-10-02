@@ -18,12 +18,27 @@ Executable hashes: launcher `PPU-83f4a1c6...`, `kingdom.self` `PPU-d626d983...`.
 - New Game choices made: Final Mix difficulty, **Manual camera** (auto-rotating camera is bad in VR), vibration on.
   System data and trophies were created on first boot (no save of Matt's existed).
 
-## Frame rate
+## Frame rate: unlocked, real time at any rate (2026-10-02, fork 1b068732b)
 
-- Native 30 (cutscenes and movie 30). With the patch: 60 at Vblank 60, **120 flat at Vblank 120**.
-- **Frame-locked above 60:** at Vblank 120 Sora walks ~2x as far for the same key press
-  (`tools/re/kh_speed.sh 60|120`). Profile `max_fps 60` / `default_fps 60` (reprojected in the headset) until the
-  game's step is found (memory-dump method as Jak 1: `memcount.py`).
+- The frame limiter `0x36830` (called every frame) stores the step `0x20d100c` = vblanks since the last frame x
+  `[0x20d1004]` (set once to 1.0 by `0x36038`), i.e. each vblank counts as 1/60 s, then waits for
+  `[0x20d1014] + 1` vblanks (1 = 30 FPS). The step is read in ~330 places. The community 60 FPS patch
+  (`li r3, 0` at `0x36870`) removes the wait: right at 60 Hz, 1.5x / 2x fast at 90 / 120 (measured 5x on one object).
+- **Patch "Unlocked frame rate (VR)" v2.0** (`bin/patches/BLUS31212_patch.yml`, copy in `vr-non-working/patches/`):
+  the community `li r3, 0`, plus `0x3686c` `lfs f2, 0x102c(r3)` (the factor now comes from `0x20d102c`) and the
+  word `0x20d102c` = 1.0 at load. `0x20d102c` is padding: no code builds its address (`tools/re/absrange.py`), and
+  PPU read/write watches over a minute of play saw no access. The profile's new key
+  `game_vblank_frames_f32: ["0x20d102c"]` keeps it at 60 / vblank rate every frame (fork 0e59c7967). Without the
+  profile it stays 1.0: the community patch.
+- **Verified** from a savestate made on the patched disc boot, recompiler, Vblank 60/72/90/120
+  (`tools/re/kh_rt.sh kh1 RATE TAG native`, `tools/re/rthist.py`): ~2000-2300 world positions move at x1.0 their
+  60 Hz speed at each rate. The opening movie stalls at 90 Hz ("waiting for a consumer"), as Killzone HD's:
+  `video_vblank_rate: 60` in the profile (the step word follows: 1.0 while the movie plays).
+- Profile `max_fps 0`, `default_fps 0` (headset rate). **VR at 300%: 120 Hz sustained** (Dive, 0% late, RSX thread
+  1.3 ms).
+- Savestate `vrtest_kh1_dive` (= `_1_2`): made on the patched disc boot, so it has the v2 code (patches are not
+  re-applied to savestates).
+- The title's cursor starts on New Game (it was on Load once, after backing out of the Load menu).
 
 ## VR profile (generated in the Dive, then hand-fixed)
 

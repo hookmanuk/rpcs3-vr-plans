@@ -23,6 +23,8 @@ Start-Sleep 35
 $closes = [int](& $grep -a -c 'cellVdecClose(handle' $log)
 # Title: New Game -> Standard Mode -> vibration On -> Yes
 K "X 600 4500`nX 600 4500`nX 600 4500`nX 600 4500" 25
+# The last confirmation is sometimes dropped: once more (in the movie it does nothing)
+K "X 600 3000" 8
 for ($i = 0; $i -lt 180; $i++) {
 	Start-Sleep 5
 	if ([int](& $grep -a -c 'cellVdecClose(handle' $log) -gt $closes) { break }

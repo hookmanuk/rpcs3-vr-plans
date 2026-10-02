@@ -22,12 +22,15 @@ for ($i = 0; $i -lt 20; $i++) {
 "kingdom.self after $i tries"
 Start-Sleep 25
 # Title: New Game -> difficulty (Final Mix) -> camera Manual -> vibration On -> Proceed
-$closes = (& $grep -a -c 'cellVdecClose' $log)
-K "X 600 3000`nX 600 3000`nDown 600 1500`nX 600 3000`nX 600 3000`nX 600 3000" 25
+$closes = (& $grep -a -c 'cellVdecClose(handle' $log)
+# The title starts on New Game (it was on Load once, after backing out of the Load menu).
+K "X 600 4500`nX 600 4500`nDown 600 1500`nX 600 4500`nX 600 4500`nX 600 4500" 25
+# The last confirmation is sometimes dropped: once more (in the movie it does nothing)
+K "X 600 3000" 8
 # Opening movie (its decoder closes when it ends), then the Dive to the Heart (in engine)
 for ($i = 0; $i -lt 100; $i++) {
 	Start-Sleep 5
-	if ([int](& $grep -a -c 'cellVdecClose' $log) -gt [int]$closes) { break }
+	if ([int](& $grep -a -c 'cellVdecClose(handle' $log) -gt [int]$closes) { break }
 }
 Start-Sleep 15
 "movie ended after $($i * 5) s: $((Get-Process rpcs3 -ErrorAction SilentlyContinue | Select-Object -First 1).MainWindowTitle)"
