@@ -383,7 +383,7 @@ so that OpenXR is prepared before the exitspawn into a game.
   GoW II's QTEs are implemented differently: their mash drains and time limits already use the step (real time
   at any rate) and the prompt windows come from animation time (code read; not played at 90). No GoW II patch.
 - **Collection loader intro still skewed and misaligned (Matt, headset, 2026-10-03).** The intro animation (Kratos's
-  blades, a real-time 3D animation in `GAMESEL.self`) was put on the fixed screen with `screen_frame_draws` on
+  blades, a real-time 3D animation shown before `GAMESEL.self`) was put on the fixed screen with `screen_frame_draws` on
   2026-10-02 (checked on the simulator straight and turned 25 degrees), but in the headset it is still skewed and
   misaligned. Not investigated yet.
 - **Pause menu (Select) flickers, shown twice offset (Matt, headset, 2026-10-03).** The same symptom the Power Up

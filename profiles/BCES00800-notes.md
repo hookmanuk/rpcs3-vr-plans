@@ -202,7 +202,7 @@ screen (180 -> 7 in 6 s). Check GoW II's pause menu too.
 
 ## 2026-10-03: collection loader intro still skewed and misaligned (Matt, headset): open
 
-The selector's intro animation (`GAMESEL.self`, profile `BCES00800.json`, four programs in `screen_frame_draws`, see
+The collection's intro animation (before `GAMESEL.self`, base profile `BCES00800.json`, four programs in `screen_frame_draws`, see
 2026-10-02) is still skewed and misaligned in the headset. The fix was checked on the OpenXR Simulator only. Leads:
 frames of the intro that contain none of the four listed draws (so they fall back to the headset view and the image
 jumps), or the frame shown on the fixed screen still carrying a per-eye camera transform (skew). Next: run the
