@@ -1119,3 +1119,16 @@ of a 15 ms frame at 72 Hz (7.2 ms flat). Changes, each A/B-measured on the same 
 - Camera-facing sprites in `nonrigid_camera_blocks` blocks no longer replace the cached projection scale (their
   matrix is the projection times their own size) and take their eye offset from it. Regression at 72 Hz for the five
   profiles with the key (`evidence/vrtest/2026-10-03-1959-sprite-cards`): rates as before, captures unchanged.
+
+**Generic, from WipEout HD (2026-10-03, fork c992054a8, 7ea5781ae; Matt checked both in the headset).**
+- A camera block's clip w must depend on the vertex position: WipEout's Detonator spheres (`53710e261a91f95c`) keep
+  their world matrix in `c[256]` with w = 5 beside the camera in `c[260]`; taken for the camera, the spheres stayed
+  locked to the head. The generator's camera candidates use the same test. Savestate `vrtest_wipeout_matt_spheres`
+  (hard link to `BCES00664_1_3`).
+- `screen_space.bare_projection` also takes a list of camera blocks (only bare projections bound from those are screen
+  space). WipEout's weapon fire and explosions (`1d4c28f9ad375876`, camera space through a bare projection in `c[256]`)
+  were boxed by `true` and sat at HUD depth; `[260]` keeps only the menu cloud in the box. Savestate
+  `vrtest_wipeout_matt_cannon` (hard link to `BCES00664_1_5`, hold Square to fire). This change was first committed
+  for the spheres (37e4822fe), reverted when it did not fix them, and re-applied for the weapons.
+- Method that worked (Matt): one fresh load of the savestate per check, judged on its first frames. Also measured that day: the main menu at 425% holds 90 on the simulator (RSX thread
+mostly waiting, GPU ~1.5 ms of scene work); GPU memory 4.6 GB at 425% against 1.4 GB at 100% (every target scaled, per eye).
