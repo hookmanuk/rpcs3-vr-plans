@@ -236,3 +236,31 @@ programs had already been written to the shader cache, and a throw there would e
 - Profile of the grid at 60: 11% of the RSX thread in `texture_cache` flushes (`imp_flush` -> `wait_for_event`, a
   GPU readback), the rest mostly idle.
 - Next: a savestate from Matt where it drops (mid-pack), then `RPCS3_RSX_SAMPLE=2` and frame stats there.
+
+## 2026-10-03: arcade menu cards fixed (exact per-pixel depth)
+
+Matt: the arcade menu's images on the right sit on top of each other at the same depth and clip through each other;
+left/right should change the topmost. Reproduced on the OpenXR Simulator with the head pitched down to the menu
+(savestate `vrtest_gt5_arcade_menu` = `BCUS98114_1_4`: Arcade Mode, Single Race selected).
+
+- **Cause.** The cards are six quads (vertex program `2f7d1792dfd94351`, one perspective block `c[0..3]` for all, depth
+  test LESS with writes) drawn into the display buffer and boxed after the shader. The camera is ~2560 units away, so
+  every card's depth is 1 - 0.149/w and adjacent cards are ~2e-7 apart. The fixed-in-front box tilts with the head; the
+  rasterizer interpolates depth linearly across the tilted box, which is not the game's depth (error ~1e-6), so the
+  cards cut through each other in slices and the selected card never came to the top.
+- **Fix** (fork `7c8578ffa` on `multiview`, merged into the refactor branch): profile key
+  `screen_space.hud_exact_depth_programs: ["2f7d1792dfd94351"]`. For listed vertex programs both shaders get
+  `RSX_SHADER_CONTROL_VR_EXACT_DEPTH`: the vertex shader passes (window depth x game w, game w), the fragment shader
+  writes their ratio to `gl_FragDepth`, which is the game's exact depth (equal to the normal depth outside the box).
+  Simulator, head pitched -0.45 and turned 0.4: the selected card is whole and in front; Right/Left change it (Single
+  Race, Time Trial, Drift Trial) as in flat (`evidence/gt5/2026-10-03-arcade-cards-*`).
+- Cost: hashing only for a profile that lists programs, once per vertex program (fingerprint cache); early-Z off for
+  the listed program only. A race A/B (`matt_gt5_0100_1_3`, 60 Hz) did not complete: GT5 lost the Vulkan device in 3
+  of 4 boots of that savestate, including one with the key removed (not this change). One clean run: 60.0 FPS, 1% low
+  58.7, RSX 7.8 ms.
+
+Savestates: Matt's 01.00 states are kept as `matt_gt5_0100_1_0` .. `_1_3` (hard links; RPCS3 had rotated `_1_0` out).
+`_1_2` and `_1_3` are in races. Reaching the arcade menu from the disc: the title takes Cross only at some moments
+(press, wait 8 s, check); a second Cross picks GT Mode, which starts selected. The top menu uses a pointer moved with
+the left stick (L key), not the d-pad: hold L ~350 ms from GT Mode to Arcade Mode. GT Mode's exit is the red icon at
+the bottom of its left strip (Down x7 from GT Life to Museum, then Left).

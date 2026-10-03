@@ -426,6 +426,9 @@ Notes: `profiles/BCUS98114-notes.md` (the most detailed). Evidence: `evidence/gt
   PPU hash `PPU-a5e547ce3ce25092ac6cae85631f50ba5d9ea914`. **The regression savestate `vrtest_gt5_race_start` no
   longer boots** (it records the 02.11 executable): it needs a new race savestate on 01.00.
 - **Multiview (Matt, 2026-10-03): about 35% faster in races** than the two-draw renderer.
+- **Arcade menu cards fixed (2026-10-03, simulator):** the stacked mode images cut through each other in the HUD box
+  (depth interpolated across the tilted box); new profile key `hud_exact_depth_programs` writes the game's exact
+  depth for the card program. Selected card now whole and in front, changes with left/right. Notes for details.
 
 - **Frame rate:** patch "Frame rate follows VR" redirects the fixed step (`0x14017f8`) to bss `0x1948440`,
   which the profile's `game_frame_time_f32` sets to 1/fps. Physics, sim and the race timer run at 1.0x at 60
@@ -439,7 +442,7 @@ Notes: `profiles/BCUS98114-notes.md` (the most detailed). Evidence: `evidence/gt
 - **Fixed 2026-10-01 (desktop):** red/green car shadows (the shadow program keeps fog densities in the
   camera-position slot `c[467]`; the renderer now checks the slot holds the eye point), desktop mirror crop.
 - **Open (from the notes):**
-  1. Arcade menu clipped when the head moves back (needs the headset path).
+  1. ~~Arcade menu clipped~~ fixed 2026-10-03 (exact depth for the card program; recheck in the headset).
   2. Race-start frame rate: the RSX thread is CPU-bound even flat (~42 flat, ~30 stereo). Needs multiview.
 - **Headset (Matt, 2026-10-01, on the build with the RSX-thread optimisations): ~40 FPS. Target: at least 60**
   (the game's own rate; below that it does not work). The regression run's "90 Hz (race start)" was measured from the
