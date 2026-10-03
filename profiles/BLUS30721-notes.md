@@ -152,3 +152,14 @@ Matt, headset: the world looked too big at World Scale 100%; 80% looked right. W
 (`eye_baseline` x 100 / World Scale, for the eye offset, the camera-position slot and head translation), so 80% is
 `eye_baseline` x 1.25: 3.1984 -> 3.998 (about 12.5 units per metre at a 64 mm IPD). World Scale 100% now looks like
 the old 80%; Matt's per-game config (`config_BLUS30721.yml`, World Scale 80) set back to 100.
+
+## 2026-10-04: community patches bundled (fork 9de7502a)
+
+Matt's vr8 release test: slow, graphics wrong. Dev had the community *Unlock FPS*, *Disable Motion Blur* and *Disable
+Depth of Field* on in `patch_config.yml`; the package has no community `patch.yml`, so only *Wider view culling (VR)*
+applied (config otherwise the same as dev but Resolution Scale and Vblank NTSC Fixup; the online config database only
+sets Anisotropic Filter Override 0). Copies of the three, byte-identical, are now in `BLUS30721_patch.yml` as
+*Unlock FPS (VR)*, *Disable Motion Blur (VR)*, *Disable Depth of Field (VR)*: on by default, also for savestates.
+From the extracted zip (no `patch.yml`, default config, simulator) all four VR patches apply; 30.9 FPS at Vblank 60,
+59.8 at Vblank 180 (Unlock FPS: at most half the vblank; the profile's `vblanks_per_frame 2` gives 180 on a 90 Hz
+headset).

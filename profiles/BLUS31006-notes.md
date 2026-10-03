@@ -101,3 +101,9 @@ in the headset.
 - **Verified on the OpenXR Simulator (2026-10-02 05:20):** walking in `vrtest_tox_matt_puddles`, the ripple ring under
   Milla measures R-L -165.6 px, her feet -165.3, the floor on either side -166.1 / -165.9 (`parallax.py` on a
   simulator capture): the ring now lies on the floor.
+
+## 2026-10-04: community 60 FPS bundled (fork 9de7502a)
+
+The community *60 FPS* patch (Aphelion, illusion: two words, `0x710694` and `0x23f114`) is copied into
+`BLUS31006_patch.yml` as *60 FPS (VR)*, on by default, so the release needs no community patches; *Frame rate follows
+VR* still scales the game's tick. From the extracted zip (no `patch.yml`) both apply.

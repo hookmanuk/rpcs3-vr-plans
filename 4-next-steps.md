@@ -925,6 +925,24 @@ build emucore/VKGSRender/rpcs3 so the exe carries that commit, run `plans/tools/
 VR number is not above every released tag's), smoke-test
 the zip from a non-temporary folder, push `openxr` and the annotated tag; Matt tests the zip and publishes the GitHub release himself.
 
+**Out-of-box check (every release, since vr8).** Each shipped game must play as a user gets it, without the dev
+setup. vr8 shipped two games that only worked in dev: God of War capped at 60 FPS by the online config database,
+and Asura's Wrath slow and blurred without the community patches. Before tagging:
+- **No community patches needed.** Any community patch a shipped game needs is copied into the fork's
+  `<TITLE_ID>_patch.yml` as `"<name> (VR)"`, `Enabled By Default: true`, its author credited (the package has no
+  `patch.yml`). `vr-games.md` never tells users to turn on a community patch for a shipped game
+  (`grep -n community rpcs3/vr-games.md`).
+- **No dev custom config needed.** Compare each new game's `bin/config/custom_configs/config_<ID>.yml` with the
+  defaults; whatever the game needs comes from the profile or a patch, or is listed under *Required settings* in
+  `vr-games.md` (open: Killzone HD's Write/Read Color Buffers).
+- **Online config database.** `GuiConfigs/config_database.dat` (in the package) applies to any game without a
+  custom config: read each new game's entry for frame limit, vblank or resolution settings.
+- **Boot from the zip.** Extract the zip into a throwaway folder, copy `dev_flash` from an installed release
+  folder (the firmware), write `GuiConfigs/CurrentSettings.ini` with `[main_window]` `infoBoxEnabledWelcome=false`,
+  and boot each new game by its ISO on the simulator. The log should show `Applying database config`, the
+  expected `Applied patch` lines and the game's VR profile. The simulator reports no refresh rate, so set that
+  folder's Vblank Rate to the headset rate x `vblanks_per_frame` to see the unlocked frame rate. Delete the folder.
+
 **Headset regressions found by the first release test (2026-09-24), fixed.** A fresh install froze Pure and
 WipEout once the headset was worn ("invalid layout": realign copied into a fresh UNDEFINED helper image).
 The per-frame pose machinery from the Ico pass (frame-boundary poses, blend-target realignment, feedback
@@ -1142,12 +1160,15 @@ of a 15 ms frame at 72 Hz (7.2 ms flat). Changes, each A/B-measured on the same 
   passes' projections into the shared scratch matrix `0x7719e0`, not the race camera's. Also measured that day: the main menu at 425% holds 90 on the simulator (RSX thread
 mostly waiting, GPU ~1.5 ms of scene work); GPU memory 4.6 GB at 425% against 1.4 GB at 100% (every target scaled, per eye).
 
-**vr8 release (2026-10-03).** Zip `release/rpcs3-v0.0.43-vr8-27f59dc8_win64.zip` (293 files, fork 27f59dc8, openxr
+**vr8 release (2026-10-03).** Zip `release/rpcs3-v0.0.43-vr8-9de7502a_win64.zip` (293 files, fork 9de7502a, openxr
 pushed); tag `v0.0.43-vr8` first pushed at aa22747e, moved to 61a749c9 (forced tag push, Matt OK; Matt's release test: WipEout's culling patch
 did not apply to the disc version 02.00; second patch entry added), then to 27f59dc8 (Matt's release test: God of War
 stayed at 60 FPS on his 90 Hz headset: the online config database sets `Frame limit: 60` for BCES00800, also for the
-Ratchet & Clank Collection and Super Stardust HD US; in VR a fixed frame limit now follows the VR rate). The aa22747e
-and 61a749c9 zips are superseded. New playable games (Matt: ready): **God of War** and
+Ratchet & Clank Collection and Super Stardust HD US; in VR a fixed frame limit now follows the VR rate), then to 9de7502a (Matt's release test:
+Asura's Wrath slow and its graphics wrong: the community patches it needs were not on; now bundled, on by default:
+Asura's Wrath *Unlock FPS (VR)*, *Disable Motion Blur (VR)*, *Disable Depth of Field (VR)*, Tales of Xillia
+*60 FPS (VR)*; out-of-box check added to the release procedure). The tag moves after Matt's OK. The aa22747e,
+61a749c9 and 27f59dc8 zips are superseded. New playable games (Matt: ready): **God of War** and
 **God of War II** (BCES00800, God of War Collection: launcher + per-game profiles, GoW 1 QTE patch), **Dante's Inferno**
 (BLUS30405: Wider view (VR culling) 3.0, Disable camera shake), **Asura's Wrath** (BLUS30721: Wider view culling (VR);
 community Unlock FPS, motion blur and depth of field off); their files moved from `vr-non-working/` to `bin/`. Since vr7:
@@ -1159,4 +1180,5 @@ library's ISO, states saved between FIFO commands resume (Dead FIFO fix), 4k blo
 clip w depends on the position; camera-facing sprites keep the camera's projection scale); game fixes: WipEout HD
 (Detonator spheres, weapons and explosions in 3D, Wider view (VR culling) patch), Bayonetta (Dark Trigger glow, tree
 canopies), God of War (menus, intro, border, resolve). Smoke test: packaged exe starts (first-run dialog) and carries
-vr8-27f59dc8. Matt tests and publishes.
+vr8-9de7502a; out-of-box boot of Asura's Wrath and Tales of Xillia from the zip (no `patch.yml`, default
+config): the bundled patches apply, Asura 30.9 FPS at Vblank 60 and 59.8 at Vblank 180 (the patch allows half the vblank). Matt tests and publishes.
