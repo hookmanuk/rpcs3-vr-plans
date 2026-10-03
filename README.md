@@ -26,8 +26,9 @@ exact build commands.
 | [6-wip-games.md](6-wip-games.md) | State and open issues of every unreleased game |
 | [8-upstream-merge-audit.md](8-upstream-merge-audit.md) | Audit of the fork's footprint in upstream files and how to shrink it for merging from master |
 | [9-multiview-plan.md](9-multiview-plan.md) | Plan: Vulkan multiview, both eyes from one draw (replaces the right-eye replay) |
+| [10-multiview-merge-audit.md](10-multiview-merge-audit.md) | Audit of what the multiview branch adds to upstream files, what was moved out, and the merge checklist |
 | [profiles/](profiles/) | Per-game VR profile notes and the profile format ([profiles/README.md](profiles/README.md)) |
-| `tools/` | Launch, capture and analysis scripts used by the playbook |
+| `tools/` | Launch, capture and analysis scripts used by the playbook; `tools/merge/` checks a merge from upstream (hunk exposure, Linux compile check, GLSL equivalence) |
 | `evidence/` | Screenshots, captures and measurements for each gate and game |
 
 No game files are included. You need your own legally dumped games and PS3 firmware.

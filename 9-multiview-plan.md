@@ -658,3 +658,12 @@ triggers, scored by a hair-colour detector). KH II samples many such 512x512 atl
 - Dev switches for A/B: `RPCS3_VR_MULTIVIEW=0` (two draws), `RPCS3_VR_MV_EYECLEAR=0` (one clear for both
   views), `RPCS3_VR_MV_SCISSOR=0` (the game's scissor in both views); probe `why=<program>` now logs the
   headset state bits, viewport and clip size.
+
+### 2026-10-03: merge footprint
+
+[10-multiview-merge-audit.md](10-multiview-merge-audit.md) measures what this branch adds to upstream's files
+(700 lines in 41 of them, about half where upstream was busy in the past year). Fork commit `55d63cc4` (branch
+`ccr-887e03d9-ccgvu0`, on top of `multiview`) moves the movable part into `VKMultiviewVR.h/.cpp` and one-line
+hooks: 485 lines remain, no behaviour change intended, compiled but not run. Run the A/B pass above on it before
+merging into `openxr`. The audit also notes a likely stale right eye after memory reloads at 100% resolution
+scale (section 7).

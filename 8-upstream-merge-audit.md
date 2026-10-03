@@ -327,6 +327,9 @@ go, and a handful of small deliberate behaviour changes.
   7. The regression pass of 7-vr-regression.md on the headset titles.
 - **Restart the fork version at vr1** after each upstream version bump, as 4-next-steps.md
   already says.
+- With multiview in the branch, also run the checks in
+  [10-multiview-merge-audit.md](10-multiview-merge-audit.md) section 6. `tools/merge/hunk_exposure.sh`
+  shows which fork hunks sit where upstream is busy.
 
 ## 6. Implementation (2026-10-02)
 
