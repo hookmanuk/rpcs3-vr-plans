@@ -1119,10 +1119,3 @@ of a 15 ms frame at 72 Hz (7.2 ms flat). Changes, each A/B-measured on the same 
 - Camera-facing sprites in `nonrigid_camera_blocks` blocks no longer replace the cached projection scale (their
   matrix is the projection times their own size) and take their eye offset from it. Regression at 72 Hz for the five
   profiles with the key (`evidence/vrtest/2026-10-03-1959-sprite-cards`): rates as before, captures unchanged.
-
-**Generic, from WipEout HD (2026-10-03, fork 37e4822fe).** `screen_space.bare_projection` also takes a list of camera
-blocks (only bare projections bound from those are screen space). WipEout HD's in-race purple orb glows
-(`1d4c28f9ad375876`, camera space through a bare projection in `c[256]`) were boxed by `bare_projection: true` and
-floated with the head; now `[260]` keeps only the menu cloud in the box. Matt's savestate: `vrtest_wipeout_matt_spheres`
-(hard link to `BCES00664_1_3`). Also measured that day: the main menu at 425% holds 90 on the simulator (RSX thread
-mostly waiting, GPU ~1.5 ms of scene work); GPU memory 4.6 GB at 425% against 1.4 GB at 100% (every target scaled, per eye).
