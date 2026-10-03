@@ -5,7 +5,8 @@
 # frame time) or an average under 99% of the rate (frames that miss their vblank present late in RPCS3). The game's
 # sustainable rate is the highest passing one. Results and screenshots go to plans/evidence/vrtest/<date-time>/.
 cd "$(dirname "$0")"
-D=/f/rpsc3/source/plans/evidence/vrtest/$(date +%Y-%m-%d-%H%M); mkdir -p "$D"
+D=/f/rpsc3/source/plans/evidence/vrtest/$(date +%Y-%m-%d-%H%M)${TAG:+-$TAG}; mkdir -p "$D"
+echo "# path: $([ "${DESKTOP:-0}" = 1 ] && echo desktop stereo || echo OpenXR Simulator), RPCS3_VR_MULTIVIEW=${RPCS3_VR_MULTIVIEW:-default}, build $(git -C /f/rpsc3/source/rpcs3 log --oneline -1 | cut -c1-60)" | tee "$D/results.txt"
 grep -v '^#' vrtest_states.txt | grep -- "${1:-.}" | while read id st vpf walk settle rest; do
   [ -z "$id" ] && continue
   echo "# $id $st: $rest" | tee -a "$D/results.txt"
@@ -22,6 +23,7 @@ grep -v '^#' vrtest_states.txt | grep -- "${1:-.}" | while read id st vpf walk s
       echo "$out" | tee -a "$D/results.txt"
     fi
     [ -f "p1_${st}_$((rate * vpf)).png" ] && cp "p1_${st}_$((rate * vpf)).png" "$D/${st}_$rate.png"
+    [ -f "sim_${st}_$((rate * vpf)).png" ] && cp "sim_${st}_$((rate * vpf)).png" "$D/sim_${st}_$rate.png" && rm -f "sim_${st}_$((rate * vpf)).png" "sim_${st}_$((rate * vpf)).full.png"
     late=$(echo "$out" | grep -o "late frames [0-9.]*%" | grep -o "[0-9.]*")
     avg=$(echo "$out" | grep -o "median of [0-9]* windows: avg [0-9.]*" | grep -o "[0-9.]*$")
     if [ -n "$late" ] && awk "BEGIN{exit !($late < 1.0 && $avg >= $rate * 0.99)}"; then best=$rate; else break; fi
