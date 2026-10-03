@@ -88,8 +88,11 @@ patch in the headset ("it all works").
   matrix is the projection times the sprite's size, passed the orthogonality test and replaced the cached projection
   scale, so the rotation and FOV remap used the sprite's scale. Fixed in the renderer (fork b90de01dd): checked on the
   simulator, the glow hugs her as in the game's own view, head straight and turned 0.4 rad.
-- **Trees "not real", floating over the sky:** the same fix covers camera-facing cards in `c[24]` (`4a7ee48a110a6526`,
-  128x128 plant and tree cards; one measured 554 units away scaled 179x, so its eye offset was 179x too large and it
-  showed at a few units' distance). Not confirmed at Matt's spot (outdoors, trees left of the fountain): Matt to
-  check in the headset.
+- **Trees "not real", floating over the sky, moving wrongly with the head:** not the sprite cards (the sprite fix left
+  them as they were, Matt). They are the outdoor tree canopies, vertex program `611aa0e5b2292dd0` (256x256 textures),
+  drawn in camera space through the bare projection `c[4..7]` with `c[20..23]` and `c[216..222]`; no listed camera
+  block covered them, so they kept the game camera's view. Found with probe `hide=611aa0e5b2292dd0` outdoors (the
+  canopy over the square vanished). Fix: `camera_blocks: [8, 24, 4]` (fork cfc80ef7e); checked on the simulator
+  (straight, +-0.3 rad, against `render=0`) and by Matt in the headset. The `c[24]` cards (`4a7ee48a`, plants) get
+  the sprite fix too. Generator: not yet checked that it finds `c[4]` from an outdoor scene.
 - Diagnosis note: probe keys are comma-separated (`render=1,hide=<hash>@<target>`); with a space the hide is ignored.
