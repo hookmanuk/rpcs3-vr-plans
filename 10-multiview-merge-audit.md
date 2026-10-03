@@ -299,8 +299,8 @@ take a minute to resolve:
 - **`rpcs3/rpcs3_version.cpp`.** RPCS3 released 0.0.43. The fork's version line carries `RPCS3_VR_VERSION`,
   so the line conflicts, as [8-upstream-merge-audit.md](8-upstream-merge-audit.md) predicted for every
   version bump. Resolution: `version{ 0, 0, 43, utils::version_type::alpha, 1, RPCS3_VR_VERSION "-"
-  RPCS3_GIT_VERSION }`. By the fork's own rule ([4-next-steps.md](4-next-steps.md)) the VR version restarts
-  at vr1 after an upstream bump (`rpcs3_vr_version.h`).
+  RPCS3_GIT_VERSION }`. The VR number carries on across the bump: the next release is 0.0.43-vr8, never
+  vr1 again ([4-next-steps.md](4-next-steps.md), release procedure; `rpcs3_vr_version.h`).
 - **`Overlays/HomeMenu/overlay_home_menu_components.h`.** RPCS3 fixed an off-by-one (`<=` to `<`) in the
   dropdown's selection loop, which the fork had rewritten for its filter/relabel extension. The fork's
   loop is already bounded correctly. Resolution: keep the fork's loop.
