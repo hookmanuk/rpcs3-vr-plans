@@ -1,5 +1,11 @@
 # Multiview merge audit: what the `multiview` branch adds to upstream's files
 
+**Upstream** in this document is [RPCS3/rpcs3](https://github.com/RPCS3/rpcs3), the repository the fork was
+made from, not hookmanuk/rpcs3. The fork's `master` is RPCS3's `master` as of `9e86f165` (2026-09-19, an RPCS3
+commit by RPCS3's Elad) plus six issue-template commits, so every "upstream file", "upstream line" and
+"upstream commits a year" figure below is RPCS3's code and RPCS3's history. RPCS3's commits after 2026-09-19
+are not in it: the fork's `master` has not been synced since (section 4, "Not done").
+
 Audited 2026-10-03: `multiview` at `2a0afd28` against `openxr` at `d582cbeb` (the fork after the
 restructuring of [8-upstream-merge-audit.md](8-upstream-merge-audit.md)) and upstream `master` at
 `9e86f165` (2026-09-19, the merge base of both). `openxr..multiview` (9 commits, one of them identical in
@@ -43,6 +49,17 @@ cheaper to merge without changing what the emulator does.
   further only with design changes (section 5).
 
 ## 2. Numbers
+
+The whole branch against RPCS3's code (`9e86f165`). New files never conflict; the merge cost is in the
+RPCS3 files the fork modifies, and most of all in the lines where RPCS3 itself kept editing:
+
+| Branch | New fork files | RPCS3 files modified | Fork lines in RPCS3 files | Of those, in spots RPCS3 edited in the year before |
+|---|---:|---:|---:|---|
+| `openxr` | 98 (33,824 lines) | 73 | 928 | 413 lines in 44 files |
+| `multiview` | 98 (34,583 lines) | 95 | 1,628 | 784 lines in 64 files |
+| after this work (`f6e8731f`) | 100 (35,000 lines) | 93 | 1,413 | 625 lines in 60 files |
+
+Multiview's own share, separated from openxr's:
 
 | | Upstream files | Lines added | Upstream lines modified or removed | Total |
 |---|---:|---:|---:|---:|
@@ -183,9 +200,10 @@ in the same function. Places that are not literally identical, each checked:
   regression).
 - No MSVC build. The new files are in `VKGSRender.vcxproj`, `.filters` and `Emu/CMakeLists.txt`, with
   CRLF and BOM kept.
-- No trial merge with current upstream. `RPCS3/rpcs3` cannot be attached to this session beside the
-  fork (same checkout name), and the fork's `master` stops at the base. With the `upstream` remote of
-  [1-structure.md](1-structure.md):
+- No trial merge with RPCS3's current `master`. The fork's `master` stops at RPCS3's 2026-09-19, and
+  RPCS3/rpcs3 cannot be attached to a session beside the fork (both check out as `rpcs3`). Two ways to
+  get it: sync the fork (GitHub, `master`, "Sync fork"), after which a session can fetch RPCS3's newer
+  commits from hookmanuk/rpcs3; or, on the PC with the `upstream` remote of [1-structure.md](1-structure.md):
 
   ```
   git merge --no-commit upstream/master
