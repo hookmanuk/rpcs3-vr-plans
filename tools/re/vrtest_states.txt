@@ -29,4 +29,5 @@ BCUS98259   vrtest_ico_bridge            2  1    10     ICO (released): Old Brid
 BCUS98282   vrtest_rc2_aranos_hall       1  1    10     Ratchet & Clank 2: Aranos, the machinery hall further in (made by Matt)
 BLUS31460   vrtest_kh2_twilight          1  1    10     Kingdom Hearts II Final Mix (KH 2.5): Twilight Town, first control (unlocked frame rate patch)
 BLUS31212   vrtest_kh1_dive              1  1    10     Kingdom Hearts Final Mix (KH 1.5): Dive to the Heart, first control (unlocked frame rate patch)
+BCUS98155   vrtest_mspr_race             1  W    10     MotorStorm: Pacific Rift: Free-Play, Kanaloa Bay, 11 AI, rally car, countdown "1" (holds R2)
 NPUA80068   vrtest_ssd_lave              1  script 5    Super Stardust HD: Lave, Arcade (Easy), level start; fires in circles (vrtest_boot/vrtest_ssd_lave.walk)

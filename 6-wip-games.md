@@ -179,7 +179,7 @@ pass mark** for fully compatible.
 | God of War Collection (GOW1, GOW2) | BCES00800 | `vr-non-working/` + untracked `bin/` copies | yes (profile, no patch) | 120 (GoW 1 boat, GoW II Rhodes) | **GoW 1**: main menu on the fixed screen and Kratos's blurred edges fixed 2026-10-01 evening (simulator / desktop checked); performance good; GoW 2 unchecked | 5% black border |
 | Killzone 2 | BCUS98116 | `vr-non-working/` + untracked `bin/` copy | no: default 45 | not measured | not played | RSX-bound; HUD and combat unchecked |
 | Gran Turismo 5 | BCUS98114 | `vr-non-working/` + untracked `bin/` copy | yes (patch) | ~~90 (race start)~~ ~40 FPS in the headset (Matt) | tested, broken: **~40 FPS, needs 60 minimum** | menu clipping, race-start frame rate |
-| MotorStorm: Pacific Rift | BCUS98155 | `vr-non-working/` + untracked `bin/` copy | yes (patch) | not measured | not played | stereo 50-70 at race start (needs multiview) |
+| MotorStorm: Pacific Rift | BCUS98155 | `vr-non-working/` + untracked `bin/` copy | yes (patch) | **72 Hz with multiview** (2026-10-03, race start; 90 averages 87, start window 1.1% late); two-draw misses 72 at the start (7.9% late) | not played | needs the multiview build for 72 |
 | Blur | BLUS30295 | `vr-non-working/` | yes (patch) | not measured | not played | 45-50 FPS stereo |
 | Need for Speed Most Wanted | BLUS31010 | `vr-non-working/` | yes (patch, fixed per rate) | not measured | not played | in-race speed at 90 unconfirmed |
 | inFamous 2 | BCUS98125 | `vr-non-working/` | no patch needed | not measured | not played | 52-72 stereo; SPU layer left-eye only |
@@ -447,6 +447,10 @@ Notes: `profiles/BCUS98155-notes.md`. Evidence: `evidence/motorstorm/`. Moved to
   85-90. The headset path at 300% runs 35-53 (GPU 68%). The RSX thread is already saturated flat, and
   stereo adds ~1.7 us per draw on 4,500-5,000 draws. Most of that is driver submission for the right eye,
   which multiview would remove. 200% is worth trying in the headset.
+- **Multiview (2026-10-03, simulator, 300%, `vrtest_mspr_race` holding R2):** 72 Hz sustained (71.9 FPS, 0.17%
+  late; the start window with the pack in view 69.6 FPS, 0.36%). Two-draw on the same build: 69.1 FPS, start
+  window 62.9 FPS with 7.9% late. 90 Hz: 87.1 FPS, 0.14% late, but the start window 80.9 FPS and 1.08% late.
+  New regression state `vrtest_mspr_race` (countdown "1"; route in `7-vr-regression.md`).
 
 ## Blur (BLUS30295 v01.00)
 

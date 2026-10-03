@@ -1,4 +1,5 @@
-"""shot.py ID [out] [width] [crop x0,y0,x1,y1 fractions]: RPCS3 screenshot via the SHOT trigger; saves scratchpad/<out>.png (resized) and <out>.full.png"""
+"""shot.py ID [out] [width] [crop x0,y0,x1,y1 fractions]: RPCS3 screenshot via the SHOT trigger; saves scratchpad/<out>.png (resized) and <out>.full.png
+Env SHOT_MOVE=1: the screenshot leaves bin/screenshots/ID once copied (scripted runs at 300% wrote ~20 MB each there)."""
 import sys, os, glob, time, shutil, subprocess
 from PIL import Image
 
@@ -32,6 +33,11 @@ for _ in range(40):
     except (PermissionError, OSError):
         time.sleep(0.25)
 print(im.size, new)
+if os.environ.get('SHOT_MOVE') == '1':
+    try:
+        os.remove(new)
+    except OSError:
+        pass
 if crop:
     im = im.crop((int(crop[0] * im.width), int(crop[1] * im.height), int(crop[2] * im.width), int(crop[3] * im.height)))
 im.resize((w, im.height * w // im.width)).save(os.path.join(HERE, out + '.png'))

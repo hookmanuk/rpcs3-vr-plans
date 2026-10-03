@@ -85,6 +85,22 @@ flush 7%, early-copy submits from `prepare_rtts` ~4%.
 Tried: Multithreaded RSX, no clear change. Still open: the flush waits include the same pass's right-eye work
 (copy the left surface before the right-eye batch runs), and the per-draw stereo cost (multiview).
 
+## Multiview (2026-10-03, fork branch `multiview` d6acea81e)
+
+New savestate `bin/savestates/BCUS98155/vrtest_mspr_race.SAVESTAT.zst` (hard link to `BCUS98155_1_0`, 2 GB):
+Free-Play, Kanaloa Bay, 11 AI, rally car, at countdown "1". Measured on the headset path (OpenXR Simulator,
+`tools/re/vr1pct.sh BCUS98155 vrtest_mspr_race RATE W`: holds R2, three 8 s windows from 10 s in), Matt's config
+(300%), each after a warm-up run:
+
+| Path | Rate | avg FPS | 1% low | late | RSX ms/frame | first window (pack in view) |
+|---|---|---|---|---|---|---|
+| multiview | 72 | 71.9 | 56.2 | 0.17% | 10.7 | 69.6 FPS, 0.36% late |
+| two-draw | 72 | 69.1 | 51.6 | 0.18% | 12.6 | 62.9 FPS, 7.94% late |
+| multiview | 90 | 87.1 | 68.1 | 0.14% | 9.6 | 80.9 FPS, 1.08% late |
+
+So multiview makes 72 Hz hold through the start; 90 holds once the field spreads. The simulator capture shows the
+car, track and HUD in both eyes with parallax (`evidence/motorstorm/2026-10-03-multiview-sim90.jpg`).
+
 ## Driving it unattended
 
 Keyboard pad from the template. The key hook drops presses while a menu animates in, so the route needs

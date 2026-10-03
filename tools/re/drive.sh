@@ -27,8 +27,8 @@ for mode in ${MODES:-stereo flat}; do
   for step in $steps; do
     name=${step%%=*}; k=${step#*=}
     if [ "$k" != "-" ]; then sh keys.sh "$k"; tot=$(printf "$k" | awk '{s+=$2+$3} END {print int(s/1000)+2}'); sleep $tot; fi
-    touch "$O/.m"; py -3.13 shot.py "$id" "khd_$tag" 1920 >/dev/null 2>&1
-    f=$(find $B/screenshots/$id -name "*.png" -newer "$O/.m" 2>/dev/null | head -1); [ -n "$f" ] && mv "$f" "$O/${mode}_$name.png"
+    rm -f "khd_$tag.full.png"; SHOT_MOVE=1 py -3.13 shot.py "$id" "khd_$tag" 1920 >/dev/null 2>&1
+    [ -f "khd_$tag.full.png" ] && mv -f "khd_$tag.full.png" "$O/${mode}_$name.png"; rm -f "khd_$tag.png"
     [ $mode = stereo ] && py -3.13 simshot.py "khs_$tag" 960 >/dev/null 2>&1 && mv -f "khs_$tag.full.png" "$O/sim_$name.png" && rm -f "khs_$tag.png"
     echo "$mode $name: $(powershell -c "(Get-Process rpcs3 -ErrorAction SilentlyContinue).MainWindowTitle" | cut -c1-24)"
   done

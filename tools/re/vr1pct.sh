@@ -85,7 +85,7 @@ elif [ "${4:-1}" != 0 ] && [ "${4:-1}" != script ]; then
   sh keys.sh "$4 25000 50\n"
 fi
 sleep 26
-py -3.13 shot.py "$1" "p1_$2_$3" 480 >/dev/null
+SHOT_MOVE=1 py -3.13 shot.py "$1" "p1_$2_$3" 480 >/dev/null
 [ -z "$GB" ] && py -3.13 simshot.py "sim_$2_$3" 960 >/dev/null 2>&1
 # Windows that start after the settle: skip the one under way when measuring began.
 lines=$(grep -a "VR frame stats" $L | tail -n +$((n0 + 2)) | sed -E 's/.*VR frame stats: //' | head -3)
