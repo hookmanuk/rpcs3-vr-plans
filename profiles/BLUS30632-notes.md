@@ -81,12 +81,16 @@ a frame). Matt's config, 300%:
 | two-draw | 49.8 FPS, RSX 19.8 ms | 46.7 FPS, RSX 21.2 ms |
 | multiview + Force CPU Blit | 71.8 FPS | 42.6 FPS |
 
-- **Blocked before stereo:** gameplay at 300% does not hold 72 even flat. The RSX thread is the limit.
-- RSX thread sample (popup, multiview): 42% inside `prefetch_fragment_program` -> access violation -> texture cache
-  flush -> `wait_for_event`: the RSX thread reads fragment program ucode (`0xce3d8180`, `0xced46600`) from pages a
-  GPU-written section covers, so each read forces a readback and a full GPU sync mid-frame. The GPU profile puts
-  ~8.6 ms/frame on the 8x8 target `0xca250000` with no draws (the sync's idle time, flat as well).
-  **Force CPU Blit** removes those readbacks (popup 57.6 -> 71.8) but costs more in gameplay (51.8 -> 42.6): not a fix.
+- **Blocked before stereo:** gameplay at 300% does not hold 72 even flat. In gameplay the RSX thread idles ~35%
+  waiting for the game (RSX sample with walking): the game's own CPU work holds it near 60.
+- Popup state (multiview): 42% of the RSX thread inside `prefetch_fragment_program` -> access violation -> texture
+  cache flush -> `wait_for_event`. The ucode (`0xce3d8180`, `0xced46600`) shares 4 KiB pages with render targets
+  (1280x720 at `0xce3d8a00`, 16x8 ones at `0xced46000`-`0xced465ff`) but lies outside them: false sharing. The GPU
+  profile puts ~8.6 ms/frame of idle on the 8x8 target `0xca250000` (flat as well).
+- **Tried and reverted:** reading the ucode through the unprotected mapping when no flushable section's own bytes
+  cover it. The ucode faults went, but the same flush and wait moved to the vertex data upload
+  (`write_vertex_data_to_memory`): once a frame some RSX-thread read touches those pages first. No gain (55 vs 58).
+- **Force CPU Blit** removes the readbacks on the popup (57.6 -> 71.8) but costs more in gameplay (51.8 -> 42.6): not a fix.
 - **Headset picture in gameplay is wrong** (`evidence/anarchy/2026-10-03-gameplay-flat-vs-headset.jpg`): large flat
   dark-grey wedges cover the ground and parts of the scene where flat shows the street; the HUD box is right. The
   popup's blurred background lands in the HUD box over the world (`2026-10-03-popup-flat-vs-headset.jpg`). Not
