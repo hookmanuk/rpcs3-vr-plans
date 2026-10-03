@@ -1107,3 +1107,15 @@ of a 15 ms frame at 72 Hz (7.2 ms flat). Changes, each A/B-measured on the same 
 - Remaining stereo cost in R&C 1: ~2.5-3.5 ms per frame over flat, mostly recording each draw a second time
   (driver time, descriptor sets, push constants). Further large cuts need Vulkan multiview (Gate 6 item).
 - Not yet done: a full `vr_regress.sh` pass on this build (stopped after R&C 1 and R&C 2 for Matt's testing).
+
+**Generic, from Bayonetta and a user's savestate (2026-10-03, fork 8f20fbee0, f1da9a41c, b90de01dd).**
+- Savestates made from a disc game folder load when the game library (`games.yml`) has the game as an ISO: upstream
+  pointed the disc at the ISO device without loading the ISO, so `/dev_bdvd` stayed unmounted ("Verification failed"
+  in `lv2_file`, `CELL_ENOTMOUNTED`). A hook rewrites the state's disc and `argv[0]` as an ISO-made state stores them.
+- Savestates saved between FIFO commands resume at the next command: since upstream a3dc7e6af (merged in fa44c3a04)
+  `restore_state` steps the position back 4 on every load, right only for a state saved mid-command. Old states died
+  with "Dead FIFO" 10 s in (Bayonetta `BLUS30367_1_7`, also the regression state `vrtest_bayonetta_play`, which had no
+  result in the 12:29 run). One line in `RSXThread.cpp`. Both are upstream bugs worth sending upstream.
+- Camera-facing sprites in `nonrigid_camera_blocks` blocks no longer replace the cached projection scale (their
+  matrix is the projection times their own size) and take their eye offset from it. Regression at 72 Hz for the five
+  profiles with the key (`evidence/vrtest/2026-10-03-1959-sprite-cards`): rates as before, captures unchanged.

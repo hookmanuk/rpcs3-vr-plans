@@ -1,0 +1,36 @@
+# path: OpenXR Simulator, RPCS3_VR_MULTIVIEW=default, build 8f20fbee0 Savestates made from a disc folder load with the g
+# BLUS30405 vrtest_dante_acre_v3: Dante's Inferno: Acre, first fight (Wider view 3.0 at 2.75 + camera shake off, 2026-10-02)
+BLUS30405 vrtest_dante_acre_v3 vblank 72 scale 300%:
+   576 frames over 8.0 s: avg 72.0 FPS, 1% low 61.9, 0.1% low 57.0 (worst frame 17.5 ms), median 13.91 ms, late 0.00%, RSX thread 5.01 ms/frame
+   577 frames over 8.0 s: avg 72.0 FPS, 1% low 63.1, 0.1% low 61.4 (worst frame 16.3 ms), median 13.92 ms, late 0.00%, RSX thread 5.25 ms/frame
+   577 frames over 8.0 s: avg 72.0 FPS, 1% low 63.7, 0.1% low 42.9 (worst frame 23.3 ms), median 13.88 ms, late 0.17%, RSX thread 5.07 ms/frame
+   => median of 3 windows: avg 72.0 FPS, 1% low 63.1, late frames 0.00%, RSX thread 5.07 ms/frame
+SUSTAINABLE BLUS30405 vrtest_dante_acre_v3: 72 Hz
+# BLUS31155 vrtest_ddda_prologue: Dragon's Dogma DA: prologue start
+BLUS31155 vrtest_ddda_prologue vblank 72 scale 300%:
+   577 frames over 8.0 s: avg 72.0 FPS, 1% low 59.4, 0.1% low 58.0 (worst frame 17.2 ms), median 13.91 ms, late 0.00%, RSX thread 7.43 ms/frame
+   577 frames over 8.0 s: avg 72.0 FPS, 1% low 59.2, 0.1% low 51.6 (worst frame 19.4 ms), median 13.88 ms, late 0.00%, RSX thread 7.26 ms/frame
+   => median of 2 windows: avg 72.0 FPS, 1% low 59.2, late frames 0.00%, RSX thread 7.26 ms/frame
+SUSTAINABLE BLUS31155 vrtest_ddda_prologue: 72 Hz
+# BLUS30306 vrtest_dw6e_battle: Dynasty Warriors 6 Empires: first mercenary battle
+BLUS30306 vrtest_dw6e_battle vblank 72 scale 300%:
+   480 frames over 8.0 s: avg 60.0 FPS, 1% low 56.9, 0.1% low 55.9 (worst frame 17.9 ms), median 16.52 ms, late 0.00%, RSX thread 14.14 ms/frame
+   480 frames over 8.0 s: avg 60.0 FPS, 1% low 57.1, 0.1% low 56.5 (worst frame 17.7 ms), median 16.52 ms, late 0.00%, RSX thread 14.51 ms/frame
+   481 frames over 8.0 s: avg 60.0 FPS, 1% low 56.6, 0.1% low 40.6 (worst frame 24.6 ms), median 16.52 ms, late 0.00%, RSX thread 11.29 ms/frame
+   => median of 3 windows: avg 60.0 FPS, 1% low 56.9, late frames 0.00%, RSX thread 14.14 ms/frame
+SUSTAINABLE BLUS30306 vrtest_dw6e_battle: none Hz
+# BLUS30443 vrtest_demons_1: Demon's Souls (released): tutorial corridor
+BLUS30443 vrtest_demons_1 vblank 72 scale 300%:
+   577 frames over 8.0 s: avg 72.0 FPS, 1% low 65.9, 0.1% low 63.8 (worst frame 15.7 ms), median 13.88 ms, late 0.00%, RSX thread 2.19 ms/frame
+   577 frames over 8.0 s: avg 72.0 FPS, 1% low 65.9, 0.1% low 65.5 (worst frame 15.3 ms), median 13.90 ms, late 0.00%, RSX thread 2.20 ms/frame
+   573 frames over 8.0 s: avg 71.5 FPS, 1% low 65.7, 0.1% low 13.3 (worst frame 75.3 ms), median 13.91 ms, late 0.17%, RSX thread 2.34 ms/frame
+   => median of 3 windows: avg 72.0 FPS, 1% low 65.9, late frames 0.00%, RSX thread 2.20 ms/frame
+SUSTAINABLE BLUS30443 vrtest_demons_1: 72 Hz
+# BLUS30367 vrtest_bayonetta_play: Bayonetta: graveyard fight, Prologue (continued from the chapter menu)
+BLUS30367 vrtest_bayonetta_play vblank 72 scale 300%:
+   577 frames over 8.0 s: avg 72.0 FPS, 1% low 67.8, 0.1% low 66.0 (worst frame 15.1 ms), median 13.99 ms, late 0.00%, RSX thread 13.30 ms/frame
+   576 frames over 8.0 s: avg 71.9 FPS, 1% low 67.7, 0.1% low 46.5 (worst frame 21.5 ms), median 14.00 ms, late 0.17%, RSX thread 12.86 ms/frame
+   574 frames over 8.0 s: avg 71.7 FPS, 1% low 67.1, 0.1% low 35.9 (worst frame 27.8 ms), median 13.99 ms, late 0.35%, RSX thread 13.13 ms/frame
+   => median of 3 windows: avg 71.9 FPS, 1% low 67.7, late frames 0.17%, RSX thread 13.13 ms/frame
+SUSTAINABLE BLUS30367 vrtest_bayonetta_play: 72 Hz
+DONE /f/rpsc3/source/plans/evidence/vrtest/2026-10-03-1959-sprite-cards

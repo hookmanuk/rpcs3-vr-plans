@@ -75,3 +75,21 @@ patch in the headset ("it all works").
   Matt reports savestate `1_5` running at 90 FPS in the headset.
 - The profile has `max_fps: 0` (Matt's edit): at 90 Hz the game runs 1.5x fast until a speed patch exists; 60 is
   the real-time setting.
+
+## 2026-10-03: a user's savestate; Dark Trigger glow and floating trees (Matt, headset)
+
+- **The user's state** (`bin/savestates/BLUS30367/user_save.zst`, made in vr6 from a game folder) failed with
+  "Verification failed" in `lv2_file`: the library has the ISO, which upstream never loaded for a folder-made state.
+  Fixed in the loader (fork 8f20fbee0). Matt's own `BLUS30367_1_7` (= `vrtest_bayonetta_play`) died with "Dead FIFO"
+  10 s after loading since the upstream merge; fixed (fork f1da9a41c; restore position of a state saved between FIFO
+  commands). Lost on 2026-10-03: `BLUS30367_1_4/_1_5/_1_6` (deleted by test saves at the per-game cap of 4).
+- **Dark Trigger glow** (purple, when the MP circles are full): drawn larger than Bayonetta and off to one side in the
+  headset. It is `fc414b4f3cb724b2`'s camera-facing sprites into the scene target (`c[24]`, row vectors): each sprite
+  matrix is the projection times the sprite's size, passed the orthogonality test and replaced the cached projection
+  scale, so the rotation and FOV remap used the sprite's scale. Fixed in the renderer (fork b90de01dd): checked on the
+  simulator, the glow hugs her as in the game's own view, head straight and turned 0.4 rad.
+- **Trees "not real", floating over the sky:** the same fix covers camera-facing cards in `c[24]` (`4a7ee48a110a6526`,
+  128x128 plant and tree cards; one measured 554 units away scaled 179x, so its eye offset was 179x too large and it
+  showed at a few units' distance). Not confirmed at Matt's spot (outdoors, trees left of the fountain): Matt to
+  check in the headset.
+- Diagnosis note: probe keys are comma-separated (`render=1,hide=<hash>@<target>`); with a space the hide is ignored.
