@@ -431,6 +431,9 @@ Notes: `profiles/BCUS98114-notes.md` (the most detailed). Evidence: `evidence/gt
   selected card come to the front and change with left/right. **Still open:** turning the HMD sideways or tilting it
   up/down, parts of the card art are still obscured: the front card is cut off along a diagonal edge on its right
   (`evidence/gt5/2026-10-03-arcade-cards-matt-headset-still-cut.png`, Time Trial selected). Notes for details.
+- **Rear-view mirror: same problem (Matt, headset, 2026-10-03).** In a race the mirror image resizes and is culled
+  depending on the HMD angle (`evidence/gt5/2026-10-03-mirror-matt-headset-cut.png`: the mirror's scene does not fill
+  its frame and is cut off at the right). The mirror is a camera draw into the HUD box (`subviewport_cameras_in_box`).
 
 - **Frame rate:** patch "Frame rate follows VR" redirects the fixed step (`0x14017f8`) to bss `0x1948440`,
   which the profile's `game_frame_time_f32` sets to 1/fps. Physics, sim and the race timer run at 1.0x at 60
@@ -445,7 +448,7 @@ Notes: `profiles/BCUS98114-notes.md` (the most detailed). Evidence: `evidence/gt
   camera-position slot `c[467]`; the renderer now checks the slot holds the eye point), desktop mirror crop.
 - **Open (from the notes):**
   1. Arcade menu cards: improved 2026-10-03 (exact depth for the card program), still obscured when the HMD turns or
-     tilts (Matt, headset).
+     tilts (Matt, headset). The rear-view mirror image also resizes and is culled with the HMD angle.
   2. Race-start frame rate: the RSX thread is CPU-bound even flat (~42 flat, ~30 stereo). Needs multiview.
 - **Headset (Matt, 2026-10-01, on the build with the RSX-thread optimisations): ~40 FPS. Target: at least 60**
   (the game's own rate; below that it does not work). The regression run's "90 Hz (race start)" was measured from the

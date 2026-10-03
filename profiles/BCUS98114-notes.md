@@ -260,6 +260,11 @@ left/right should change the topmost. Reproduced on the OpenXR Simulator with th
   (`evidence/gt5/2026-10-03-arcade-cards-matt-headset-still-cut.png`). Not investigated yet. Leads: another draw's
   depth (the menu background or the unboxed text-coverage fills that share depth surface `0xc1100000`) occluding the
   card where the tilted box moves it; or the card's corners crossing the near/far range once w changes.
+- **Rear-view mirror, same symptom (Matt, headset, same day):** in a race the mirror image resizes and is culled
+  depending on the HMD angle (`evidence/gt5/2026-10-03-mirror-matt-headset-cut.png`: its scene does not fill the mirror
+  frame and is cut off at the right). The mirror is a camera draw through the 448x86 viewport at (416,42), put into the
+  HUD box with the game's mirror camera (`subviewport_cameras_in_box`), so both are 3D draws in the tilted box: likely
+  one cause. Its scissored clear moves with the box; the culling may be the scissor or the near/far range as w changes.
 - Cost: hashing only for a profile that lists programs, once per vertex program (fingerprint cache); early-Z off for
   the listed program only. A race A/B (`matt_gt5_0100_1_3`, 60 Hz) did not complete: GT5 lost the Vulkan device in 3
   of 4 boots of that savestate, including one with the key removed (not this change). One clean run: 60.0 FPS, 1% low
