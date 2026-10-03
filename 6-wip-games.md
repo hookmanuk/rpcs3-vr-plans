@@ -382,6 +382,10 @@ so that OpenXR is prepared before the exitspawn into a game.
   frame rate (VR)* (GOW1 `0xe8410`: `li r3, 60` for the rate in the drain), on by default; details in the notes.
   GoW II's QTEs are implemented differently: their mash drains and time limits already use the step (real time
   at any rate) and the prompt windows come from animation time (code read; not played at 90). No GoW II patch.
+- **Pause menu (Select) flickers, shown twice offset (Matt, headset, 2026-10-03).** The same symptom the Power Up
+  screen (Start) had before its fix: the frame switches between the fixed screen and the headset view. The Power Up
+  fix was `screen_frame_draws` with its menu-art draw (`a3b1455d9ebdd381`, 512x512 texture); the pause menu needs its
+  own unique draw found (inspector capture) and listed the same way. GoW II's pause menu unchecked.
 - **HUD:** a 4:3 bare projection in the scene's slots. The new profile field
   `screen_space.offaspect_projection` handles it, and the generator detects it.
 - **Open:**

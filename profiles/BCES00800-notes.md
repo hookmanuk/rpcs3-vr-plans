@@ -191,3 +191,11 @@ not `rate x step`:
   animation advances with the step.
 The one frame-rate-dependent construct of GOW1 (`x rate x dt` in the drain) is not in GOW2's QTE code. Not played
 through a GoW II QTE at 90 (no savestate at one).
+
+## 2026-10-03: pause menu (Select) flickers, shown twice offset (Matt, headset): open
+
+The GoW 1 pause menu opened with Select flickers and shows twice, offset: the same symptom the Power Up screen
+(Start) had before `screen_frame_draws` `{a3b1455d9ebdd381, 512x512}` fixed it (frames switching between the fixed
+screen and the headset view every few frames). Next: an inspector capture of the pause menu, find a draw it has and
+gameplay does not, add it to `screen_frame_draws` in `BCES00800.gow1.json`; count view switches as for the Power Up
+screen (180 -> 7 in 6 s). Check GoW II's pause menu too.
