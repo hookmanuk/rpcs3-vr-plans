@@ -535,7 +535,9 @@ draws, partial-clear mirroring, and an occlusion/convergence comparison beyond t
       Matt measured GT5 races ~35% faster. **2026-10-03 morning:** right-eye flicker in texture atlases built from
       render-target sections fixed (`d6acea81e`: layer 1 was never filled; Kingdom Hearts II's hair); warm reruns
       put R&C 1, MotorStorm PR (new state) and Dragon's Dogma (Matt's save, 90) at or above 72 on multiview only.
-      Next: Matt's headset pass, then merge into `openxr` for vr8.
+      **Merged into `openxr` (2026-10-03, fork `4af1b0163`)**, including the refactor that moved the multiview code
+      into fork-only files (`VKMultiviewVR.h/.cpp`, branch `ccr-887e03d9-ccgvu0`). Work continues on `openxr`; the
+      `multiview` branch is done. Not yet run: the paired occlusion-query reference fix (`1a81ce78d`).
 - [ ] Measure CPU/GPU cost, frame pacing, latency, and headset comfort.
 
 ### OpenXR first light (2026-09-21)

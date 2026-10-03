@@ -658,3 +658,12 @@ triggers, scored by a hair-colour detector). KH II samples many such 512x512 atl
 - Dev switches for A/B: `RPCS3_VR_MULTIVIEW=0` (two draws), `RPCS3_VR_MV_EYECLEAR=0` (one clear for both
   views), `RPCS3_VR_MV_SCISSOR=0` (the game's scissor in both views); probe `why=<program>` now logs the
   headset state bits, viewport and clip size.
+
+## 2026-10-03: merged into `openxr`
+
+`multiview` (with the refactor branch `ccr-887e03d9-ccgvu0` merged in: multiview code moved to fork-only
+`VKMultiviewVR.h/.cpp`, one-line hooks in upstream files) was merged into `openxr` as `4af1b0163`; the two trees are
+identical. Development continues on `openxr`. On the merged code: GT5 arcade cards and KH2 (0 right-eye dropouts in
+132 shots) checked on the simulator; the full regression was stopped part-way (it measures frame rate, not pictures).
+Not yet built or run: `1a81ce78d`, the paired occlusion queries' pool references (each pair kept its pool alive, the
+discard pile grew to 34 in GT5's menus).
