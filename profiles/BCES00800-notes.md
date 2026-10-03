@@ -230,3 +230,14 @@ selector intro on the simulator at several head angles through the whole animati
   that part of the eye image (log: "Projection layer shows 5472x3078 at (144, 81) of the 5760x3240 eye image"); fixed
   screen frames keep the whole picture. Not seen in the headset yet (the simulator window was collapsed, so no
   composited screenshots).
+
+## 2026-10-03 night: locked at 60 FPS in the vr8 release (Matt, 90 Hz): fixed (fork 27f59dc8)
+
+From the disc in the vr8 release GoW 1 ran at 60 FPS while other games ran at 90. The profiles were right (the log
+loads `BCES00800|gow1`, headset 90 Hz, `Game frame rate at 0x531dd0: 60 -> 90 FPS`); the config dump said
+`Frame limit: 60`. RPCS3's online config database (`GuiConfigs/config_database.dat`, `api.rpcs3.net/config`, shipped
+in the package) has `BCES00800: Video: Frame limit: 60`, applied at every boot when the game has no custom config
+(`Applying database config`; dev has `config_BCES00800.yml`, so `Found custom config. Ignoring database config`).
+Setting the selector profile to `max_fps 0` did not help (reverted). Fix: in VR with a profile a fixed frame limit
+follows the VR rate (`rsx::vr::vr_frame_limit`, one line in the frame limiter). Dev check, GoW 1 savestate on the
+simulator with Frame limit 60: 90 FPS, log `VR: Frame limit 60.00 replaced by the VR rate 90`.

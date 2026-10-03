@@ -1142,9 +1142,12 @@ of a 15 ms frame at 72 Hz (7.2 ms flat). Changes, each A/B-measured on the same 
   passes' projections into the shared scratch matrix `0x7719e0`, not the race camera's. Also measured that day: the main menu at 425% holds 90 on the simulator (RSX thread
 mostly waiting, GPU ~1.5 ms of scene work); GPU memory 4.6 GB at 425% against 1.4 GB at 100% (every target scaled, per eye).
 
-**vr8 release (2026-10-03).** Zip `release/rpcs3-v0.0.43-vr8-61a749c9_win64.zip` (293 files, fork 61a749c9, openxr
+**vr8 release (2026-10-03).** Zip `release/rpcs3-v0.0.43-vr8-27f59dc8_win64.zip` (293 files, fork 27f59dc8, openxr
 pushed); tag `v0.0.43-vr8` first pushed at aa22747e, moved to 61a749c9 (forced tag push, Matt OK; Matt's release test: WipEout's culling patch
-did not apply to the disc version 02.00; second patch entry added). The aa22747e zip is superseded. New playable games (Matt: ready): **God of War** and
+did not apply to the disc version 02.00; second patch entry added), then to 27f59dc8 (Matt's release test: God of War
+stayed at 60 FPS on his 90 Hz headset: the online config database sets `Frame limit: 60` for BCES00800, also for the
+Ratchet & Clank Collection and Super Stardust HD US; in VR a fixed frame limit now follows the VR rate). The aa22747e
+and 61a749c9 zips are superseded. New playable games (Matt: ready): **God of War** and
 **God of War II** (BCES00800, God of War Collection: launcher + per-game profiles, GoW 1 QTE patch), **Dante's Inferno**
 (BLUS30405: Wider view (VR culling) 3.0, Disable camera shake), **Asura's Wrath** (BLUS30721: Wider view culling (VR);
 community Unlock FPS, motion blur and depth of field off); their files moved from `vr-non-working/` to `bin/`. Since vr7:
@@ -1156,4 +1159,4 @@ library's ISO, states saved between FIFO commands resume (Dead FIFO fix), 4k blo
 clip w depends on the position; camera-facing sprites keep the camera's projection scale); game fixes: WipEout HD
 (Detonator spheres, weapons and explosions in 3D, Wider view (VR culling) patch), Bayonetta (Dark Trigger glow, tree
 canopies), God of War (menus, intro, border, resolve). Smoke test: packaged exe starts (first-run dialog) and carries
-vr8-aa22747e. Matt tests and publishes.
+vr8-27f59dc8. Matt tests and publishes.
