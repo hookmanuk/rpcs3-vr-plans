@@ -28,7 +28,7 @@ exact build commands.
 | [9-multiview-plan.md](9-multiview-plan.md) | Plan: Vulkan multiview, both eyes from one draw (replaces the right-eye replay) |
 | [10-multiview-merge-audit.md](10-multiview-merge-audit.md) | Audit of what the multiview branch adds to upstream files, what was moved out, and the merge checklist |
 | [profiles/](profiles/) | Per-game VR profile notes and the profile format ([profiles/README.md](profiles/README.md)) |
-| `tools/` | Launch, capture and analysis scripts used by the playbook; `tools/merge/` checks a merge from upstream (hunk exposure, Linux compile check, GLSL equivalence) |
+| `tools/` | Launch, capture and analysis scripts used by the playbook; `tools/merge/` checks a merge from upstream (hunk exposure, near misses, Linux compile check, GLSL equivalence) |
 | `evidence/` | Screenshots, captures and measurements for each gate and game |
 
 No game files are included. You need your own legally dumped games and PS3 firmware.

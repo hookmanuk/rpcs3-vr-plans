@@ -4,7 +4,8 @@
 made from, not hookmanuk/rpcs3. The fork's `master` is RPCS3's `master` as of `9e86f165` (2026-09-19, an RPCS3
 commit by RPCS3's Elad) plus six issue-template commits, so every "upstream file", "upstream line" and
 "upstream commits a year" figure below is RPCS3's code and RPCS3's history. RPCS3's commits after 2026-09-19
-are not in it: the fork's `master` has not been synced since (section 4, "Not done").
+are not in these figures. Section 8 is the trial merge with RPCS3's `master` of 2026-10-02, after the fork's
+`master` was synced.
 
 Audited 2026-10-03: `multiview` at `2a0afd28` against `openxr` at `d582cbeb` (the fork after the
 restructuring of [8-upstream-merge-audit.md](8-upstream-merge-audit.md)) and upstream `master` at
@@ -47,6 +48,11 @@ cheaper to merge without changing what the emulator does.
 - **What remains (about 480 lines) is inherent to two-layer targets.** It is mostly single-line edits:
   a layer count where upstream wrote `1`, or a layer parameter on an upstream function. It shrinks
   further only with design changes (section 5).
+- **Trial merge with RPCS3's current `master` (section 8): 2 conflicts, neither from multiview.** RPCS3's
+  174 commits from 2026-09-19 to 2026-10-02 conflict in two lines on every branch (`openxr`, `multiview`,
+  this one): the version bump to 0.0.43, and a loop in the home menu that RPCS3 fixed and the fork had
+  rewritten. Multiview's files all merged automatically. The merged tree compiles wherever RPCS3's own
+  `master` does in this container.
 
 ## 2. Numbers
 
@@ -200,18 +206,10 @@ in the same function. Places that are not literally identical, each checked:
   regression).
 - No MSVC build. The new files are in `VKGSRender.vcxproj`, `.filters` and `Emu/CMakeLists.txt`, with
   CRLF and BOM kept.
-- No trial merge with RPCS3's current `master`. The fork's `master` stops at RPCS3's 2026-09-19, and
-  RPCS3/rpcs3 cannot be attached to a session beside the fork (both check out as `rpcs3`). Two ways to
-  get it: sync the fork (GitHub, `master`, "Sync fork"), after which a session can fetch RPCS3's newer
-  commits from hookmanuk/rpcs3; or, on the PC with the `upstream` remote of [1-structure.md](1-structure.md):
-
-  ```
-  git merge --no-commit upstream/master
-  git diff --name-only --diff-filter=U
-  git merge --abort
-  ```
-
-  Run it on `multiview` and on this branch to see the difference in conflicting files.
+- The trial merge with RPCS3's current `master` is section 8 (done after the fork's `master` was synced).
+  To repeat it on the PC with the `upstream` remote of [1-structure.md](1-structure.md), without touching
+  any branch: `git merge-tree --write-tree --name-only upstream/master multiview` lists the conflicted
+  files (Git 2.38 or newer).
 
 ## 5. What remains, and what it would take to shrink it
 
@@ -282,3 +280,69 @@ carries multiview:
    into `\n` inside raw strings: GCC does, checked here, and MSVC does too as far as known. If it ever
    does not match, the new log line says so.
 3. **GCC build.** Fixed in `f6e8731f` (section 4).
+
+## 8. Trial merge with RPCS3's `master` of 2026-10-02
+
+The fork's `master` was synced with RPCS3 on 2026-10-03 (merge `fd8b3343`): 174 RPCS3 commits from
+2026-09-19 to 2026-10-02 on top of the old base `9e86f165`. Each branch was merged with it, first with
+`git merge-tree` (no branch touched), then for real in scratch worktrees for the compile check.
+
+| Branch merged with RPCS3 `master` | Conflicted files | Conflict regions | Files both sides changed, merged automatically |
+|---|---:|---:|---:|
+| `openxr` | 2 | 2 | 34 |
+| `multiview` | 2 | 2 | 38 |
+| this branch (`f6e8731f`) | 2 | 2 | 38 |
+
+Both conflicts come from the `openxr` work. They are the same on all three branches, one region each, and
+take a minute to resolve:
+
+- **`rpcs3/rpcs3_version.cpp`.** RPCS3 released 0.0.43. The fork's version line carries `RPCS3_VR_VERSION`,
+  so the line conflicts, as [8-upstream-merge-audit.md](8-upstream-merge-audit.md) predicted for every
+  version bump. Resolution: `version{ 0, 0, 43, utils::version_type::alpha, 1, RPCS3_VR_VERSION "-"
+  RPCS3_GIT_VERSION }`. By the fork's own rule ([4-next-steps.md](4-next-steps.md)) the VR version restarts
+  at vr1 after an upstream bump (`rpcs3_vr_version.h`).
+- **`Overlays/HomeMenu/overlay_home_menu_components.h`.** RPCS3 fixed an off-by-one (`<=` to `<`) in the
+  dropdown's selection loop, which the fork had rewritten for its filter/relabel extension. The fork's
+  loop is already bounded correctly. Resolution: keep the fork's loop.
+
+**Multiview added no conflict.** RPCS3 changed 14 of the files multiview touches in these two weeks:
+`RSXThread.cpp` (8 commits), the shader interpreter and pipeline compiler (3 each), and the texture cache,
+render pass (`.cpp` and `.h`), render targets, vertex program (`.cpp` and `.h`), query pool, device,
+`VKDraw.cpp`, `VKGSRender.cpp` and `VKPresent.cpp` (1 each). All merged automatically. No RPCS3 hunk touched a multiview hunk, and only one came within 3 lines
+(`VKRenderPass.h`).
+
+**Checks beyond the text, on the merged refactored branch:**
+
+- **Compile.** 161 of 165 translation units compile with the project's flags. The other 4 fail for
+  reasons that also stop pure RPCS3 `master` in this container: the Fusion submodule header is missing
+  (`keyboard_pad_handler.cpp`, and the fork's `keyboard_pad_handler_vr.cpp` through the same header),
+  `git-version.h` is generated at build time, and the system yaml-cpp needs exceptions. Two of the four
+  (`rpcs3_version.cpp` with the resolved line, and `bin_patch.cpp`) compile with a stub header and
+  `-fexceptions`. There are no new
+  warnings, and `nm` finds no missing or doubled definition.
+- **Merge guards.** The `static_assert`s pass, so RPCS3 did not change the GLSL text that the VR copies
+  and patches depend on.
+- **RPCS3 changes that could break the fork without a conflict,** read one by one:
+  - **`get_renderpass_key(format, ...)`** gained a `color_attachment_count` parameter before
+    `sample_count` (2026-09-21). A fork call passing a sample count there would now pass an attachment
+    count and still compile. The fork's two calls pass only the format, so they are unaffected.
+  - **The render pass key layout** is unchanged: bits 42-43 are still free for multiview's view mask.
+  - **The texture cache's image-pool key** was repacked (depth up to 512, 2026-10-01). Multiview compares
+    layer counts separately, not through that key, so it is unaffected.
+  - **Interpreter seeding** (2026-09-19 and 21) now builds interpreter pipelines for common render pass
+    keys at boot. The multiview variants (two-view keys, `COMPILER_OPT_VR_MULTIVIEW`) are not among them,
+    so in VR they still compile on first use. Seeding them while multiview is on is a possible follow-up.
+  - **Reused query pools** now reset their reference counts (2026-10-01). This does not touch the pair
+    slots.
+  - **"Complete pending unresolve before feedback loops"** (2026-09-30) calls `write_barrier`, whose range
+    multiview already widened to every layer.
+
+**What it means.** Two weeks of RPCS3 cost two one-line conflicts, both from the `openxr` work, and nothing
+from multiview. Two weeks is a small sample: the year's exposure (section 2) says the texture cache and the
+shader interpreter will conflict now and then. Merging every two to four weeks, as section 5 of
+8-upstream-merge-audit.md recommends, keeps each conflict as small as these were.
+[tools/merge/near_misses.py](tools/merge/near_misses.py) shows how close upstream's new changes came to the
+fork's lines, the places worth a read after a clean merge.
+
+Not done: the merge itself is not pushed anywhere. Merging RPCS3's `master` into `openxr` or `multiview`
+is a step to take on the PC with a build and the regression pass.
