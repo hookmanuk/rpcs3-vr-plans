@@ -617,8 +617,9 @@ profile at 90 Hz in the simulator.
 
 Warm reruns later the same morning (one state each, same build plus the atlas fix): **R&C 1 72** (72.0 FPS, 0%
 late, RSX 9.3-10.0 ms; 90 averages 85.4), MotorStorm Pacific Rift 72 (new state, two-draw misses it at the start),
-Dragon's Dogma in Matt's slow save 90 (two-draw 72). So on the headset path every state in the list but The
-Darkness now holds 72 with multiview.
+Dragon's Dogma in Matt's slow save 90 (two-draw 72). So on the headset path every uncapped state in the list
+holds 72 with multiview except The Darkness (Jak 1, Jak 3 and DW6E are capped at 60 by their profiles, ICO at 30;
+GT5 was not run).
 
 RSX thread time per frame is lower with multiview in most states (Dante 5.8 -> 4.8 ms, GoW 1.9 -> 1.2, R&C 3 10.6 ->
 8.5). The first multiview run of a title compiles its shader variants during the measurement: the cold run had KH 2,
