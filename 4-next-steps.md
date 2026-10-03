@@ -1130,5 +1130,14 @@ of a 15 ms frame at 72 Hz (7.2 ms flat). Changes, each A/B-measured on the same 
   were boxed by `true` and sat at HUD depth; `[260]` keeps only the menu cloud in the box. Savestate
   `vrtest_wipeout_matt_cannon` (hard link to `BCES00664_1_5`, hold Square to fire). This change was first committed
   for the spheres (37e4822fe), reverted when it did not fix them, and re-applied for the weapons.
-- Method that worked (Matt): one fresh load of the savestate per check, judged on its first frames. Also measured that day: the main menu at 425% holds 90 on the simulator (RSX thread
+- Method that worked (Matt): one fresh load of the savestate per check, judged on its first frames.
+- Patch "Wider view (VR culling)" (fork d6c1f6a53, `bin/patches/BCES00664_patch.yml`, on by default, savestates too):
+  the track overhead ended in sky when looking up (the game culls to its 60 x 91 degree race camera). In the race camera
+  update `0x29633c` the field of view in degrees (camera `+0x234`, camera object from TOC `0x71a4(r2)`, `0xc1ff40` in
+  the savestate) becomes the half angle with pi/180 instead of pi/360 (`lfs f24` at `0x296620` reads `0x726f90`):
+  projection 120 x 144. Profile `stereo.eye_offset: "baseline"` keeps the stereo (the clip shear tripled the eye
+  distance with the wider projection; near/far disparity -12 px with and without). Matt checked it in the headset.
+  Savestate `vrtest_wipeout_matt_trackcut` (`BCES00664_1_6`). Not covered: the track behind the camera (outside any
+  field of view; the culling itself would need patching). Dead end: `0x327824` (`lfs` at `0x327868`) builds other
+  passes' projections into the shared scratch matrix `0x7719e0`, not the race camera's. Also measured that day: the main menu at 425% holds 90 on the simulator (RSX thread
 mostly waiting, GPU ~1.5 ms of scene work); GPU memory 4.6 GB at 425% against 1.4 GB at 100% (every target scaled, per eye).
