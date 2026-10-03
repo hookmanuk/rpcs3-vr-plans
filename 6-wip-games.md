@@ -52,7 +52,7 @@ Headset recheck list, in order of what changed most:
 | Asura's Wrath | letterbox bars hidden (`fc13d36f`, untextured); grey 16:9 box = a full-screen pass boxed as HUD: `hud_skips_passes` | in-gameplay cutscenes not seen (same program expected); fades drawn with the same program would be hidden too |
 | Tales of Xillia | walking ripples at the wrong depth: per-object scale in the eye offset (rings scaled up to 11x): `eye_offset: baseline_per_w`; measured on the simulator: the ring now has the floor's disparity (-165.6 vs -166 px) | blue floor lights in one eye: Matt saw it right on the simulator, rechecks in the headset |
 | Dante's Inferno | intro movie after New Game: drawn over the first level, which renders behind it, so the frame counted as 3D: `screen_frame_draws` with the movie draw. **Culling: new patch "Wider view (VR culling)"** (`bin/patches/BLUS30405_patch.yml`, enabled by default): the game camera's FOV x2 (124 x 93 degrees); straight ahead complete, 40-degree turns mostly filled; still 120 Hz sustained at 300% | looking up/down past ~45 degrees still culls (vertical is the narrow axis); a larger factor needs a code cave |
-| God of War selector | the intro is a real-time 3D logo animation through a camera: its four programs are `screen_frame_draws` | |
+| God of War selector | the intro is a real-time 3D logo animation through a camera: its four programs are `screen_frame_draws` | **still skewed and misaligned in the headset (Matt, 2026-10-03)**: the `screen_frame_draws` fix (simulator-checked) is not enough |
 | God of War 1 | Power Up screen flicker (camera classification changed every ~3 frames): its menu-art draw pins the frame to the screen (180 -> 7 switches in 6 s); **world scale measured: 13.5 units/m, `eye_baseline` 3.2 -> 0.864** (characters ~3.7x bigger) | ~~QTEs not passable at 90 FPS~~ **fixed 2026-10-03:** patch *QTE button mashing at any frame rate (VR)* (`BCES00800_patch.yml`, on by default): the mash meter drains per second as at 60 FPS; Matt's Hydra QTE won at 90 in the test. GoW II's QTEs use other code, already real time (code read) |
 | God of War II | same Power Up flicker (260 -> 7), same scale (0.864); savestate `vrtest_gow2_rhodes` | |
 | Puppeteer | **dark/small explained:** the lit stage is as bright as flat but covers 13% of the view (game FOV 45 x 26, stage 27 m away): `eye_baseline` 0.064 -> 0.64 (diorama ~2.7 m away); try **Camera Depth Offset +2 m** in the VR menu to enlarge it. Velocity buffer fixed (`linked_camera_blocks [264]`), a likely cause of the trails | trails (recheck), deferred lights rebuild rays with the game's projection (shapes unchecked) |
@@ -382,6 +382,10 @@ so that OpenXR is prepared before the exitspawn into a game.
   frame rate (VR)* (GOW1 `0xe8410`: `li r3, 60` for the rate in the drain), on by default; details in the notes.
   GoW II's QTEs are implemented differently: their mash drains and time limits already use the step (real time
   at any rate) and the prompt windows come from animation time (code read; not played at 90). No GoW II patch.
+- **Collection loader intro still skewed and misaligned (Matt, headset, 2026-10-03).** The intro animation (Kratos's
+  blades, a real-time 3D animation in `GAMESEL.self`) was put on the fixed screen with `screen_frame_draws` on
+  2026-10-02 (checked on the simulator straight and turned 25 degrees), but in the headset it is still skewed and
+  misaligned. Not investigated yet.
 - **Pause menu (Select) flickers, shown twice offset (Matt, headset, 2026-10-03).** The same symptom the Power Up
   screen (Start) had before its fix: the frame switches between the fixed screen and the headset view. The Power Up
   fix was `screen_frame_draws` with its menu-art draw (`a3b1455d9ebdd381`, 512x512 texture); the pause menu needs its
