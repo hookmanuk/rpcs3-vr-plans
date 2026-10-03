@@ -5,18 +5,20 @@
 # name=- only shoots.
 # Env MODES="stereo flat" (default; either alone), OUT=<dir> (default tools/re/drive_TAG). Refuses to run over an
 # existing custom config or pad for the title and removes its own on exit. Grid: drivegrid.py OUT STEP,STEP.
+# KEEPCFG=1: use the title's own custom config unchanged (it must have VR enabled) instead of a temporary one.
 # Stereo and flat runs drift apart in cutscenes (different boot timing): compare steps taken in gameplay.
 id=$1; st=$2; tag=$3; steps=$4; settle=${5:-15}
 OUT=${OUT:-/f/rpsc3/source/plans/tools/re/drive_$3}
 B=/f/rpsc3/source/rpcs3/bin; CF=$B/config; C=$CF/custom_configs/config_$id.yml; P=$CF/input_configs/$id; D="$LOCALAPPDATA/OpenXR-Simulator"; O=$OUT
 mkdir -p $O; cd /f/rpsc3/source/plans/tools/re
 kill_rpcs3() { powershell -c "Get-Process rpcs3 -ErrorAction SilentlyContinue | Stop-Process -Force; while (Get-Process rpcs3 -ErrorAction SilentlyContinue) { Start-Sleep -Milliseconds 200 }"; }
-[ -f "$C" ] && { echo "custom config exists for $id: not touching it"; exit 1; }
+[ "${KEEPCFG:-0}" = 1 ] && [ ! -f "$C" ] && { echo "KEEPCFG=1 but no custom config for $id"; exit 1; }
+[ "${KEEPCFG:-0}" != 1 ] && [ -f "$C" ] && { echo "custom config exists for $id: not touching it"; exit 1; }
 [ -d "$P" ] && { echo "input config exists for $id: not touching it"; exit 1; }
-cleanup() { kill_rpcs3; rm -f "$C"; rm -rf "$P"; [ -f "$C" ] || [ -d "$P" ] && echo "WARNING: temp config left"; }
+cleanup() { kill_rpcs3; [ "${KEEPCFG:-0}" != 1 ] && rm -f "$C"; rm -rf "$P"; [ -d "$P" ] && echo "WARNING: temp pad left"; }
 trap cleanup EXIT
 mkdir -p "$P" && cp /f/rpsc3/source/plans/tools/keyboard-pad-template.yml "$P/Default.yml"
-printf 'Audio:\n  Renderer: "Null"\nVideo:\n  VR:\n    Enabled: true\n' > "$C"
+[ "${KEEPCFG:-0}" != 1 ] && printf 'Audio:\n  Renderer: "Null"\nVideo:\n  VR:\n    Enabled: true\n' > "$C"
 for mode in ${MODES:-stereo flat}; do
   kill_rpcs3
   printf '{"x": 0, "y": 0, "z": 0, "yaw": 0, "pitch": 0, "roll": 0}' > "$D/head_pose_command.json"

@@ -320,6 +320,10 @@ Practice. Open: campaign, HUD sprite timers at 3x, headset run.
   culled by depth; the intro is very long and cannot be skipped. In gameplay: bad performance and lots of graphics
   issues (the desktop checks only covered Training > Practice). Matt's savestate at the start of gameplay:
   `vrtest_anarchy_matt_gameplay` (`BLUS30632_1_2`, 18:36); also `vrtest_anarchy_matt_1834` (`_1_1`).
+- **2026-10-03 (simulator, multiview): still parked, blocked before stereo.** Gameplay in Matt's save at 300%:
+  flat 60.2 FPS, multiview 51.8, two-draw 46.7 (72 needed). The RSX thread waits on GPU readbacks forced by reading
+  fragment program ucode from GPU-written pages; Force CPU Blit removes them but is slower in gameplay. The headset
+  picture in gameplay has large dark-grey wedges over the ground (notes, `evidence/anarchy/2026-10-03-*`).
 
 ## Dante's Inferno (BLUS30405, disc 01.00)
 

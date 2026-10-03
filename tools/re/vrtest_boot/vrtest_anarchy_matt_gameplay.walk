@@ -1,0 +1,19 @@
+# Anarchy Reigns (vrtest_anarchy_matt_gameplay, Matt's save): six Cross presses page through the Street Brawl
+# tutorial popup (the state opens on it, the scene paused and blurred behind it), then walk forward and back.
+wait 10000
+X 600 2400
+X 600 2400
+X 600 2400
+X 600 2400
+X 600 2400
+X 600 2400
+I 2500 300
+K 2500 300
+I 2500 300
+K 2500 300
+I 2500 300
+K 2500 300
+I 2500 300
+K 2500 300
+I 2500 300
+K 2500 300

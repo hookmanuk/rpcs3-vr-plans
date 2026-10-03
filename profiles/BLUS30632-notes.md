@@ -66,3 +66,28 @@ characters hold dt 1/90). Jack's feet position: f32 xyz at `0x1d7fc10` (static).
 - Savestate at the start of gameplay: `bin/savestates/BLUS30632/vrtest_anarchy_matt_gameplay.SAVESTAT.zst` (hard
   link to `BLUS30632_1_2`, 18:36); also `vrtest_anarchy_matt_1834` (`_1_1`, 18:34).
 - **Parked** by Matt.
+
+## 2026-10-03: Matt's gameplay save measured (simulator, multiview build `d6acea81e`)
+
+The save opens on the Street Brawl tutorial popup (scene paused and blurred behind it): six Cross presses page
+through it. `tools/re/vrtest_boot/vrtest_anarchy_matt_gameplay.walk` waits 10 s for the load, pages through and walks;
+`vr1pct.sh BLUS30632 vrtest_anarchy_matt_gameplay 144 script` with `SETTLE=32` (Vblank 144 = 72 FPS, two vblanks
+a frame). Matt's config, 300%:
+
+| | popup (paused) | gameplay |
+|---|---|---|
+| flat (render=0) | 71.9 FPS, RSX 13.8 ms | **60.2 FPS**, RSX 16.4 ms, 0.6% late |
+| multiview | 57.6 FPS, RSX 17.2 ms | **51.8 FPS**, RSX 19.1 ms |
+| two-draw | 49.8 FPS, RSX 19.8 ms | 46.7 FPS, RSX 21.2 ms |
+| multiview + Force CPU Blit | 71.8 FPS | 42.6 FPS |
+
+- **Blocked before stereo:** gameplay at 300% does not hold 72 even flat. The RSX thread is the limit.
+- RSX thread sample (popup, multiview): 42% inside `prefetch_fragment_program` -> access violation -> texture cache
+  flush -> `wait_for_event`: the RSX thread reads fragment program ucode (`0xce3d8180`, `0xced46600`) from pages a
+  GPU-written section covers, so each read forces a readback and a full GPU sync mid-frame. The GPU profile puts
+  ~8.6 ms/frame on the 8x8 target `0xca250000` with no draws (the sync's idle time, flat as well).
+  **Force CPU Blit** removes those readbacks (popup 57.6 -> 71.8) but costs more in gameplay (51.8 -> 42.6): not a fix.
+- **Headset picture in gameplay is wrong** (`evidence/anarchy/2026-10-03-gameplay-flat-vs-headset.jpg`): large flat
+  dark-grey wedges cover the ground and parts of the scene where flat shows the street; the HUD box is right. The
+  popup's blurred background lands in the HUD box over the world (`2026-10-03-popup-flat-vs-headset.jpg`). Not
+  investigated further: the game stays parked on performance.
