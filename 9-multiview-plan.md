@@ -615,6 +615,11 @@ profile at 90 Hz in the simulator.
 | Lower | The Darkness (paused "reconnect controller" screen in both runs): 47.2 -> 31.7 FPS at 72, GPU-bound |
 | Not run | GT5: the regression savestate no longer boots (made on 02.11; GT5 is on 01.00 now) |
 
+Warm reruns later the same morning (one state each, same build plus the atlas fix): **R&C 1 72** (72.0 FPS, 0%
+late, RSX 9.3-10.0 ms; 90 averages 85.4), MotorStorm Pacific Rift 72 (new state, two-draw misses it at the start),
+Dragon's Dogma in Matt's slow save 90 (two-draw 72). So on the headset path every state in the list but The
+Darkness now holds 72 with multiview.
+
 RSX thread time per frame is lower with multiview in most states (Dante 5.8 -> 4.8 ms, GoW 1.9 -> 1.2, R&C 3 10.6 ->
 8.5). The first multiview run of a title compiles its shader variants during the measurement: the cold run had KH 2,
 Pure, RR7, Xillia and DW6E slower, all back to equal or better once warm.
