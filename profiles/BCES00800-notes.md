@@ -147,3 +147,34 @@ takes ~10 s before the screen changes). Keyboard pad: template plus right stick;
 - **World scale:** `eye_baseline` 3.20128 -> 0.864 as GoW 1. With 3.2, Kratos's disparity against the frusta's
   offset was 57.6 px (GoW 1: 56.9 px), assuming the same zero-separation offset (-615 px, same headset FOV): the same
   camera distance, so GoW 1's measured 13.5 units/m is taken for GoW 2 (not measured on his height).
+
+## 2026-10-03: QTE button mashing fixed (GoW 1)
+
+**Cause.** All button-mash minigames run through one function, GOW1 `0xe813c`, with one global state block
+(pointer at TOC -0x45bc = `0x57ad34`: params pointer +0x28, time since the last press +0x2c, elapsed +0x30, meter
++0x34, displayed meter +0x38) and a per-minigame parameter block (+0x14 gain per press, +0x18 drain, +0x1c most time
+between presses, +0x20 time limit, +0x24 display smoothing, +0x28 pressure factor, +0x2c shortest press interval,
++0x34 button bit). `0xe8d38` starts one (zeroes the state, picks the parameters). Each frame:
+- press: meter += gain x rate x dt (pressure-weighted), less if within the shortest interval of the last press;
+- no press: meter -= drain x rate x dt.
+`rate` is the frame-rate word `0x531dd0` (getter `0x1c3d68`) that the profile sets to the headset rate, and dt
+(`0x531de4`) is 1/rate, so rate x dt = 1: the gain is per press (right) but the drain is per frame (wrong).
+Matt's Hydra jaws QTE: gain 0.225, drain 0.025, limit 10 s, shortest interval 0.12 s, Circle. At 60 FPS it drains
+1.5/s (beatable above ~6.7 presses/s); at 90 FPS 2.25/s, which needs 10 presses/s while presses closer than 0.12 s
+apart count only partly: unwinnable.
+
+**Fix.** `0xe8410` `bl 0x1c3d68` -> `li r3, 60` (`0x3860003c`): the drain uses 60 instead of the frame rate, so it
+drains per second as at 60 FPS at any frame rate; presses keep their value. File `vr-non-working/patches/
+BCES00800_patch.yml` (fork `d582cbeb5` on `openxr`, cherry-picked to `multiview`), copy in `bin/patches/`, enabled
+by default. RPCS3 logs it as applied on a disc boot (`PAT: Applied patch ... QTE button mashing`).
+
+**Test** (Matt's state `vrtest_gow1_matt_qte` = `BCES00800_1_4`, LLVM, 90 FPS, Circle at 8 presses/s from the boot;
+the QTE starts within ~15 s of loading; `pine.py` watched the state): unpatched the meter peaked at 0.23 and the QTE
+timed out at 10 s (twice). With the drain scaled by 60/rate in the parameters (what the patch does, done through PINE
+because patches do not apply to savestates and LLVM ignores code pokes) it was won in 2.4 s (meter 1.01).
+Below 60 FPS the patched drain is the 60 FPS one (the unpatched game was easier there).
+
+Other QTE kinds in the module: button prompts (`0xe8a68`: right button wins, wrong one fails; the window comes from
+the animation, which runs on dt) and stick rotation (same function, counts quarter turns): no per-frame timing found.
+GoW II does not contain this mash code (its minigame update `0xea4c4` plays `SND_MINIGAME_BUTTON`/`HIT`); its QTEs
+are unchecked at high frame rates.
