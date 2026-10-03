@@ -537,3 +537,75 @@ with `-DWITH_LLVM=OFF -DUSE_SDL=OFF -DUSE_FAUDIO=OFF`, GCC 13, Ninja, the Vulkan
 GitHub (`-DVulkan_INCLUDE_DIR`), then `ninja rpcs3_emu`. Two fork sources needed portability fixes to get
 there (`_dupenv_s` in `VKGSRender.cpp`, and `-Wno-old-style-cast` for `VKOpenXR.cpp` because of the vendored
 OpenXR macros); both are in the commit and change nothing on Windows.
+
+## 10. Port and first runs on the PC (2026-10-02 evening)
+
+Branch `multiview` of hookmanuk/rpcs3, off `openxr` at vr7 (`c5772f2c7`). The plan branch's commit was written
+against vr5, before the restructuring moved the VR code out of `VKGSRender.cpp`, `VKDraw.cpp` and
+`VKPresent.cpp`; its hunks for those files became hooks into `VKGSRenderVR.cpp` (`vr_update_multiview_mode`,
+`bind_vr_eye_constants_pair`, `vr_hud_vertex_env_pair`, `vr_bind_viewport`, `vr_after_render_pass_bound`,
+`vr_array_view`, `vr_clear_attachments`, `vr_draw_view_mask`, `vr_query_slot_result`), one line each in the
+upstream files. Everything else merged as it was. Every run below is the OpenXR simulator (`mvtest.sh`) or
+`vr1pct.sh` (desktop stereo at 300%), always A/B against `RPCS3_VR_MULTIVIEW=0` on the same build.
+
+### Fixed before it ran at all
+
+1. `RSX_SHADER_CONTROL_VR_MULTIVIEW` was `0x40000000`, programmable blending's bit: now `0x4000` (and the
+   fragment path clears it when multiview is off).
+2. The `multiViewport` device feature was never enabled: the validation layer rejected every two-viewport
+   pipeline and `vkCmdSetViewport`. Enabled beside `wideLines`.
+3. `image_view::as_array()` built its view with the constructor that does not keep the image, so every
+   descriptor made from it dereferenced null: an access violation at the first multiview draw (WipEout).
+4. The present path only looked for layers on `image_to_flip`, which `get_present_source()` replaces with a
+   one-layer copy when the surface's format is not the output's (WipEout): no right eye, no eye swapchains.
+   The display surface itself is looked up (bound targets, then the merged region), layer 1 copied out.
+5. `allocate_query_pair` rebuilt a hash set of the free list on every call: 91% of the RSX thread in
+   WipEout (a query segment per draw), 41 FPS. Pairs are now freed as pairs (the head frees its second
+   slot right after itself) and taken from the front of the list in O(1), rotating a lone slot to the back.
+6. The right eye's HUD-box vertex context was a second allocation, which fell outside the bound window
+   (GT5): both eyes' contexts are one two-entry allocation, the right eye's index the left's plus one.
+7. GT5's rear-view mirror was black: draws boxed through the vertex context (sub-viewport camera draws)
+   took their per-eye scissors from the constants pair, before the box was mapped, so both views kept the
+   game's 448x86 scissor at the top of the screen while the box moved the geometry. The env pair records
+   each eye's scissor itself. Also, when a rule becomes true during the left eye's apply (the projection
+   becoming known), the eyes classified a draw differently; both are redone from the untransformed constants.
+
+### Results so far (two-draw -> multiview, same build)
+
+| Title, state | Two draws | Multiview | Pictures |
+|---|---|---|---|
+| WipEout `vrtest_wipeout_race`, vblank 90 | 90.0 FPS, 0.00% late, RSX 1.9 ms/frame | 90.0, 0.00%, RSX 1.9-5.6 ms (frame limiter idle) | both eyes, HUD and parallax match (`evidence/multiview/wipeout_*`) |
+| WipEout, vblank 180 | 100 avg, 25.9% late (GPU-bound at 300%), RSX 2.3 ms | 100 avg, 25.0% late, RSX 1.9 ms | |
+| GT5 `vrtest_gt5_race_start`, vblank 90 | 90.0, 1% low 70.7, 0.14% late, RSX 7.6 ms | 90.0, 1% low 72.6-74.0, 0.00% late, RSX 6.1-6.3 ms | mirror, HUD, gauges, shadows match (`evidence/multiview/gt5_*`) |
+
+The first multiview run of a title compiles every shader variant from scratch (the flat cache is not reused):
+GT5's race clock jumped three minutes during that stall; warm, the clock tracks the two-draw path (10.3 s per
+10.3 s). Validation layer (WipEout): only the pre-existing warnings (binary semaphore reuse, unused fragment
+outputs). RSX sampler on GT5 at 90: 44% waiting in the frame limiter, 20% draws (9.5% texture-cache flushes:
+GT5's readbacks), so the race-start dip needs a mid-pack state to measure (the grid state holds 90 on both).
+
+### 2026-10-03 (night): ICO, the shader interpreter, the regression through the simulator
+
+- ICO/SotC: the older-frame realignment (`vr_realign_blend_targets`) warps each layer of a stereo surface, and the
+  memory-bounce staging (`m_vr_staged`) copies from and into layer 1; with multiview `vr_mirror_blit` does only that
+  staging (the blitter writes both layers of every surface-to-surface blit). The masked sub-viewport clear
+  (`attachment_clear_pass`) runs per eye like the plain one. ICO's bridge in the simulator at yaw 0 / +0.3 / -0.3:
+  multiview matches the two-draw path (mean difference 2.0, the motion between captures), both eyes, parallax.
+- Shader interpreter: a multiview variant (`COMPILER_OPT_VR_MULTIVIEW`, bit 32, VK-local): per-view draw parameters,
+  `gl_ViewportIndex`, `sampler2DArray` sampled at layer `gl_ViewIndex`, two viewports in two-view pipelines,
+  2D-array views and null views in `bind_interpreter_texture_env`. With "Shader Interpreter only" on WipEout the
+  eyes now differ by the stereo offset. Found on the way, on both paths and not multiview's: interpreter draws do
+  not get the HUD box, and on the two-draw path they are identical in both eyes (left/right difference 0.00). The
+  interpreter only draws while a game's shaders compile, so this stays a note.
+- The VR regression (`tools/re/vr_regress.sh`) now runs through the OpenXR Simulator (`gboot.ps1` without
+  `-Desktop`; VR on, Frame Rate Unlimited so the Vblank Rate paces, Null audio) and saves the simulator's
+  composited frame (`sim_STATE_RATE.png`) beside the desktop one. `tools/re/regcompare.py` compares two runs.
+
+### Still open (M4 as planned, plus what the runs found)
+
+- Instanced draws: one set of constants for both eyes (no parallax on them), drawn with the game camera on both
+  paths (the two-draw path leaves them out of the right eye). A count over 17 games' VR savestates found none.
+- A surface spilled under VRAM pressure comes back without layer 1 until redrawn.
+- Dev switches for A/B: `RPCS3_VR_MULTIVIEW=0` (two draws), `RPCS3_VR_MV_EYECLEAR=0` (one clear for both
+  views), `RPCS3_VR_MV_SCISSOR=0` (the game's scissor in both views); probe `why=<program>` now logs the
+  headset state bits, viewport and clip size.

@@ -24,6 +24,14 @@ compare runs on the same PC.
    config (`tools/re/gclean.sh <ID>`).
 6. Check it: `sh tools/re/vr_regress.sh <state name>` should boot it, walk, and print frame stats.
 
+**Path (since 2026-10-03): the OpenXR Simulator.** `vr1pct.sh` boots each state with a headset session on the
+simulator (`gboot.ps1`), VR on with Frame Rate Unlimited for the run (the simulator reports no refresh rate, so the
+Vblank Rate still paces the game) and Null audio, and saves the simulator's composited frame (`sim_STATE_RATE.png`)
+beside the desktop side-by-side shot. `DESKTOP=1` gives the old desktop-only stereo; runs before 2026-10-03 are
+desktop numbers and are not comparable with simulator runs. On the headset path a profile's `max_fps` applies, so
+games capped at 60 (Jak 1-3, Dynasty Warriors 6 Empires) report 60.0 FPS at every rate and "none" sustainable.
+`tools/re/regcompare.py BASE NEW` compares two runs (rates, RSX ms/frame, simulator captures side by side).
+
 Manifest columns (`tools/re/vrtest_states.txt`): `ID STATE VPF WALK SETTLE scene`. WALK is 1 (walk back and forth with
 the left stick), 0 (no input), a pad key to hold for 25 s (`W` = R2, accelerate in Pure) or `script`: the key script
 `tools/re/vrtest_boot/<STATE>.walk`, played from the boot on (Super Stardust HD fires in circles to stay alive). The pad
@@ -67,7 +75,7 @@ speed at. The other games read their frame time every frame.
 | `ico_bridge` | BCUS98259 | released profiles + patches (as in `vr-games.md`) | Collection launcher: ICO; title Return; Continue, file 1 (a save at the Old Bridge; any save point works); X, then walk a step so the camera follows; Ctrl+S. Measured at 30 FPS only (`rates=30` in the manifest: ICO is frame-locked at 30 in VR). |
 | `demons_1` | BLUS30443 | released profile + patches | New character; Ctrl+S in the tutorial corridor (first steps of the Boletarian Palace tutorial). |
 | `bayonetta_play` | BLUS30367 | profile + patches as in `vr-games.md` | New game; Ctrl+S during the graveyard fight in the Prologue. |
-| `gt5_race_start` | BCUS98114 | `BCUS98114_patch.yml`; your custom config (300% works, **200% freezes**) | Arcade > single race; Ctrl+S on the grid right after the start. SETTLE 40 (GT5 stalls for ~30 s after the savestate loads). WALK=0. |
+| `gt5_race_start` | BCUS98114 | `BCUS98114_patch.yml`; your custom config (300% works, **200% freezes**) | Arcade > single race; Ctrl+S on the grid right after the start. SETTLE 40 (GT5 stalls for ~30 s after the savestate loads). WALK=0. **Out of date since 2026-10-03:** made on 02.11, it no longer boots now GT5 is on 01.00; remake on 01.00. |
 | `pure_race` | BLUS30182 | released profile; set **Compatible Savestate Mode** while saving (as for God of War) | Warnings X, X, Return; autosave notice X; title Return; Main Menu Down (Single Event), X; Race, X; track (Alto Vista), rider and ATV: X each; wait ~40 s for the intro flyby; Ctrl+S on the start line. R2 (W) accelerates, so WALK=W. |
 | `rr7_boot` (no savestate) | BCAS20001 | released profile | Ridge Racer 7 **cannot savestate** ("HLE VDEC (video decoder) context(s) exist": the menu video's decoder stays open). The run boots the disc from `games.yml` and plays `tools/re/vrtest_boot/vrtest_rr7_boot.keys` (Arcade > Single Race > Rave City Riverfront, holds Cross); nothing to recreate. |
 | `kz_trench` | BCES01743 | released profile + `BCES01743_patch.yml`; make it with **Frame rate 120 FPS** on and *90 FPS* off (Manage > Game Patches), then switch back | Savestates keep the patched code, and the 120 entry's loop takes up to 4 fixed steps a frame, so one state measures 72, 90 and 120. Boot; Return; X (skips the intro movie to the menu); X GAME, X Campaign, X Helghast Assault, X Easy, X Templar; ~20 s, then Return and X to skip the intro movie; Ctrl+S at the first control in the trench. |

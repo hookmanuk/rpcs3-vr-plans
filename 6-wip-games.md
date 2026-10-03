@@ -400,9 +400,18 @@ Notes: `profiles/BCUS98116-notes.md`. Evidence: `evidence/killzone2/`. Fork d12f
   - Movies at the raised vblank: does it need `video_vblank_rate: 60`, as Killzone HD did?
 - **Files:** `vr-non-working/vr_profiles/BCUS98116.json` (moved out of `bin/` for vr7), untracked copy in `bin/`.
 
-## Gran Turismo 5 (BCUS98114 v02.11, XL Edition, US)
+## Gran Turismo 5 (BCUS98114, XL Edition, US; disc 01.00 since 2026-10-03, was v02.11)
 
 Notes: `profiles/BCUS98114-notes.md` (the most detailed). Evidence: `evidence/gt5/`. Parked at vr5.
+
+- **2026-10-03: Matt moved GT5 to version 01.00** (the 02.11 data folder replaced). The profile now targets 01.00:
+  the 1/59.94 frame step is in writable data there, two TOC words read by the two step getters (`0x184680c` via
+  `0x17d288`, the fixed-step loop `0x1819fc`; `0x184acc0` via `0x281c24`), and `game_frame_time_f32` writes both
+  every frame (logged `0.016683 -> 0.016667 s` at 60). No code patch on 01.00 (the 02.11 entry stays; its hash no
+  longer matches). Not yet measured at 90 (Matt testing). Executable dump `tools/re/elf/BCUS98114-0100.elf`,
+  PPU hash `PPU-a5e547ce3ce25092ac6cae85631f50ba5d9ea914`. **The regression savestate `vrtest_gt5_race_start` no
+  longer boots** (it records the 02.11 executable): it needs a new race savestate on 01.00.
+- **Multiview (Matt, 2026-10-03): about 35% faster in races** than the two-draw renderer.
 
 - **Frame rate:** patch "Frame rate follows VR" redirects the fixed step (`0x14017f8`) to bss `0x1948440`,
   which the profile's `game_frame_time_f32` sets to 1/fps. Physics, sim and the race timer run at 1.0x at 60
