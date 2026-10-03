@@ -167,7 +167,7 @@ pass mark** for fully compatible.
 
 | Game | ID | Profile | Real-time above 60 | Sustained in VR, 300% | Headset | Blocker |
 |---|---|---|---|---|---|---|
-| Dragon's Dogma: Dark Arisen | BLUS31155 | `vr-non-working/` + untracked `bin/` copy | yes (community Unlock FPS, real-time) | **120 Hz** (prologue, 2026-10-02 run; 72 on 2026-10-01) | **broken** (boot screens head-locked; slow in Matt's save) | open-world frame rate and outdoor flares with `zcull_approximate` unchecked; headset frame rate (risk); needs update 01.02 |
+| Dragon's Dogma: Dark Arisen | BLUS31155 | `vr-non-working/` + untracked `bin/` copy | yes (community Unlock FPS, real-time) | **120 Hz** (prologue, 2026-10-02 run; 72 on 2026-10-01); Matt's slow save **90 Hz with multiview** (72 two-draw), 2026-10-03 | **broken** (boot screens head-locked; slow in Matt's save) | open-world frame rate and outdoor flares with `zcull_approximate` unchecked; headset frame rate (risk); needs update 01.02 |
 | Ratchet & Clank Collection | BCUS98282 | `vr-non-working/` + untracked `bin/` copies (base + rc1/rc2/rc3 executable profiles) | R&C 1, 2, 3 yes (profile frame-time values, run speed verified) | **R&C 1 90 Hz**, **R&C 3 90 Hz** (2026-10-02 run; both 72 before), **R&C 2 120 Hz** (Aranos and the machinery hall) | **broken** (R&C 1 unplayable: scene as a fixed 2D window; loader and menus head-locked) | R&C 1 has little margin at 72; R&C 1 pause menu |
 | The Darkness | BLUS30035 | `vr-non-working/` + untracked `bin/` copy | yes (community 60 FPS patch, real-time) | below 72 (48 at 72) | **parked**: under 60 FPS in Matt's save; intro black for a long time, videos missing | too slow at 300% (48 at 72); stereo and headset view fixed in the opening |
 | Dynasty Warriors 6 Empires | BLUS30306 | `vr-non-working/` + untracked `bin/` copy | no: frame-locked, profile at 60 (180 flat possible) | 120, but frame-locked: plays at 60 | not played | 90 FPS needs a logic-step patch |
@@ -220,6 +220,10 @@ Notes: `profiles/BLUS31155-notes.md`. Evidence: `evidence/ddda/`. Profile `BLUS3
   Accuracy "Approximate" while VR renders only): **72.0 FPS, 0% late**, RSX thread 13.9 -> 7.8 ms per frame.
 - **Headset (Matt, 2026-10-01): broken.** Boot screens head-locked; performance bad in his save
   (`vrtest_ddda_matt_slow`). See "First headset test" above.
+- **2026-10-03 (simulator, multiview build `d6acea81e`), to recheck in the headset:** Matt's save now holds
+  **90 Hz** at 300% on multiview (90.0 FPS, 0% late; 120 averages 110.7); two-draw holds 72 (90 averages 87.2).
+  The boot screens (notices, Capcom, title, main menu) are world-fixed: each moves across the view when the head
+  turns 29 degrees (`evidence/ddda/2026-10-03-boot-screens-yaw0-vs-yaw05.jpg`). Nothing head-locked seen.
 - **Open:** open-world frame rate; outdoor flares with `zcull_approximate` (any visible pixel reports as fully
   visible); NPC name tags stay in the HUD box; world scale and HUD in the headset.
 
