@@ -82,7 +82,7 @@ pause menu, in-game cutscenes.
   prompt, `goMiniGameCircle`, spawned at `0x61964`), then mashing. Scripted Square bursts stun the head within
   ~15 s and Circle bursts (8/s) grabbed it once, but combat timing differs run to run, so a fixed script does not
   reach the grab reliably. The "Mashometer" tunables in the strings belong to Zeus' Fury (magic), not the QTE. The
-  RPCS3 community patch notes for God of War III say its button-mash QTEs are tied to frame rate too.
+  community patches have no QTE fix for God of War HD.
   Savestates: Matt's `BCES00800_1_4` is now also `vrtest_gow1_matt_qte` (a hard link: RPCS3 keeps only 4 numbered
   states and deletes the oldest; `BCES00800_1_2` went that way, `vrtest_gow1_matt_blur` still holds its data);
   `gow1_qte_pre` (`_1_6`): after one attack/mash/attack round from it.
