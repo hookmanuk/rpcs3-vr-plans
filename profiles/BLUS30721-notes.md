@@ -89,3 +89,37 @@ why?"). The bug shows in the first 10 seconds: Asura's red top goes dark and lig
   `-before-dense.png` and `-after-dense.png` (left eye, every 2nd capture through the sweep).
 - The 2026-10-02 rotation audit of `_1_5` found no shadow map in the frames it checked; `_1_6`'s space cutscene
   renders one per character.
+
+## 2026-10-03: missing objects and pop-in fixed: culling patch (fork 989c62599)
+
+Matt's savestate `BLUS30721_1_8` (hard link `vrtest_asura_matt_culling`): the palace cutscene ("General Asura, the
+Emperor summons you"). Loads of objects missing or popping in when the head turns; distant central objects popping in
+as the camera moves closer.
+- **Cause.** Unreal Engine 3 frustum culling with the game's camera, and the cutscene cameras are narrow: 22.6 to 39.6
+  degrees across (Px 5.0 and 2.78; the 39.6 one is a 50 mm lens on 36 mm film, tan = 0.36). With the head turned 35
+  degrees the whole palace was culled (pink sky); looking straight, distant structures above and ahead of the framed
+  characters were outside the game's view and popped in as the camera tilted.
+- **Found.** The renderer's cached view constants at `0x01a5a5b0` (camera-relative view-projection, then the view origin
+  and its negation); a PPU write watch there gave the shader-parameter setter (`0x2216ac`, reading `View + 0x1d0`).
+  `GetViewFrustumBounds` is `0x1048a0` (DELTA^2 at `0x104894`; Empty(6), near plane from column 2 if bUseNearPlane,
+  then left/right/top/bottom from columns 0/1 +- column 3, far, Init `0x1042f0`), found as the call with
+  `r3 = r22 + 0x380`, `r4 = r22 + 0x270`, `li r5, 0` at `0x662aec` (the scene view constructor). Other callers build
+  light and shadow frustums (`0x14e678`, `0x6a17e0` ... `0x6a8224`).
+- **Proved live** under the interpreter (`RPCS3_VR_POKE`): skipping the four side planes brought the palace back.
+- **Patch** `bin/patches/BLUS30721_patch.yml` *Wider view culling (VR)* (`tools/re/asura_cull.py` writes the lines):
+  the call at `0x662aec` goes to a cave written over the radial blur function `0x679ff8` (its only call `0x67a908`
+  becomes a nop, as the community *Disable Motion Blur* does). The cave passes a copy of the view-projection with clip x
+  and y scaled by min(1, T / Px), T = 1 / tan(half angle): configurable *Culling* 180 (default, T = 0: everything
+  ahead), 160, 140, 120, or the game's own. Rendering, LOD and the near/far planes keep the game's matrices. On by
+  default, and `Apply To Savestates: true` (new fork key) so the 1_8 savestate gets it.
+- **Checked** on the simulator (LLVM, Matt's config at 450%): with a 40-degree wobble the courtyard and palace are
+  complete; head straight through the hall, the throne structure, lanterns and left columns that popped in without the
+  patch are there from the start. Frame rate at Vblank 180 (90 FPS target): 89-90 FPS with and without the patch,
+  1% lows 80-86 against 83-86. A first version without side planes at all (everything around, behind too) cost up
+  to 10% (81-89 FPS, 1% lows 67-74) and was replaced.
+- **Open: a black disc.** In the hall, the large golden disc above the throne turns into a black silhouette (its light
+  orb still lit) once the camera tilts up past it (`evidence/asura/2026-10-03-culling-hall-black-disc.png`). It is above
+  the game camera's view at that point; without the patch it is not drawn at all then, so the game's own look there is
+  unknown. Not the character shadow mask (hiding `07d7202e` leaves it). Next: inspector captures at the golden and the
+  black moment, compare the disc draw's textures and constants.
+- Evidence: `evidence/asura/2026-10-03-culling-before.png`, `-culling-after.png`, `-culling-hall-popin-patch-vs-none.png`.
