@@ -325,8 +325,8 @@ go, and a handful of small deliberate behaviour changes.
   6. The four `effective_vblank_rate()` substitutions in `RSXThread.cpp` are all still
      present (a conflict there is easy to resolve by taking upstream and losing one).
   7. The regression pass of 7-vr-regression.md on the headset titles.
-- **Restart the fork version at vr1** after each upstream version bump, as 4-next-steps.md
-  already says.
+- **Keep the VR number counting** after an upstream version bump: the next release takes the next number
+  (`0.0.42-vr7`, then `0.0.43-vr8`), never vr1 again (4-next-steps.md, release procedure).
 
 ## 6. Implementation (2026-10-02)
 

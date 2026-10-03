@@ -25,11 +25,34 @@ def fetch(url):
         return r.read()
 
 
+def check_vr_number(base, vr):
+    """The VR number counts every release and never restarts, also not after merging a newer upstream version
+    (v0.0.42-vr7, then v0.0.43-vr8). Stops if a new version's number is not above every released tag's; rebuilding
+    an already tagged version is allowed. Uses the tags of the SRC checkout."""
+    number = re.fullmatch(r'vr(\d+)', vr)
+    if not number:
+        sys.exit(f'RPCS3_VR_VERSION "{vr}" is not vrN')
+    tags = subprocess.run(['git', '-C', SRC, 'tag', '--list', 'v*-vr*'], capture_output=True, text=True, check=True).stdout.split()
+    released = [int(m.group(1)) for m in (re.fullmatch(r'v\d+\.\d+\.\d+-vr(\d+)', t) for t in tags) if m]
+    if f'v{base}-{vr}' in tags or not released:
+        return
+    latest = max(released)
+    if int(number.group(1)) <= latest:
+        sys.exit(f'RPCS3_VR_VERSION is {vr}, but vr{latest} is already released: the VR number never restarts, so this '
+                 f'release is vr{latest + 1} (rpcs3/rpcs3_vr_version.h)')
+    if int(number.group(1)) > latest + 1:
+        print(f'warning: {vr} skips numbers after the latest tag, vr{latest} (are all tags fetched?)')
+
+
 def main():
     commit = re.search(r'RPCS3_GIT_VERSION "([^"]+)"', open(os.path.join(SRC, 'rpcs3', 'git-version.h')).read()).group(1)
     ver_src = open(os.path.join(SRC, 'rpcs3', 'rpcs3_version.cpp')).read()
     base = '.'.join(re.search(r'utils::version version\{ (\d+), (\d+), (\d+),', ver_src).groups())
-    vr = re.search(r'#define RPCS3_VR_VERSION "([^"]+)"', ver_src).group(1)
+    # RPCS3_VR_VERSION lives in rpcs3_vr_version.h since the merge-footprint restructuring (in rpcs3_version.cpp before).
+    vr_header = os.path.join(SRC, 'rpcs3', 'rpcs3_vr_version.h')
+    vr_src = open(vr_header).read() if os.path.exists(vr_header) else ver_src
+    vr = re.search(r'#define RPCS3_VR_VERSION "([^"]+)"', vr_src).group(1)
+    check_vr_number(base, vr)
     version = f'v{base}-{vr}-{commit}'  # the GitHub release tag is v{base}-{vr}
     files = {}  # zip path -> bytes or source path
 

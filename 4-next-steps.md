@@ -914,12 +914,14 @@ the fixed screen". Note: `plans/tools/launch.ps1` without `-Probe 'render=1'` le
   1.1, supersedes the community 1.0), Full Pixel Mode always on, Wider view (x20). Verified with no
   `patch_config.yml`. Ico's unlocked frame-rate patch is not shipped (game runs 3x fast).
 
-**Release procedure.** Versions are upstream's plus a fork tag: `0.0.42-vrN-<commit> Alpha` in the app,
-GitHub release tag `v0.0.42-vrN`, zip `rpcs3-v0.0.42-vrN-<commit>_win64.zip`. For each release: bump
+**Release procedure.** Versions are upstream's plus a fork tag: `<upstream>-vrN-<commit> Alpha` in the app
+(`0.0.42-vr7-<commit> Alpha` now), GitHub release tag `v<upstream>-vrN`, zip `rpcs3-v<upstream>-vrN-<commit>_win64.zip`.
+The VR number counts every release and never restarts, also not after merging a newer upstream version:
+`0.0.42-vr7` is followed by `0.0.43-vr8`. For each release: bump
 `RPCS3_VR_VERSION` in `rpcs3/rpcs3/rpcs3_vr_version.h` (a fork-only header since the merge-footprint restructuring; vr7 tagged 2026-10-02; the next is vr8), commit,
-build emucore/VKGSRender/rpcs3 so the exe carries that commit, run `plans/tools/package_release.py`, smoke-test
-the zip from a non-temporary folder, push `openxr` and the annotated tag; Matt tests the zip and publishes the GitHub release himself. After merging a newer upstream
-version, restart at vr1.
+build emucore/VKGSRender/rpcs3 so the exe carries that commit, run `plans/tools/package_release.py` (it stops if the
+VR number is not above every released tag's), smoke-test
+the zip from a non-temporary folder, push `openxr` and the annotated tag; Matt tests the zip and publishes the GitHub release himself.
 
 **Headset regressions found by the first release test (2026-09-24), fixed.** A fresh install froze Pure and
 WipEout once the headset was worn ("invalid layout": realign copied into a fresh UNDEFINED helper image).
