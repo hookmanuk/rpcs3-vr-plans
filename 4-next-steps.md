@@ -1141,3 +1141,18 @@ of a 15 ms frame at 72 Hz (7.2 ms flat). Changes, each A/B-measured on the same 
   field of view; the culling itself would need patching). Dead end: `0x327824` (`lfs` at `0x327868`) builds other
   passes' projections into the shared scratch matrix `0x7719e0`, not the race camera's. Also measured that day: the main menu at 425% holds 90 on the simulator (RSX thread
 mostly waiting, GPU ~1.5 ms of scene work); GPU memory 4.6 GB at 425% against 1.4 GB at 100% (every target scaled, per eye).
+
+**vr8 release (2026-10-03).** Tag `v0.0.43-vr8` at fork aa22747e (openxr pushed), zip
+`release/rpcs3-v0.0.43-vr8-aa22747e_win64.zip` (293 files). New playable games (Matt: ready): **God of War** and
+**God of War II** (BCES00800, God of War Collection: launcher + per-game profiles, GoW 1 QTE patch), **Dante's Inferno**
+(BLUS30405: Wider view (VR culling) 3.0, Disable camera shake), **Asura's Wrath** (BLUS30721: Wider view culling (VR);
+community Unlock FPS, motion blur and depth of field off); their files moved from `vr-non-working/` to `bin/`. Since vr7:
+upstream merge (175 commits, to fd8b33430, version 0.0.43); multiview stereo (both eyes in one draw); VR code moved out
+of upstream files; World Scale in the settings dialog (up to 1000%); savestates: folder-made states load with the
+library's ISO, states saved between FIFO commands resume (Dead FIFO fix), 4k blocks restore 4k pages; patch key
+`Apply To Savestates`; profile keys `depth_remap_programs`, `game_camera_aspects`, `screen_space.hud_block_programs`,
+`display_rect`, `bare_projection` block lists, `preprojected_programs` `without_depth_test`; camera tests (a camera's
+clip w depends on the position; camera-facing sprites keep the camera's projection scale); game fixes: WipEout HD
+(Detonator spheres, weapons and explosions in 3D, Wider view (VR culling) patch), Bayonetta (Dark Trigger glow, tree
+canopies), God of War (menus, intro, border, resolve). Smoke test: packaged exe starts (first-run dialog) and carries
+vr8-aa22747e. Matt tests and publishes.

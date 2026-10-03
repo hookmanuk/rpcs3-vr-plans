@@ -18,6 +18,8 @@ untracked in `bin/` for testing without being released. Unreleased profiles and 
 `vr-non-working/` for vr7 (untracked copies stay in `bin/`).
 
 **Shipped in vr7 (2026-10-02): Tales of Xillia and Super Stardust HD** (sections removed; history in their notes files).
+**Shipped in vr8 (2026-10-03): God of War and God of War II (God of War Collection), Dante's Inferno, Asura's Wrath**
+(sections removed; history in `profiles/BCES00800-notes.md`, `BLUS30405-notes.md`, `BLUS30721-notes.md`).
 
 ## Second headset test (Matt, 90 Hz, 2026-10-01 late): continue here
 
@@ -173,10 +175,7 @@ pass mark** for fully compatible.
 | Dynasty Warriors 6 Empires | BLUS30306 | `vr-non-working/` + untracked `bin/` copy | no: frame-locked, profile at 60 (180 flat possible) | 120, but frame-locked: plays at 60 | not played | 90 FPS needs a logic-step patch |
 | Puppeteer | BCUS98227 | `vr-non-working/` + untracked `bin/` copy | yes (profile frame time, Vblank 180 = 90 FPS, real-time) | 90 (2026-10-02; 72 before) | **barely works**: graphics trails, very dark, world far away and small; the head-locked intro light fixed 2026-10-01 evening | stage small in the headset view; SPU post skipped in VR |
 | Jak and Daxter Collection | BCUS98281 | `vr-non-working/` + untracked `bin/` copies | Jak 1 **no**: steps a fixed 1/60 per frame (1.5x at 90): capped at 60 in VR for now; Jak II probably the same; Jak 3 no (74-85 flat in Spargus) | Jak 1 120 (renderer; the game is capped at 60); Jak II 72 (2026-10-02); Jak 3 below 72 | **Jak 1**: HUD boxed, speed fixed (capped at 60, reprojected) and stereo depth fixed 2026-10-01 late, simulator-checked; to recheck in the headset | HUD unchecked |
-| Asura's Wrath | BLUS30721 | `vr-non-working/` + untracked `bin/` copy | yes (community Unlock FPS, real-time) | **120 Hz** (Episode 1 space battle) | **works well**; cutscene letterbox box/bars to remove; Matt 2026-10-02: intro video and TV screens fixed (simulator); character shadows fixed 2026-10-03 (`depth_remap_programs`); missing objects and pop-in in cutscenes fixed 2026-10-03 (patch *Wider view culling (VR)*); world scale set from Matt's headset 80% (`eye_baseline` 3.998); open: disc above the throne black/gold with head pitch (depth-bounds fix reverted, no change in the headset), blood on the stairs (1_8) | QTE mashing at 90 untested: the community *Unlock FPS* notes say some button-mash QTEs are tied to frame rate (playable at 60 if you mash well, 120+ unplayable in several missions) |
 | Anarchy Reigns | BLUS30632 | `vr-non-working/` + untracked `bin/` copies (profile, patch) | yes (fork patch, real-time verified) | 90 (Training only) | **parked**: splash/intro head-locked, HUD culled by depth; bad performance and graphics issues in gameplay | campaign unchecked; HUD timers 3x |
-| Dante's Inferno | BLUS30405 | `vr-non-working/` + untracked `bin/` copy | yes (profile `game_frame_ms_f32`, no patch; 0.99x at 90) | 120 | gameplay performs really well; splash, menus, intro movie and pause menu world-fixed since 2026-10-01 evening (simulator); edges of the headset view filled (Wider view 3.0: 170 degrees by default, full detail; simulator); hit shake off (patch, Matt confirmed); tooltip text fixed (simulator) | sky is a screen card; world scale unchecked |
-| God of War Collection (GOW1, GOW2) | BCES00800 | `vr-non-working/` + untracked `bin/` copies | yes (profile; GoW 1 QTE mash patch) | 120 (GoW 1 boat, GoW II Rhodes) | **GoW 1**: main menu on the fixed screen and Kratos's blurred edges fixed 2026-10-01 evening (simulator / desktop checked); performance good; **GoW II**: the same blurred edges (same resolve) fixed 2026-10-03 (Matt, headset); its main menu unchecked (GoW 1 needed the logo `screen_frame_draws` 1024x256) | ~~5% black border~~ fixed 2026-10-03 (`display_rect`) |
 | Killzone 2 | BCUS98116 | `vr-non-working/` + untracked `bin/` copy | no: default 45 | not measured | not played | RSX-bound; HUD and combat unchecked |
 | Gran Turismo 5 | BCUS98114 | `vr-non-working/` + untracked `bin/` copy | yes (patch) | ~~90 (race start)~~ ~40 FPS in the headset (Matt) | tested, broken: **~40 FPS, needs 60 minimum** | menu clipping, race-start frame rate |
 | MotorStorm: Pacific Rift | BCUS98155 | `vr-non-working/` + untracked `bin/` copy | yes (patch) | **72 Hz with multiview** (2026-10-03, race start; 90 averages 87, start window 1.1% late); two-draw misses 72 at the start (7.9% late) | not played | needs the multiview build for 72 |
@@ -288,39 +287,6 @@ sparkles. Jak 3 not started.
   wrong thing; what the eye sees (animations, effects, NPCs, camera) runs per frame. Jak II's "real-time" rests on
   the same test and is suspect too.
 
-## Asura's Wrath (BLUS30721, disc 01.00)
-
-Notes: `profiles/BLUS30721-notes.md`. Evidence: `evidence/asura/`. Community Unlock FPS (+ motion blur and depth of
-field off): 90 FPS at Vblank 180, real-time; generated profile with `vblanks_per_frame 2`; stereo and yaw audit
-look right in Episode 1. Sustained in VR at 300%: 120 Hz (Episode 1 space battle, 119.6 FPS at Vblank 240, no late
-frames; savestate `vrtest_asura_space`, made with Compatible Savestate Mode).
-
-- **Headset (Matt, 2026-10-01): works well.** To do: in-engine cutscenes show a 16:9 box with black letterbox
-  bars (the game draws the bars; the viewport is the full 1280x720). Hide the box background and the bars in VR so
-  the cutscene shows the 3D world with the HUD elements (subtitles, prompts) on top. Find the bar and background
-  draws with probe `hide=<vertex hash>[@<target>]` (and `why=`) in a cutscene, then `hidden_draws` (program + texture
-  size) or an unboxed/passthrough rule; check subtitles and QTE prompts stay.
-- **Headset (Matt, 2026-10-02):**
-  1. **Intro video tied to the head: fixed on the simulator.** The title/intro video draw `487364b5` (1280x720) is a
-     `screen_frame_draws` entry: those frames go on the fixed screen.
-  2. **TV screens (`BLUS30721_1_5`): fixed on the simulator.** The hologram feeds are rendered by separate cameras at
-     720/408 (projection aspect 1.765) into the scene target and copied to 720x408 textures; the head transform turned
-     those cameras with the head. New profile key `game_camera_aspects: [1.7647]` keeps them on the game camera:
-     feed identical in both eyes (mean diff 0.00) and unchanged by a head turn (before: 20.8 at 25 degrees, mostly black).
-  3. **Shadows sliding over the characters: fixed 2026-10-03 (fork 9135d376d; Matt: looks good).** Matt's
-     `BLUS30721_1_6` (`vrtest_asura_matt_shadows`) shows it in the space cutscene. The characters' screen-space
-     shadow mask (`07d7202e`) rebuilt positions from the eye's depth with the game's camera. New profile key
-     `depth_remap_programs` maps the eye's position and depth back to the game's per pixel. Details in the notes.
-  4. **Missing objects and pop-in (`BLUS30721_1_8`, `vrtest_asura_matt_culling`): fixed 2026-10-03 (fork 989c62599).**
-     The cutscene cameras are 22-40 degrees wide and the game culls to them. Patch *Wider view culling (VR)* widens
-     only the main view's culling frustum (default 180 degrees: everything ahead); also applied to savestates (new
-     patch key `Apply To Savestates`). Frame rate unchanged at 90.
-  5. **Disc black or gold with head pitch, blood on the stairs with yaw (Matt, 1_8): open.** The light passes use the
-     RSX depth-bounds test in the game camera's depth; turning it off (`disable_depth_bounds`, fork 002880a97) fixed
-     the disc on the simulator but not in the headset (Matt), so it was reverted (53125801a). The blood is unchecked.
-  6. **World scale: `eye_baseline` 3.1984 -> 3.998 (fork 53125801a).** Matt found World Scale 80% right in the headset;
-     100% now looks like that.
-
 ## Anarchy Reigns (BLUS30632, disc 01.00)
 
 Notes: `profiles/BLUS30632-notes.md`. Evidence: `evidence/anarchy/`. Fork patch *Frame rate follows VR* (instead of
@@ -337,77 +303,6 @@ Practice. Open: campaign, HUD sprite timers at 3x, headset run.
   thread idles ~35%). A once-a-frame GPU readback (render targets sharing pages with the ucode) costs the paused
   popup screen; Force CPU Blit removes it there but is slower in gameplay. The headset
   picture in gameplay has large dark-grey wedges over the ground (notes, `evidence/anarchy/2026-10-03-*`).
-
-## Dante's Inferno (BLUS30405, disc 01.00)
-
-Notes: `profiles/BLUS30405-notes.md`. Evidence: `evidence/dante/`. Frame-locked above 60 by a whole-frame clock;
-the profile sets its frame interval (new key `game_frame_ms_f32`, `0x119ecb4`): real-time at 90 without a patch.
-Generated profile (row vectors, five camera blocks, HUD `c[0]`); the HUD vanished in stereo until
-`require_rigid_camera` (generator fixed to write it). Stereo, audit, pause menu right on the desktop.
-- **Headset (Matt, 2026-10-01):** gameplay performs really well. Splash screen, menus and the intro movie are tied
-  to the head (screens with nothing the profile boxes). Needs culling/FOV work: the game culls to its own narrower
-  frustum, so objects in the wider headset view are missing (a culling-widening patch, as ICO's "Wider view (VR
-  culling)").
-- **Headset (Matt, 2026-10-02): fixed the same day.**
-  1. **Screen shake on hits** (`BLUS30405_1_2`): **fixed, confirmed by Matt.** The shake is a camera modifier
-     (class vtable `0xea3e50`, apply `0x663d8`: noise from a random table) in the camera manager's 12 modifier slots
-     (`+0x170`, stride `0x18`; manager at `0x30f1fdc0` in that save). Patch "Disable camera shake (VR)" (on by
-     default) makes the apply function return at once. Found from the shaken camera position (`0x11a19a0`, jitter
-     while attacking) -> write watch -> the view setter `0x452da0` -> its caller's camera record -> the modifier loop
-     (`0x452244`, virtual apply call at `0x452b38`).
-  2. **Empty tooltip banner** (`BLUS30405_1_3`): **fixed on the simulator** (fork e0a6d501e). The banner draw reads
-     the HUD block `c[0]` (boxed), but its text (program `2f7541c3`) reads a unit-square matrix from `c[256]`, so it
-     stayed at its full-view place. New profile key `screen_space.hud_block_programs` gives listed programs their
-     own HUD block (`2f7541c3` -> 256). Matt asked for all text everywhere to be visible: check other text screens.
-  3. **Wider view 2.0 (Matt: "near maximum", selectable):** scale dropdown 1.0-2.75 (62-170 degrees across), default
-     2.75 (170, the clamp), in a code cave in the dead body of the shake modifier. Matt in the headset: "the gfx are all
-     corrupted, especially the people".
-  4. **Wider view 3.0: full detail at 170 degrees (simulator, 2026-10-02 evening).** The corruption was EDGE's SPU
-     triangle culling: it drops triangles that cover no pixel of the game's viewport, and the widened projection made
-     everything 19x smaller there (characters kept ~1/5 of their triangles). The patch now scales EDGE's culling
-     viewport and scissor by 20 (setters `0x5ef390`, `0x5ef250`) and gives the small-object/effect size metric
-     (`0x65e8f0`) the unwidened FOV. At 2.75: character vertices and effect draws as at the normal FOV, heads turned 45
-     degrees whole; 120 FPS sustained in desktop stereo at 300%. New regression state `vrtest_dante_acre_v3`. Details
-     in the notes. **Next:** Matt's headset check. Open: the sun's lens flare is missing with the wide view (it was
-     before 3.0 too).
-  5. **Torch glows followed the head** (Matt, after 3.0): the glow sprites (`54fba8b4`) are projected by the game and drawn
-     with depth test off; new `preprojected_programs` entry form `{ "program": ..., "without_depth_test": true }` puts them on
-     their torches (simulator; Matt OK'd the captures). The generator cannot find such programs yet (a first rule failed,
-     reverted; notes in the game's file).
-
-## God of War Collection (BCES00800 v01.00, UK disc)
-
-Notes: `profiles/BCES00800-notes.md`. Evidence: `evidence/gow/`. Profiles: `BCES00800.gow1.json`,
-`BCES00800.gow2.json` and a base `BCES00800.json` for the launcher. The collection needs the base profile
-so that OpenXR is prepared before the exitspawn into a game.
-
-- **State:** desktop and headset-path verified; not played in the headset. Both games reach 90 FPS in
-  stereo on the headset path (flat RSX load 10-45%).
-- **Headset, GoW 1 (Matt, 2026-10-01):** performance good. The main menu looks wrong: its 2D and 3D elements are
-  combined at the wrong depth. In gameplay the main character has blurred edges (a screen-space pass, e.g. motion
-  blur or an outline/glow, misaligned with the head-transformed scene): Matt's savestate `vrtest_gow1_matt_blur`
-  (`BCES00800_1_2`, 18:14). GoW 2 not tried.
-- **Frame rate:** profile `game_fps_u32` sets the engine's dt to 1/rate (GOW1 `0x531dd0`,
-  GOW2 `0x5720f4`); game time measured at 1.0x at 90.
-- **QTEs (GoW 1), fixed 2026-10-03:** button-mash minigames drained their meter by a fixed amount per frame (drain x
-  rate x dt), so at 90 FPS Matt's Hydra QTE could not be won. Patch `BCES00800_patch.yml` *QTE button mashing at any
-  frame rate (VR)* (GOW1 `0xe8410`: `li r3, 60` for the rate in the drain), on by default; details in the notes.
-  GoW II's QTEs are implemented differently: their mash drains and time limits already use the step (real time
-  at any rate) and the prompt windows come from animation time (code read; not played at 90). No GoW II patch.
-- **Collection loader intro skewed and misaligned: fixed 2026-10-03 (fork 113c145eb).** The base profile keeps the
-  launcher's and selector's eight programs on the game camera (no stereo on the fixed screen) and a new renderer starts
-  on the fixed screen: no view switches through the intro (simulator log). Matt to check in the headset.
-- **Pause menu (Select) flicker: fixed 2026-10-03 (fork 113c145eb)**, GoW 1 and II, and the Power Up screen's real
-  cause: off-aspect HUD draws counted as camera draws on the fixed screen. Details in the notes.
-- **HUD:** a 4:3 bare projection in the scene's slots. The new profile field
-  `screen_space.offaspect_projection` handles it, and the generator detects it.
-- **Open:**
-  - 5% black border: **fixed 2026-10-03** with the new profile key `display_rect` `[32, 18, 1216, 684]` (both games):
-    the headset is shown only the scene's part of the display. Matt to check in the headset.
-  - One crash in 8 boots at the collection switch (`vkCreateSwapchainKHR` into an unloaded module); not
-    reproduced.
-  - Savestate restore then checkpoint restart kills the RSX thread: boot fresh.
-- **Files:** `vr-non-working/vr_profiles/` (moved out of `bin/` for vr7), untracked copies in `bin/`.
 
 ## Killzone 2 (BCUS98116)
 
