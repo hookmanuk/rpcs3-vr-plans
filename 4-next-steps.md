@@ -529,7 +529,10 @@ draws, partial-clear mirroring, and an occlusion/convergence comparison beyond t
 
 - [x] Add OpenXR submission only after the generated eye images are correct.
 - [x] Establish a correct render-twice implementation before considering Vulkan multiview.
-- [ ] Vulkan multiview, both eyes from one draw: plan in [9-multiview-plan.md](9-multiview-plan.md).
+- [ ] Vulkan multiview, both eyes from one draw: plan in [9-multiview-plan.md](9-multiview-plan.md). **Implemented on
+      branch `multiview` (2026-10-02/03)**, on by default there, `RPCS3_VR_MULTIVIEW=0` for the two-draw path. Full
+      regression through the simulator: equal or higher sustainable rate everywhere except The Darkness's pause screen;
+      Matt measured GT5 races ~35% faster. Next: Matt's headset pass, then merge into `openxr` for vr8.
 - [ ] Measure CPU/GPU cost, frame pacing, latency, and headset comfort.
 
 ### OpenXR first light (2026-09-21)

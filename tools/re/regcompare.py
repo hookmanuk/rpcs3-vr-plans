@@ -4,7 +4,7 @@ Performance: per state, the sustainable rate of each run and, at every rate both
 and RSX thread ms/frame. Pictures: the simulator captures (sim_STATE_RATE.png, what the headset was shown) at the
 lowest rate both ran: mean absolute RGB difference between the runs, and left/right eye difference within each run
 (0 = one eye copied into the other, i.e. no stereo). A capture taken at a different moment of play differs by its
-motion as well, so the number flags states to look at; the side-by-side montage (OUT_DIR/STATE.png: base left,
+motion as well, so the number flags states to look at; the side-by-side montage (OUT_DIR/STATE.jpg: base left,
 new right) is the check. Writes OUT_DIR/compare.md (default: NEW_DIR/compare)."""
 import os, re, sys
 from PIL import Image
@@ -57,7 +57,7 @@ for st in order:
             d = np.abs(A - B).mean()
             pic = '%.1f | %.1f / %.1f' % (d, eyes(A), eyes(B))
             m = Image.new('RGB', (ib.width * 2 + 8, ib.height), (255, 0, 255))
-            m.paste(ib, (0, 0)); m.paste(inn, (ib.width + 8, 0)); m.save(os.path.join(out, '%s.png' % st))
+            m.paste(ib, (0, 0)); m.paste(inn, (ib.width + 8, 0)); m.save(os.path.join(out, '%s.jpg' % st), quality=85)
             if eyes(B) < 0.5 or B.mean() < 3:
                 flags.append('%s: new run shows %s' % (st, 'a black frame' if B.mean() < 3 else 'identical eyes'))
             break

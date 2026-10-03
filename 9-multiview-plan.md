@@ -601,7 +601,37 @@ GT5's readbacks), so the race-start dip needs a mid-pack state to measure (the g
   `-Desktop`; VR on, Frame Rate Unlimited so the Vblank Rate paces, Null audio) and saves the simulator's
   composited frame (`sim_STATE_RATE.png`) beside the desktop one. `tools/re/regcompare.py` compares two runs.
 
+### Full regression through the simulator, two-draw vs multiview (2026-10-03)
+
+`evidence/vrtest/2026-10-03-0200-twodraw` and `2026-10-03-0323-multiview` (plus `2026-10-03-0437-multiview-warm`:
+seven states rerun once their multiview shaders were compiled); `compare/compare.md` and side-by-side simulator
+captures in the multiview folder. Same build (`dbb5a9e46`), `RPCS3_VR_MULTIVIEW=0` vs `1`, 300%, Pimax Dream Air
+profile at 90 Hz in the simulator.
+
+| | Sustainable rate, two-draw -> multiview |
+|---|---|
+| Higher with multiview | R&C 3 72 -> 90, Puppeteer 90 -> 120, Dragon's Dogma 90 -> 120, Jak II none -> 72, SotC 72 -> 90, Bayonetta 90 -> 120, RR7 90 -> 120 (warm) |
+| Same | R&C 1 (none; 69.4 -> 71.2 FPS at 72), R&C 2 and the hall 120, Anarchy 90 (101 -> 113 FPS at 120), Dante 120, Tales of Xillia 120, Jak 1 and 3 (capped at 60: their `max_fps`), DW6E (capped at 60), WipEout 90 (at 120: 39.6% late -> 0%), GoW 1 and II 120, Demon's Souls 120, Pure 120 (warm), Killzone HD 90, Asura 120, ICO 30, KH 1 120, KH 2 72 (warm), Super Stardust 120 |
+| Lower | The Darkness (paused "reconnect controller" screen in both runs): 47.2 -> 31.7 FPS at 72, GPU-bound |
+| Not run | GT5: the regression savestate no longer boots (made on 02.11; GT5 is on 01.00 now) |
+
+RSX thread time per frame is lower with multiview in most states (Dante 5.8 -> 4.8 ms, GoW 1.9 -> 1.2, R&C 3 10.6 ->
+8.5). The first multiview run of a title compiles its shader variants during the measurement: the cold run had KH 2,
+Pure, RR7, Xillia and DW6E slower, all back to equal or better once warm.
+
+Pictures: every state shows both eyes with parallax; between the runs only the moment of play differs (where the
+walk took the player). KH 2's two-draw frame has black bars at the sides that the multiview one does not: to check
+against the flat image.
+
+**The Darkness:** the GPU profile (`RPCS3_VR_GPUPROF=1`) puts it in one target, `0xc11a0000` (1024x576 FP16 x3),
+15.2 -> 24.6 ms/frame for the same 51 draws: the pause screen's full-screen blur chain costs ~1.5x per draw
+(0.88 -> 1.33 ms). Candidates, not yet told apart: each draw first copies the target into a downsampled texture,
+now for both eyes (the two-draw run did 0 right-eye texture rebuilds, so its right eye may have reused the left
+eye's copies), or the GPU loses framebuffer compression on two-layer FP16 targets.
+
 ### Still open (M4 as planned, plus what the runs found)
+
+- The Darkness's pause-screen blur is ~1.5x slower on the GPU (above).
 
 - Instanced draws: one set of constants for both eyes (no parallax on them), drawn with the game camera on both
   paths (the two-draw path leaves them out of the right eye). A count over 17 games' VR savestates found none.
