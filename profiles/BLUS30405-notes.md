@@ -161,3 +161,11 @@ camera block into the scene target with more camera draws after them, no colour-
 a second try: the glows read `c[0..2]`, which `matrix_less()` takes for a 3-row block; 54fba8b4 also draws into
 `0xc1d40000` (the 320x320 effect target, reused as the 1280x720 HUD target), which may have counted against it; check
 what it samples (a depth texture would read as a colour target).
+
+## 2026-10-03: pause menu text in the headset (simulator, multiview build)
+
+From `vrtest_dante_acre_v3` with Matt's config (`tools/re/drive.sh` KEEPCFG): Start, then R1 through the tabs
+Upgrade, Relics, Dante's Journal, Collectibles and Magic. Every tab is whole in the HUD box with all its text
+legible: tab names, level/EXP boxes, "Equip relics to modify stats...", the Journal's categories, "30 Pieces of
+Silver" and "Beatrice Stones" descriptions, "You do not have any magic spells yet", button prompts
+(`evidence/dante/2026-10-03-pause-*`). Still unchecked: loading-screen hints, in-game pickup popups, subtitles.
