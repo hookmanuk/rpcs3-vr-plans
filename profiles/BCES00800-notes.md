@@ -109,7 +109,7 @@ takes ~10 s before the screen changes). Keyboard pad: template plus right stick;
   466, 467] in `BCES00800.gow1.json` (as Ridge Racer 7): halo gone on Matt's savestate (desktop stereo, 300%).
 - Main menu fixed (fork, new key `screen_frame_draws`): the menu is Kratos in 3D in front of a 2D fire background
   with the logo; the headset view pulled them apart. A frame with the logo draw (`a3b1455d9ebdd381`, 1024x256) goes
-  whole on the fixed screen. Simulator: menu world-fixed, gameplay headset view. Open: GoW 2 (same resolve and menu?).
+  whole on the fixed screen. Simulator: menu world-fixed, gameplay headset view. GoW II: same resolve, fixed 2026-10-03 (fork 63b4e3f46, Matt checked in the headset); its main menu still open.
 
 ## 2026-10-02: Matt's second headset run, fixed on the OpenXR Simulator (fork 116138201)
 
