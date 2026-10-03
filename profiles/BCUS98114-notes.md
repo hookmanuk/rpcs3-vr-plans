@@ -237,7 +237,7 @@ programs had already been written to the shader cache, and a throw there would e
   GPU readback), the rest mostly idle.
 - Next: a savestate from Matt where it drops (mid-pack), then `RPCS3_RSX_SAMPLE=2` and frame stats there.
 
-## 2026-10-03: arcade menu cards fixed (exact per-pixel depth)
+## 2026-10-03: arcade menu cards improved, not fixed (exact per-pixel depth)
 
 Matt: the arcade menu's images on the right sit on top of each other at the same depth and clip through each other;
 left/right should change the topmost. Reproduced on the OpenXR Simulator with the head pitched down to the menu
@@ -254,6 +254,12 @@ left/right should change the topmost. Reproduced on the OpenXR Simulator with th
   writes their ratio to `gl_FragDepth`, which is the game's exact depth (equal to the normal depth outside the box).
   Simulator, head pitched -0.45 and turned 0.4: the selected card is whole and in front; Right/Left change it (Single
   Race, Time Trial, Drift Trial) as in flat (`evidence/gt5/2026-10-03-arcade-cards-*`).
+- **Matt, headset, same day: better, but not fixed.** The selected card is in front, but when the HMD turns
+  sideways or tilts up/down parts of the card art are still obscured: the front card (Time Trial) is cut off along a
+  diagonal edge on its right, with a white sliver of the card behind showing
+  (`evidence/gt5/2026-10-03-arcade-cards-matt-headset-still-cut.png`). Not investigated yet. Leads: another draw's
+  depth (the menu background or the unboxed text-coverage fills that share depth surface `0xc1100000`) occluding the
+  card where the tilted box moves it; or the card's corners crossing the near/far range once w changes.
 - Cost: hashing only for a profile that lists programs, once per vertex program (fingerprint cache); early-Z off for
   the listed program only. A race A/B (`matt_gt5_0100_1_3`, 60 Hz) did not complete: GT5 lost the Vulkan device in 3
   of 4 boots of that savestate, including one with the key removed (not this change). One clean run: 60.0 FPS, 1% low
