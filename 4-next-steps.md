@@ -1143,7 +1143,7 @@ of a 15 ms frame at 72 Hz (7.2 ms flat). Changes, each A/B-measured on the same 
 mostly waiting, GPU ~1.5 ms of scene work); GPU memory 4.6 GB at 425% against 1.4 GB at 100% (every target scaled, per eye).
 
 **vr8 release (2026-10-03).** Zip `release/rpcs3-v0.0.43-vr8-61a749c9_win64.zip` (293 files, fork 61a749c9, openxr
-pushed); tag `v0.0.43-vr8` first pushed at aa22747e, to move to 61a749c9 (Matt's release test: WipEout's culling patch
+pushed); tag `v0.0.43-vr8` first pushed at aa22747e, moved to 61a749c9 (forced tag push, Matt OK; Matt's release test: WipEout's culling patch
 did not apply to the disc version 02.00; second patch entry added). The aa22747e zip is superseded. New playable games (Matt: ready): **God of War** and
 **God of War II** (BCES00800, God of War Collection: launcher + per-game profiles, GoW 1 QTE patch), **Dante's Inferno**
 (BLUS30405: Wider view (VR culling) 3.0, Disable camera shake), **Asura's Wrath** (BLUS30721: Wider view culling (VR);
