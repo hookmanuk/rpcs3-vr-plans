@@ -123,3 +123,9 @@ screenshot and press X again if it stopped at a menu. The first boot compiles PP
 - So the slowdown Matt saw is not reproduced. Differences left: his real runtime and compositor, or what he read as
   slow (FPS counter, judder). His headset run's RPCS3.log was overwritten; next time keep that log (or note the FPS
   in the title bar).
+
+## 2026-10-03: headset run (Matt): WIP
+
+Matt in the headset: lots of graphics render errors; the text layer is cut off when the head turns; a phantom graphics layer shows when the head turns. Not investigated yet; no savestate or screenshots. Next: a savestate where it shows,
+then yaw audits on the simulator (straight vs turned) to find the cut-off text layer (a HUD box clipping it?) and the
+layer that appears only when turned.
