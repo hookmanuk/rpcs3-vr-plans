@@ -36,7 +36,12 @@ def eyes(a):
     return np.abs(a[:, :w] - a[:, w:2 * w]).mean()
 
 b, order = parse(base)
-n, _ = parse(new)
+n, order_new = parse(new)
+# States only the new run has (added to the manifest since the base run): their numbers against "-".
+for st in order_new:
+    if st not in b:
+        order.append(st)
+        b[st] = {'scene': n[st]['scene'], 'rates': {r: (None, None, None, None) for r in n[st]['rates']}, 'sus': 'not run'}
 lines = ['# VR regression comparison', '', 'Base: `%s`  ' % base, 'New: `%s`' % new, '',
          '| State | Sustainable base / new | Rate | avg FPS | 1% low | late % | RSX ms/frame | Picture |d| | L/R base / new |',
          '|---|---|---|---|---|---|---|---|---|']
