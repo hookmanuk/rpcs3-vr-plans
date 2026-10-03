@@ -173,7 +173,7 @@ pass mark** for fully compatible.
 | Dynasty Warriors 6 Empires | BLUS30306 | `vr-non-working/` + untracked `bin/` copy | no: frame-locked, profile at 60 (180 flat possible) | 120, but frame-locked: plays at 60 | not played | 90 FPS needs a logic-step patch |
 | Puppeteer | BCUS98227 | `vr-non-working/` + untracked `bin/` copy | yes (profile frame time, Vblank 180 = 90 FPS, real-time) | 90 (2026-10-02; 72 before) | **barely works**: graphics trails, very dark, world far away and small; the head-locked intro light fixed 2026-10-01 evening | stage small in the headset view; SPU post skipped in VR |
 | Jak and Daxter Collection | BCUS98281 | `vr-non-working/` + untracked `bin/` copies | Jak 1 **no**: steps a fixed 1/60 per frame (1.5x at 90): capped at 60 in VR for now; Jak II probably the same; Jak 3 no (74-85 flat in Spargus) | Jak 1 120 (renderer; the game is capped at 60); Jak II 72 (2026-10-02); Jak 3 below 72 | **Jak 1**: HUD boxed, speed fixed (capped at 60, reprojected) and stereo depth fixed 2026-10-01 late, simulator-checked; to recheck in the headset | HUD unchecked |
-| Asura's Wrath | BLUS30721 | `vr-non-working/` + untracked `bin/` copy | yes (community Unlock FPS, real-time) | **120 Hz** (Episode 1 space battle) | **works well**; cutscene letterbox box/bars to remove; Matt 2026-10-02: intro video and TV screens fixed (simulator); character shadows not reproduced | QTE mashing at 90 untested: the community *Unlock FPS* notes say some button-mash QTEs are tied to frame rate (playable at 60 if you mash well, 120+ unplayable in several missions) |
+| Asura's Wrath | BLUS30721 | `vr-non-working/` + untracked `bin/` copy | yes (community Unlock FPS, real-time) | **120 Hz** (Episode 1 space battle) | **works well**; cutscene letterbox box/bars to remove; Matt 2026-10-02: intro video and TV screens fixed (simulator); character shadows fixed 2026-10-03 (`depth_remap_programs`) | QTE mashing at 90 untested: the community *Unlock FPS* notes say some button-mash QTEs are tied to frame rate (playable at 60 if you mash well, 120+ unplayable in several missions) |
 | Anarchy Reigns | BLUS30632 | `vr-non-working/` + untracked `bin/` copies (profile, patch) | yes (fork patch, real-time verified) | 90 (Training only) | **parked**: splash/intro head-locked, HUD culled by depth; bad performance and graphics issues in gameplay | campaign unchecked; HUD timers 3x |
 | Dante's Inferno | BLUS30405 | `vr-non-working/` + untracked `bin/` copy | yes (profile `game_frame_ms_f32`, no patch; 0.99x at 90) | 120 | gameplay performs really well; splash, menus, intro movie and pause menu world-fixed since 2026-10-01 evening (simulator); edges of the headset view filled (Wider view 3.0: 170 degrees by default, full detail; simulator); hit shake off (patch, Matt confirmed); tooltip text fixed (simulator) | sky is a screen card; world scale unchecked |
 | God of War Collection (GOW1, GOW2) | BCES00800 | `vr-non-working/` + untracked `bin/` copies | yes (profile; GoW 1 QTE mash patch) | 120 (GoW 1 boat, GoW II Rhodes) | **GoW 1**: main menu on the fixed screen and Kratos's blurred edges fixed 2026-10-01 evening (simulator / desktop checked); performance good; GoW 2 unchecked | 5% black border |
@@ -305,9 +305,10 @@ frames; savestate `vrtest_asura_space`, made with Compatible Savestate Mode).
      720/408 (projection aspect 1.765) into the scene target and copied to 720x408 textures; the head transform turned
      those cameras with the head. New profile key `game_camera_aspects: [1.7647]` keeps them on the game camera:
      feed identical in both eyes (mean diff 0.00) and unchanged by a head turn (before: 20.8 at 25 degrees, mostly black).
-  3. **Shadows sliding over the characters: not reproduced.** Rotation audit (right eye yawed 12/15 degrees, same
-     frame) through the `_1_5` cutscene: the character shading matches in both eyes. No shadow map is rendered; the
-     only shadow-like draws are 7 stencil boxes (`2ebaa6ed`, main camera). Need Matt's screenshot or the exact shot.
+  3. **Shadows sliding over the characters: fixed 2026-10-03 (fork 9135d376d; Matt: looks good).** Matt's
+     `BLUS30721_1_6` (`vrtest_asura_matt_shadows`) shows it in the space cutscene. The characters' screen-space
+     shadow mask (`07d7202e`) rebuilt positions from the eye's depth with the game's camera. New profile key
+     `depth_remap_programs` maps the eye's position and depth back to the game's per pixel. Details in the notes.
 
 ## Anarchy Reigns (BLUS30632, disc 01.00)
 

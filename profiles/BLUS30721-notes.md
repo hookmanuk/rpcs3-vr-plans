@@ -68,3 +68,24 @@ OpenXR Simulator with an inspector capture (`f1860`):
 - Intro video: `screen_frame_draws` with the movie draw `487364b5ccf9cbc2` (1280x720).
 - TV screens: `game_camera_aspects: [1.7647]` (new key): the 720/408 feed cameras keep the game camera.
 - Character shadows: not reproduced (audit through the `_1_5` cutscene). See `6-wip-games.md`.
+
+## 2026-10-03: character shadows fixed (fork 9135d376d)
+
+Matt's savestate `BLUS30721_1_6` (hard link `vrtest_asura_matt_shadows`): the space cutscene ("The Brahmastra? But
+why?"). The bug shows in the first 10 seconds: Asura's red top goes dark and light again as the head turns.
+- **Cause.** Per character, the game renders a 512x512 shadow map (`54e8142ea414fea1`, viewport 502x256 or 502x128
+  at `0xcd6b2000`), then a screen-space shadow mask: `07d7202eb4af1d79` draws a 36-vertex box with the camera
+  `c[0..3]` into `0xc0840000` / `0xc0100000`. Its fragment program reads the scene depth `0xcabf0000` as
+  Z24-in-RGBA8 and maps (screen position from `tc0`, depth) into the shadow map with fragment constants fc5-fc11
+  (16 PCF taps). The characters (`76c6f060eff733e8`) sample the mask at their screen position. In the headset the
+  position and depth are the eye's but the constants are the game's, so the lookup slid with the head (the headset
+  FOV moved it even looking straight). Rewriting constants can't fix it: with head rotation the rebuild's divisor
+  would depend on x and y.
+- **Fix.** New profile key `depth_remap_programs: ["07d7202eb4af1d79"]`. The fragment shader maps the eye's (NDC,
+  depth) at each pixel to the game's before the program reads them (each eye's matrix follows its vertex constants).
+- **Checked** on the simulator with a 40-degree yaw wobble (scratch `asura_simburst.sh`, 40 s from launch): the
+  characters' shading stays constant across the sweep (before: Asura's top darkened at some yaws). Matt: "it all
+  looks good to me". Evidence: `evidence/asura/2026-10-03-shadows-before.png` (Matt's sheet: bottom row),
+  `-before-dense.png` and `-after-dense.png` (left eye, every 2nd capture through the sweep).
+- The 2026-10-02 rotation audit of `_1_5` found no shadow map in the frames it checked; `_1_6`'s space cutscene
+  renders one per character.
