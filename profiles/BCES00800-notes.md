@@ -176,5 +176,18 @@ Below 60 FPS the patched drain is the 60 FPS one (the unpatched game was easier 
 
 Other QTE kinds in the module: button prompts (`0xe8a68`: right button wins, wrong one fails; the window comes from
 the animation, which runs on dt) and stick rotation (same function, counts quarter turns): no per-frame timing found.
-GoW II does not contain this mash code (its minigame update `0xea4c4` plays `SND_MINIGAME_BUTTON`/`HIT`); its QTEs
-are unchecked at high frame rates.
+GoW II does not contain this mash code (its minigame update `0xea4c4` plays `SND_MINIGAME_BUTTON`/`HIT`); see below.
+
+### God of War II QTEs: already real time (code read 2026-10-03, no patch needed)
+
+GOW2's timing block `0x5720f4` (read live from `vrtest_gow2_rhodes` at 90): rate 90 (`+0`), step 1/90 (`+8`),
+scaled step (`+0xc`, the step x the scales at `+0x10`/`+0x14`), 1.0 at `+0x18`..`+0x24`. Its QTEs use the step,
+not `rate x step`:
+- Circle mash, two implementations, both found from the `PB_CircleBtnSmash` prompt: `0x10a1e0` (meter at object
+  `+0x604`) and `0x1176bc` (meter `+0x84`). Each frame the meter loses drain x `[0x572114]` (1.0) x scaled step:
+  a rate per second. A press adds 1.0. The time limit (`+0x608` += 1.0 x scaled step) counts seconds.
+- The minigame update `0xea4c4` (button prompts, sounds): no use of the rate or the step; its counters are loop
+  indices over event lists, and its windows are animation-event times passed to `0x62ca8` / `0x62af4`, and the
+  animation advances with the step.
+The one frame-rate-dependent construct of GOW1 (`x rate x dt` in the drain) is not in GOW2's QTE code. Not played
+through a GoW II QTE at 90 (no savestate at one).
