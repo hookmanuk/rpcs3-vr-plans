@@ -192,7 +192,7 @@ not `rate x step`:
 The one frame-rate-dependent construct of GOW1 (`x rate x dt` in the drain) is not in GOW2's QTE code. Not played
 through a GoW II QTE at 90 (no savestate at one).
 
-## 2026-10-03: pause menu (Select) flickers, shown twice offset (Matt, headset): open
+## 2026-10-03: pause menu (Select) flickers, shown twice offset (Matt, headset): fixed (see below)
 
 The GoW 1 pause menu opened with Select flickers and shows twice, offset: the same symptom the Power Up screen
 (Start) had before `screen_frame_draws` `{a3b1455d9ebdd381, 512x512}` fixed it (frames switching between the fixed
@@ -200,10 +200,33 @@ screen and the headset view every few frames). Next: an inspector capture of the
 gameplay does not, add it to `screen_frame_draws` in `BCES00800.gow1.json`; count view switches as for the Power Up
 screen (180 -> 7 in 6 s). Check GoW II's pause menu too.
 
-## 2026-10-03: collection loader intro still skewed and misaligned (Matt, headset): open
+## 2026-10-03: collection loader intro still skewed and misaligned (Matt, headset): fixed (see below)
 
 The collection's intro animation (before `GAMESEL.self`, base profile `BCES00800.json`, four programs in `screen_frame_draws`, see
 2026-10-02) is still skewed and misaligned in the headset. The fix was checked on the OpenXR Simulator only. Leads:
 frames of the intro that contain none of the four listed draws (so they fall back to the headset view and the image
 jumps), or the frame shown on the fixed screen still carrying a per-eye camera transform (skew). Next: run the
 selector intro on the simulator at several head angles through the whole animation and count view switches.
+
+## 2026-10-03 evening: pause menu, loader intro, black border fixed (fork 113c145eb)
+
+- **Pause menu flicker (GoW 1 and II), and the real cause of the Power Up flicker.** Reproduced from
+  `vrtest_gow1_matt_blur` with Select: 272 view switches in 6 s. The menu frames have no world draws (scene copy
+  `c4882b95`, menu art `a3b1455d`, text `246db670`); probe `why=` showed the menu draws classified `box 1` (HUD) with
+  the headset view on (state 7) but `camera 1` once the frame was on the fixed screen (state 6/2, no view), because
+  the `offaspect_projection` rule only ran with the view on. Camera draws brought the headset view back, where the
+  same draws count as none: a 3-on/3-off loop. Fix in the renderer: on the fixed screen an off-aspect bare projection
+  is left as drawn, not a camera draw. Checked: GoW 1 pause opens to the fixed screen and stays (0 switches in 6 s),
+  Circle returns to the headset view; Power Up (Start / Start) the same; GoW II pause (Select / Circle) the same.
+  `a3b1455d` at 128x128 was not usable as a `screen_frame_draws` key: gameplay HUD draws it too.
+- **Loader intro.** The intro's frames (EBOOT, then GAMESEL) use eight vertex programs; one frame at 5.7 s and the
+  first frames after the GAMESEL switch (~26 s) went to the headset view, and on the fixed screen the 3D blades took
+  per-eye stereo against the 2D logo. The base profile `BCES00800.json` now lists all eight in `game_camera_programs`
+  (no head transform, no stereo: the launcher and selector have no 3D to follow), and a new renderer starts on the
+  fixed screen until its first camera draw (the switch flip). Checked: one switch to the fixed screen at boot, none
+  through the intro and into the selector (45 s).
+- **Black border.** Measured on display dumps: both games inset the 1216x684 scene at (32, 18) in 1280x720. New profile
+  key `display_rect` (`[32, 18, 1216, 684]` in `BCES00800.gow1.json` and `.gow2.json`): the projection layer shows only
+  that part of the eye image (log: "Projection layer shows 5472x3078 at (144, 81) of the 5760x3240 eye image"); fixed
+  screen frames keep the whole picture. Not seen in the headset yet (the simulator window was collapsed, so no
+  composited screenshots).

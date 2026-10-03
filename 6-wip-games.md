@@ -391,19 +391,16 @@ so that OpenXR is prepared before the exitspawn into a game.
   frame rate (VR)* (GOW1 `0xe8410`: `li r3, 60` for the rate in the drain), on by default; details in the notes.
   GoW II's QTEs are implemented differently: their mash drains and time limits already use the step (real time
   at any rate) and the prompt windows come from animation time (code read; not played at 90). No GoW II patch.
-- **Collection loader intro still skewed and misaligned (Matt, headset, 2026-10-03).** The intro animation (Kratos's
-  blades, a real-time 3D animation shown before `GAMESEL.self`) was put on the fixed screen with `screen_frame_draws` on
-  2026-10-02 (checked on the simulator straight and turned 25 degrees), but in the headset it is still skewed and
-  misaligned. Not investigated yet.
-- **Pause menu (Select) flickers, shown twice offset (Matt, headset, 2026-10-03).** The same symptom the Power Up
-  screen (Start) had before its fix: the frame switches between the fixed screen and the headset view. The Power Up
-  fix was `screen_frame_draws` with its menu-art draw (`a3b1455d9ebdd381`, 512x512 texture); the pause menu needs its
-  own unique draw found (inspector capture) and listed the same way. GoW II's pause menu unchecked.
+- **Collection loader intro skewed and misaligned: fixed 2026-10-03 (fork 113c145eb).** The base profile keeps the
+  launcher's and selector's eight programs on the game camera (no stereo on the fixed screen) and a new renderer starts
+  on the fixed screen: no view switches through the intro (simulator log). Matt to check in the headset.
+- **Pause menu (Select) flicker: fixed 2026-10-03 (fork 113c145eb)**, GoW 1 and II, and the Power Up screen's real
+  cause: off-aspect HUD draws counted as camera draws on the fixed screen. Details in the notes.
 - **HUD:** a 4:3 bare projection in the scene's slots. The new profile field
   `screen_space.offaspect_projection` handles it, and the generator detects it.
 - **Open:**
-  - 5% black border: the scene renders at 1216x684, inset in 1280x720, so the world is ~5% smaller than
-    the head rotation. Lead: the per-video-mode layout table at GOW1 `0x157918`. Measure k first.
+  - 5% black border: **fixed 2026-10-03** with the new profile key `display_rect` `[32, 18, 1216, 684]` (both games):
+    the headset is shown only the scene's part of the display. Matt to check in the headset.
   - One crash in 8 boots at the collection switch (`vkCreateSwapchainKHR` into an unloaded module); not
     reproduced.
   - Savestate restore then checkpoint restart kills the RSX thread: boot fresh.
