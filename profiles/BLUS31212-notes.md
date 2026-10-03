@@ -62,9 +62,21 @@ Executable hashes: launcher `PPU-83f4a1c6...`, `kingdom.self` `PPU-d626d983...`.
   ("Power sleeps within you.") were full-view before; not yet seen with the rule. `e44e6d596e281ee5` (opaque,
   1024x1024 texture, into the scene) is not identified; kept out of the list.
 
+## Headset pass, 2026-10-03 (OpenXR Simulator, multiview build)
+
+- **HUD rule checked on the Dive's 2D layer:** the captions ("If you give it form...", "Is this the power you
+  seek?") and the pedestal's Yes/No box are in the HUD box in both eyes, beside Sora as in flat
+  (`evidence/kh/2026-10-03/kh1_*`).
+- Cutscene close-ups use a telephoto game camera: at the headset's FOV the same shot shows Sora small and far away.
+- **Getting to the gameplay HUD (for a savestate):** from `vrtest_kh1_dive` with `tools/re/drive.sh`, 600 ms presses:
+  `I 2500` (walk; the pedestals rise), four `X`, `I 2100` (up to the sword's pedestal), `I+C 900` (jump onto it:
+  "The power of the warrior..."), `X` x3 (Yes: Sora stands on it facing the centre, the staff ahead-left, the
+  shield ahead-right). The second pedestal defeated blind steering: the manual camera swings after each jump
+  (`I+J 1500` then a split jump `I+J+C 450` / `I+C 500` ends beside the staff's pedestal; `J+C`, `L+C`, `I+L+C`
+  from there missed). Next try: small steps with a screenshot each, or read Sora's position from memory.
+
 ## Open
 
-- **Need a gameplay savestate with the HUD on screen** (command menu, HP): scripted input did not get Sora past
-  the first pedestal (X / Triangle / Circle did nothing there).
+- **Need a gameplay savestate with the HUD on screen** (command menu, HP): the second pedestal (above).
 - The step for >60 FPS; Re:Chain of Memories (`recom.self`, community 60 FPS patch exists) and the launcher's
   menus in the headset.

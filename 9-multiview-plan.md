@@ -620,14 +620,27 @@ RSX thread time per frame is lower with multiview in most states (Dante 5.8 -> 4
 Pure, RR7, Xillia and DW6E slower, all back to equal or better once warm.
 
 Pictures: every state shows both eyes with parallax; between the runs only the moment of play differs (where the
-walk took the player). KH 2's two-draw frame has black bars at the sides that the multiview one does not: to check
-against the flat image.
+walk took the player). KH 2's two-draw frame had black bars at the sides that the multiview one did not; on
+2026-10-03 neither path showed them (`evidence/kh/2026-10-03/kh2_sim_twodraw_vs_multiview.jpg`): a passing frame.
 
 **The Darkness:** the GPU profile (`RPCS3_VR_GPUPROF=1`) puts it in one target, `0xc11a0000` (1024x576 FP16 x3),
 15.2 -> 24.6 ms/frame for the same 51 draws: the pause screen's full-screen blur chain costs ~1.5x per draw
 (0.88 -> 1.33 ms). Candidates, not yet told apart: each draw first copies the target into a downsampled texture,
 now for both eyes (the two-draw run did 0 right-eye texture rebuilds, so its right eye may have reused the left
 eye's copies), or the GPU loses framebuffer compression on two-layer FP16 targets.
+
+### 2026-10-03 (morning): right-eye texture flicker in atlases (fixed, fork `d6acea81e`)
+
+Kingdom Hearts II in the headset: about one frame in 25, the right eye drew Roxas without hair, his hands garbled
+and his arms in an older pose (`evidence/kh/2026-10-03/`). Multiview only (0 of 12 right eyes on the two-draw path
+had it; 6 of 129 shots on multiview). Found by elimination, with temporary diagnostics since removed: the eyes'
+constants differed in the same single slot every frame (not the constants), and forcing every sampled array view
+to layer 0 made it go away. Cause: `generate_atlas_from_images` and `generate_2d_mipmaps_from_images` build a
+texture from several render-target sections; under multiview the image has two layers (`vr_temporary_layers`), but
+the layout change, clear, barrier and the guest-memory background load covered layer 0 only. Layer 1 kept what the
+pooled image last held. Both now cover every layer, and the memory background is copied into layer 1 before the
+sections write each eye's pixels. After the fix: 0 of 131 shots (two bursts of screenshot
+triggers, scored by a hair-colour detector). KH II samples many such 512x512 atlases (94 distinct images in one run).
 
 ### Still open (M4 as planned, plus what the runs found)
 

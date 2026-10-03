@@ -26,7 +26,17 @@ Final Mix, `PPU-f18bcdcc...`), `BBS.self` (Birth by Sleep Final Mix) or the Re:c
   `passthrough_hud` + `hud_programs` [`67d8f773436e61a5`, `b4c6872a86d66c95`]: in the HUD box, world-fixed at 25
   degrees. GS-pixel-projected effects `a0ae7ea7d5ffb37f` (as KH 1's `b7585fdc`): `require_rigid_camera` +
   `preprojected_programs`. `eye_baseline` 6.4 (1 unit = 1 cm as KH 1; Roxas ~120-155 units tall on screen, rough).
-- Unchecked: menus (the pause/command menu), battles, cutscenes in the headset.
+- Unchecked: the main menu (Triangle does nothing at the first control), battles, cutscenes in the headset.
+
+## Headset pass, 2026-10-03 (OpenXR Simulator, multiview build)
+
+Flat against headset from `vrtest_kh2_twilight` with `tools/re/drive.sh` (`evidence/kh/2026-10-03/`):
+- Standing, walking (I held 1.5 s) and the **pause box** (Start, 600 ms) match flat. The pause screen's full-screen
+  dim is part of the 2D layer, so in the headset it darkens the HUD box only: a dark panel behind the text.
+- **Right-eye flicker, fixed:** about one frame in 25 the right eye drew Roxas without hair, his hands garbled
+  and his arms in an older pose. Multiview only: atlas textures built from render-target sections kept stale data
+  in layer 1 (fork `d6acea81e`, details in `9-multiview-plan.md`). 0 of 131 shots after the fix (6 of 129 before).
+- The black side bars of the 2026-10-03 two-draw regression capture did not come back on either path.
 
 ## Frame rate: unlocked, real time at any rate (2026-10-02, fork 1b068732b)
 
