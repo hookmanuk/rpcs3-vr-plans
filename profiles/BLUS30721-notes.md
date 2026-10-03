@@ -123,3 +123,25 @@ as the camera moves closer.
   unknown. Not the character shadow mask (hiding `07d7202e` leaves it). Next: inspector captures at the golden and the
   black moment, compare the disc draw's textures and constants.
 - Evidence: `evidence/asura/2026-10-03-culling-before.png`, `-culling-after.png`, `-culling-hall-popin-patch-vs-none.png`.
+
+## 2026-10-03 evening: disc black or gold with head pitch (fork 002880a97)
+
+Matt, on `BLUS30721_1_8`: the golden disc above the throne is black or gold depending on the vertical HMD angle, and
+the blood under a man dying on the stairs shows or hides with the horizontal angle.
+- **Disc.** Its gold is the orb's point light, an additive pass (`defd351b25230540`; another light pass is
+  `e121e0f142a5b6b2`). Both use the RSX depth-bounds test with the light's depth range in the game camera's window
+  depth (e.g. 0.9971-0.9978). The depth buffer holds the eye's depth, which changes with the head's rotation, so the
+  disc's pixels left or entered the range as the head pitched. New profile key `disable_depth_bounds: true` turns
+  the test off while VR renders. Checked: in the throne shot the disc stays gold when looking up (pitch +0.2, +0.3),
+  where it went black before.
+- Ruled out on the way: occlusion queries (forcing every report visible changed nothing), texture streaming (textures
+  one mip lower in some frames, but not the cause), the per-object constants, the shadow mask's `defd` pass alone.
+- **Still dark, consistently:** in the carpet shot before the throne (31-33 s of the savestate) the disc is black at
+  every head angle; at 31.3 s Asura's shadow mask (`7d7202eb`, blended into the scene) darkens it, after that it stays
+  black with the mask hidden too. Probably the cutscene's light being off for that shot (the game camera never shows
+  the disc there); not confirmed.
+- **Blood:** not confirmed. The second bounded light pass (`e121e0f1`) lights the dying man's mesh, so it may be the
+  same cause; the simulator window shrank (1904x61 screenshots), so the last captures were too poor to judge. Matt
+  to check in the headset.
+- Note for scripts: the simulator's `head_pose_command.json` takes radians (the playbook says so); earlier pose
+  sweeps in this session used degrees by mistake.
