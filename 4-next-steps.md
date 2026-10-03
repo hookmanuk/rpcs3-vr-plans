@@ -532,7 +532,10 @@ draws, partial-clear mirroring, and an occlusion/convergence comparison beyond t
 - [ ] Vulkan multiview, both eyes from one draw: plan in [9-multiview-plan.md](9-multiview-plan.md). **Implemented on
       branch `multiview` (2026-10-02/03)**, on by default there, `RPCS3_VR_MULTIVIEW=0` for the two-draw path. Full
       regression through the simulator: equal or higher sustainable rate everywhere except The Darkness's pause screen;
-      Matt measured GT5 races ~35% faster. Next: Matt's headset pass, then merge into `openxr` for vr8.
+      Matt measured GT5 races ~35% faster. **2026-10-03 morning:** right-eye flicker in texture atlases built from
+      render-target sections fixed (`d6acea81e`: layer 1 was never filled; Kingdom Hearts II's hair); warm reruns
+      put R&C 1, MotorStorm PR (new state) and Dragon's Dogma (Matt's save, 90) at or above 72 on multiview only.
+      Next: Matt's headset pass, then merge into `openxr` for vr8.
 - [ ] Measure CPU/GPU cost, frame pacing, latency, and headset comfort.
 
 ### OpenXR first light (2026-09-21)
