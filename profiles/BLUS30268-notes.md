@@ -70,6 +70,15 @@ Sustained: **72 Hz** (no margin; busier fights unmeasured).
   edge is not culling, and nothing visible was culled in this scene. The edge is drawn by something else (a hide scan
   needs a state where Wolverine survives: enemies kill him ~45 s after `xmen_jungle0` loads, and the pause screen is a
   frozen image).
+  **Arc traced:** a hide scan on the simulator (`xmen_jungle0`, every vertex program; scratchpad `xmhide.sh`) shows the
+  top-left arc comes from `b382ae7d966a52ec` (fp 701), UE3's final post-process into the scene target `c9a78000`
+  (copied out by `1c7935c330cbbbd8`). Its fragment program reads the scene (depth in alpha), the 322x182 bloom and a
+  256x256 texture it samples at a world position rebuilt from a view-ray varying `tc7` divided by that depth (plus fog
+  terms, a `tc0` vignette and tone mapping); hidden, the arc goes (and the grading with it). Keeping this program on the
+  game camera (`gamecam=`) leaves the arc, so the eye transform of `c[0..4]` is not the cause; the arc is the edge of
+  that world-space lookup (or its fog radius) beyond the game's own view. Next: RTDUMP the 256x256 texture and read
+  `tc7`'s vertex program to see which constant sets the radius; a candidate fix is the depth-remap ray variant
+  (`depth_remap_ray_texcoord: 7`) if `tc7` is built with the game's view.
 - Not seen: menus beyond pause, cutscenes, later levels.
 
 ## Gate shading bisect (2026-10-04)
