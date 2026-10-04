@@ -42,7 +42,7 @@ preview, as in DW Gundam).
 While driving, dark patches (shaped like cast shadows, often car-sized, sometimes thin streaks) appear on the road in
 one eye and not the other; the car's own shadow is missing or displaced in one eye. Same with Wider view 1.0, with
 zero eye separation (`per_eye_separation` 0, `eye_baseline` 0: so it follows each eye's projection, not the offset),
-in two-draw unbatched mode (`RPCS3_VR_MULTIVIEW=0 RPCS3_VR_BATCH=0`), with `require_camera_aspect`, with
+without `camera_position.slot` (Wolverine's per-eye cause; c[4] is also a camera block here), in two-draw unbatched mode (`RPCS3_VR_MULTIVIEW=0 RPCS3_VR_BATCH=0`), with `require_camera_aspect`, with
 `hud_display_buffers_only`, with `unboxed_draws` for the HUD program's full-screen sizes.
 **Gone** with `passthrough_hud: false` (HUD drawn full-view in each eye; car shadow then matches in both eyes) and
 with probe `hide=ae5d1f3fa4187794+f780e2c460d9eba2` (both matrix-less HUD programs). Not gone hiding only
