@@ -51,7 +51,7 @@ Sustained: **72 Hz** (no margin; busier fights unmeasured).
 ## Headset checks (simulator)
 
 - Jungle: world, Wolverine, enemies coherent straight / turned 25 / pitched 25; HUD (health) boxed; pause menu boxed.
-- **Open: shading differs between the eyes** on some surfaces (the wooden gate is darker and lower-contrast in the
+- ~~**Open: shading differs between the eyes**~~ **fixed 2026-10-04** (see below). Was: on some surfaces (the wooden gate darker and lower-contrast in the
   left eye than in the right and than flat). Present in desktop stereo too, and on both multiview and two-draw. Bisected
   to the base-pass program `991df40b5c30d3b5` (it draws the gate; the eyes already differ right after it); not its
   camera transform (also with `gamecam=`), not texture LOD, not the shadow, light or post passes (hidden one by one).
@@ -70,3 +70,13 @@ vertex program on gamecam= (keeps the game camera instead of the eye camera): **
 other single program stays at 0.89-0.92. So the per-eye darkening is that program's eye transform. Next: dump it
 (RTDUMP prog=4cd95a1fd09b3c9c) to see what it computes from c[0..4] (probably a light/shadow projection that must stay
 on the game camera or take only the position offset).
+
+**Cause and fix.** `4cd95a1fd09b3c9c` draws the gate wall (hidden, the wall vanishes; `gamecam=` only looked fixed
+because the wall then vanished too). Its inputs are plain textures (no per-eye render target), and the probe's new
+`why=` log showed only `c[0..3]` and `c[4]` differ per eye. `c[4]` is UE3's camera position in camera-relative space,
+always (0, 0, 0, 1); the generator had taken it as `camera_position.slot` (the camera block's eye point is a hair off
+the origin from float noise, within the match tolerance), so each eye got a +/-1.6-unit offset there, which the wall's
+lighting reads. Removing `camera_position.slot` (the eye offset still goes through the camera block) makes the gate
+match in both eyes (ratio 0.716 -> 0.927, the same as unaffected regions' parallax); straight / turned / pitched
+checked on multiview. Generator fixed (fork 3a40d9c82): a (0,0,0,1) constant never matches as the camera position;
+regenerating Wolverine now leaves the slot out.
