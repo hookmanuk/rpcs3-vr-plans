@@ -1200,4 +1200,9 @@ Origins: Wolverine; game state in `6-wip-games.md`).**
   layout, for Sonic's half-resolution shadow mask: placement right straight ahead, a hard seam with the head turned.
 - Profile key `game_vblank_frames_f32` also takes `{ "address": "...", "scale": n }` (writes n x 60 / rate): Jak II's
   ticks of 1/300 s per frame (fork 6a31f01f2). Existing string entries behave as before (scale 1).
+- Generator: camera-space boxes at a fixed depth that read the depth buffer as colour, or share their matrix with a draw
+  that does, are deferred light or shadow volumes and no longer count towards `depth_offset_projection` (fork
+  a2450e7c5; regenerating Sonic no longer writes it). Mini regression on this build
+  (`evidence/vrtest/2026-10-04-0655`): WipEout 90, Demon's Souls 120, Sonic 90, DW Gundam 120, Wolverine 72; Pure 120 on a
+  re-run (one 353 ms stall had failed its first run).
 

@@ -1,0 +1,76 @@
+# path: OpenXR Simulator, RPCS3_VR_MULTIVIEW=default, build 6a31f01f2 VR: Jak II at real-time speed at the headset rate;
+# BCES00664 vrtest_wipeout_race: WipEout HD (released): in a race, ship at speed
+BCES00664 vrtest_wipeout_race vblank 72 scale 300%:
+   576 frames over 8.0 s: avg 72.0 FPS, 1% low 68.1, 0.1% low 52.7 (worst frame 19.0 ms), median 13.98 ms, late 0.00%, RSX thread 4.30 ms/frame
+   => median of 1 windows: avg 72.0 FPS, 1% low 68.1, late frames 0.00%, RSX thread 4.30 ms/frame
+BCES00664 vrtest_wipeout_race vblank 90 scale 300%:
+   721 frames over 8.0 s: avg 90.0 FPS, 1% low 83.3, 0.1% low 79.2 (worst frame 12.6 ms), median 11.02 ms, late 0.00%, RSX thread 10.15 ms/frame
+   721 frames over 8.0 s: avg 90.0 FPS, 1% low 83.1, 0.1% low 81.2 (worst frame 12.3 ms), median 11.02 ms, late 0.00%, RSX thread 9.65 ms/frame
+   721 frames over 8.0 s: avg 90.0 FPS, 1% low 83.1, 0.1% low 81.4 (worst frame 12.3 ms), median 11.03 ms, late 0.00%, RSX thread 9.78 ms/frame
+   => median of 3 windows: avg 90.0 FPS, 1% low 83.1, late frames 0.00%, RSX thread 9.78 ms/frame
+BCES00664 vrtest_wipeout_race vblank 120 scale 300%:
+   802 frames over 8.0 s: avg 100.2 FPS, 1% low 42.8, 0.1% low 37.7 (worst frame 26.5 ms), median 8.43 ms, late 38.40%, RSX thread 3.08 ms/frame
+   801 frames over 8.0 s: avg 99.9 FPS, 1% low 53.0, 0.1% low 51.5 (worst frame 19.4 ms), median 11.09 ms, late 22.72%, RSX thread 2.80 ms/frame
+   801 frames over 8.0 s: avg 100.0 FPS, 1% low 53.0, 0.1% low 52.1 (worst frame 19.2 ms), median 8.72 ms, late 41.07%, RSX thread 2.84 ms/frame
+   => median of 3 windows: avg 100.0 FPS, 1% low 53.0, late frames 38.40%, RSX thread 2.84 ms/frame
+SUSTAINABLE BCES00664 vrtest_wipeout_race: 90 Hz
+# BLUS30443 vrtest_demons_1: Demon's Souls (released): tutorial corridor
+BLUS30443 vrtest_demons_1 vblank 72 scale 300%:
+   577 frames over 8.0 s: avg 72.0 FPS, 1% low 65.6, 0.1% low 64.5 (worst frame 15.5 ms), median 13.93 ms, late 0.00%, RSX thread 1.67 ms/frame
+   577 frames over 8.0 s: avg 72.0 FPS, 1% low 65.8, 0.1% low 65.0 (worst frame 15.4 ms), median 13.90 ms, late 0.00%, RSX thread 1.75 ms/frame
+   => median of 2 windows: avg 72.0 FPS, 1% low 65.6, late frames 0.00%, RSX thread 1.67 ms/frame
+BLUS30443 vrtest_demons_1 vblank 90 scale 300%:
+   721 frames over 8.0 s: avg 90.0 FPS, 1% low 79.7, 0.1% low 78.4 (worst frame 12.8 ms), median 11.05 ms, late 0.00%, RSX thread 1.72 ms/frame
+   721 frames over 8.0 s: avg 90.0 FPS, 1% low 80.9, 0.1% low 77.7 (worst frame 12.9 ms), median 11.09 ms, late 0.00%, RSX thread 1.70 ms/frame
+   719 frames over 8.0 s: avg 89.9 FPS, 1% low 80.1, 0.1% low 32.3 (worst frame 31.0 ms), median 11.05 ms, late 0.14%, RSX thread 1.75 ms/frame
+   => median of 3 windows: avg 90.0 FPS, 1% low 80.1, late frames 0.00%, RSX thread 1.72 ms/frame
+BLUS30443 vrtest_demons_1 vblank 120 scale 300%:
+   961 frames over 8.0 s: avg 120.0 FPS, 1% low 106.2, 0.1% low 100.8 (worst frame 9.9 ms), median 8.34 ms, late 0.00%, RSX thread 1.52 ms/frame
+   961 frames over 8.0 s: avg 120.0 FPS, 1% low 107.2, 0.1% low 99.9 (worst frame 10.0 ms), median 8.37 ms, late 0.00%, RSX thread 1.55 ms/frame
+   959 frames over 8.0 s: avg 119.8 FPS, 1% low 105.6, 0.1% low 35.0 (worst frame 28.6 ms), median 8.36 ms, late 0.21%, RSX thread 1.61 ms/frame
+   => median of 3 windows: avg 120.0 FPS, 1% low 106.2, late frames 0.00%, RSX thread 1.55 ms/frame
+SUSTAINABLE BLUS30443 vrtest_demons_1: 120 Hz
+# BLUS30182 vrtest_pure_race: Pure (released): Alto Vista race, from the start line (holds R2)
+BLUS30182 vrtest_pure_race vblank 72 scale 300%:
+   576 frames over 8.0 s: avg 72.0 FPS, 1% low 68.9, 0.1% low 54.3 (worst frame 18.4 ms), median 14.00 ms, late 0.00%, RSX thread 13.73 ms/frame
+   553 frames over 8.0 s: avg 69.0 FPS, 1% low 68.9, 0.1% low 2.8 (worst frame 353.6 ms), median 14.00 ms, late 0.18%, RSX thread 14.30 ms/frame
+   => median of 2 windows: avg 69.0 FPS, 1% low 68.9, late frames 0.00%, RSX thread 13.73 ms/frame
+SUSTAINABLE BLUS30182 vrtest_pure_race: none Hz
+# BLUS30839 vrtest_sonic_race: Sonic & All-Stars Racing Transformed: Ocean View, mid-lap 1 (holds R2; Unlocked frame rate + Wider view 3.0)
+BLUS30839 vrtest_sonic_race vblank 72 scale 300%:
+   576 frames over 8.0 s: avg 72.0 FPS, 1% low 68.9, 0.1% low 68.1 (worst frame 14.7 ms), median 14.00 ms, late 0.00%, RSX thread 13.68 ms/frame
+   577 frames over 8.0 s: avg 72.0 FPS, 1% low 70.1, 0.1% low 68.9 (worst frame 14.5 ms), median 14.00 ms, late 0.00%, RSX thread 13.70 ms/frame
+   574 frames over 8.0 s: avg 71.6 FPS, 1% low 62.8, 0.1% low 31.3 (worst frame 31.9 ms), median 14.00 ms, late 0.52%, RSX thread 11.53 ms/frame
+   => median of 3 windows: avg 72.0 FPS, 1% low 68.9, late frames 0.00%, RSX thread 13.68 ms/frame
+BLUS30839 vrtest_sonic_race vblank 90 scale 300%:
+   719 frames over 8.0 s: avg 89.9 FPS, 1% low 72.9, 0.1% low 66.6 (worst frame 15.0 ms), median 11.01 ms, late 0.00%, RSX thread 7.54 ms/frame
+   721 frames over 8.0 s: avg 90.0 FPS, 1% low 80.4, 0.1% low 72.0 (worst frame 13.9 ms), median 11.01 ms, late 0.00%, RSX thread 7.36 ms/frame
+   718 frames over 8.0 s: avg 89.7 FPS, 1% low 75.2, 0.1% low 31.5 (worst frame 31.7 ms), median 11.01 ms, late 0.14%, RSX thread 7.77 ms/frame
+   => median of 3 windows: avg 89.9 FPS, 1% low 75.2, late frames 0.00%, RSX thread 7.54 ms/frame
+BLUS30839 vrtest_sonic_race vblank 120 scale 300%:
+   817 frames over 8.0 s: avg 102.0 FPS, 1% low 72.7, 0.1% low 65.9 (worst frame 15.2 ms), median 9.68 ms, late 0.37%, RSX thread 9.60 ms/frame
+   872 frames over 8.0 s: avg 108.9 FPS, 1% low 73.2, 0.1% low 57.8 (worst frame 17.3 ms), median 8.90 ms, late 1.26%, RSX thread 8.77 ms/frame
+   902 frames over 8.0 s: avg 112.7 FPS, 1% low 77.8, 0.1% low 34.0 (worst frame 29.4 ms), median 8.52 ms, late 1.11%, RSX thread 8.66 ms/frame
+   => median of 3 windows: avg 108.9 FPS, 1% low 73.2, late frames 1.11%, RSX thread 8.77 ms/frame
+SUSTAINABLE BLUS30839 vrtest_sonic_race: 90 Hz
+# BLUS30058 vrtest_dwg_odessa: Dynasty Warriors: GUNDAM: Official Mode, Mission 01 (Odessa), battle start (Frame rate follows VR + Wider view 3.0)
+BLUS30058 vrtest_dwg_odessa vblank 72 scale 300%:
+   577 frames over 8.0 s: avg 72.0 FPS, 1% low 67.9, 0.1% low 66.5 (worst frame 15.0 ms), median 13.92 ms, late 0.00%, RSX thread 7.20 ms/frame
+   576 frames over 8.0 s: avg 72.0 FPS, 1% low 67.3, 0.1% low 62.2 (worst frame 16.1 ms), median 13.90 ms, late 0.00%, RSX thread 7.83 ms/frame
+   => median of 2 windows: avg 72.0 FPS, 1% low 67.3, late frames 0.00%, RSX thread 7.20 ms/frame
+BLUS30058 vrtest_dwg_odessa vblank 90 scale 300%:
+   720 frames over 8.0 s: avg 90.0 FPS, 1% low 80.3, 0.1% low 76.6 (worst frame 13.1 ms), median 11.06 ms, late 0.00%, RSX thread 3.45 ms/frame
+   721 frames over 8.0 s: avg 90.0 FPS, 1% low 80.5, 0.1% low 68.6 (worst frame 14.6 ms), median 11.07 ms, late 0.00%, RSX thread 3.60 ms/frame
+   => median of 2 windows: avg 90.0 FPS, 1% low 80.3, late frames 0.00%, RSX thread 3.45 ms/frame
+BLUS30058 vrtest_dwg_odessa vblank 120 scale 300%:
+   960 frames over 8.0 s: avg 119.9 FPS, 1% low 101.2, 0.1% low 60.4 (worst frame 16.6 ms), median 8.35 ms, late 0.10%, RSX thread 4.71 ms/frame
+   961 frames over 8.0 s: avg 120.0 FPS, 1% low 101.9, 0.1% low 92.6 (worst frame 10.8 ms), median 8.36 ms, late 0.00%, RSX thread 3.95 ms/frame
+   => median of 2 windows: avg 119.9 FPS, 1% low 101.2, late frames 0.00%, RSX thread 3.95 ms/frame
+SUSTAINABLE BLUS30058 vrtest_dwg_odessa: 120 Hz
+# BLUS30268 vrtest_xmen_jungle: X-Men Origins: Wolverine: jungle, first control after the intro (Unlocked frame rate (VR); 72 Hz = Vblank 144) rates=72
+BLUS30268 vrtest_xmen_jungle vblank 144 scale 300%:
+   573 frames over 8.0 s: avg 71.5 FPS, 1% low 59.3, 0.1% low 58.0 (worst frame 17.2 ms), median 13.98 ms, late 0.00%, RSX thread 13.83 ms/frame
+   575 frames over 8.0 s: avg 71.8 FPS, 1% low 63.1, 0.1% low 58.5 (worst frame 17.1 ms), median 13.98 ms, late 0.00%, RSX thread 13.77 ms/frame
+   => median of 2 windows: avg 71.5 FPS, 1% low 59.3, late frames 0.00%, RSX thread 13.77 ms/frame
+SUSTAINABLE BLUS30268 vrtest_xmen_jungle: 72 Hz
+DONE /f/rpsc3/source/plans/evidence/vrtest/2026-10-04-0655
