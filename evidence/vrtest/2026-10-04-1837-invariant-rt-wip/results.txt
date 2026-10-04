@@ -326,3 +326,8 @@ DONE /f/rpsc3/source/plans/evidence/vrtest/2026-10-04-1837-invariant-rt-wip
 # KH II 71.2, Jak II 70.5, SEGA Rally 66.7) are not the eye-invariant change: A/B straight after, same build,
 # RPCS3_VR_NO_INVARIANT=1 vs default: SEGA Rally 71.8 / 71.8 FPS at 72, Jak 3 51.0 / 51.4. SteamVR's vrcompositor was
 # running on the machine during this run (GPU shared); re-run these states with SteamVR closed before comparing.
+# Follow-up: SteamVR (vrserver/vrcompositor) and fpsVR have been running since 09:25, after the 06:55 baseline run.
+# Wolverine at Vblank 144, same session: default 63.2 FPS (RSX 15.5 ms), RPCS3_VR_NO_INVARIANT=1 62.5, the morning
+# profile (with the c[4] position slot) 58.9: none of today's changes; the morning's 71.5 (RSX 13.8 ms) was measured
+# before SteamVR started. Sonic (90 Hz, RSX 8.8 ms) and DW Gundam (120) are unchanged. Re-measure the RSX-bound games
+# (Wolverine, Killzone 2, Jak 3, KH II, SEGA Rally) with SteamVR closed.
