@@ -95,3 +95,18 @@ Savestates: `BCUS98281_1_0` (Jak 1, Samos' hut after the intro), `BCUS98281_1_1`
 - Also: `fc3fabcf3cb724b2` full-screen passes (glow composite 512x360, scene copy 1024x720, untextured fill) in
   `unboxed_draws`: they were boxed since `orthographic_block 0` (faint rectangles when the head turned).
 - World Scale in the VR settings corrects the size if 0.5 m per unit is off.
+
+## 2026-10-04: Jak II frame-locked too; capped at 60
+
+- Timeline test (`vrtest_jak2_prison`, walk forward, shots 1.6 s apart from the same savestate at Vblank 60 and 120):
+  at 120 Jak reaches the next room while at 60 he is still by the vats. The earlier "real-time" walk check was wrong for
+  Jak II as for Jak 1. `BCUS98281.jak2.json`: `max_fps 60`, `default_fps 60` (fork 28687269a); 60.0 FPS on the
+  simulator at 90 Hz (headset reprojects).
+- Multiview build, 300%, simulator: Jak II renders 90 Hz sustained (89.6 FPS, 0.14% late; 72 on 2026-10-02); Jak 3
+  (`vrtest_jak3_spargus`) 56.9 FPS at 72.
+- Looked for the GOAL clock fields to drive the step (OpenGOAL: `clock` seconds-per-frame 1/60, frames-per-second 60,
+  time-adjust-ratio 1.0; `display` time-factor 5.0 NTSC / 6.0 PAL). Jak II's memory has 1/60 at only 9 places, none
+  beside 60.0 (two in a constant table at `0xc53df0`: 1.0, 1/60, 255, 5, 10, 20, then 59.925, 29.95). Not found; the
+  HD port's structures differ. Next idea: write-watch a per-frame counter that advances by 5 (ticks) to find the clock
+  update.
+

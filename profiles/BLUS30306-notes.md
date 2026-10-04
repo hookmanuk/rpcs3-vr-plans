@@ -35,3 +35,11 @@ Bandits).
 ## Open
 
 - 90 FPS (frame lock); world scale; menus (2D, full-screen) and the strategy map in the headset.
+
+## 2026-10-04: DW Gundam's step fix does not carry over (yet)
+
+Dynasty Warriors: GUNDAM (BLUS30058, same developer) was fixed by redirecting a step constant (1.0 frames) passed to its
+battle update. Here, memory clocks at Vblank 120 run 1.3-1.8x (vs 0.9-1.0 at 60); the one traced under the interpreter
+(`0x30d1abb0`, 51.8 and rising, 0.95x at 60 / 1.77x at 120, many copies) is written as a vector (29.6, 0.5, 0.5, 0) at
+`0x2ae068` (caller `0x2afab8`): an effect parameter, not the logic step. Not pursued further this time.
+

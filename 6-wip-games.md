@@ -177,10 +177,10 @@ pass mark** for fully compatible.
 |---|---|---|---|---|---|---|
 | Dragon's Dogma: Dark Arisen | BLUS31155 | `vr-non-working/` + untracked `bin/` copy | yes (community Unlock FPS, real-time) | **120 Hz** (prologue, 2026-10-02 run; 72 on 2026-10-01); Matt's slow save **90 Hz with multiview** (72 two-draw), 2026-10-03 | **WIP: graphics errors in the headset** (Matt 2026-10-03: many render errors, text cut off and a phantom layer when the head turns) | open-world frame rate and outdoor flares with `zcull_approximate` unchecked; headset frame rate (risk); needs update 01.02 |
 | Ratchet & Clank Collection | BCUS98282 | `vr-non-working/` + untracked `bin/` copies (base + rc1/rc2/rc3 executable profiles) | R&C 1, 2, 3 yes (profile frame-time values, run speed verified) | **R&C 1 90 Hz**, **R&C 3 90 Hz** (2026-10-02 run, desktop stereo; both 72 before), **R&C 2 120 Hz** (Aranos and the machinery hall). Headset path (simulator, 2026-10-03): R&C 1 **72 on multiview** (90 averages 85.4), two-draw 69.4 at 72; R&C 3 90 on multiview | **broken** (R&C 1 unplayable: scene as a fixed 2D window; loader and menus head-locked) | R&C 1 has little margin at 72; R&C 1 pause menu |
-| The Darkness | BLUS30035 | `vr-non-working/` + untracked `bin/` copy | yes (community 60 FPS patch, real-time) | below 72 (48 at 72) | **parked**: under 60 FPS in Matt's save; intro black for a long time, videos missing | too slow at 300% (48 at 72); stereo and headset view fixed in the opening |
+| The Darkness | BLUS30035 | `vr-non-working/` + untracked `bin/` copy | yes (community 60 FPS patch, real-time) | below 72: 53 FPS at 72 in Matt's save (2026-10-04, multiview; 48 on 2026-10-01), 32 in the opening car scene | **parked**: under 60 FPS in Matt's save; intro black for a long time, videos missing | too slow at 300%; stereo and headset view fixed in the opening |
 | Dynasty Warriors 6 Empires | BLUS30306 | `vr-non-working/` + untracked `bin/` copy | no: frame-locked, profile at 60 (180 flat possible) | 120, but frame-locked: plays at 60 | not played | 90 FPS needs a logic-step patch |
 | Puppeteer | BCUS98227 | `vr-non-working/` + untracked `bin/` copy | yes (profile frame time, Vblank 180 = 90 FPS, real-time) | 90 (2026-10-02; 72 before) | **barely works**: graphics trails, very dark, world far away and small; the head-locked intro light fixed 2026-10-01 evening | stage small in the headset view; SPU post skipped in VR |
-| Jak and Daxter Collection | BCUS98281 | `vr-non-working/` + untracked `bin/` copies | Jak 1 **no**: steps a fixed 1/60 per frame (1.5x at 90): capped at 60 in VR for now; Jak II probably the same; Jak 3 no (74-85 flat in Spargus) | Jak 1 120 (renderer; the game is capped at 60); Jak II 72 (2026-10-02); Jak 3 below 72 | **Jak 1**: HUD boxed, speed fixed (capped at 60, reprojected) and stereo depth fixed 2026-10-01 late, simulator-checked; to recheck in the headset | HUD unchecked |
+| Jak and Daxter Collection | BCUS98281 | `vr-non-working/` + untracked `bin/` copies | Jak 1 and **Jak II no**: both step a fixed 1/60 per frame (Jak II confirmed 2026-10-04: twice the distance at Vblank 120); both capped at 60 in VR; Jak 3 no (74-85 flat in Spargus) | renderer: Jak II 90 Hz (2026-10-04, was 72), Jak 3 57 FPS at 72 (was ~43); the games run at 60 | **Jak 1**: HUD boxed, speed fixed (capped at 60, reprojected) and stereo depth fixed 2026-10-01 late, simulator-checked; to recheck in the headset | a VR-rate fix needs the engine's frame step (the OpenGOAL clock fields were not found in the HD port's memory) |
 | Anarchy Reigns | BLUS30632 | `vr-non-working/` + untracked `bin/` copies (profile, patch) | yes (fork patch, real-time verified) | 90 (Training only) | **parked**: splash/intro head-locked, HUD culled by depth; bad performance and graphics issues in gameplay | campaign unchecked; HUD timers 3x |
 | Killzone 2 | BCUS98116 | `vr-non-working/` + untracked `bin/` copy | no: default 45 | not measured | not played | RSX-bound; HUD and combat unchecked |
 | Gran Turismo 5 | BCUS98114 | `vr-non-working/` + untracked `bin/` copy | yes (patch) | ~~90 (race start)~~ ~40 FPS in the headset (Matt) | tested, broken: **~40 FPS, needs 60 minimum** | menu clipping, race-start frame rate |
@@ -272,6 +272,10 @@ Notes: `profiles/BLUS30035-notes.md`. Evidence: `evidence/darkness/`.
 Notes: `profiles/BLUS30306-notes.md`. Evidence: `evidence/dw6e/`. Generated profile, stereo and yaw audit clean,
 180 FPS flat in battle, but frame-locked (3.4x at 180, no dt found): runs at 60 with reprojection for now.
 
+- **2026-10-04:** tried DW Gundam's fix (a step constant passed to the battle update): clocks at Vblank 120 run 1.3-1.8x,
+  but the one traced (`0x30d1abb0`, 0.95x at 60, 1.77x at 120) is an effect parameter (vector store at `0x2ae068`), not
+  the logic step. Still at 60.
+
 ## Puppeteer (BCUS98227, disc 01.00)
 
 Notes: `profiles/BCUS98227-notes.md`. Native 30, frame-locked; the game's frame time (`0x98ebec`) is now driven by
@@ -295,6 +299,12 @@ sparkles. Jak 3 not started.
   desktop "real-time" check (float clocks 1.00x, the same walk displacement at 60 and 180) was wrong or measured the
   wrong thing; what the eye sees (animations, effects, NPCs, camera) runs per frame. Jak II's "real-time" rests on
   the same test and is suspect too.
+
+- **2026-10-04:** Jak II is frame-locked too (idle/walk timeline from `vrtest_jak2_prison`: at Vblank 120 Jak is twice as
+  far along at the same wall times). `BCUS98281.jak2.json` now `max_fps 60` / `default_fps 60` (fork 28687269a), verified
+  60.0 FPS on the simulator at 90 Hz. Re-measured on the multiview build: Jak II renders 90 Hz sustained (it was 72),
+  Jak 3 57 FPS at 72 (was ~43). Looked for OpenGOAL's clock fields (seconds-per-frame 1/60 beside frames-per-second 60,
+  time-factor 5.0) in Jak II's memory to drive the step from the profile: not found (the HD port's layout differs).
 
 ## Anarchy Reigns (BLUS30632, disc 01.00)
 
