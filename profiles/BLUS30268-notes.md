@@ -84,6 +84,9 @@ Sustained: **72 Hz** (no margin; busier fights unmeasured).
   the depth comes from the scene's alpha (`fc2` linearisation), not a depth texture. A fix needs a remap variant that
   replaces an attribute ray with the eye pixel's direction in the game's view (rotation-only: the eye offset is 3 cm)
   and leaves the depth read alone. Not done.
+  It is in RPCS3's own eye image (not the simulator's composite), is curved (computed, not a polygon edge), and did not
+  move when the game's FOV source was poked from 75 to 120 degrees: content the post pass produces only outside the
+  game's own 91-degree view, which the headset's wider view reveals. Cosmetic, at the edge of view; parked.
 - Not seen: menus beyond pause, cutscenes, later levels.
 
 ## Gate shading bisect (2026-10-04)
