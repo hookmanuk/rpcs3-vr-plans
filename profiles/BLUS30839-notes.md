@@ -55,7 +55,10 @@ Sustained: **90 Hz** with the default patch, 120 Hz with Wider view off.
 
 - Race: stereo and HUD box right, straight / turned / pitched; pause menu (panel and menu boxed, the world behind
   stays); title screen (3D sky world in the headset view, logo boxed); intro movie on the world-fixed screen.
-- **Open: distant soft shadows differ between the eyes.** The game draws shadows as deferred cascade boxes
+- **Fixed 2026-10-04 (fork 1aef7457b): distant soft shadows differed between the eyes.** Profile `depth_remap_programs:
+  [ed46d28a122d7235]`, `depth_remap_ray_texcoord: 1`, `depth_remap_xyw: true` (new renderer variant). Rock and pillar
+  now lit the same in both eyes, straight / turned / pitched, multiview and two-draw; 90 Hz kept (89.7, 0% late).
+  History: The game draws shadows as deferred cascade boxes
   (`ed46d28a122d7235`, light-space lookup from the depth buffer with fragment constants built for the game's camera).
   The full-resolution cascades are right in both eyes; the distant cascades are drawn at 640x360 (with a half-res
   depth copy and a split-depth quad), downsampled, blurred and upsampled under them, and these come out wrong in
