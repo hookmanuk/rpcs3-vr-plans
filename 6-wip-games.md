@@ -198,7 +198,7 @@ pass mark** for fully compatible.
 | SEGA Rally Revo | BLUS30068 | `vr-non-working/` + untracked `bin/` copies (profile, patch) | yes (fork patch *Unlocked frame rate*: 30 -> vblank rate, measured time) | **72 Hz** with Wider view 2.0 (71.9 FPS, 0% late; 2.5 gives 68, 1.0 gives 71.9), 2026-10-04 | simulator only | ~~one-eye shadow blobs~~ fixed 2026-10-04 (right eye's stale shadow-map copy; generic renderer fix); savestates need Compatible Savestate Mode + GETLLAR spin optimisation off |
 | Dragon Age: Origins | BLUS30415 | `vr-non-working/` + untracked `bin/` copies (profile, patch) | yes (no patch needed: every vblank, measured time) | **120 Hz** (Castle Cousland hall), 2026-10-04 | simulator only | combat and outdoor unchecked; Wider view default 2.0 (2.5 stretches fire) |
 | Dragon Age II | BLUS30645 | `vr-non-working/` + untracked `bin/` copy (profile) | yes (no patch needed, clocks at 1.0 measured) | **below 72**: 70.1-70.6 FPS at 72, 1.2-2.3% late (tutorial fight; PPU/SPU-bound) | simulator only | just misses 72 in the busy fight: the game doubles ~1.7% of frames even flat at 60 Hz (not stereo); measure Kirkwall |
-| Dragon Age: Inquisition | BLUS30997 | none | - | - | - | **hangs ~26 s after boot** (start-menu load, no flips) once its data is installed; Clocks scale 50, SPU Block Size Mega, Accurate RSX reservation, Sleep Timers As Host, PPU Threads 1, Cubeb audio, no headset: all hang |
+| Dragon Age: Inquisition | BLUS30997 | none | - | - | - | **emulation blocker:** hangs loading the start menu and each level (a GPU frame fence the SPU job system never kicks); Clocks scale 30 gets past it but runs at 9 FPS. `profiles/BLUS30997-notes.md` |
 | MX vs ATV Reflex | BLUS30321 | untracked `bin/` only | no (`max_fps 30`) | not measured | not played | generated 2026-09-28; no notes |
 | Uncharted: Drake's Fortune | BCUS98103 | none | no: 42-46 flat | not measured | - | SPU/PPU-bound; not pursued |
 | Final Fantasy X/X-2 HD Remaster | BLUS31211 | none | no: 80-91 flat | not measured | - | RSX-bound flat; not pursued |
@@ -586,7 +586,9 @@ boot stops presenting ~26 s in, while loading the start menu (log: trophy check,
 thread's last flip; PPU threads spin in `sys_event_queue_tryreceive`). Tried, all hang the same way: Clocks scale 50
 (Frostbite 3 games are reported to need under 100%), SPU Block Size Mega, Accurate RSX reservation access, Sleep
 Timers Accuracy As Host, PPU Threads 1, Cubeb audio, without the headset session. Not a VR issue: an emulation
-blocker. PPU hash `PPU-22a17ff565b6caaa2a6c498b7b9e9a31b4b43da2`; ELF in `tools/re/elf/BLUS30997.elf`.
+blocker. **Clocks scale 30** reaches the title (at 9 FPS); a title savestate made at 30% runs at full speed until the
+next level load hangs again. The hang is a frame fence (GPU label 0x42) whose commands the SPU job system never
+submits. Notes: `profiles/BLUS30997-notes.md`. PPU hash `PPU-22a17ff565b6caaa2a6c498b7b9e9a31b4b43da2`; ELF in `tools/re/elf/BLUS30997.elf`.
 
 ## MX vs ATV Reflex (BLUS30321 v01.00)
 
