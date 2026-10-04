@@ -60,3 +60,16 @@ over into the next frame's first draws: the 512 / 912 passes are matrix-less `f7
 `f780` draw).
 
 Scripts: `tools/re/sr_boot.sh`, scratchpad `srdrive.sh OUT [PROBE]` (simulator, `sr_race0`, throttle, 4 SBS shots).
+
+### More on the blobs (2026-10-04 afternoon)
+
+- Not `camera_position.slot`, not `eye_offset baseline_per_w`, not `clip_space_scene_draws`, not the 17 programs
+  drawing into the 512x512 `c3678000` (hidden).
+- A paused frame keeps the blob (the pause screen blurs a frozen copy of the last scene frame), so hide tests on a
+  paused frame show nothing.
+- **Timing-dependent:** three identical runs (`sr_race0`, throttle 9.3 s, pause; scratchpad `srpause.sh`) gave the
+  left-eye blob in two and not in the third (region mean 44 vs 53). Bisecting with `gamecam=` sets is therefore
+  unreliable (both halves "fixed" it). A per-eye difference that comes and goes between identical runs points at data
+  that changes between the left and right eye's draws (a buffer or texture the game rewrites mid-frame), not at a
+  profile key. Next: RTDUMP the main target per eye right before the post chain (`prog=f78638bb1ce5eba2`) over many
+  frames to catch one with the blob, then step back with `prog=X#n` to the draw where the eyes diverge.
