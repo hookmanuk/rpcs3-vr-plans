@@ -180,7 +180,7 @@ pass mark** for fully compatible.
 | The Darkness | BLUS30035 | `vr-non-working/` + untracked `bin/` copy | yes (community 60 FPS patch, real-time) | below 72: 53 FPS at 72 in Matt's save (2026-10-04, multiview; 48 on 2026-10-01), 32 in the opening car scene | **parked**: under 60 FPS in Matt's save; intro black for a long time, videos missing | too slow at 300%; stereo and headset view fixed in the opening |
 | Dynasty Warriors 6 Empires | BLUS30306 | `vr-non-working/` + untracked `bin/` copy | no: frame-locked, profile at 60 (180 flat possible) | 120, but frame-locked: plays at 60 | not played | 90 FPS needs a logic-step patch |
 | Puppeteer | BCUS98227 | `vr-non-working/` + untracked `bin/` copy | yes (profile frame time, Vblank 180 = 90 FPS, real-time) | 90 (2026-10-02; 72 before) | **barely works**: graphics trails, very dark, world far away and small; the head-locked intro light fixed 2026-10-01 evening | stage small in the headset view; SPU post skipped in VR |
-| Jak and Daxter Collection | BCUS98281 | `vr-non-working/` + untracked `bin/` copies | Jak 1 and **Jak II no**: both step a fixed 1/60 per frame (Jak II confirmed 2026-10-04: twice the distance at Vblank 120); both capped at 60 in VR; Jak 3 no (74-85 flat in Spargus) | renderer: Jak II 90 Hz (2026-10-04, was 72), Jak 3 57 FPS at 72 (was ~43); the games run at 60 | **Jak 1**: HUD boxed, speed fixed (capped at 60, reprojected) and stereo depth fixed 2026-10-01 late, simulator-checked; to recheck in the headset | a VR-rate fix needs the engine's frame step (the OpenGOAL clock fields were not found in the HD port's memory) |
+| Jak and Daxter Collection | BCUS98281 | `vr-non-working/` + untracked `bin/` copies (profiles, patch) | **Jak II yes** (fork patch *Frame rate follows VR (Jak II)*, 2026-10-04); Jak 1 no: steps a fixed 1/60 per frame, capped at 60 (a ratio fix broke it); Jak 3 no (74-85 flat in Spargus) | **Jak II 72 Hz** at real-time speed (90 averages 86), 2026-10-04; Jak 1 60 (cap); Jak 3 57 FPS at 72 | **Jak 1**: HUD boxed, speed fixed (capped at 60, reprojected) and stereo depth fixed 2026-10-01 late, simulator-checked; to recheck in the headset | Jak 1 at the headset rate; Jak II HUD in the headset |
 | Anarchy Reigns | BLUS30632 | `vr-non-working/` + untracked `bin/` copies (profile, patch) | yes (fork patch, real-time verified) | 90 (Training only) | **parked**: splash/intro head-locked, HUD culled by depth; bad performance and graphics issues in gameplay | campaign unchecked; HUD timers 3x |
 | Killzone 2 | BCUS98116 | `vr-non-working/` + untracked `bin/` copy | no: default 45 | not measured | not played | RSX-bound; HUD and combat unchecked |
 | Gran Turismo 5 | BCUS98114 | `vr-non-working/` + untracked `bin/` copy | yes (patch) | ~~90 (race start)~~ ~40 FPS in the headset (Matt) | tested, broken: **~40 FPS, needs 60 minimum** | menu clipping, race-start frame rate |
@@ -300,6 +300,13 @@ sparkles. Jak 3 not started.
   wrong thing; what the eye sees (animations, effects, NPCs, camera) runs per frame. Jak II's "real-time" rests on
   the same test and is suspect too.
 
+- **2026-10-04 later: Jak II real-time at the headset rate.** Jak HD runs the PS2 code recompiled, PS2 RAM little-endian at
+  `0x20000000`; Jak II's 13 GOAL clocks sit at `0x20401fc0 + n x 0x60` and add the display's time-factor (5.0, at
+  `0x20401f7c`) each frame. Fork patch *Frame rate follows VR (Jak II)* (`BCUS98281_patch.yml`, on by default): the
+  recompiled set-time-ratios (`0x317db0`) loads time-factor from `0x16ba300`, which the profile sets to 300 / fps
+  (`game_vblank_frames_f32` with `scale` 5). Measured: 256 instead of 515 ticks/s at 120 FPS; a walk timeline at 120
+  matches 60. VR 72 Hz sustained at 300% (90 averages 86). The 60 cap is lifted again. Jak 1 (display at `0x2032fe58`,
+  set-time-ratios `0x1ff668`) also needs its ratio argument scaled, and that warped Jak to a checkpoint: reverted.
 - **2026-10-04:** Jak II is frame-locked too (idle/walk timeline from `vrtest_jak2_prison`: at Vblank 120 Jak is twice as
   far along at the same wall times). `BCUS98281.jak2.json` now `max_fps 60` / `default_fps 60` (fork 28687269a), verified
   60.0 FPS on the simulator at 90 Hz. Re-measured on the multiview build: Jak II renders 90 Hz sustained (it was 72),

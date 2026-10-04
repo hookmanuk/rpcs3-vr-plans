@@ -110,3 +110,29 @@ Savestates: `BCUS98281_1_0` (Jak 1, Samos' hut after the intro), `BCUS98281_1_1`
   HD port's structures differ. Next idea: write-watch a per-frame counter that advances by 5 (ticks) to find the clock
   update.
 
+## 2026-10-04 later: Jak II real-time at the headset rate (fork 6a31f01f2)
+
+- **Where the timing lives.** The routines use `lwbrx`/`stwbrx`: Jak HD runs the PS2 code recompiled to PPU, with the
+  PS2 RAM image (little-endian) as an ELF segment at `0x20000000` (64 MB). A little-endian search for 1/60 found Jak II's
+  13 GOAL `clock`s at `0x20401fc0 + n x 0x60` (OpenGOAL layout: clock-ratio +0xc, accum +0x10, frame-counter +0x18 (u64,
+  +5 a frame), sparticle-data +0x40 (5, 5.0, 1, 1), seconds-per-frame +0x50, frames-per-second +0x54, time-adjust-ratio
+  +0x58), and the display's time-factor 5.0 / dog-ratio 1.0 at `0x20401f7c` (after pointers to the clocks). At 120 FPS
+  the clocks counted ~600 ticks/s (2x).
+- **Writer.** An interpreter write watch on `0x20401f7c`: thread "GOAL", recompiled set-time-ratios around `0x317d10`
+  (`r27` = the recompiler's register/constant block: 5.0 NTSC at `+0x920`, 6.0 PAL at `+0x964`; `r28` = display;
+  stores with `stwbrx` to `+0x58` time-factor, `+0x5c` dog-ratio).
+- **Patch** *Frame rate follows VR (Jak II)*: `0x317db0..0x317db8` become `lis r11, 0x16c; lwz r0, -0x5d00(r11); stw r0,
+  0x400(r27)`, then the original `li r29, 0x58; stwbrx r0, r28, r29` (r11 is rewritten right after). The word
+  `0x16ba300` (just past the bss end `0x16ba268`, same page) is seeded 5.0; the profile writes 300 / fps there
+  (`"game_vblank_frames_f32": [{ "address": "0x16ba300", "scale": 5 }]`, new `scale` form). Proved live with
+  `RPCS3_VR_POKE` first: time-factor 2.5, clock rate halved (515 -> 256 ticks/s), seconds-per-frame 1/120.
+- **Checked:** walk timelines from `vrtest_jak2_prison` (`tools/re/jk2f_sheet.png`): patched 120 matches 60, unpatched 120
+  is a room ahead. Simulator 300%: 72 Hz 71.8 FPS 0% late; 90 Hz 85-87 FPS. Profile `max_fps 0` again.
+- **Jak 1, tried and reverted.** Display timing block at `0x2032fe58` (time-adjust-ratio, seconds-per-frame,
+  frames-per-second, time-factor, dog-ratio); set-time-ratios `0x1ff668` (NTSC branch `0x1ff80c`) scales the first four by
+  its ratio argument, time-factor is a constant. Redirecting time-factor alone left Jak running fast; redirecting the ratio
+  (to 60 / fps) as well made Jak warp to a checkpoint within a second of a load and stop responding (at 90 and 120,
+  `vrtest_jak1_matt_gameplay`). Jak 1 stays capped at 60. Code words for a later attempt: `0x1ff6c8 lis r11,0x113`,
+  `0x1ff6cc lfs f1,-0x3a00(r11)` (ratio from `0x112c600`), `0x1ff8c4 lis r11,0x113`, `0x1ff8c8 lwz r0,-0x39fc(r11)`
+  (time-factor from `0x112c604`).
+

@@ -1198,4 +1198,6 @@ Origins: Wolverine; game state in `6-wip-games.md`).**
   `re/insplist.py` (per-draw listing of a capture); `re/xmen_boot.sh`.
 - Tried and reverted (not committed): depth remap reading the depth texel at the target's size and an (x, y, w) clip
   layout, for Sonic's half-resolution shadow mask: placement right straight ahead, a hard seam with the head turned.
+- Profile key `game_vblank_frames_f32` also takes `{ "address": "...", "scale": n }` (writes n x 60 / rate): Jak II's
+  ticks of 1/300 s per frame (fork 6a31f01f2). Existing string entries behave as before (scale 1).
 
