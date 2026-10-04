@@ -35,3 +35,6 @@ BLUS30839   vrtest_sonic_race            1  W    10     Sonic & All-Stars Racing
 BLUS30058   vrtest_dwg_odessa            1  1    10     Dynasty Warriors: GUNDAM: Official Mode, Mission 01 (Odessa), battle start (Frame rate follows VR + Wider view 3.0)
 BLUS30268   vrtest_xmen_jungle           2  1    10     X-Men Origins: Wolverine: jungle, first control after the intro (Unlocked frame rate (VR); 72 Hz = Vblank 144) rates=72
 BCUS98116   vrtest_kz2_carrier           2  1    10     Killzone 2: Campaign > Continue, the carrier walk (Write/Read Color Buffers in the game config)
+BLUS30068   vrtest_segarally_race        1  W    10     SEGA Rally Revo: Safari, race start (holds R2; Unlocked frame rate + Wider view 2.0)
+BLUS30415   vrtest_dao_castle            1  1    10     Dragon Age: Origins: Castle Cousland hall after the opening (Wider view 2.0)
+BLUS30645   vrtest_da2_fight             1  0    10     Dragon Age II: prologue, first fight (no input)

@@ -85,6 +85,9 @@ speed at. The other games read their frame time every frame.
 | `dwg_odessa` | BLUS30058 | fork patch file (*Frame rate follows VR*, *Wider view (VR culling)*) | Title Start; Official Mode X; Amuro X; Mission 01 X; briefing Start/X; mission menu Up, X (Start Mission); save at the battle start. |
 | `xmen_jungle` | BLUS30268 | fork *Unlocked frame rate (VR)*; **Compatible Savestate Mode** while saving | `tools/re/xmen_boot.sh` (logos, New Game, Normal, the ~2.5 min intro); X on the Health tip; save at the first control. Measured at 72 only (`rates=72`, VPF 2). |
 | `kz2_carrier` | BCUS98116 | Write and Read Color Buffers (game config); **Compatible Savestate Mode** while saving | Needs a campaign save: title X, Start, Campaign X, Continue X; ~60 s of the carrier opening, then walk a step and save. VPF 2. |
+| `segarally_race` | BLUS30068 | fork *Unlocked frame rate* + *Wider view* 2.0; custom config **Compatible Savestate Mode** + **Disable SPU GETLLAR Spin Optimization** (saves can still fail mid-race: retry Ctrl+S) | `tools/re/sr_boot.sh` (Start > Premier > Amateur > AZA Challenge > Safari > Subaru), save on the grid |
+| `dao_castle` | BLUS30415 | fork *Wider view* 2.0 | first boot installs data; New Game, Human Noble, Quick Play (Triangle), X through the opening dialogue to Castle Cousland's hall |
+| `da2_fight` | BLUS30645 | custom config **Compatible Savestate Mode** | `tools/re/da2_boot.sh` (New Game, Male Warrior, prologue to the first fight) |
 | (NFS Most Wanted) | BLUS31010 | | Skipped: the disc image is no longer in `F:/rpsc3/games`. |
 
 ## RPCS3 savestate gotchas
