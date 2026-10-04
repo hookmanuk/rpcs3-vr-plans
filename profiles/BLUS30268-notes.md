@@ -61,6 +61,15 @@ Sustained: **72 Hz** (no margin; busier fights unmeasured).
   +0x210, projection at +0x90) are not written by PPU code while it runs (write watches over the game and PRX code
   saw nothing), so the scene view seems to be built elsewhere (SPU?). Asura's Wrath's UE3 route (`GetViewFrustumBounds`
   by its DELTA^2 constant) did not match this build's code. Not fixed.
+  **2026-10-04 evening:** the game camera's field of view is **75 degrees** (4:3, vertical-locked: 59.84 deg high, 91.3
+  wide at 16:9), a static float on the heap (`0x13fed520` in `xmen_jungle0`). Found by poking every float near 75
+  (validated before each write; a stale snapshot once corrupted the RSX FIFO) and bisecting on the live projection
+  copies. No PPU code reads or writes it while playing (read and write watches over the whole code segment
+  `0x10000`-`0x1f8ccc8`), so the view is built from it on the SPU. Poked to 120 during a simulator session the flat
+  view widens, but **the headset view does not change**, including the curved light edge at the top left: so that
+  edge is not culling, and nothing visible was culled in this scene. The edge is drawn by something else (a hide scan
+  needs a state where Wolverine survives: enemies kill him ~45 s after `xmen_jungle0` loads, and the pause screen is a
+  frozen image).
 - Not seen: menus beyond pause, cutscenes, later levels.
 
 ## Gate shading bisect (2026-10-04)
