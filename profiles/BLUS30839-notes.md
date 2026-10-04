@@ -67,3 +67,14 @@ Sustained: **90 Hz** with the default patch, 120 Hz with Wider view off.
   head turned, and needed renderer changes for this program (its clip position is packed as (x, y, w), and the mask
   is 640x360 against a 1280x720 depth); reverted. Next: dump the 640 mask per eye while turning the head on a paused
   frame, and find which input differs (the half-res depth copy's sampling, or the cascade selection).
+
+  **2026-10-04 evening:** per-eye RTDUMPs (`sonic_rock`, two-draw, 100%): the half-res depth `c0cd0000` (built at
+  draw 1128-1129 from the full depth `c0840000`) is right in each eye (matches that eye's full depth halved). The
+  640x360 mask `c0dc0000` after the cascades (1130-1133) has the rock and pillar lit in the left eye and fully
+  shadowed in the right. `why=` shows only `c[0]` (clip x) changes per eye. The fragment program (fp 560) rebuilds the
+  position as: uv from `tc0` = clip (x, y, w) packed; view depth from the depth texel (`fc1`, `fc3`, `fc4`); view
+  position = normalize(`tc1`) scaled to that depth, where `tc1` is a view-space ray the vertex shader computes with the
+  game's view (not a camera block), then light space via `fc7`/`fc8`/`fc15`. So the ray is the game camera's while uv
+  and depth are the eye's. A fix must remap both `tc0` and `tc1` (the existing `depth_remap_programs` path replaces
+  only the position varying and assumes (x, y, z, w) packing and a full-size depth). The eye-invariant target fix
+  (fork a3d6d1822) does not change it (the shadow map was already identical per eye).
