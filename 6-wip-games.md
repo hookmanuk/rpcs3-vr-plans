@@ -238,6 +238,8 @@ Notes: `profiles/BLUS31155-notes.md`. Evidence: `evidence/ddda/`. Profile `BLUS3
   turns 29 degrees (`evidence/ddda/2026-10-03-boot-screens-yaw0-vs-yaw05.jpg`). Nothing head-locked seen.
 - **Headset (Matt, 2026-10-03): WIP.** Lots of graphics render errors; the text layer is cut off when the head turns; a phantom graphics layer shows when the head turns. No savestate or screenshots yet; not
   investigated.
+- **2026-10-04:** new patch *Wider view (VR culling)* (FOV x2.0): the culled distant scenery seen past the game's
+  55-degree view when the head turns (a likely cause of the "phantom layer") is drawn; Matt's save still 90 Hz.
 - **Open:** the headset errors above; open-world frame rate; outdoor flares with `zcull_approximate` (any visible
   pixel reports as fully visible); NPC name tags stay in the HUD box; world scale and HUD in the headset.
 

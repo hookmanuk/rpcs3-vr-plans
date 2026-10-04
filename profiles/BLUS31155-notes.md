@@ -129,3 +129,16 @@ screenshot and press X again if it stopped at a menu. The first boot compiles PP
 Matt in the headset: lots of graphics render errors; the text layer is cut off when the head turns; a phantom graphics layer shows when the head turns. Not investigated yet; no savestate or screenshots. Next: a savestate where it shows,
 then yaw audits on the simulator (straight vs turned) to find the cut-off text layer (a HUD box clipping it?) and the
 layer that appears only when turned.
+
+## 2026-10-04: Wider view (VR culling) patch
+
+Toward Matt's "phantom graphics layer when the head turns" (2026-10-03): with the head turned, the cave opening in
+`vrtest_ddda_matt_slow` showed a flat pale region with a straight edge where the game had culled the distant scenery
+outside its 55-degree view. New fork patch *Wider view (VR culling)* (`BLUS31155_patch.yml`, on by default, Scale 2.0):
+the camera's FOV in degrees (camera +0x3c; +0x30 far 1.6e6, +0x34 near 16, +0x38 aspect) is multiplied where its
+`getProjection` (`0x536db8`, vtable +0x58, called from `0xf3ec80`) loads it (`0x536de8`), capped at 150; cave in the code
+page tail (`0x1681500`). Found from the projection copies (`findproj2.py`) -> write watch (copied in `0xf3eca0` from the
+virtual getter) -> trace. Flat: much wider view. Simulator: the opening now shows scenery when turned; pitched and
+straight fine. Matt's save: **90 Hz** (89.9, 0% late, RSX 8.2 ms), 72 Hz 0% late.
+Still to check in the headset: whether this was the phantom layer, and the "text layer cut off" (on the simulator the
+HUD box is world-fixed and simply leaves the view at the edge when the head turns far).
