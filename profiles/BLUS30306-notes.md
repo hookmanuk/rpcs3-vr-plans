@@ -43,3 +43,7 @@ battle update. Here, memory clocks at Vblank 120 run 1.3-1.8x (vs 0.9-1.0 at 60)
 (`0x30d1abb0`, 51.8 and rising, 0.95x at 60 / 1.77x at 120, many copies) is written as a vector (29.6, 0.5, 0.5, 0) at
 `0x2ae068` (caller `0x2afab8`): an effect parameter, not the logic step. Not pursued further this time.
 
+
+- 2026-10-04 evening: DW Gundam's call pattern (a vtable call with `f1` = 1.0 from the TOC, the battle step) does not
+  occur in this executable: of 6292 `bctrl`, 14 have an `lfs f1, d(r2)` in the 8 instructions before, none with 1.0.
+  The step is not a float argument here.
