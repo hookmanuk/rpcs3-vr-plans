@@ -26,5 +26,17 @@ if ($NoHeadset) { $env:RPCS3_OPENXR = '0' } else { Remove-Item Env:RPCS3_OPENXR 
 if ($FakeHmd) { $env:RPCS3_VR_FAKE_HMD = "$FakeHmd" } else { Remove-Item Env:RPCS3_VR_FAKE_HMD -ErrorAction SilentlyContinue }
 if ($Audit) { $env:RPCS3_VR_AUDIT = $Audit } else { Remove-Item Env:RPCS3_VR_AUDIT -ErrorAction SilentlyContinue }
 Start-Process "$bin\rpcs3.exe" -ArgumentList "`"$Game`"" -WorkingDirectory $bin
-for ($i = 0; $i -lt 180; $i++) { Start-Sleep 1; if ($i % 5 -eq 4) { & "$PSScriptRoot\re\dismiss_pkg.ps1" | Out-Null }; $t = (Get-Process rpcs3 -ErrorAction SilentlyContinue | Select-Object -First 1).MainWindowTitle; if ($t -match 'FPS: [1-9]') { break } }
+# The game window is not always the process's main window (MainWindowTitle then shows the game list's title):
+# look through all of rpcs3's top-level windows for the game window's "FPS: n" title.
+if (-not ('RpcsU.RpcsWin' -as [type])) { Add-Type -Namespace RpcsU -Name RpcsWin -MemberDefinition '[DllImport("user32.dll")] public static extern bool EnumWindows(EnumWindowsProc f, System.IntPtr l); public delegate bool EnumWindowsProc(System.IntPtr h, System.IntPtr l); [DllImport("user32.dll", CharSet = CharSet.Unicode)] public static extern int GetWindowText(System.IntPtr h, System.Text.StringBuilder s, int n); [DllImport("user32.dll")] public static extern uint GetWindowThreadProcessId(System.IntPtr h, out uint p);' }
+function Get-GameTitle {
+  $p = Get-Process rpcs3 -ErrorAction SilentlyContinue | Select-Object -First 1
+  if (-not $p) { return '' }
+  $script:found = $p.MainWindowTitle
+  [RpcsU.RpcsWin]::EnumWindows({ param($h, $l) $x = [uint32]0; [RpcsU.RpcsWin]::GetWindowThreadProcessId($h, [ref]$x) | Out-Null
+    if ($x -eq $p.Id) { $sb = New-Object Text.StringBuilder 512; [RpcsU.RpcsWin]::GetWindowText($h, $sb, 512) | Out-Null; if ($sb.ToString() -match '^FPS:') { $script:found = $sb.ToString() } }
+    $true }, [IntPtr]::Zero) | Out-Null
+  return $script:found
+}
+for ($i = 0; $i -lt 180; $i++) { Start-Sleep 1; if ($i % 5 -eq 4) { & "$PSScriptRoot\re\dismiss_pkg.ps1" | Out-Null }; $t = Get-GameTitle; if ($t -match 'FPS: [1-9]') { break } }
 "running: $t"

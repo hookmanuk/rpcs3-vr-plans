@@ -31,3 +31,6 @@ BLUS31460   vrtest_kh2_twilight          1  1    10     Kingdom Hearts II Final 
 BLUS31212   vrtest_kh1_dive              1  1    10     Kingdom Hearts Final Mix (KH 1.5): Dive to the Heart, first control (unlocked frame rate patch)
 BCUS98155   vrtest_mspr_race             1  W    10     MotorStorm: Pacific Rift: Free-Play, Kanaloa Bay, 11 AI, rally car, countdown "1" (holds R2)
 NPUA80068   vrtest_ssd_lave              1  script 5    Super Stardust HD: Lave, Arcade (Easy), level start; fires in circles (vrtest_boot/vrtest_ssd_lave.walk)
+BLUS30839   vrtest_sonic_race            1  W    10     Sonic & All-Stars Racing Transformed: Ocean View, mid-lap 1 (holds R2; Unlocked frame rate + Wider view 3.0)
+BLUS30058   vrtest_dwg_odessa            1  1    10     Dynasty Warriors: GUNDAM: Official Mode, Mission 01 (Odessa), battle start (Frame rate follows VR + Wider view 3.0)
+BLUS30268   vrtest_xmen_jungle           2  1    10     X-Men Origins: Wolverine: jungle, first control after the intro (Unlocked frame rate (VR); 72 Hz = Vblank 144) rates=72

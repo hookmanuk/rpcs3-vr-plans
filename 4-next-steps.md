@@ -1182,3 +1182,20 @@ clip w depends on the position; camera-facing sprites keep the camera's projecti
 canopies), God of War (menus, intro, border, resolve). Smoke test: packaged exe starts (first-run dialog) and carries
 vr8-9de7502a; out-of-box boot of Asura's Wrath and Tales of Xillia from the zip (no `patch.yml`, default
 config): the bundled patches apply, Asura 30.9 FPS at Vblank 60 and 59.8 at Vblank 180 (the patch allows half the vblank). Matt tests and publishes.
+
+**Generic, from the 2026-10-04 new games (Sonic & All-Stars Racing Transformed, Dynasty Warriors: GUNDAM, X-Men
+Origins: Wolverine; game state in `6-wip-games.md`).**
+- Generator: when stray data in a listed camera block is off the output aspect (DW Gundam's light vectors in `c[0]`), it
+  writes `require_camera_aspect` (log line "Stray data in a camera block is off the output aspect"); checked by
+  regenerating DW Gundam.
+- Dev: probe `why=<hash>` also logs the first vertices of attribute 0 (float arrays) of that program's draws (up to 8),
+  and for a `preprojected_programs` entry the game and eye camera blocks it is mapped through.
+- Tools (`plans/tools`): `launch.ps1` finds the game window among all of rpcs3's windows (MainWindowTitle sometimes
+  shows the game list, so boots waited the full 3 minutes); `re/vrcheck.sh` (fresh savestate load on the simulator,
+  headset view straight / turned / pitched + RPCS3's image; waits for the game's first flip; `VIDEO_CFG`, `GBOOT_ARGS`);
+  `re/stubmap.py` (import stubs from the ELF's import table when the log's addresses are HLE descriptors);
+  `re/valtrack.py` (snapshot every f32 near a value, change something in game, list what changed: found Sonic's FOV);
+  `re/insplist.py` (per-draw listing of a capture); `re/xmen_boot.sh`.
+- Tried and reverted (not committed): depth remap reading the depth texel at the target's size and an (x, y, w) clip
+  layout, for Sonic's half-resolution shadow mask: placement right straight ahead, a hard seam with the head turned.
+

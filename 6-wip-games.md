@@ -21,6 +21,12 @@ untracked in `bin/` for testing without being released. Unreleased profiles and 
 **Shipped in vr8 (2026-10-03): God of War and God of War II (God of War Collection), Dante's Inferno, Asura's Wrath**
 (sections removed; history in `profiles/BCES00800-notes.md`, `BLUS30405-notes.md`, `BLUS30721-notes.md`).
 
+**New games 2026-10-04 (Matt): Sonic & All-Stars Racing Transformed, Dynasty Warriors: GUNDAM, X-Men Origins:
+Wolverine.** All three were 30 FPS games with no community patches: each got a fork frame-rate patch (real time
+verified at several rates), a generated and hand-fixed profile, and checks on the OpenXR Simulator; Sonic and DW Gundam
+also got a *Wider view (VR culling)* patch. Files in `rpcs3/vr-non-working/` (+ untracked `bin/` copies); regression
+states `vrtest_sonic_race`, `vrtest_dwg_odessa`, `vrtest_xmen_jungle`. Sections below; detail in the notes files.
+
 ## Second headset test (Matt, 90 Hz, 2026-10-01 late): continue here
 
 Matt's recheck after the evening fixes (fork up to 03abf3550). New savestates (hard links):
@@ -186,6 +192,9 @@ pass mark** for fully compatible.
 | inFamous | BCUS98119 | `vr-non-working/` + untracked `bin/` copy | no patch needed | not measured | not played | ~25 stereo: too slow |
 | Split/Second | BLUS30300 | `vr-non-working/` | yes (patch) | not measured | not played | race load-bound |
 | God of War III | BCUS98111 | `vr-non-working/` + untracked `bin/` copy | no (`max_fps 36`) | not measured | not played | early experimental; no notes |
+| Sonic & All-Stars Racing Transformed | BLUS30839 | `vr-non-working/` + untracked `bin/` copies (profile, patch) | yes (patch, measured time) | **90 Hz** with Wider view 3.0 (120 with it off), 2026-10-04 | simulator only | distant soft shadows differ between the eyes |
+| Dynasty Warriors: GUNDAM | BLUS30058 | `vr-non-working/` + untracked `bin/` copies (profile, patch) | yes (patch *Frame rate follows VR*) | **120 Hz** (with Wider view 3.0), 2026-10-04 | simulator only | space missions, cutscenes unchecked |
+| X-Men Origins: Wolverine | BLUS30268 | `vr-non-working/` + untracked `bin/` copies (profile, patch) | yes (measured time; the patch removes a 62 FPS cap) | **72 Hz** (Vblank 144, two vblanks a frame; 90 reaches 79), 2026-10-04 | simulator only | per-eye shading difference on some surfaces; culling at the game's 91 x 60 view |
 | MX vs ATV Reflex | BLUS30321 | untracked `bin/` only | no (`max_fps 30`) | not measured | not played | generated 2026-09-28; no notes |
 | Uncharted: Drake's Fortune | BCUS98103 | none | no: 42-46 flat | not measured | - | SPU/PPU-bound; not pursued |
 | Final Fantasy X/X-2 HD Remaster | BLUS31211 | none | no: 80-91 flat | not measured | - | RSX-bound flat; not pursued |
@@ -477,6 +486,45 @@ Notes: `profiles/BLUS30300-notes.md`. Evidence: `evidence/splitsecond/`.
 
 Early experimental profile (`row_vectors`, camera blocks 256/260/0, `max_fps 36`). It has no notes file
 and no recorded measurements: start from the playbook if it is picked up again.
+
+## Sonic & All-Stars Racing Transformed (BLUS30839, disc 01.00)
+
+Notes: `profiles/BLUS30839-notes.md`. Profile and patch file in `vr-non-working/` (copies untracked in `bin/`).
+
+- **Frame rate:** fork patch *Unlocked frame rate (follows Vblank Rate)*: the vblank handler's flip interval 2 -> 1.
+  Game time is measured: real-time at 60/120/180 (same track positions at the same wall times). Flat 130-180 FPS.
+- **Profile:** generated in a race (`column_vectors c[138, 4, 0]`, HUD `c[138]`, `hud_box_after_shader`, metres),
+  without the generated `depth_offset_projection` (a dark band in the HUD box) and the 640-wide stereo rule.
+- **Culling:** fork patch *Wider view (VR culling)* (Scale 3.0 = 150 degrees high, cap): straight, turned and looking up
+  filled on the simulator. Costs 120 -> 90 Hz sustained.
+- **Open:** distant soft shadows (half-resolution cascades of the deferred shadow pass `ed46d28a122d7235`) differ
+  between the eyes in places. A depth-remap fix was tried and reverted (notes). Headset run.
+
+## Dynasty Warriors: GUNDAM (BLUS30058, disc 01.00)
+
+Notes: `profiles/BLUS30058-notes.md`. Profile and patch file in `vr-non-working/` (copies untracked in `bin/`).
+
+- **Frame rate:** flips every vblank already but steps battles one 1/60 s frame per frame (1.9x at 120). Fork patch
+  *Frame rate follows VR*: the battle step reads a free word (`0x45f880`) the profile sets to 60 / fps
+  (`game_vblank_frames_f32`). Real-time at 120 (clocks and a walk timeline).
+- **Profile:** generated (`row_vectors c[256, 0]`) + `require_camera_aspect` (the characters keep light vectors in the
+  terrain's camera block `c[0]`: stretched mobile suits without it; the generator now writes this key) +
+  `preprojected_programs` for the CPU-projected effects; `clip_space_scene_draws` removed.
+- **Culling:** fork patch *Wider view (VR culling)* (Scale 3.0: 30 -> 90 degrees high).
+- **Open:** space missions, cutscenes, other modes; headset run.
+
+## X-Men Origins: Wolverine (BLUS30268, disc 01.00)
+
+Notes: `profiles/BLUS30268-notes.md`. Profile and patch file in `vr-non-working/` (copies untracked in `bin/`).
+
+- **Frame rate:** fork patch *Unlocked frame rate (VR)* removes the main loop's 62 FPS cap; the game keeps its two
+  vblanks a frame and the profile runs Vblank 144 (`vblanks_per_frame 2`, `max_fps 72`). Every-vblank flips (patch
+  *Present every vblank (flat 60 FPS)*, off by default) are steady flat but alternate in stereo. Real-time at any rate.
+- **Profile:** generated (UE3, `row_vectors c[0]`, 100% coverage) with the HUD block corrected to `c[200]` (pause menu
+  splat and icons were missing).
+- **Open:** some surfaces shaded differently per eye (bisected to the base-pass program `991df40b5c30d3b5`); the sky
+  ends at the game's 91 x 60 degree view (no culling patch yet: the scene view is not written by PPU code); 72 Hz has no
+  margin; headset run.
 
 ## MX vs ATV Reflex (BLUS30321 v01.00)
 
