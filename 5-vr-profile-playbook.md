@@ -42,6 +42,10 @@ Put evidence in `plans/evidence/<game>/` and findings in `plans/profiles/<TITLE_
   set to the vblank rate. Check the game clock stays real-time: time a lap or a timer against wall time.
   This is what decides `match_headset_refresh_rate`.
 - **Updates.** Check whether a later game update adds native 3D before you decide there's no native stereo.
+- **Resolution.** Make and test profiles at 1280x720 output (`Resolution` 720p); `Resolution Scale` sets the
+  detail. Since 2026-10-04 VR forces 720p for every title with a profile (`rsx::vr::force_vr_resolution`, log
+  `VR: Resolution 1920x1080 replaced by 1280x720`), so a profile's pixel sizes and aspect checks are always in
+  720p terms. Some games draw another layout at 1080p (God of War: 960x1080 stretched to 16:9).
 - **Scripted input.** Copy `keyboard-pad-template.yml` to
   `rpcs3/bin/config/input_configs/<TITLE_ID>/Default.yml`. Start is `Return`, not `Enter`: the key names
   are Qt's. **Delete this file when you finish**, because it overrides the user's controller for this
@@ -473,6 +477,7 @@ check for each symptom:
 | Rear-view mirror stuck to the head at the top of the view | `screen_space.subviewport_cameras_in_box` (with `hud_box_after_shader`) | Gran Turismo 5 |
 | Car/object shadows turn odd colours (green in one eye, magenta in the other) | a shadow map rendered into a display buffer's memory is being HUD-boxed; the display-buffer test must match size, not only address (fixed in the fork for `hud_display_buffers_only`) | Gran Turismo 5 |
 | Shadows or lighting slide across characters as the head turns (dark sections that come and go) | a deferred pass rebuilds positions from the depth buffer with fragment constants made for the game's camera: `depth_remap_programs` (the generator's log names candidates: camera draws reading the depth buffer as colour) | Asura's Wrath |
+| A user's game never leaves the flat screen in gameplay; ours works | none: the user's `Resolution` was not 720p and the game drew another layout (960x1080), so every camera view failed the output-aspect check. Since 2026-10-04 VR forces 720p for profiled titles (`force_vr_resolution`) | God of War (user log, vr8) |
 | A black border around the view; the world a few percent smaller than the head's rotation | the game insets its scene in the display (God of War: 1216x684 in 1280x720) | `display_rect` with the inset, measured on a display dump |
 | A menu flickers between the fixed screen and the headset view, shown twice offset | its draws count as camera draws on the fixed screen but as HUD in the headset view, so the frame alternates; the probe's `why=` shows `camera 1` with state 6/2 and `box 1` with state 7 | fixed in the renderer for `offaspect_projection` (God of War); for another rule, the same: classify the HUD the same way with the view off |
 | 2D menus leave trails outside the HUD box when the head turns | the game never clears the display buffer; `hud_display_buffers_only` clears the shown region before the first boxed draw of a frame | Gran Turismo 5 |

@@ -241,3 +241,18 @@ in the package) has `BCES00800: Video: Frame limit: 60`, applied at every boot w
 Setting the selector profile to `max_fps 0` did not help (reverted). Fix: in VR with a profile a fixed frame limit
 follows the VR rate (`rsx::vr::vr_frame_limit`, one line in the frame limiter). Dev check, GoW 1 savestate on the
 simulator with Frame limit 60: 90 FPS, log `VR: Frame limit 60.00 replaced by the VR rate 90`.
+
+## 2026-10-04: a user's GoW 1 never left the flat screen at 1080p: fixed (VR forces 720p)
+
+User log (vr8 release, Quest 3, `Resolution: 1920x1080`, scale 350% in their own `config_BCES00800.yml`): the
+headset session was fine, but gameplay never had a camera draw (no `camera draws again: headset view`; traces
+without `C` entries), so the whole game stayed on the fixed screen. At 1080p GoW 1 picks another video mode
+(`Screen Width: 960 Screen Height: 1080 Framebuffer Width: 912 Framebuffer Height: 1026`): its 912x1026 targets
+fail the probe's output-aspect check (0.89 against 1.78, tolerance 2%). Matt's release check passed only because
+RPCS3's default is 720p; the config database (`Frame limit: 60` only) is ignored once a custom config exists.
+Fix: with VR on, a title with a VR profile runs at 1280x720 output (`rsx::vr::force_vr_resolution`, one line after
+`fixup_settings` in `Emulator::Load`; log `VR: Resolution 1920x1080 replaced by 1280x720`). Every dev config was
+already 720p (NFS Most Wanted, non-working, at 480p).
+Dev check (OpenXR Simulator, `render=1`, dev config set to 1920x1080 for the run): all three executables log the
+replacement, GOW1 reports `Screen Width: 1280 ... 1216x684`, and new-game gameplay switches to the headset view
+(`camera draws again: headset view` at 2:17; traces `C7476 x529`, pose advancing every frame).
