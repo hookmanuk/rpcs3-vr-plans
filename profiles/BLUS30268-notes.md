@@ -79,6 +79,11 @@ Sustained: **72 Hz** (no margin; busier fights unmeasured).
   that world-space lookup (or its fog radius) beyond the game's own view. Next: RTDUMP the 256x256 texture and read
   `tc7`'s vertex program to see which constant sets the radius; a candidate fix is the depth-remap ray variant
   (`depth_remap_ray_texcoord: 7`) if `tc7` is built with the game's view.
+  Vertex program (`insp/vp_b382ae7d966a52ec.glsl`): `tc7` = vertex attributes `in_tc0.xy`, `in_tc1.y` (the
+  frustum-corner rays the CPU writes for the game's view), so neither the eye transform nor `gamecam=` reaches it, and
+  the depth comes from the scene's alpha (`fc2` linearisation), not a depth texture. A fix needs a remap variant that
+  replaces an attribute ray with the eye pixel's direction in the game's view (rotation-only: the eye offset is 3 cm)
+  and leaves the depth read alone. Not done.
 - Not seen: menus beyond pause, cutscenes, later levels.
 
 ## Gate shading bisect (2026-10-04)
