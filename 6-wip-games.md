@@ -195,6 +195,10 @@ pass mark** for fully compatible.
 | Sonic & All-Stars Racing Transformed | BLUS30839 | `vr-non-working/` + untracked `bin/` copies (profile, patch) | yes (patch, measured time) | **90 Hz** with Wider view 3.0 (120 with it off), 2026-10-04 | simulator only | distant soft shadows differ between the eyes |
 | Dynasty Warriors: GUNDAM | BLUS30058 | `vr-non-working/` + untracked `bin/` copies (profile, patch) | yes (patch *Frame rate follows VR*) | **120 Hz** (with Wider view 3.0), 2026-10-04 | simulator only | space missions, cutscenes unchecked |
 | X-Men Origins: Wolverine | BLUS30268 | `vr-non-working/` + untracked `bin/` copies (profile, patch) | yes (measured time; the patch removes a 62 FPS cap) | **72 Hz** (Vblank 144, two vblanks a frame; 90 reaches 79), 2026-10-04 | simulator only | per-eye shading difference on some surfaces; culling at the game's 91 x 60 view |
+| SEGA Rally Revo | BLUS30068 | `vr-non-working/` + untracked `bin/` copies (profile, patch) | yes (fork patch *Unlocked frame rate*: 30 -> vblank rate, measured time) | not measured (flat 175-225 FPS) | simulator only | **dark shadow-like blobs on the road, different per eye** (open); savestates need Compatible Savestate Mode + GETLLAR spin optimisation off |
+| Dragon Age: Origins | BLUS30415 | `vr-non-working/` + untracked `bin/` copies (profile, patch) | yes (no patch needed: every vblank, measured time) | **120 Hz** (Castle Cousland hall), 2026-10-04 | simulator only | combat and outdoor unchecked; Wider view default 2.0 (2.5 stretches fire) |
+| Dragon Age II | BLUS30645 | `vr-non-working/` + untracked `bin/` copy (profile) | yes (no patch needed, clocks at 1.0 measured) | **below 72**: 70.1-70.6 FPS at 72, 1.2-2.3% late (tutorial fight; PPU/SPU-bound) | simulator only | just misses 72 in the busy fight; measure Kirkwall |
+| Dragon Age: Inquisition | BLUS30997 | none | - | - | - | **hangs ~26 s after boot** (start-menu load, no flips) once its data is installed; Clocks scale 50, SPU Block Size Mega, Accurate RSX reservation, Sleep Timers As Host, PPU Threads 1, Cubeb audio, no headset: all hang |
 | MX vs ATV Reflex | BLUS30321 | untracked `bin/` only | no (`max_fps 30`) | not measured | not played | generated 2026-09-28; no notes |
 | Uncharted: Drake's Fortune | BCUS98103 | none | no: 42-46 flat | not measured | - | SPU/PPU-bound; not pursued |
 | Final Fantasy X/X-2 HD Remaster | BLUS31211 | none | no: 80-91 flat | not measured | - | RSX-bound flat; not pursued |
@@ -545,6 +549,40 @@ Notes: `profiles/BLUS30268-notes.md`. Profile and patch file in `vr-non-working/
 - **Open:** some surfaces shaded differently per eye (bisected to the base-pass program `991df40b5c30d3b5`); the sky
   ends at the game's 91 x 60 degree view (no culling patch yet: the scene view is not written by PPU code); 72 Hz has no
   margin; headset run.
+
+## SEGA Rally Revo (BLUS30068, disc 01.00)
+
+Notes: `profiles/BLUS30068-notes.md`. Patch `BLUS30068_patch.yml`: *Unlocked frame rate (follows Vblank Rate)* (the
+flip passes vsync interval 1 instead of 2) and *Wider view (VR culling)* (FOV x2.5 in the projection builder, cave in
+the code page tail). Generated profile (`c[8, 0, 4]`, `passthrough_hud`), `max_fps 0`. Race state `sr_race0`,
+route `tools/re/sr_boot.sh`. Savestates need Compatible Savestate Mode **and** `Disable SPU GETLLAR Spin
+Optimization` (both in Matt's custom config). **Open:** while driving, dark car-sized patches appear on the road in
+one eye only (ruled out: Wider view, eye separation, multiview/batching, the shadow-map and decal programs; gone with
+`passthrough_hud` off in one run, needs repeating at a fixed track spot). VR frame rate not measured yet.
+
+## Dragon Age: Origins (BLUS30415, disc 01.00)
+
+Notes: `profiles/BLUS30415-notes.md`. Already presents every vblank and steps by measured time: no frame-rate patch.
+Patch `BLUS30415_patch.yml`: *Wider view (VR culling)* (camera FOV x2.0 at `0x71b85c`, cave `0x144f980`; 2.5 makes
+the fireplace flames streak). Generated profile (`c[256]` rigid, HUD `c[260]`, `baseline_per_w`), `max_fps 0`.
+State `da1_castle0` (Castle Cousland hall after the opening). **120 Hz sustained** at 300% on the simulator.
+Unchecked: combat effects, outdoors, cutscenes.
+
+## Dragon Age II (BLUS30645, disc 01.01)
+
+Notes: `profiles/BLUS30645-notes.md`. Real time without a patch. Generated profile (`c[256, 269, 263, 271]`,
+`clip_space_scene_draws`, HUD `c[260]`), `max_fps 0`. State `da2_fight0` (tutorial fight), route
+`tools/re/da2_boot.sh`; savestates need Compatible Savestate Mode (set). **Misses 72** by a hair in the fight (70.1-70.6
+FPS, 1.2-2.3% late), limited by the game's PPU/SPU work (RSX thread mostly waiting); measure a town scene next.
+
+## Dragon Age: Inquisition (BLUS30997, disc 01.01)
+
+The first boot installs 5.3 GB (`dev_hdd0/game/BLUS30997install`), then the game sits at a black screen. Every later
+boot stops presenting ~26 s in, while loading the start menu (log: trophy check, content permit, then the main
+thread's last flip; PPU threads spin in `sys_event_queue_tryreceive`). Tried, all hang the same way: Clocks scale 50
+(Frostbite 3 games are reported to need under 100%), SPU Block Size Mega, Accurate RSX reservation access, Sleep
+Timers Accuracy As Host, PPU Threads 1, Cubeb audio, without the headset session. Not a VR issue: an emulation
+blocker. PPU hash `PPU-22a17ff565b6caaa2a6c498b7b9e9a31b4b43da2`; ELF in `tools/re/elf/BLUS30997.elf`.
 
 ## MX vs ATV Reflex (BLUS30321 v01.00)
 

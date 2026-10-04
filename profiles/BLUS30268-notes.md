@@ -62,3 +62,11 @@ Sustained: **72 Hz** (no margin; busier fights unmeasured).
   saw nothing), so the scene view seems to be built elsewhere (SPU?). Asura's Wrath's UE3 route (`GetViewFrustumBounds`
   by its DELTA^2 constant) did not match this build's code. Not fixed.
 - Not seen: menus beyond pause, cutscenes, later levels.
+
+## Gate shading bisect (2026-10-04)
+
+Two-draw mode, fresh xmen_jungle0, gate left/right ratio (gateratio.py; 0.716 broken, 1.0 fixed). Putting a single
+vertex program on gamecam= (keeps the game camera instead of the eye camera): **4cd95a1fd09b3c9c gives 1.062**; every
+other single program stays at 0.89-0.92. So the per-eye darkening is that program's eye transform. Next: dump it
+(RTDUMP prog=4cd95a1fd09b3c9c) to see what it computes from c[0..4] (probably a light/shadow projection that must stay
+on the game camera or take only the position offset).
