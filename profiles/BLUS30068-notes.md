@@ -30,6 +30,17 @@ Trap: `lfs f0, -0x8e80(r12)` can't be encoded (16-bit signed offset); with `lis 
 0x4e7180 and the scene went black. `lis r12, 0x4d` + 0x7180 is right.
 On the simulator the view is filled straight, turned 25 degrees and pitched up 25 degrees.
 
+## Frame rate in VR (OpenXR Simulator, 300%, `sr_race0` holding the throttle)
+
+| Wider view | 72 Hz | 90 Hz | 120 Hz |
+|---|---|---|---|
+| 2.5 | 67.6, RSX 14.3 ms | 69.6 | 69.7 |
+| 2.0 (default) | **71.9, 0% late**, RSX 11.9 ms | | |
+| 1.0 | 71.9, 0% late, RSX 11.8 ms | | |
+
+Sustained **72 Hz** with the default Wider view 2.0 (still fills the view turned and pitched, a sliver missing at the
+far left when turned).
+
 ## VR profile
 
 Generated in the race (`row_vectors`, camera blocks `c[8]` (most scene), `c[0]`, `c[4]` (the road: removing it puts

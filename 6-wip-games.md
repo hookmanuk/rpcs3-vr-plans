@@ -195,7 +195,7 @@ pass mark** for fully compatible.
 | Sonic & All-Stars Racing Transformed | BLUS30839 | `vr-non-working/` + untracked `bin/` copies (profile, patch) | yes (patch, measured time) | **90 Hz** with Wider view 3.0 (120 with it off), 2026-10-04 | simulator only | distant soft shadows differ between the eyes |
 | Dynasty Warriors: GUNDAM | BLUS30058 | `vr-non-working/` + untracked `bin/` copies (profile, patch) | yes (patch *Frame rate follows VR*) | **120 Hz** (with Wider view 3.0), 2026-10-04 | simulator only | space missions, cutscenes unchecked |
 | X-Men Origins: Wolverine | BLUS30268 | `vr-non-working/` + untracked `bin/` copies (profile, patch) | yes (measured time; the patch removes a 62 FPS cap) | **72 Hz** (Vblank 144, two vblanks a frame; 90 reaches 79), 2026-10-04 | simulator only | culling at the game's 91 x 60 view (per-eye shading fixed 2026-10-04) |
-| SEGA Rally Revo | BLUS30068 | `vr-non-working/` + untracked `bin/` copies (profile, patch) | yes (fork patch *Unlocked frame rate*: 30 -> vblank rate, measured time) | not measured (flat 175-225 FPS) | simulator only | **dark shadow-like blobs on the road, different per eye** (open); savestates need Compatible Savestate Mode + GETLLAR spin optimisation off |
+| SEGA Rally Revo | BLUS30068 | `vr-non-working/` + untracked `bin/` copies (profile, patch) | yes (fork patch *Unlocked frame rate*: 30 -> vblank rate, measured time) | **72 Hz** with Wider view 2.0 (71.9 FPS, 0% late; 2.5 gives 68, 1.0 gives 71.9), 2026-10-04 | simulator only | **dark shadow-like blobs on the road, one eye at a time, timing-dependent** (open); savestates need Compatible Savestate Mode + GETLLAR spin optimisation off |
 | Dragon Age: Origins | BLUS30415 | `vr-non-working/` + untracked `bin/` copies (profile, patch) | yes (no patch needed: every vblank, measured time) | **120 Hz** (Castle Cousland hall), 2026-10-04 | simulator only | combat and outdoor unchecked; Wider view default 2.0 (2.5 stretches fire) |
 | Dragon Age II | BLUS30645 | `vr-non-working/` + untracked `bin/` copy (profile) | yes (no patch needed, clocks at 1.0 measured) | **below 72**: 70.1-70.6 FPS at 72, 1.2-2.3% late (tutorial fight; PPU/SPU-bound) | simulator only | just misses 72 in the busy fight; measure Kirkwall |
 | Dragon Age: Inquisition | BLUS30997 | none | - | - | - | **hangs ~26 s after boot** (start-menu load, no flips) once its data is installed; Clocks scale 50, SPU Block Size Mega, Accurate RSX reservation, Sleep Timers As Host, PPU Threads 1, Cubeb audio, no headset: all hang |
@@ -560,7 +560,8 @@ the code page tail). Generated profile (`c[8, 0, 4]`, `passthrough_hud`), `max_f
 route `tools/re/sr_boot.sh`. Savestates need Compatible Savestate Mode **and** `Disable SPU GETLLAR Spin
 Optimization` (both in Matt's custom config). **Open:** while driving, dark car-sized patches appear on the road in
 one eye only (ruled out: Wider view, eye separation, multiview/batching, the shadow-map and decal programs; gone with
-`passthrough_hud` off in one run, needs repeating at a fixed track spot). VR frame rate not measured yet.
+`passthrough_hud` off in one run; identical runs differ, so it is timing-dependent). **72 Hz** sustained with Wider
+view 2.0 (now the default; 2.5 drops to 68 FPS).
 
 ## Dragon Age: Origins (BLUS30415, disc 01.00)
 
