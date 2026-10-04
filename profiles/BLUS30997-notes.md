@@ -29,3 +29,11 @@ Disc 01.01 (`Dragon Age - Inquisition (USA) (En,Fr,Es).iso`), PPU hash `PPU-22a1
   (a timeout or an adaptive frame budget) takes a path that never kicks the frame.
 - Next: find the timebase reads (`mftb`, `sys_time_get_system_time`) in the job manager / proxy (`0xb64xxx`-`0xb6bxxx`,
   `0xa0fxxx`-`0xa10xxx`) and compare their branches at 30% and 100% with trace breakpoints.
+
+## More attempts (2026-10-04 evening)
+
+- Settings, all hang at ~26 s: PPU Reservation Priority Over SPUs, RSX FIFO Fetch Accuracy Atomic & Ordered, SPU
+  Wake-Up Delay 100, Usleep Time Addend 100, Clocks scale 95.
+- Test patch: the PPU proxy's event wait (`sys_event_queue_receive` at `0xb6b090`, timeout 1.67 s, which stamps a
+  timebase heartbeat into each job context +0x330 on every timeout) cut to 10 ms (`0xb6b080` `li r5, 10000`,
+  `0xb6b088` nop; patch versions must name APP_VER 01.00): still hangs. Removed.
