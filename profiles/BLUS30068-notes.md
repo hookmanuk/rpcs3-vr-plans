@@ -48,7 +48,7 @@ the road at the game camera), camera position `c[4]`, near 0.1 = metres, `passth
 `default_fps 0`. HUD box straight and turned: OK (the left-eye edge crop with the head turned is the simulator
 preview, as in DW Gundam).
 
-## Open: dark shadow-like blobs, different in each eye
+## ~~Open~~ Fixed: dark shadow-like blobs, different in each eye (see "Cause and fix" below)
 
 While driving, dark patches (shaped like cast shadows, often car-sized, sometimes thin streaks) appear on the road in
 one eye and not the other; the car's own shadow is missing or displaced in one eye. Same with Wider view 1.0, with
@@ -84,3 +84,16 @@ Scripts: `tools/re/sr_boot.sh`, scratchpad `srdrive.sh OUT [PROBE]` (simulator, 
   that changes between the left and right eye's draws (a buffer or texture the game rewrites mid-frame), not at a
   profile key. Next: RTDUMP the main target per eye right before the post chain (`prog=f78638bb1ce5eba2`) over many
   frames to catch one with the blob, then step back with `prog=X#n` to the draw where the eyes diverge.
+
+### Cause and fix (2026-10-04 evening)
+
+Per-eye RTDUMPs of the 912x912 shadow map `c8250000` (two-draw, 100% scale) showed the eyes' copies differing by
+3-9% of their bytes, and identical before the first caster draw: the right eye's copy of this light-space target had
+casters missing or from older frames (some dumps had no right copy at all). The right-eye surface cache keeps its own
+copy of every render target, which it can evict and rebuild out of date; for a target no camera draw reaches, both
+eyes' images are by definition the same. Renderer fix (fork, `VKGSRenderVR.cpp`):
+`vr_eye_invariant_target()` = an off-aspect colour target with no 3D content (`vr_has_3d` false, not
+`is_view_target`, profile without `offaspect_player_views`); the right eye samples the left eye's surface (direct
+views and format-converting copies), and with multiview its layer 1 takes a copy of layer 0 after each write before
+it is read (`vr_restore_texture`). Result: the tree shadows on the road now appear in both eyes, at matching places,
+on two-draw and multiview; 72 Hz unchanged (71.9 FPS, RSX 12.0 ms).

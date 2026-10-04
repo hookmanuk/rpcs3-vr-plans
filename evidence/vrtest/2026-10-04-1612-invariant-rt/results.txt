@@ -1,0 +1,158 @@
+# path: OpenXR Simulator, RPCS3_VR_MULTIVIEW=default, build 3a40d9c82 VR generator: a (0,0,0,1) constant is never the ca
+# BCES00664 vrtest_wipeout_race: WipEout HD (released): in a race, ship at speed
+BCES00664 vrtest_wipeout_race vblank 72 scale 300%:
+   577 frames over 8.0 s: avg 72.0 FPS, 1% low 67.0, 0.1% low 43.1 (worst frame 23.2 ms), median 13.97 ms, late 0.17%, RSX thread 7.19 ms/frame
+   576 frames over 8.0 s: avg 72.0 FPS, 1% low 68.3, 0.1% low 65.2 (worst frame 15.3 ms), median 13.97 ms, late 0.00%, RSX thread 4.76 ms/frame
+   576 frames over 8.0 s: avg 72.0 FPS, 1% low 67.1, 0.1% low 49.9 (worst frame 20.1 ms), median 13.97 ms, late 0.00%, RSX thread 5.28 ms/frame
+   => median of 3 windows: avg 72.0 FPS, 1% low 67.1, late frames 0.00%, RSX thread 5.28 ms/frame
+BCES00664 vrtest_wipeout_race vblank 90 scale 300%:
+   721 frames over 8.0 s: avg 90.0 FPS, 1% low 81.4, 0.1% low 78.5 (worst frame 12.7 ms), median 11.06 ms, late 0.00%, RSX thread 1.84 ms/frame
+   721 frames over 8.0 s: avg 90.0 FPS, 1% low 82.5, 0.1% low 78.8 (worst frame 12.7 ms), median 11.06 ms, late 0.00%, RSX thread 1.87 ms/frame
+   720 frames over 8.0 s: avg 90.0 FPS, 1% low 82.5, 0.1% low 76.2 (worst frame 13.1 ms), median 11.06 ms, late 0.00%, RSX thread 1.96 ms/frame
+   => median of 3 windows: avg 90.0 FPS, 1% low 82.5, late frames 0.00%, RSX thread 1.87 ms/frame
+BCES00664 vrtest_wipeout_race vblank 120 scale 300%:
+   801 frames over 8.0 s: avg 100.0 FPS, 1% low 86.8, 0.1% low 83.1 (worst frame 12.0 ms), median 9.96 ms, late 0.00%, RSX thread 1.57 ms/frame
+   801 frames over 8.0 s: avg 100.0 FPS, 1% low 86.8, 0.1% low 83.1 (worst frame 12.0 ms), median 10.00 ms, late 0.00%, RSX thread 1.51 ms/frame
+   801 frames over 8.0 s: avg 100.0 FPS, 1% low 86.8, 0.1% low 79.9 (worst frame 12.5 ms), median 10.00 ms, late 0.00%, RSX thread 1.52 ms/frame
+   => median of 3 windows: avg 100.0 FPS, 1% low 86.8, late frames 0.00%, RSX thread 1.52 ms/frame
+SUSTAINABLE BCES00664 vrtest_wipeout_race: 90 Hz
+# BCES00800 vrtest_gowc_boat: God of War Collection (released): GoW 1, the boat, first fight
+BCES00800 vrtest_gowc_boat vblank 72 scale 300%:
+   577 frames over 8.0 s: avg 72.0 FPS, 1% low 67.0, 0.1% low 64.8 (worst frame 15.4 ms), median 13.96 ms, late 0.00%, RSX thread 1.04 ms/frame
+   577 frames over 8.0 s: avg 72.0 FPS, 1% low 66.8, 0.1% low 66.1 (worst frame 15.1 ms), median 13.92 ms, late 0.00%, RSX thread 1.04 ms/frame
+   => median of 2 windows: avg 72.0 FPS, 1% low 66.8, late frames 0.00%, RSX thread 1.04 ms/frame
+BCES00800 vrtest_gowc_boat vblank 90 scale 300%:
+   721 frames over 8.0 s: avg 90.0 FPS, 1% low 82.7, 0.1% low 78.9 (worst frame 12.7 ms), median 11.06 ms, late 0.00%, RSX thread 1.06 ms/frame
+   720 frames over 8.0 s: avg 90.0 FPS, 1% low 82.5, 0.1% low 78.3 (worst frame 12.8 ms), median 11.05 ms, late 0.00%, RSX thread 1.06 ms/frame
+   => median of 2 windows: avg 90.0 FPS, 1% low 82.5, late frames 0.00%, RSX thread 1.06 ms/frame
+BCES00800 vrtest_gowc_boat vblank 120 scale 300%:
+   960 frames over 8.0 s: avg 120.0 FPS, 1% low 104.4, 0.1% low 97.7 (worst frame 10.2 ms), median 8.38 ms, late 0.00%, RSX thread 0.88 ms/frame
+   961 frames over 8.0 s: avg 120.0 FPS, 1% low 104.4, 0.1% low 97.6 (worst frame 10.2 ms), median 8.39 ms, late 0.00%, RSX thread 1.02 ms/frame
+   => median of 2 windows: avg 120.0 FPS, 1% low 104.4, late frames 0.00%, RSX thread 0.88 ms/frame
+SUSTAINABLE BCES00800 vrtest_gowc_boat: 120 Hz
+# BCUS98259 vrtest_icosotc_1: ICO & SotC Collection (released): SotC, a valley
+BCUS98259 vrtest_icosotc_1 vblank 72 scale 300%:
+   576 frames over 8.0 s: avg 72.0 FPS, 1% low 68.9, 0.1% low 67.3 (worst frame 14.9 ms), median 14.00 ms, late 0.00%, RSX thread 13.64 ms/frame
+   577 frames over 8.0 s: avg 72.0 FPS, 1% low 68.9, 0.1% low 63.4 (worst frame 15.8 ms), median 14.00 ms, late 0.00%, RSX thread 12.48 ms/frame
+   572 frames over 8.0 s: avg 71.5 FPS, 1% low 60.0, 0.1% low 35.7 (worst frame 28.0 ms), median 14.00 ms, late 0.70%, RSX thread 12.57 ms/frame
+   => median of 3 windows: avg 72.0 FPS, 1% low 68.9, late frames 0.00%, RSX thread 12.57 ms/frame
+BCUS98259 vrtest_icosotc_1 vblank 90 scale 300%:
+   718 frames over 8.0 s: avg 89.7 FPS, 1% low 75.0, 0.1% low 44.6 (worst frame 22.4 ms), median 11.10 ms, late 0.28%, RSX thread 9.90 ms/frame
+   716 frames over 8.0 s: avg 89.5 FPS, 1% low 74.4, 0.1% low 40.8 (worst frame 24.5 ms), median 11.04 ms, late 0.56%, RSX thread 10.20 ms/frame
+   716 frames over 8.0 s: avg 89.5 FPS, 1% low 74.3, 0.1% low 42.4 (worst frame 23.6 ms), median 11.08 ms, late 0.56%, RSX thread 10.06 ms/frame
+   => median of 3 windows: avg 89.5 FPS, 1% low 74.4, late frames 0.56%, RSX thread 10.06 ms/frame
+BCUS98259 vrtest_icosotc_1 vblank 120 scale 300%:
+   803 frames over 8.0 s: avg 100.4 FPS, 1% low 51.4, 0.1% low 44.5 (worst frame 22.5 ms), median 9.03 ms, late 19.43%, RSX thread 8.79 ms/frame
+   767 frames over 8.0 s: avg 95.8 FPS, 1% low 49.5, 0.1% low 48.4 (worst frame 20.6 ms), median 9.20 ms, late 25.81%, RSX thread 9.03 ms/frame
+   815 frames over 8.0 s: avg 101.8 FPS, 1% low 51.7, 0.1% low 49.3 (worst frame 20.3 ms), median 8.92 ms, late 18.04%, RSX thread 8.79 ms/frame
+   => median of 3 windows: avg 100.4 FPS, 1% low 51.4, late frames 19.43%, RSX thread 8.79 ms/frame
+SUSTAINABLE BCUS98259 vrtest_icosotc_1: 90 Hz
+# BLUS30443 vrtest_demons_1: Demon's Souls (released): tutorial corridor
+BLUS30443 vrtest_demons_1 vblank 72 scale 300%:
+   577 frames over 8.0 s: avg 72.0 FPS, 1% low 66.3, 0.1% low 64.3 (worst frame 15.6 ms), median 13.89 ms, late 0.00%, RSX thread 1.84 ms/frame
+   577 frames over 8.0 s: avg 72.0 FPS, 1% low 67.1, 0.1% low 66.6 (worst frame 15.0 ms), median 13.89 ms, late 0.00%, RSX thread 1.84 ms/frame
+   576 frames over 8.0 s: avg 71.9 FPS, 1% low 65.6, 0.1% low 29.7 (worst frame 33.7 ms), median 13.90 ms, late 0.17%, RSX thread 1.93 ms/frame
+   => median of 3 windows: avg 72.0 FPS, 1% low 66.3, late frames 0.00%, RSX thread 1.84 ms/frame
+BLUS30443 vrtest_demons_1 vblank 90 scale 300%:
+   720 frames over 8.0 s: avg 90.0 FPS, 1% low 79.8, 0.1% low 75.3 (worst frame 13.3 ms), median 11.07 ms, late 0.00%, RSX thread 1.79 ms/frame
+   721 frames over 8.0 s: avg 90.0 FPS, 1% low 80.5, 0.1% low 72.5 (worst frame 13.8 ms), median 11.07 ms, late 0.00%, RSX thread 1.77 ms/frame
+   719 frames over 8.0 s: avg 89.9 FPS, 1% low 80.4, 0.1% low 32.5 (worst frame 30.8 ms), median 11.06 ms, late 0.14%, RSX thread 1.85 ms/frame
+   => median of 3 windows: avg 90.0 FPS, 1% low 80.4, late frames 0.00%, RSX thread 1.79 ms/frame
+BLUS30443 vrtest_demons_1 vblank 120 scale 300%:
+   960 frames over 8.0 s: avg 120.0 FPS, 1% low 104.6, 0.1% low 94.8 (worst frame 10.5 ms), median 8.36 ms, late 0.00%, RSX thread 1.63 ms/frame
+   961 frames over 8.0 s: avg 120.0 FPS, 1% low 101.0, 0.1% low 96.5 (worst frame 10.4 ms), median 8.33 ms, late 0.00%, RSX thread 1.65 ms/frame
+   959 frames over 8.0 s: avg 119.8 FPS, 1% low 101.3, 0.1% low 33.6 (worst frame 29.8 ms), median 8.35 ms, late 0.10%, RSX thread 1.66 ms/frame
+   => median of 3 windows: avg 120.0 FPS, 1% low 101.3, late frames 0.00%, RSX thread 1.65 ms/frame
+SUSTAINABLE BLUS30443 vrtest_demons_1: 120 Hz
+# BCUS98114 vrtest_gt5_race_start: Gran Turismo 5: race start
+BCUS98114 vrtest_gt5_race_start vblank 72 scale 300%:
+   
+   => no frame stats (did not run)
+   (no frame stats: retrying once)
+BCUS98114 vrtest_gt5_race_start vblank 72 scale 300%:
+   
+   => no frame stats (did not run)
+SUSTAINABLE BCUS98114 vrtest_gt5_race_start: none Hz
+# BLUS30182 vrtest_pure_race: Pure (released): Alto Vista race, from the start line (holds R2)
+BLUS30182 vrtest_pure_race vblank 72 scale 300%:
+   577 frames over 8.0 s: avg 72.0 FPS, 1% low 68.8, 0.1% low 62.1 (worst frame 16.1 ms), median 14.00 ms, late 0.00%, RSX thread 13.73 ms/frame
+   577 frames over 8.0 s: avg 72.0 FPS, 1% low 69.0, 0.1% low 67.6 (worst frame 14.8 ms), median 14.00 ms, late 0.00%, RSX thread 13.70 ms/frame
+   573 frames over 8.0 s: avg 71.5 FPS, 1% low 66.6, 0.1% low 15.8 (worst frame 63.2 ms), median 14.00 ms, late 0.35%, RSX thread 13.81 ms/frame
+   => median of 3 windows: avg 72.0 FPS, 1% low 68.8, late frames 0.00%, RSX thread 13.73 ms/frame
+BLUS30182 vrtest_pure_race vblank 90 scale 300%:
+   719 frames over 8.0 s: avg 89.9 FPS, 1% low 83.6, 0.1% low 43.6 (worst frame 23.0 ms), median 11.01 ms, late 0.42%, RSX thread 10.98 ms/frame
+   721 frames over 8.0 s: avg 90.0 FPS, 1% low 85.2, 0.1% low 74.8 (worst frame 13.4 ms), median 11.01 ms, late 0.00%, RSX thread 10.98 ms/frame
+   720 frames over 8.0 s: avg 89.9 FPS, 1% low 81.7, 0.1% low 45.5 (worst frame 22.0 ms), median 11.01 ms, late 0.28%, RSX thread 10.92 ms/frame
+   => median of 3 windows: avg 89.9 FPS, 1% low 83.6, late frames 0.28%, RSX thread 10.98 ms/frame
+BLUS30182 vrtest_pure_race vblank 120 scale 300%:
+   959 frames over 8.0 s: avg 119.9 FPS, 1% low 110.8, 0.1% low 55.4 (worst frame 18.1 ms), median 8.45 ms, late 0.10%, RSX thread 8.22 ms/frame
+   961 frames over 8.0 s: avg 120.0 FPS, 1% low 110.9, 0.1% low 80.7 (worst frame 12.4 ms), median 8.47 ms, late 0.00%, RSX thread 8.22 ms/frame
+   951 frames over 8.0 s: avg 118.9 FPS, 1% low 90.4, 0.1% low 34.2 (worst frame 29.3 ms), median 8.43 ms, late 0.21%, RSX thread 8.27 ms/frame
+   => median of 3 windows: avg 119.9 FPS, 1% low 110.8, late frames 0.10%, RSX thread 8.22 ms/frame
+SUSTAINABLE BLUS30182 vrtest_pure_race: 120 Hz
+# BCES01743 vrtest_kz_trench: Killzone HD (released): Helghast Assault, opening trench (made with the 120 FPS patch)
+BCES01743 vrtest_kz_trench vblank 72 scale 300%:
+   720 frames over 8.0 s: avg 90.0 FPS, 1% low 76.0, 0.1% low 58.0 (worst frame 17.3 ms), median 11.06 ms, late 0.28%, RSX thread 4.89 ms/frame
+   720 frames over 8.0 s: avg 89.9 FPS, 1% low 63.8, 0.1% low 50.7 (worst frame 19.7 ms), median 11.07 ms, late 0.42%, RSX thread 5.41 ms/frame
+   720 frames over 8.0 s: avg 89.8 FPS, 1% low 67.0, 0.1% low 50.9 (worst frame 19.7 ms), median 11.10 ms, late 0.69%, RSX thread 4.71 ms/frame
+   => median of 3 windows: avg 89.9 FPS, 1% low 67.0, late frames 0.42%, RSX thread 4.89 ms/frame
+BCES01743 vrtest_kz_trench vblank 90 scale 300%:
+   721 frames over 8.0 s: avg 90.0 FPS, 1% low 70.3, 0.1% low 56.9 (worst frame 17.6 ms), median 11.07 ms, late 0.28%, RSX thread 4.99 ms/frame
+   720 frames over 8.0 s: avg 90.0 FPS, 1% low 65.1, 0.1% low 56.6 (worst frame 17.7 ms), median 11.07 ms, late 0.56%, RSX thread 4.76 ms/frame
+   717 frames over 8.0 s: avg 89.6 FPS, 1% low 55.3, 0.1% low 48.8 (worst frame 20.5 ms), median 10.83 ms, late 4.04%, RSX thread 8.00 ms/frame
+   => median of 3 windows: avg 90.0 FPS, 1% low 65.1, late frames 0.56%, RSX thread 4.99 ms/frame
+BCES01743 vrtest_kz_trench vblank 120 scale 300%:
+   720 frames over 8.0 s: avg 90.0 FPS, 1% low 69.3, 0.1% low 54.0 (worst frame 18.5 ms), median 11.09 ms, late 0.42%, RSX thread 5.27 ms/frame
+   720 frames over 8.0 s: avg 90.0 FPS, 1% low 80.0, 0.1% low 58.6 (worst frame 17.1 ms), median 11.11 ms, late 0.28%, RSX thread 5.17 ms/frame
+   683 frames over 8.0 s: avg 85.3 FPS, 1% low 55.9, 0.1% low 2.7 (worst frame 375.5 ms), median 10.85 ms, late 3.66%, RSX thread 8.57 ms/frame
+   => median of 3 windows: avg 90.0 FPS, 1% low 69.3, late frames 0.42%, RSX thread 5.27 ms/frame
+SUSTAINABLE BCES01743 vrtest_kz_trench: 90 Hz
+# BLUS30721 vrtest_asura_space: Asura's Wrath: Episode 1, space battle (rail shooter)
+BLUS30721 vrtest_asura_space vblank 144 scale 300%:
+   
+   => no frame stats (did not run)
+   (no frame stats: retrying once)
+BLUS30721 vrtest_asura_space vblank 144 scale 300%:
+   576 frames over 8.0 s: avg 71.9 FPS, 1% low 68.9, 0.1% low 44.3 (worst frame 22.6 ms), median 13.98 ms, late 0.17%, RSX thread 13.68 ms/frame
+   577 frames over 8.0 s: avg 72.0 FPS, 1% low 68.9, 0.1% low 64.9 (worst frame 15.4 ms), median 13.97 ms, late 0.00%, RSX thread 13.67 ms/frame
+   => median of 2 windows: avg 71.9 FPS, 1% low 68.9, late frames 0.00%, RSX thread 13.67 ms/frame
+BLUS30721 vrtest_asura_space vblank 180 scale 300%:
+   719 frames over 8.0 s: avg 89.8 FPS, 1% low 86.0, 0.1% low 31.2 (worst frame 32.1 ms), median 11.02 ms, late 0.14%, RSX thread 10.73 ms/frame
+   720 frames over 8.0 s: avg 90.0 FPS, 1% low 84.3, 0.1% low 83.3 (worst frame 12.0 ms), median 11.02 ms, late 0.00%, RSX thread 10.81 ms/frame
+   => median of 2 windows: avg 89.8 FPS, 1% low 84.3, late frames 0.00%, RSX thread 10.73 ms/frame
+BLUS30721 vrtest_asura_space vblank 240 scale 300%:
+   958 frames over 8.0 s: avg 119.6 FPS, 1% low 108.1, 0.1% low 31.0 (worst frame 32.2 ms), median 8.41 ms, late 0.10%, RSX thread 8.16 ms/frame
+   959 frames over 8.0 s: avg 119.8 FPS, 1% low 104.4, 0.1% low 93.5 (worst frame 10.7 ms), median 8.41 ms, late 0.00%, RSX thread 8.17 ms/frame
+   => median of 2 windows: avg 119.6 FPS, 1% low 104.4, late frames 0.00%, RSX thread 8.16 ms/frame
+SUSTAINABLE BLUS30721 vrtest_asura_space: 120 Hz
+# BCUS98259 vrtest_ico_bridge: ICO (released): Old Bridge, from a save (Continue, file 1); frame-locked at 30 in VR, rates=30
+BCUS98259 vrtest_ico_bridge vblank 60 scale 300%:
+   240 frames over 8.0 s: avg 30.0 FPS, 1% low 29.3, 0.1% low 29.2 (worst frame 34.2 ms), median 33.42 ms, late 0.00%, RSX thread 32.64 ms/frame
+   240 frames over 8.0 s: avg 30.0 FPS, 1% low 29.5, 0.1% low 29.3 (worst frame 34.1 ms), median 33.42 ms, late 0.00%, RSX thread 32.50 ms/frame
+   240 frames over 8.0 s: avg 30.0 FPS, 1% low 29.4, 0.1% low 29.4 (worst frame 34.0 ms), median 33.38 ms, late 0.00%, RSX thread 32.65 ms/frame
+   => median of 3 windows: avg 30.0 FPS, 1% low 29.4, late frames 0.00%, RSX thread 32.64 ms/frame
+SUSTAINABLE BCUS98259 vrtest_ico_bridge: 30 Hz
+# BCUS98155 vrtest_mspr_race: MotorStorm: Pacific Rift: Free-Play, Kanaloa Bay, 11 AI, rally car, countdown "1" (holds R2)
+BCUS98155 vrtest_mspr_race vblank 72 scale 300%:
+   535 frames over 8.0 s: avg 66.8 FPS, 1% low 50.7, 0.1% low 2.4 (worst frame 415.3 ms), median 14.04 ms, late 0.37%, RSX thread 13.42 ms/frame
+   574 frames over 8.0 s: avg 71.7 FPS, 1% low 51.4, 0.1% low 39.9 (worst frame 25.1 ms), median 13.99 ms, late 0.52%, RSX thread 11.39 ms/frame
+   => median of 2 windows: avg 66.8 FPS, 1% low 50.7, late frames 0.37%, RSX thread 11.39 ms/frame
+SUSTAINABLE BCUS98155 vrtest_mspr_race: none Hz
+# BLUS30839 vrtest_sonic_race: Sonic & All-Stars Racing Transformed: Ocean View, mid-lap 1 (holds R2; Unlocked frame rate + Wider view 3.0)
+BLUS30839 vrtest_sonic_race vblank 72 scale 300%:
+   576 frames over 8.0 s: avg 72.0 FPS, 1% low 69.2, 0.1% low 67.6 (worst frame 14.8 ms), median 14.00 ms, late 0.00%, RSX thread 10.95 ms/frame
+   577 frames over 8.0 s: avg 72.0 FPS, 1% low 68.9, 0.1% low 67.9 (worst frame 14.7 ms), median 14.00 ms, late 0.00%, RSX thread 11.54 ms/frame
+   570 frames over 8.0 s: avg 71.1 FPS, 1% low 68.8, 0.1% low 9.0 (worst frame 111.4 ms), median 14.00 ms, late 0.18%, RSX thread 12.12 ms/frame
+   => median of 3 windows: avg 72.0 FPS, 1% low 68.9, late frames 0.00%, RSX thread 11.54 ms/frame
+BLUS30839 vrtest_sonic_race vblank 90 scale 300%:
+   719 frames over 8.0 s: avg 89.9 FPS, 1% low 72.2, 0.1% low 62.4 (worst frame 16.0 ms), median 11.02 ms, late 0.00%, RSX thread 7.71 ms/frame
+   720 frames over 8.0 s: avg 89.9 FPS, 1% low 70.9, 0.1% low 56.6 (worst frame 17.7 ms), median 11.01 ms, late 0.28%, RSX thread 7.69 ms/frame
+   718 frames over 8.0 s: avg 89.7 FPS, 1% low 69.6, 0.1% low 61.3 (worst frame 16.3 ms), median 11.15 ms, late 0.00%, RSX thread 7.71 ms/frame
+   => median of 3 windows: avg 89.9 FPS, 1% low 70.9, late frames 0.00%, RSX thread 7.71 ms/frame
+BLUS30839 vrtest_sonic_race vblank 120 scale 300%:
+   775 frames over 8.0 s: avg 96.8 FPS, 1% low 68.1, 0.1% low 60.9 (worst frame 16.4 ms), median 10.29 ms, late 0.39%, RSX thread 10.11 ms/frame
+   865 frames over 8.0 s: avg 108.1 FPS, 1% low 76.5, 0.1% low 66.5 (worst frame 15.0 ms), median 8.85 ms, late 0.81%, RSX thread 8.80 ms/frame
+   833 frames over 8.0 s: avg 104.1 FPS, 1% low 70.9, 0.1% low 31.4 (worst frame 31.8 ms), median 9.49 ms, late 0.96%, RSX thread 9.28 ms/frame
+   => median of 3 windows: avg 104.1 FPS, 1% low 70.9, late frames 0.81%, RSX thread 9.28 ms/frame
+SUSTAINABLE BLUS30839 vrtest_sonic_race: 90 Hz
+DONE /f/rpsc3/source/plans/evidence/vrtest/2026-10-04-1612-invariant-rt
