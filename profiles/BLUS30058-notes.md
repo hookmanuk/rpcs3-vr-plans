@@ -64,4 +64,7 @@ Sustained: **120 Hz**.
 - Main menu: starfield in the headset view, the menu boxed; the small 3D Gundam beside it is a camera-space element.
 - Mission (pause) menu: the 3D map's field blocks stay in the menu with `preprojected_programs` (they spilled outside
   without it).
-- Not seen: cutscenes, versus/original modes, space missions.
+- **Space (2026-10-04):** Kamille Bidan's Official Mode Mission 01 ("Atmosphere": pilot ring Right, X, X through the
+  briefing, Start Mission) is in space. Savestate `dwg_space0`. Simulator: stereo and HUD (gauge, minimap, Shot Down)
+  right straight, turned 25 and pitched 25; the starfield fills the view. **120 Hz** (120.0 FPS, 0% late, RSX 4.8 ms).
+- Not seen: cutscenes, versus/original modes.
