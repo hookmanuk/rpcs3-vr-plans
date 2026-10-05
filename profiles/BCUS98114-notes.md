@@ -418,3 +418,25 @@ surface `0xc1100000`, and probe `why=`:
   text line. Blind writes to the ~36 candidates (an earlier attempt) unpaused the game and switched its camera.
 - Next: find the camera parameters the PPU passes to the SPU jobs, or the SPU culling program itself (SPU patch).
 
+## 2026-10-05 afternoon: frame rate with many cars in view (Matt's paused savestate 2_13), no fix found
+
+- `BCUS98114_2_13` (paused, ten cars ahead) loads paused only with Matt's pad connected (otherwise the race runs).
+  Simulator, Matt's config, VR Frame Rate 90 (the simulator reports no refresh rate): ~48-50 FPS, RSX thread
+  ~20 ms per frame (the limit), 2,420 draws (1,843 on the main 1280x720 target).
+- Cars: each car is 110-165 draws at any distance (4.8 m: 132, 63 m: 110); the game's LOD lowers vertices
+  (112k at 10 m, 25k at 63 m), not draws. Ten cars ~1,350 main-pass draws (73%). A lower-LOD patch would not
+  reduce draws much; only drawing fewer cars would (~1.4 ms of RSX thread per car).
+- Hiding the shadow-map programs (`c0324ae756edb42b`, `cbaec9167c09d2`, `373812cf945f923a`, `30532bfcf0d877be`:
+  187 draws) and the reflection-map programs (12, 97 draws) with probe `hide=`: +1 and +0 FPS, both +2.5 FPS (the
+  per-draw cost is mostly paid before the renderer's skip point). Not worth the lost shadows and reflections.
+- RSX thread profile (`RPCS3_RSX_SAMPLE=2`): spread out. FIFO reading ~12%, texture uploads and memory blits
+  ~10-14%, `load_texture_env` ~13%, VR per-draw setup ~13%, fragment program lookup ~8%, pipeline lookup ~8%,
+  vertex upload ~6%, submits ~5%.
+- Texture re-uploads: ~63 per paused frame (54 addresses, car DXT textures, two 1024x1024), the bytes unchanged.
+  Cause: GT5 rewrites small per-frame data (e.g. the cars' 8x8 textures) in 4 KB pages shared with the ends of car
+  textures; the texture cache locks pages, so each write drops the texture. Tried (reverted): hashing sections
+  below 128 KB instead of locking (uploads -90%, but 48 -> 44.5 FPS: every use hashes); skipping the upload copy
+  when a reused image's bytes are unchanged (88% of uploads skipped, FPS unchanged: the copy is not the cost).
+- Savestate-only corruption (multicoloured dots on cars): the per-car 256x512 ARGB textures (unit 8); theory, not
+  tested: built on the GPU at race load and not in the savestate with Write Color Buffers off.
+

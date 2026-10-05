@@ -402,6 +402,10 @@ Notes: `profiles/BCUS98114-notes.md` (the most detailed). Evidence: `evidence/gt
   loading a race** (garbage fragment program, also with VR off). Any other scale works; 300% is verified.
 - **Fixed 2026-10-01 (desktop):** red/green car shadows (the shadow program keeps fog densities in the
   camera-position slot `c[467]`; the renderer now checks the slot holds the eye point), desktop mirror crop.
+- **2026-10-05 (Matt, headset):** cars beside the player are culled by the game's SPU code (parked; notes); with many
+  cars in view ~48 FPS at 90 (RSX thread bound, ~135 draws per car at any distance; hiding shadows/reflections
+  +2.5 FPS, texture re-upload fixes no gain; notes "2026-10-05 afternoon"). Savestate loads show multicoloured
+  car paint (open).
 - **Open (from the notes):**
   1. Arcade menu cards: improved 2026-10-03 (exact depth for the card program), still obscured when the HMD turns or
      tilts (Matt, headset). The rear-view mirror image also resizes and is culled with the HMD angle.
