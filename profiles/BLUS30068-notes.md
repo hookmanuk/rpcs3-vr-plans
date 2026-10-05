@@ -104,9 +104,13 @@ Straight, yaw +-20, pitch +-10, roll 15 (`posecheck.sh`, race): road, car and HU
 
 ## Open (Matt, 2026-10-05)
 
-- **Main menu flicker:** Matt's state `BLUS30068_1_2` (main menu): the menu items flicker on and off. Not
-  investigated yet. First steps: load it on the simulator, check flat vs stereo, and whether the items are
-  one of the matrix-less HUD programs (`ae5d1f3fa4187794`, `f780e2c460d9eba2`) or fall to the scene path on
-  some frames (`passthrough_hud`).
+- **Menu flicker, fixed 2026-10-05 (fork 17b02348e):** in Matt's `BLUS30068_1_2` (league select) the headset view
+  showed only the card panel and the 3D card stack on black: the blue background, title and button prompts were
+  missing (they flicker in Matt's headset). The front end draws a 3D jungle backdrop and cards through camera-like
+  blocks, so the frame counted as 3D. Inspector menu vs race frames: programs only the front end uses are the
+  background `860c2ce6c6398a2c` (draws into `c3460000`), `9e0f6220216133cc`, `1be7ebf6362e1549`, the cards
+  `5e4fd5886053bfac` and `ae47d748b3e87794`. `screen_frame_draws` with the background and cards, texture `0x0`
+  (their textures start at unit 1; unit 0 is unbound, so `2048x1024` never matched). 14 shots over two menus all
+  whole on the fixed screen, matching flat (`evidence/sr-menu-2026-10-05/`); the race state stays 3D.
 - **Performance: aim for 90 FPS.** 72 Hz (71.9 FPS, RSX ~12 ms) has no margin. Spend time on it: profile the
   stereo frame per pass and find work that can be cut or shared between the eyes.
