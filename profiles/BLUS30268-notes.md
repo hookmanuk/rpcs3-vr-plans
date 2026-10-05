@@ -110,3 +110,13 @@ regenerating Wolverine now leaves the slot out.
 ## Head poses on the OpenXR Simulator (real head pose, 2026-10-05)
 
 Straight, yaw +-20, pitch +-10, roll 15 (`posecheck.sh`): HUD boxed and world right; the known top-left sky edge shows when turned/pitched up (above). Sheet `evidence/headpose-2026-10-05/pc_xmen_sheet.png`.
+
+## Open (Matt, headset, 2026-10-05): HUD follows the head, pixelated image
+
+- **HUD rotates with the head.** The simulator pose check (2026-10-05) had the health HUD boxed at every pose,
+  so either another HUD program/screen than the jungle's (`8dc5cbd5eb2c59ec`, `c[200]`) or a headset-only path.
+  Ask Matt where (gameplay, pause, menus) or check those screens with `simpose.py`.
+- **Pixelated even at 400%.** Not investigated. Candidates: a render target the resolution scale does not reach
+  (the scene target `c9a78000` copied out by `1c7935c330cbbbd8`, the 322x182 bloom: check the final scene
+  target's real size with RTDUMP at 100% vs 400%); the custom config's `Cinematic Scenes: Lower Resolution`
+  if it was a cutscene; or the game's own upscale from a sub-720p buffer. Compare a flat 400% shot first.
