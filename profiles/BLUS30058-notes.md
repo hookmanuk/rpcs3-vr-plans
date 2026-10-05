@@ -80,3 +80,13 @@ missing. No savestate. Not investigated yet. Menus and dialogue were never check
 profile's 2D handling there is untested: check flat vs stereo, whether the menu draws take the scene path
 (`row_vectors c[256, 0]`, `require_camera_aspect`) or `preprojected_programs`, and whether the portraits are
 hidden or drawn off-screen/behind the menu in one or both eyes.
+
+**2026-10-06 (night):** booted from the disc (Load Save > Yes, title movie, Start x2). Original: the starfield filled
+the view and the menu sat in the box, but the rotating 3D mobile-suit head was placed differently in each eye from the
+panels (`evidence/dwg-menus-2026-10-06/gm_orig_sheet.png`). Programs only the front end uses (inspector, menu vs
+battle): `f76b21b4f832b4c` (starfield, 128x128), `e13087f4ee27e50e`, `a7004bfba1919d7a` (the model), and
+`2f663733efd6add1` with a 2048x2048 atlas (battle uses it with other textures). `screen_frame_draws` with the first and
+last: title and main menu whole on the fixed screen, world-fixed at yaw 20 / pitch 15 / roll 15 (`gm_new_sheet.png`);
+`dwg_odessa0` and `BLUS30058_1_0` stay in the headset view. The pause menu in a mission (Start) was already on the
+fixed screen and world-fixed (`gd_pf_sheet.png`). Portraits: no dialogue showed in ~50 s of either battle state;
+menu navigation by script kept falling back to the title, so a dialogue was not reached.
