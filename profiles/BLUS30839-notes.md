@@ -113,4 +113,15 @@ differs between the left and right eye.
   (`son_pa`, `son_pi` sheets). Wider view 1.5 still has both, and culls the view edges (`son_s15_sheet.png`). Left: the
   getter `0x1dd778`, and SPU code (SPURS jobs reading the camera by DMA are invisible to the PPU watch). Next: trace the
   getter's callers' use, and an SPU-side search for the camera address (RSX/SPU DMA log of `0x30696680`).
+- **The culling frustum is the getter `0x1dd760`** (called from `0x28a304`; builds a perspective matrix from FOV
+  `+0x38`, aspect `+0x3c`, near/far `+0x40/+0x44`). Cave at `0xbe8fc0` (`bl` from `0x1dd778`), interpreter + POKE:
+  - FOV / Scale there at Wider view 3.0: the scenery is culled to the game's frustum again (`son_pg_sheet.png`).
+  - **Wider view 1.0 + FOV x3 (cap 150) there only:** the view is filled, as at 3.0, while the render camera, projection
+    and shadow fit keep the game's FOV (`son_pc_sheet.png`). Cave: `lfs f28,0x38(r3); lis r12,0xbf; lfs f0,-0x7018(r12)
+    (3.0 at 0xbe8fe8); fmuls f28,f28,f0; lfs f0,-0x704c(r12) (cap); fsubs f13,f28,f0; fsel f28,f13,f0,f28; blr`.
+  - The bars at the top of the loop are still there with it: they come with the wider culling (objects or a level of
+    detail the game never shows from that angle), not with the render FOV. The per-eye pillar shadow was not judged
+    reliably in this run (the shots are 4 s apart under the interpreter).
+  Next: a patch version doing only the getter widening (verify under LLVM, check the shadows and frame rate), then look
+  for an LOD decision in the cull pass (`0x28a2c0` onwards) to keep the loop's full mesh.
 No sound in that run was a test leftover (`Audio Renderer: Null` in the custom config), restored to Cubeb.
