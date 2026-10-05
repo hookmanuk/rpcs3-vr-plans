@@ -375,5 +375,9 @@ More (same night):
 - Arcade menu (`vrtest_gt5_arcade_menu`), poses yaw/pitch/roll 0/0/0, -20/0/0, 20/0/0, 0/15/0, 0/0/15, 20/-10/10:
   `evidence/gt5/2026-10-05-arcade-menu-real-pose.png`. Pitch 15: the panel's lower part (Single Race, thumbnails,
   buttons) is cut along a straight horizontal line; yaw -20: its lower right is cut along a diagonal. Matt's "obscured
-  when the HMD turns or tilts". Not yet traced (next: the box scissor and clear rectangles of the cut draws, as for
-  the mirror).
+  when the HMD turns or tilts". Checked at full resolution: the panel's own cuts are the edge of the field of view
+  (looking up 15 degrees the world-fixed box runs off the bottom of the eye image: its scissor clamps at the shown
+  region, y 1440 at 200%), so those are expected. **The real fault:** at yaw -20 the front card's art is cut to a
+  ~80 px strip (about 250 px straight ahead) while the panel around it is whole. `hud_keep_depth` is already on (all
+  box draws keep the game's z/w, as the exact-depth card program does), so it is not the box's w changing depth.
+  Next: find the card draws (RTDUMP / per-draw trace at yaw -20) and their scissor and clear rectangles.
