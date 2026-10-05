@@ -1,0 +1,8 @@
+# path: OpenXR Simulator, RPCS3_VR_MULTIVIEW=default, build dddc882ca VR generator: 2D-transform (Scaleform-style) HUD p
+# BLUS30645 vrtest_da2_fight: Dragon Age II: prologue, first fight (no input)
+BLUS30645 vrtest_da2_fight vblank 72 scale 300%:
+   567 frames over 8.0 s: avg 70.9 FPS, 1% low 36.2, 0.1% low 35.7 (worst frame 28.0 ms), median 14.01 ms, late 1.59%, RSX thread 12.41 ms/frame
+   564 frames over 8.0 s: avg 70.5 FPS, 1% low 35.9, 0.1% low 35.7 (worst frame 28.0 ms), median 14.01 ms, late 2.13%, RSX thread 12.24 ms/frame
+   => median of 2 windows: avg 70.5 FPS, 1% low 35.9, late frames 1.59%, RSX thread 12.24 ms/frame
+SUSTAINABLE BLUS30645 vrtest_da2_fight: none Hz
+DONE /f/rpsc3/source/plans/evidence/vrtest/2026-10-05-1134-da2base

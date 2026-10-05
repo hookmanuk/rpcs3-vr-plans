@@ -47,5 +47,5 @@ The updated generator logs two 1280x720x4 sections (`0x33000000` and `0xc0f70000
 frame in the tutorial fight, each waiting for the GPU (Write/Read Color Buffers are off). `0xc0f70000` is the target of the
 frame's last draw (`1c7935c330cbbbd8`, after the HUD). If the game never reads them, `skip_readback_sections` would
 remove a GPU wait per frame from a game that misses 72 by 1-2 FPS; if its SPUs read the frame (post-processing,
-pause-screen capture), it can't be skipped. To check.
+pause-screen capture), it can't be skipped. **Checked 2026-10-05: no.** The read comes from the game's SPU job thread (`EclipseGameSPUCellSpursKernel3`: the game uses the frame), and skipping both made no difference anyway: 70.5 FPS / 1.59% late without, 70.5 / 2.12% with (`evidence/vrtest/2026-10-05-1134-da2base`, `-1135-da2skip`). Reverted.
 
