@@ -326,7 +326,9 @@ More (same night):
 - **Temporary image pool.** The RSX sampler (`RPCS3_RSX_SAMPLE=3`) on the Rome start showed ~5% of the RSX thread in
   `texture_cache::on_frame_end` destroying images (`FreeGpuVirtualAddress`): upstream halves the pool above 256 MB and
   one temporary copy of a 1280x720 target is 118 MB at 400% stereo. The limit now scales (4 GB on the 5090).
-- Also tried, no gain: Multithreaded RSX, Asynchronous Texture Streaming (slightly worse), MSAA off (~5% GPU only).
+- Also tried, no gain: Multithreaded RSX, Asynchronous Texture Streaming (slightly worse), MSAA off (~5% GPU only),
+  presenting the desktop window only every third headset frame (RSX thread unchanged; reverted). The fork's per-draw
+  eye-constant work is ~0.65 ms of the RSX thread's ~10 ms at 1,400 draws.
 - New savestates: `gt5_rome_prerace` (Rome Circuit grid, City tab), `gt5_rome_start` (race 5 s in, pack ahead);
   `vrtest_gt5_race_start` is now a hard link to `gt5_indy_start` (regression list).
 - **Visual, not fixed:** on Rome (race and flyby) the top of the headset view shows a black arc: the sky dome ends
@@ -334,3 +336,6 @@ More (same night):
 - **Intermittent device lost at boot** (2 of ~30 savestate boots tonight, 0 of 8 in a boot loop with
   `tools/re/gt5_bootloop.sh`): GPU write fault at address 0 during the first frames after a savestate loads
   (`wait_for_fence`). Known since 2026-10-03; not reproduced on demand.
+- Regression subset after tonight's changes (`evidence/vrtest/2026-10-05-0356-gt5night`, simulator, 300%): WipEout,
+  GoW 1, SotC, Demon's Souls, Pure, RR7, Killzone, ICO unchanged against the 2026-10-04 runs; GT5 race start (new
+  state) sustains 120 (90 with 0% late frames).
