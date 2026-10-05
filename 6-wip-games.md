@@ -420,6 +420,8 @@ Notes: `profiles/BCUS98114-notes.md` (the most detailed). Evidence: `evidence/gt
   Next: find where a car's model level is stored (per-car state that changes between the full and far model as a car
   passes ~85 m in a running race: memory diff or write watch), then its threshold. Notes: "2026-10-05 late afternoon",
   "2026-10-05 night".
+  Test state: `savestates/BCUS98114/gt5_busy_race_2_17` (hard link of Matt's 2_17: paused with his pad connected,
+  nine cars ahead within 58 m, ~50 FPS).
 - **Open (from the notes):**
   1. Arcade menu cards: improved 2026-10-03 (exact depth for the card program), still obscured when the HMD turns or
      tilts (Matt, headset). The rear-view mirror image also resizes and is culled with the HMD angle.
