@@ -478,3 +478,19 @@ surface `0xc1100000`, and probe `why=`:
   (cross-correlation), not by pixel positions: each eye's projection centre differs (~900 px at 400%).
   Do not compare menu shots taken at different moments: the sequence changes lighting fast.
 
+## 2026-10-05 night: why 2_17 runs at ~50 FPS when 2_14 runs at ~75 (simulator, VR Frame Rate 90)
+
+- Same build and tiers: 2_17 ~51 FPS (RSX thread 19.2 ms), 2_14 ~75 (13.0 ms). 2_17 is a heavier frame in every
+  category, not one bad pass: even with the car tiers 2,654 draws / 1.49M vertices against 2_14's 1,829 / 978k
+  (2_14 without any limit). Main view 940k vertices vs 645k (nine cars at 9-58 m, models of ~183 draws each vs ~135);
+  reflection map 534 draws / 139k vs 87 / 12k; shadow maps 345 / 346k vs 202 / 271k; other passes 313 vs 233.
+  The rest of the scene is the same (~480-490 main-view draws).
+- RSX sampler diff (`RPCS3_RSX_SAMPLE=2`): the extra 6.2 ms is spread over per-draw work; vertex emission grows most
+  (`emit_geometry` +2.4 ms: GT5's vertex data is in main memory, copied every draw), then draw handling +1.7, FIFO
+  +1.3, VR per-draw setup +0.7.
+- Tried on 2_17: reflection map skipped entirely (all 256x256 draws) 48.5 -> ~51 FPS (1.1 ms for 534 cheap draws; not
+  kept); `min_scalable_dimension` 511 vs 512: no difference; Multithreaded RSX on: no gain (51.6-52.7 vs 53.7);
+  aggressive tiers (nearest car full, rest 70%) ~53.7 but Matt: too much culling, reverted to 2 / 4x85% / 70%.
+- Car shadows: shadow draws carry no world position (c[256..259] identity, the model in the light transform), so the
+  tiers cannot reach them without inverting each cascade's light matrix; shadows are cheap depth draws (~1 FPS at most).
+
