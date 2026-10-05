@@ -80,3 +80,11 @@ Executable hashes: launcher `PPU-83f4a1c6...`, `kingdom.self` `PPU-d626d983...`.
 - **Need a gameplay savestate with the HUD on screen** (command menu, HP): the second pedestal (above).
 - The step for >60 FPS; Re:Chain of Memories (`recom.self`, community 60 FPS patch exists) and the launcher's
   menus in the headset.
+
+## Open (Matt, 2026-10-05): opening video head-locked, stray 3D background
+
+Matt's state `BLUS31212_1_3` is at the main menu. Starting the game plays a video that follows the head instead
+of staying fixed in place, and behind it a 3D background is drawn that should not be visible (flat shows only
+the video). Not investigated yet. Likely the same shape as Dante's Inferno's intro movie: a scene rendered
+behind a full-screen movie draw makes the frame count as 3D; first try `screen_frame_draws` with the movie
+draw's program, and find what the background is (hidden in flat by the opaque video, or a pass flat never shows).
