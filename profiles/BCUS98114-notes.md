@@ -364,3 +364,16 @@ More (same night):
   box gets the nearest depth (multiview path), so the mirror draws stop at the quad. Turned 40 degrees the mirror is a
   slanted panel, larger near the edge of the wide view (perspective), with the scene around it
   (`evidence/gt5/2026-10-05-mirror-yaw-fixed.png`). Race frame rate unchanged. **Needs Matt's headset check.**
+
+## 2026-10-05 morning: arcade menu with the simulator's real head pose
+
+- `tools/re/simpose.py YAW [PITCH] [ROLL]` turns the OpenXR Simulator's head (its `head_pose_command.json`), so
+  compositor layers move too. `RPCS3_VR_YAW_FILE` only turns the rendered pose: fine for content drawn into the eye
+  images (the race HUD and mirror), misleading for screens with compositor layers (a dark axis-aligned rectangle
+  stayed behind the turned menu panel). Use simpose for menus; set HUD Vertical Offset 70 (temporary config) or the
+  box sits low in the simulator's view.
+- Arcade menu (`vrtest_gt5_arcade_menu`), poses yaw/pitch/roll 0/0/0, -20/0/0, 20/0/0, 0/15/0, 0/0/15, 20/-10/10:
+  `evidence/gt5/2026-10-05-arcade-menu-real-pose.png`. Pitch 15: the panel's lower part (Single Race, thumbnails,
+  buttons) is cut along a straight horizontal line; yaw -20: its lower right is cut along a diagonal. Matt's "obscured
+  when the HMD turns or tilts". Not yet traced (next: the box scissor and clear rectangles of the cut draws, as for
+  the mirror).
