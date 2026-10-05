@@ -220,6 +220,9 @@ left-eye contact sheet `OUT_sheet.png`. Run it in gameplay (with the input held 
 and on every menu. Check:
 
 - **Nothing follows the head:** the world stays put, glows and sprites stay on their lights.
+- **The world moves the right way:** against the straight shot, yaw +20 moves the world right, pitch +10 moves it
+  down, roll 15 turns it clockwise (the same way the fixed screen moves). A world that moves the other way on pitch
+  and roll only is `view_y_down` (Kingdom Hearts passed earlier checks with it wrong: a single shot looks fine).
 - **The HUD and menus stay whole in their fixed box:** no layer cut along a line, no panel sliding against another,
   no part of the box missing that is inside the view (a box running off the edge of the view is expected).
 - **The sky and the edges:** black regions are geometry the game culled against its own narrower frustum: expected
@@ -528,6 +531,7 @@ check for each symptom:
 | A depth_remap pass draws at half resolution from a full-resolution depth (blocky or offset shadows after adding it) | supported since 2026-10-04: `depth_remap_ray_texcoord` (the view-ray varying, also replaced) reads the depth at its own size, `depth_remap_xyw` for (x, y, w) packing. Read the pass's fragment program: the ray is the texcoord normalised and scaled by the depth | Sonic & All-Stars Racing Transformed |
 | 3D view letterboxed (bars top and bottom); the generator finds no camera (projection B/A far from 16:9) | a game-side letterbox: patch its height/width factor to 16:9 (search the executable for the factor next to the viewport setup, e.g. 0.475 = 608/1280) | Dragon's Dogma |
 | Skinned characters wrecked, or a stray wedge, in one eye; a listed block is also a bone slot in skinned programs | `camera_slots_read_directly: true` (generated since 2026-09-30) | Dragon's Dogma |
+| Looking up moves the world up (and a roll turns it the same way as the head), while turning left and right is right: the world swims with head pitch and roll | `view_y_down: true` (the scene viewport's y scale is positive; generated since 2026-10-05). To see it, compare with something the compositor fixes (the fixed screen, a pause image): at pitch +15 the fixed screen moves down, so the world must too | Kingdom Hearts 1.5, 2.5 |
 | Right eye black or missing large parts of the scene only in stereo (flat-route `stereo=` probe fine) | was a renderer bug: a stencil-only clear copied the left eye's depth into the right eye (fixed 2026-09-30). To diagnose similar ones: `RPCS3_VR_RTDUMP` with `prog=<vertex hash>` dumps both eyes' surfaces (depth too) just before that program draws | Dragon's Dogma |
 | Sprites (flames, glows) drift away from their source | `screen_space.preprojected_programs` | ICO |
 | Reflections or light pools on the ground follow the head | `offaspect_player_views: true` when the reflections are drawn with the player's camera into an off-aspect target and sampled at screen position. Find the drawing program with probe `hide=<vertex hash>[@<target>]` and `RPCS3_VR_RTDUMP` diffs | Ridge Racer 7 |

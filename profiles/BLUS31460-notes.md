@@ -62,3 +62,10 @@ Flat against headset from `vrtest_kh2_twilight` with `tools/re/drive.sh` (`evide
 - Savestates: `vrtest_kh2_twilight` (= `_1_3`, made on the patched disc boot, after the tutorial messages: the
   regression state), `vrtest_kh2_twilight_30` (= `_1_0`, the original 30 FPS game).
 - Fixed mode unchecked: when the flag is 0 the game runs at half the vblank rate with the scaled step.
+
+## Fixed 2026-10-05: head pitch and roll inverted (fork 57a6069d0)
+
+Same as KH 1.5 (see `BLUS31212-notes.md`): the scene viewport's y scale is +1, so looking up moved the world and the
+HUD box up, and roll turned them the wrong way. `view_y_down: true` in `BLUS31460.kingdom2.json`; pose check on
+`vrtest_kh2_twilight` right after. Seen in that check, not yet looked at: a thick black rectangle outlines the HUD box
+over the world in gameplay (likely the game's screen-edge frame, invisible at the edges in flat).

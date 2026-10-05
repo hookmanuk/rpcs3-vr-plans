@@ -89,7 +89,18 @@ the video). Not investigated yet. Likely the same shape as Dante's Inferno's int
 behind a full-screen movie draw makes the frame count as 3D; first try `screen_frame_draws` with the movie
 draw's program, and find what the background is (hidden in flat by the opaque video, or a pass flat never shows).
 
-## Open (Matt, 2026-10-05): world moves with head pitch and roll
+## Fixed 2026-10-05: world moved with head pitch and roll (fork 57a6069d0)
+
+Cause: KH's scene viewport has a positive y scale (log `VR viewport: scale 1.0000 x 1.0000`; SEGA Rally's is
+`1 x -1`), so its NDC +Y is screen-down and the head pose went into the clip basis with y unflipped: pitch and roll
+inverted, yaw right. Measured on the simulator against the compositor-fixed pause image (Matt's state loads
+paused; Start unpauses): at pitch +15 the pause screen moved down 72 px and the world up 60 px; roll turned them
+opposite ways. `RPCS3_OPENXR_FLIP_Y=1` fixed it; new profile key `view_y_down: true` does the same for this game
+(`BLUS31212.kingdom.json`, and KH 2.5's `BLUS31460.kingdom2.json`: same fault, same fix). Pose checks after:
+`BLUS31212_1_4` and `vrtest_kh1_dive` (Sora, platform and pillar move together and the right way), KH 2.5
+`vrtest_kh2_twilight`. The generator writes the key (KH 2.5: 12040 of 12040 scene draws y-down).
+
+Was (Matt):
 
 Matt's state `BLUS31212_1_4`: everywhere in that scene, looking up or down or tilting the head moves the world;
 turning left or right is fine. Not investigated yet. Yaw-only correctness suggests the head rotation is
