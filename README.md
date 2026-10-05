@@ -26,6 +26,7 @@ exact build commands.
 | [6-wip-games.md](6-wip-games.md) | State and open issues of every unreleased game |
 | [8-upstream-merge-audit.md](8-upstream-merge-audit.md) | Audit of the fork's footprint in upstream files and how to shrink it for merging from master |
 | [9-multiview-plan.md](9-multiview-plan.md) | Plan: Vulkan multiview, both eyes from one draw (replaces the right-eye replay) |
+| [10-move-openxr-plan.md](10-move-openxr-plan.md) | Plan: PlayStation Move games driven by the headset's OpenXR controllers |
 | [profiles/](profiles/) | Per-game VR profile notes and the profile format ([profiles/README.md](profiles/README.md)) |
 | `tools/` | Launch, capture and analysis scripts used by the playbook |
 | `evidence/` | Screenshots, captures and measurements for each gate and game |
