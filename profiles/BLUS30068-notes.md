@@ -112,5 +112,15 @@ Straight, yaw +-20, pitch +-10, roll 15 (`posecheck.sh`, race): road, car and HU
   `5e4fd5886053bfac` and `ae47d748b3e87794`. `screen_frame_draws` with the background and cards, texture `0x0`
   (their textures start at unit 1; unit 0 is unbound, so `2048x1024` never matched). 14 shots over two menus all
   whole on the fixed screen, matching flat (`evidence/sr-menu-2026-10-05/`); the race state stays 3D.
-- **Performance: aim for 90 FPS.** 72 Hz (71.9 FPS, RSX ~12 ms) has no margin. Spend time on it: profile the
-  stereo frame per pass and find work that can be cut or shared between the eyes.
+- **Performance: 90 Hz reached 2026-10-06 (fork 24f0bf997).** `tools/rsx_sample.py rsx::thread 10` in the race
+  (`vrtest_segarally_race`, R2 held): 22% in `VKGSRender::get_occlusion_query_result`, 26% semaphore waits. The
+  config has `Accurate ZCULL stats: true`. Measured with `vr1pct.sh ... W` at 300%:
+  | Setting | Vblank 90 | Vblank 180 |
+  |---|---|---|
+  | as before | 79.0 FPS, late 0.16% (RSX 11.9 ms) | 82.0 |
+  | Relaxed ZCULL Sync (config) | 89.1, late 0% | 105.3 |
+  | + Accurate ZCULL stats off | | 100.7 (no gain) |
+  | profile `zcull_approximate` | 77.7 (no gain; reverted) | |
+  | profile `zcull_relaxed_sync` (new) | 90.0 / 88.8, late 0-0.28% | |
+  After: the RSX thread waits on the game ~35% of the time (6.8-10 ms a frame); race burst shots relaxed vs strict
+  show nothing missing or flickering. Profile now `zcull_relaxed_sync: true`.
