@@ -345,6 +345,12 @@ In stereo the RSX thread is usually the bottleneck (it draws every draw twice): 
 The desktop fake headset (`RPCS3_VR_FAKE_HMD`) has a fixed pose, no OpenXR session and skips the real-headset-only
 code, so it is not a headset test. The OpenXR Simulator is a real OpenXR runtime: RPCS3 runs its full headset path.
 
+**Head angles: always use the simulator's real head pose** (Matt, 2026-10-05): `py tools/re/simpose.py YAW [PITCH]
+[ROLL]` (degrees; writes the simulator's `head_pose_command.json`; reset with `0 0 0`). Check straight ahead and turned and
+tilted (yaw +-20, pitch 10, roll 15). `RPCS3_VR_YAW_FILE` / `RPCS3_VR_WOBBLE` only turn the rendered pose, so compositor
+layers stay put: on GT5's menu they showed a fake seam and hid the real fault. Run `tools/re/simwin.ps1` after boot if
+eye swapchains are refused or shots come out squashed.
+
 - Source and build: `F:\rpsc3\source\OpenXR-Simulator` (github.com/elliotttate/OpenXR-Simulator, 8de3457). Local
   change: a **Pimax Dream Air** profile (`dreamair`, hmdgdb "Pimax Dream Air LH": per-eye FOV -55.08/45.54 deg
   horizontal, +-44.55 vertical, panel 3840x3552) in `src/ui_enhancements.h`. Build with VS 2026 Insiders (its CMake
