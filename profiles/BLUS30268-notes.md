@@ -116,7 +116,19 @@ Straight, yaw +-20, pitch +-10, roll 15 (`posecheck.sh`): HUD boxed and world ri
 - **HUD rotates with the head.** The simulator pose check (2026-10-05) had the health HUD boxed at every pose,
   so either another HUD program/screen than the jungle's (`8dc5cbd5eb2c59ec`, `c[200]`) or a headset-only path.
   Ask Matt where (gameplay, pause, menus) or check those screens with `simpose.py`.
+  **Checked 2026-10-05 (night), not reproduced:** `vrtest_xmen_jungle` in combat (health bar and portrait in the
+  box), its pause menu, and a fresh boot from the disc to the jungle's first tutorial prompt ("Blocking"): at yaw +-25,
+  pitch 15 and roll 20 the health bar, the prompt and the pause menu all stay in the world-fixed box (they turn and
+  roll with the world, `evidence/xmen-hud-res-2026-10-05/`). The game camera drifts on its own in play, which can look
+  like the world moving under a still HUD. Matt's config has HUD Fixed In Front on. Need Matt's screen (a savestate).
 - **Pixelated even at 400%.** Not investigated. Candidates: a render target the resolution scale does not reach
   (the scene target `c9a78000` copied out by `1c7935c330cbbbd8`, the 322x182 bloom: check the final scene
   target's real size with RTDUMP at 100% vs 400%); the custom config's `Cinematic Scenes: Lower Resolution`
   if it was a cutscene; or the game's own upscale from a sub-720p buffer. Compare a flat 400% shot first.
+  **Measured 2026-10-05 (night):** the game renders at full scale (the 300% display buffer `c0484000`, 3840x2160,
+  has single-pixel edges; no block upscaling, `xm_px.png`), and Cinematic Scenes only acts on profiles with
+  `reduced_scale_frames` (X-Men has none). The cause is generic: the eye swapchain is the game's 16:9 frame
+  (3840x2160 at 300%) stretched over the headset's 120.6 x 109.1 degrees, so 31.8 pixels per degree across but only
+  19.8 down (400%: 42 across, 26 down), against roughly 35 per degree in a current headset panel. Vertical is the
+  short axis in every game; X-Men's dense foliage with no anti-aliasing shows it most. A fix is an anisotropic
+  resolution scale (more rows than columns, ~1.6x for this headset): a generic renderer change, proposed, not done.

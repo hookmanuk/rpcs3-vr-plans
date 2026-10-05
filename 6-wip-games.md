@@ -587,8 +587,10 @@ Notes: `profiles/BLUS30268-notes.md`. Profile and patch file in `vr-non-working/
   splat and icons were missing).
 - **Per-eye shading fixed 2026-10-04:** the generator had taken UE3's camera-relative eye `c[4]` (always the origin)
   as the camera position, and the wall lighting read the per-eye offset; slot removed, generator fixed (fork 3a40d9c82).
-- **Open (Matt, headset, 2026-10-05):** the HUD rotates with the head (the simulator pose check had it boxed);
-  the image looks very pixelated even at 400% resolution scale. Not investigated yet.
+- **Open (Matt, headset, 2026-10-05):** the HUD rotates with the head: not reproduced on the simulator (health
+  bar, tutorial prompt and pause menu stay world-fixed at every pose, see notes); needs Matt's screen. Pixelated even
+  at 400%: measured, the game renders at full scale; the 16:9 eye image covers 120 x 109 degrees, so vertical density
+  is 60% of horizontal in every game (anisotropic resolution scale proposed in the notes).
 - **Open:** the sky
   ends at the game's 91 x 60 degree view (no culling patch yet: the scene view is not written by PPU code); 72 Hz has no
   margin; headset run.
