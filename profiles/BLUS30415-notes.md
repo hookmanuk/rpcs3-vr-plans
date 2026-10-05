@@ -46,7 +46,19 @@ Combat (spell effects), outdoor areas (Ostagar), cutscenes, the generator's defe
 
 Straight, yaw +-20, pitch +-10, roll 15 (`posecheck.sh`, `vrtest_dao_castle`). **Found:** the HUD (portrait, minimap, ability bar) stayed on the face: it is Scaleform, 2D transform in `c[0..1]`, not the `c[260]` block, so the earlier rendered-pose checks (which turn the rendered pose, not the compositor) missed it. **Fixed:** `passthrough_hud` with `hud_programs` `fc6fc45502d91a9a`, `fbf8826148d91a90`, `f7f66105c0d5ebac` (from an inspector capture: the programs drawing into the output after the scene); listed programs are now boxed also untextured and with no colour target, since the game masks the minimap and portrait in depth/stencil with colour writes off (fork 0501cbdcc). Before `evidence/headpose-2026-10-05/pc_dao_sheet.png`, after `evidence/headpose-2026-10-05/pc_dao2_sheet.png`.
 
-## Open (Matt, 2026-10-05): culling, missing legs, overlay on head movement
+## Fixed 2026-10-05: conversation culling (missing legs, grey, overlay)
+
+Matt's state `BLUS30415_1_2` is a conversation (Duncan, the arl's hall). Flat, its camera is a narrow close-up
+(`evidence/dao-conversation-2026-10-05/dao_flat.png`): the legs, the man at the fireplace and the room to the right
+are off-screen. The game culls each armour mesh and prop against that frustum, and *Wider view* x2 of a ~30-degree
+close-up is still far narrower than the headset: legs cut at the thighs, a floating head and no fire in the
+fireplace, flat grey past the right edge, and window light shafts cut off (the pale ghost beside the fireplace on
+head turns: the 'overlay'). *Wider view* 1.1: the cave takes max(FOV x Scale, 60 degrees x Scale), capped at 150
+(new constant 1.0472 at `0x144f9c8`), so gameplay (60 degrees) is unchanged and close-ups cull at gameplay width.
+Pose check after: room, legs, guards, fire and light shafts whole at every pose. RSX thread 7.1 -> 8.6 ms here
+(both 60 FPS: the simulator reports no refresh rate and Unlimited keeps the config's Vblank 60).
+
+Was (Matt):
 
 Matt's state `BLUS30415_1_2`:
 - Looking right, the view is all grey: Wider view x2.0 is not enough here, or this scene culls with another
