@@ -183,7 +183,7 @@ pass mark** for fully compatible.
 | Jak and Daxter Collection | BCUS98281 | `vr-non-working/` + untracked `bin/` copies (profiles, patch) | **Jak II yes** (fork patch *Frame rate follows VR (Jak II)*, 2026-10-04); Jak 1 no: steps a fixed 1/60 per frame, capped at 60 (a ratio fix broke it); Jak 3 no (74-85 flat in Spargus) | **Jak II 72 Hz** at real-time speed (90 averages 86), 2026-10-04; Jak 1 60 (cap); Jak 3 57 FPS at 72 | **Jak 1**: HUD boxed, speed fixed (capped at 60, reprojected) and stereo depth fixed 2026-10-01 late, simulator-checked; to recheck in the headset | Jak 1 at the headset rate; Jak II HUD in the headset |
 | Anarchy Reigns | BLUS30632 | `vr-non-working/` + untracked `bin/` copies (profile, patch) | yes (fork patch, real-time verified) | 90 (Training only) | **parked**: splash/intro head-locked, HUD culled by depth; bad performance and graphics issues in gameplay | campaign unchecked; HUD timers 3x |
 | Killzone 2 | BCUS98116 | `vr-non-working/` + untracked `bin/` copy | no: default 45 | below 72: 63-65 FPS at 72 (Vblank 144) on the multiview build, RSX thread 15.5 ms/frame (2026-10-04, `vrtest_kz2_carrier`) | not played | RSX-bound; HUD and combat unchecked |
-| Gran Turismo 5 | BCUS98114 | `vr-non-working/` + untracked `bin/` copy | yes (profile frame step; patch *Pre-race at full frame rate*) | **90 Hz in races** (400% stereo, simulator, 2026-10-05: race start 83-89 then 90, tree-lined track 90 locked; grid 62-85) | headset ~40 FPS on 2026-10-01 (old build): recheck | grid -> race transition 66-80 for ~8 s (RSX-thread bound); menu cards and mirror in the tilted HUD box |
+| Gran Turismo 5 | BCUS98114 | `vr-non-working/` + untracked `bin/` copy | yes (profile frame step; patch *Pre-race at full frame rate*) | **90 Hz in races** (400% stereo, simulator, 2026-10-05: race start 83-90, tree-lined track and grid 90 locked) | headset ~40 FPS on 2026-10-01 (old build): recheck | race start dips to 77-86 for a few seconds (RSX-thread bound); black arc at the top of the view on Rome (sky dome); menu cards and mirror in the tilted HUD box |
 | MotorStorm: Pacific Rift | BCUS98155 | `vr-non-working/` + untracked `bin/` copy | yes (patch) | **72 Hz with multiview** (2026-10-03, race start; 90 averages 87, start window 1.1% late); two-draw misses 72 at the start (7.9% late) | not played | needs the multiview build for 72 |
 | Blur | BLUS30295 | `vr-non-working/` | yes (patch) | not measured | not played | 45-50 FPS stereo |
 | Need for Speed Most Wanted | BLUS31010 | `vr-non-working/` | yes (patch, fixed per rate) | not measured | not played | in-race speed at 90 unconfirmed |
@@ -367,7 +367,7 @@ Notes: `profiles/BCUS98114-notes.md` (the most detailed). Evidence: `evidence/gt
 
 - **2026-10-05 night: frame rate (simulator, Matt's config at 400% stereo, 90 Hz).** Races hold 90: the Indy race
   start with the pack ahead 83-89 then 90 (was 60-65), a tree-lined track 90 locked (was 78). The pre-race grid runs
-  62-85 (was 17). Fixes: readbacks the game takes every frame answered late or skipped (`late_readback_*`,
+  at 90 (was 17). Fixes: readbacks the game takes every frame answered late or skipped (`late_readback_*`,
   `skip_readback_sections`), small passes left unscaled (`min_scalable_dimension` 512), the pre-race views at a
   reduced scale (`reduced_scale_frames`) and at full frame rate (new patch). New VR setting **Cinematic Scenes**:
   Lower Resolution / Fixed Screen / Full Quality for the pre-race views. The GPU is not the limit (5090 at 4-17%);

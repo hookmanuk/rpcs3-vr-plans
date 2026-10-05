@@ -288,10 +288,11 @@ Savestates (my arcade run, Superspeedway Indy, Fiat 500 '68, rolling start): `gt
 
 | Scene | Before | After | What did it |
 |---|---|---|---|
-| Grid screen (pre-race views) | 17 | 62-85 | `reduced_scale_frames` 200% (17 -> 45, the cap), then the patch "Pre-race at full frame rate" (45 -> 62-85) |
+| Grid screen (pre-race views) | 17 | 90 locked | `reduced_scale_frames` 200% (17 -> 45, the cap), the patch "Pre-race at full frame rate" (45 -> 62-85, GPU at 100% there), then 150% (90 locked; 200% reaches only 85-86) |
 | Race start, pack ahead (`gt5_indy_start`) | 60-65 | 83-89, then 90 | `skip_readback_sections` (stale 512x512, 60-65 -> 72-74), `late_readback_lengths` 512 (exposure ring) |
 | Tree-lined track (`_1_3`) | 78 | 90 locked | `late_readback_sections` 0xc57f8000 (78 -> 84), `min_scalable_dimension` 512 (84 -> 90) |
-| Grid -> race transition | - | 66-80 for ~8 s, then 90 | RSX-thread bound (1,300 draws), see below |
+| Grid -> race transition | - | 77-89 for ~8 s, then 90 (was 66-80) | the temporary image pool limit (fork a2fce3db3): the pool was trimmed and reallocated every frame at 400% stereo |
+| Rome Circuit race start (`gt5_rome_start`) | - | 86-90 | same fixes; RSX-thread bound at 1,300-1,500 draws |
 
 Findings:
 - **The GPU is not the limit.** An RTX 5090 shows 4-17% utilisation (`nvidia-smi`) during the race start at 400%
@@ -317,3 +318,19 @@ Findings:
 - Not useful here: `max_scalable_dimension` (scale cap for big targets): GT5's shadow cascades (1024x2048, 2048x1080)
   live in the display buffers' memory, and an unscaled 2048x1080 there became the eye image. Reverted.
 - The community "Unlock FPS" patch lists this executable's hash for 02.17, but its bytes do not match 01.00 code.
+
+More (same night):
+- **The grid is GPU-bound** once uncapped (5090 at 100%: the 2560x1440 supersampled scene at 200% is 5120x2880 per
+  eye, twice). A live sweep of `reduced_scale_frames.scale` (the launcher reloads the profile): 200% 56-86, 150% /
+  125% / 100% 90-91. The profile now uses 150.
+- **Temporary image pool.** The RSX sampler (`RPCS3_RSX_SAMPLE=3`) on the Rome start showed ~5% of the RSX thread in
+  `texture_cache::on_frame_end` destroying images (`FreeGpuVirtualAddress`): upstream halves the pool above 256 MB and
+  one temporary copy of a 1280x720 target is 118 MB at 400% stereo. The limit now scales (4 GB on the 5090).
+- Also tried, no gain: Multithreaded RSX, Asynchronous Texture Streaming (slightly worse), MSAA off (~5% GPU only).
+- New savestates: `gt5_rome_prerace` (Rome Circuit grid, City tab), `gt5_rome_start` (race 5 s in, pack ahead);
+  `vrtest_gt5_race_start` is now a hard link to `gt5_indy_start` (regression list).
+- **Visual, not fixed:** on Rome (race and flyby) the top of the headset view shows a black arc: the sky dome ends
+  inside the wider headset view (as noted for the pre-race flyby before). Needs the dome or the culling widened.
+- **Intermittent device lost at boot** (2 of ~30 savestate boots tonight, 0 of 8 in a boot loop with
+  `tools/re/gt5_bootloop.sh`): GPU write fault at address 0 during the first frames after a savestate loads
+  (`wait_for_fence`). Known since 2026-10-03; not reproduced on demand.
