@@ -81,7 +81,17 @@ Executable hashes: launcher `PPU-83f4a1c6...`, `kingdom.self` `PPU-d626d983...`.
 - The step for >60 FPS; Re:Chain of Memories (`recom.self`, community 60 FPS patch exists) and the launcher's
   menus in the headset.
 
-## Open (Matt, 2026-10-05): opening video head-locked, stray 3D background
+## Fixed 2026-10-05: opening video head-locked, stray 3D background (fork e3b302013)
+
+From `BLUS31212_1_3` (difficulty select): Cross x4 (Final Mix, Auto camera, vibration On, Proceed Yes). The logos
+and the opening movie are drawn by `16ac04cbcbe66dac` (a `hud_programs` entry, so boxed) from the movie frame
+copied into a 1280x720 target, after 9 camera draws of the Dive platform the game renders behind it (inspector,
+draws 1-9 `c2a35ae334af037a`). New `screen_frame_draws: [{16ac04cbcbe66dac, 1280x720}]`: the movie frames go whole
+on the fixed screen (no platform behind; world-fixed at pitch 15 / roll 10); the Dive gameplay after it is 3D
+(3 minutes of shots). Evidence `evidence/kh-movie-2026-10-05/`. Seen, not raised: a thin grey line above the
+fixed screen on the new-game menus.
+
+Was (Matt):
 
 Matt's state `BLUS31212_1_3` is at the main menu. Starting the game plays a video that follows the head instead
 of staying fixed in place, and behind it a 3D background is drawn that should not be visible (flat shows only
