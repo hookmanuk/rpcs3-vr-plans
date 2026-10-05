@@ -360,3 +360,7 @@ More (same night):
   whose image extends past the 448x86 viewport, so inside the bigger box the extra camera image shows.
 - Fix needed: clip the mirror draw to its own viewport in the shader (its clip-space x/y within +-w before the box),
   not by a scissor. An attempt to re-map through the full output viewport double-applied the viewport (reverted).
+- **Fixed** (same morning): the mirror's clear covers the quad in 256 horizontal bands and the rest of the bounding
+  box gets the nearest depth (multiview path), so the mirror draws stop at the quad. Turned 40 degrees the mirror is a
+  slanted panel, larger near the edge of the wide view (perspective), with the scene around it
+  (`evidence/gt5/2026-10-05-mirror-yaw-fixed.png`). Race frame rate unchanged. **Needs Matt's headset check.**

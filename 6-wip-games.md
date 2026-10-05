@@ -387,7 +387,7 @@ Notes: `profiles/BCUS98114-notes.md` (the most detailed). Evidence: `evidence/gt
   selected card come to the front and change with left/right. **Still open:** turning the HMD sideways or tilting it
   up/down, parts of the card art are still obscured: the front card is cut off along a diagonal edge on its right
   (`evidence/gt5/2026-10-03-arcade-cards-matt-headset-still-cut.png`, Time Trial selected). Notes for details.
-- **Rear-view mirror: same problem (Matt, headset, 2026-10-03).** In a race the mirror image resizes and is culled
+- **Rear-view mirror: fixed 2026-10-05 on the simulator (fixed-yaw test), recheck in the headset.** Was (Matt, headset, 2026-10-03): In a race the mirror image resizes and is culled
   depending on the HMD angle (`evidence/gt5/2026-10-03-mirror-matt-headset-cut.png`: the mirror's scene does not fill
   its frame and is cut off at the right). The mirror is a camera draw into the HUD box (`subviewport_cameras_in_box`).
 
