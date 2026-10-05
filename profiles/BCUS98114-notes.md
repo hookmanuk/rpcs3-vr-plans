@@ -339,3 +339,9 @@ More (same night):
 - Regression subset after tonight's changes (`evidence/vrtest/2026-10-05-0356-gt5night`, simulator, 300%): WipEout,
   GoW 1, SotC, Demon's Souls, Pure, RR7, Killzone, ICO unchanged against the 2026-10-04 runs; GT5 race start (new
   state) sustains 120 (90 with 0% late frames).
+- Config A/B on the Rome start (2 runs each): Allow Host GPU Labels on drops to 48-49 FPS (RSX thread 20 ms: keep it
+  off); Accurate RSX reservation access off makes no difference (86-88 either way). Matt's settings stay.
+- The black arc above the view (Rome): the game's camera covers ~46 degrees vertically, the headset 89; searches for
+  the projection (A 1.3114, B 2.3314) and FOV values in live memory found only per-frame command-stream matrices
+  (HUD orthographic) and curve tables. A Wider view patch needs the camera's culling found first; it would also add
+  draws to the RSX-bound race start.
