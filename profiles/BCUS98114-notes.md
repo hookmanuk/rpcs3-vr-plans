@@ -275,3 +275,45 @@ Savestates: Matt's 01.00 states are kept as `matt_gt5_0100_1_0` .. `_1_3` (hard 
 (press, wait 8 s, check); a second Cross picks GT Mode, which starts selected. The top menu uses a pointer moved with
 the left stick (L key), not the d-pad: hold L ~350 ms from GT Mode to Arcade Mode. GT Mode's exit is the red icon at
 the bottom of its left strip (Down x7 from GT Life to Museum, then Left).
+
+## 2026-10-05 night: frame rate everywhere (fork 2a68c4b6b, b0a6ad314, 135da69fc, e2c4d83bf)
+
+All on the OpenXR Simulator, Matt's config (cfgtemp: VR on, Frame Rate Unlimited, Vblank 90, scale 400%, Null audio),
+multiview. Tools: `tools/re/gt5_start.sh` (grid state, X, hold R2), `gt5_race.sh` (race-start state or `STATE=`),
+`gt5_poke.sh` (write a word live), `cfgtemp.py` (temporary config edits, restored byte-identical).
+
+Savestates (my arcade run, Superspeedway Indy, Fiat 500 '68, rolling start): `gt5_indy_prerace` (grid screen),
+`gt5_indy_start` (race just started, pack ahead). Matt's `matt_gt5_0100_1_2` (Indy-like oval, 90 already) and
+`_1_3` (tree-lined track, car against a barrier: the heaviest scene found).
+
+| Scene | Before | After | What did it |
+|---|---|---|---|
+| Grid screen (pre-race views) | 17 | 62-85 | `reduced_scale_frames` 200% (17 -> 45, the cap), then the patch "Pre-race at full frame rate" (45 -> 62-85) |
+| Race start, pack ahead (`gt5_indy_start`) | 60-65 | 83-89, then 90 | `skip_readback_sections` (stale 512x512, 60-65 -> 72-74), `late_readback_lengths` 512 (exposure ring) |
+| Tree-lined track (`_1_3`) | 78 | 90 locked | `late_readback_sections` 0xc57f8000 (78 -> 84), `min_scalable_dimension` 512 (84 -> 90) |
+| Grid -> race transition | - | 66-80 for ~8 s, then 90 | RSX-thread bound (1,300 draws), see below |
+
+Findings:
+- **The GPU is not the limit.** An RTX 5090 shows 4-17% utilisation (`nvidia-smi`) during the race start at 400%
+  stereo. `RPCS3_VR_GPUPROF` segment times include GPU idle between submissions and must not be read as GPU load.
+  Variable rate shading (2x2 for camera draws, `VK_KHR_fragment_shading_rate`) changed nothing and was reverted;
+  MSAA off saved ~5%.
+- **Readbacks were the stall.** The game reads small GPU results every frame: a 16x8 exposure value blitted into a ring
+  of three 512-byte slots in main memory (address differs per session: 0x4fef39c0/3bc0/3dc0 or 0x4fef3340/...), and
+  a 0x40000 section at 0xc57f8000 (track scenes with sun through trees). Each read waited for the RSX thread, which
+  sat in `flip -> frame_context_cleanup` waiting for an older frame's fence and could not service the flush request
+  (8.8 ms a frame blocked on `_1_3`). `late_readback_*` answers from the previous value and writes the result when
+  the copy lands; the exposure values were checked to keep changing (PINE).
+- **The pre-race views flip every second vblank** (30 FPS at 60 Hz). The interval is picked at `0x17e2f0..0x17e310`
+  (`li r0,2` when the flag at `r24+0x1c` is set and `r21 == 0`, else 1; stored at `0x18ee6ac`). Patch `li r0,1`. The
+  flyby is time-based: screenshots at 1/3/5/7 s match the unpatched run.
+- **Cinematic Scenes** (new VR setting): Lower Resolution (default) / Fixed Screen / Full Quality. Fixed Screen shows
+  the pre-race views on the floating screen at the reduced scale (69-81 FPS on the grid), no flyby camera around the
+  player.
+- The race start and the grid -> race transition are bound by the RSX thread: ~10.5 ms CPU a frame at 1,300 draws.
+  Sampled: driver work inside `emit_geometry` (~16%), FIFO parsing, `close_and_submit_command_buffer` (2.7%, one per
+  exposure blit to main memory), temporary subresource copies, `VirtualProtect` from `texture_read_semaphore_release`.
+  Multithreaded RSX: no difference (83.6/87.5 vs 86.2/85.9).
+- Not useful here: `max_scalable_dimension` (scale cap for big targets): GT5's shadow cascades (1024x2048, 2048x1080)
+  live in the display buffers' memory, and an unscaled 2048x1080 there became the eye image. Reverted.
+- The community "Unlock FPS" patch lists this executable's hash for 02.17, but its bytes do not match 01.00 code.

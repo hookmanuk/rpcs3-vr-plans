@@ -34,7 +34,10 @@ def tname(tid):
 P = pid()
 want = sys.argv[1]; secs = float(sys.argv[2]); hz = float(sys.argv[3]) if len(sys.argv) > 3 else 400
 focus = sys.argv[4:]; chains = {f: collections.Counter() for f in focus}
-tid = next(t for t in threads(P) if want in tname(t))
+for _ in range(100):  # the thread may not be named yet just after a boot
+    P = pid(); tid = next((t for t in threads(P) if want in tname(t)), None) if P else None
+    if tid: break
+    time.sleep(0.1)
 hp = k.OpenProcess(0x0410, False, P)
 ht = k.OpenThread(0x0002 | 0x0008 | 0x0040, False, tid)
 
