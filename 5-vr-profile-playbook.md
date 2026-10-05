@@ -183,53 +183,54 @@ noise floor. Measure that noise first; ambient animation isn't zero.
 
 **Done when:** every axis moves the world, the HUD never moves, and the negative control is noise.
 
-## Step 6 - Stereo on the desktop
+## Step 6 - Stereo on the OpenXR Simulator
 
-```powershell
-plans\tools\launch.ps1 -Game <iso> -Probe 'render=1' -NoHeadset
-plans\tools\sbsshot.ps1 -Out sbs.png
+Every stereo check runs on the OpenXR Simulator (the real headset path), never the plain desktop
+(`-NoHeadset`) or the fake headset (`RPCS3_VR_FAKE_HMD`): they skip the OpenXR code and have hidden headset-only
+faults. See "Headset checks with the OpenXR Simulator" below for setup.
+
+```sh
+tools/re/simboot.ps1 -Iso <disc or savestate> -Probe render=1      # boot on the simulator
+py tools/re/simshot.py OUT                                        # what the headset shows (both eyes)
 ```
 
 Check each of these, in every scene from Step 1:
 
-- **Disparity.** Far scenery at `2*sep*eye_width/2` px, the HUD at 0, near objects crossed. Pure at 533
-  px per eye: far +8 (expected 8.5), HUD 0, rider −5.
-- **Both eyes identical apart from parallax,** especially after post-processing: bloom, blur, tone
-  mapping, pause-screen effects. A difference means a render-target operation isn't mirrored to the right
-  eye. For each suspect draw, see which texture addresses it samples (the capture's `textures`) and who
-  writes them.
-  - **Blits** (NV3089) between render targets are now mirrored (`VKGSRender::vr_mirror_blit`). Pure
-    needed it: its frame reaches the display buffer by blit, so the pause blur was missing in one eye.
-  - Partial clears and instanced draws are still not mirrored. If a game needs them, that's code work.
-    `plans/evidence/pure/instanced-per-eye.patch` is an untested starting point.
-- **Frame rate.** Compare against Step 0. With stereo, it should still reach the vblank rate at your
-  resolution scale.
+- **Disparity.** Far scenery apart by the expected stereo shift, the HUD at its box depth, near objects crossed.
+  `tools/re/parallax.py` measures it on a simulator shot.
+- **Both eyes identical apart from parallax,** especially after post-processing: bloom, blur, tone mapping,
+  pause-screen effects. A difference means a render-target operation isn't mirrored to the right eye. For each
+  suspect draw, see which texture addresses it samples (the inspector capture's `textures`) and who writes them.
+  `RPCS3_VR_RTDUMP` dumps a surface per eye.
+- **Matches the original game.** Compare against a flat run of the same savestate: nothing missing, no new
+  glitches.
+- **Frame rate.** Measure as in "VR frame-rate measurement" (72 Hz sustained at least).
 
-## Step 7 - Rotation audit (desktop stand-in for the headset)
+## Step 7 - Head poses on the simulator (real head pose)
 
-```powershell
-plans\tools\launch.ps1 -Game <iso> -Probe 'render=1' -NoHeadset -Audit 25          # yaw
-plans\tools\launch.ps1 -Game <iso> -Probe 'render=1' -NoHeadset -Audit 'pitch:35'  # look up
+Turn the simulator's real head, so the compositor's layers move as they would in the headset:
+
+```sh
+tools/re/posecheck.sh ID STATE OUT [SCALE] ["KEYS"]     # straight, yaw -20/+20, pitch +10/-10, roll 15
+py tools/re/simpose.py YAW [PITCH] [ROLL]                 # one pose by hand (reset with 0 0 0)
 ```
 
-The right eye is rotated through the same classifier and rotation as the headset, and the left eye stays
-the game's view. **Test in real gameplay (scene B) and look up at the sky.** Pure's two remaining bugs
-only showed there.
+`posecheck.sh` boots the savestate with the game's own config (temporarily VR on), shoots each pose and writes a
+left-eye contact sheet `OUT_sheet.png`. Run it in gameplay (with the input held if the game needs it), on the HUD
+and on every menu. Check:
 
-- **Floating objects in the sky, or anything in the same screen place in both eyes:** a program the
-  camera blocks don't cover (Step 3, item 3). Pure's rocks.
-- **Sky with a hard white or haze band, or a sky that "moves with you":** a sky draw not covered, often
-  one without a z slot (Pure's sky), or a fragment-shader sky.
-- **Black regions at the edges:** geometry the game culled against its own frustum. This is expected for
-  large head turns and can't be fixed by a profile.
-- **The HUD:** it must stay where it is in both eyes.
-- **Image scale (world swims on head turns):** measure it. Run the audit through the headset remap
-  (`$env:RPCS3_VR_AUDIT_FOV = '1.0'` before `launch.ps1 ... -Audit 15`), screenshot with the
-  `RPCS3_VR_SHOT` hook, then `tools/rotation_audit.py <shot> --yaw 15 --proj 1,1 --fit-scale`.
-  It must report k = 1.00. k > 1 means the final image is zoomed against the game's projection, usually a
-  screen-size/overscan option: ICO measured 1.17 with "Full pixel mode" off and 1.00 with it on.
+- **Nothing follows the head:** the world stays put, glows and sprites stay on their lights.
+- **The HUD and menus stay whole in their fixed box:** no layer cut along a line, no panel sliding against another,
+  no part of the box missing that is inside the view (a box running off the edge of the view is expected).
+- **The sky and the edges:** black regions are geometry the game culled against its own narrower frustum: expected
+  for large turns; a Wider view patch widens the game's culling if it shows at small angles.
 
-Make before/after images of the rotated eye for each fix: `plans/evidence/pure/*-before-after.png`.
+Do not use the rendered-pose hooks (`RPCS3_VR_YAW_FILE`, `RPCS3_VR_WOBBLE`) or the desktop rotation audit for these
+checks: they turn only the rendered view, so compositor layers stay behind (GT5's menu showed a fake seam that way
+and hid the real fault). The desktop audit (`launch.ps1 -Audit ...`, `tools/rotation_audit.py --fit-scale`) stays
+useful for one measurement only: the image scale k (it must be 1.00).
+
+Make before/after images of each fix: `plans/evidence/<game>/*-before-after.png`.
 
 ## Step 8 - Headset
 
@@ -243,7 +244,7 @@ profile exists. Launch without the development variables and with SteamVR runnin
 - **Pause menu, menus, loading screens** and the RPCS3 overlays.
 - **Comfort and frame pacing** over a full race or level.
 
-Every problem found here should become a Step 7 reproduction on the desktop before you fix it.
+Every problem found here should become a Step 7 reproduction on the simulator (real head pose) before you fix it.
 
 ## Step 9 - Record and clean up
 
