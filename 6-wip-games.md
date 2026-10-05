@@ -406,6 +406,9 @@ Notes: `profiles/BCUS98114-notes.md` (the most detailed). Evidence: `evidence/gt
   cars in view ~48 FPS at 90 (RSX thread bound, ~135 draws per car at any distance; hiding shadows/reflections
   +2.5 FPS, texture re-upload fixes no gain; notes "2026-10-05 afternoon"). Savestate loads show multicoloured
   car paint (open).
+- **2026-10-05 late afternoon:** profile `car_draw_limit` (fork 51ff40a65): nearest 2 cars full, cars 3-6 85%, the
+  rest 70% of their geometry (largest pieces); 2_13 ~48 -> ~64 FPS with the first version. Matt: works well. Next:
+  main menu (driver walking out differs between eyes; an overlay below in the wrong place when looking down).
 - **Open (from the notes):**
   1. Arcade menu cards: improved 2026-10-03 (exact depth for the card program), still obscured when the HMD turns or
      tilts (Matt, headset). The rear-view mirror image also resizes and is culled with the HMD angle.

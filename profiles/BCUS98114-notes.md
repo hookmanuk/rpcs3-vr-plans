@@ -440,3 +440,19 @@ surface `0xc1100000`, and probe `why=`:
 - Savestate-only corruption (multicoloured dots on cars): the per-car 256x512 ARGB textures (unit 8); theory, not
   tested: built on the GPU at race load and not in the savestate with Write Color Buffers off.
 
+## 2026-10-05 late afternoon: car_draw_limit (fork 51ff40a65), Matt: "works well"
+
+- Draw only part of each distant car. Tried on paused 2_13/2_14 (simulator, VR 90): 5 nearest cars only 48 -> ~63 FPS
+  (RSX thread 20.8 -> 15.5 ms); wheels and drivers needed learned car-part programs. A flat cap per car (60, 28)
+  showed holes and lost the glass: each car draws a body pass (~100-125 draws, all cars in turn, nearest first) and
+  a later pass (~4-40 draws: glass, see-through parts) after all bodies; caps now apply to the body pass only.
+  A vertex threshold (400) hit one model built from many mid-size pieces (62% lost); keep_percent (largest draws
+  making up p% of the car's vertices, per car) evens it out (85%: 52-64 draws skipped, 15% of each car).
+- GT5's own LOD: full model to ~75 m, a ~10-draw far model from ~95 m (complete, with glass). Moving the switch
+  closer was tried: the tables [16,76,88] 0x184057c, [50,80,350] 0x185fe38, [60.9,80.54,244.75] 0x18c3a80,
+  [4.5,11.75,13.2,79] 0x190be50 written before unpausing: no effect (switch not found; maybe screen size or SPU).
+- Profile: `[{ "cars": 2 }, { "cars": 4, "keep_percent": 85 }, { "cars": 0, "keep_percent": 70 }]`. The pre-race
+  `reduced_scale_frames` stays (removing it: the fly-by is GPU-bound at high scales, Matt confirmed).
+- Do not call `draw_clause::get_elements_count()` before the draw starts: it froze RSX (`get_range` verification);
+  `vr_total_elements()` added.
+
