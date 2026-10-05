@@ -409,6 +409,8 @@ Notes: `profiles/BCUS98114-notes.md` (the most detailed). Evidence: `evidence/gt
 - **2026-10-05 late afternoon:** profile `car_draw_limit` (fork 51ff40a65): nearest 2 cars full, cars 3-6 85%, the
   rest 70% of their geometry (largest pieces); 2_13 ~48 -> ~64 FPS with the first version. Matt: works well. Next:
   main menu (driver walking out differs between eyes; an overlay below in the wrong place when looking down).
+- **2026-10-05 evening:** main menu and pre-race fly-by on the fixed screen (`screen_frame_draws`), `min_scalable_dimension`
+  511 (the 512 value ghosted the menu's depth-of-field layer); fork 72aaa988b. Matt: good. Notes "2026-10-05 evening".
 - **Open (from the notes):**
   1. Arcade menu cards: improved 2026-10-03 (exact depth for the card program), still obscured when the HMD turns or
      tilts (Matt, headset). The rear-view mirror image also resizes and is culled with the HMD angle.

@@ -456,3 +456,25 @@ surface `0xc1100000`, and probe `why=`:
 - Do not call `draw_clause::get_elements_count()` before the draw starts: it froze RSX (`get_range` verification);
   `vr_total_elements()` added.
 
+## 2026-10-05 evening: main menu (driver walking out) fixed (fork 72aaa988b)
+
+- Matt: the driver looked doubled; looking down, an overlay in the wrong place; then a translucent duplicate of the
+  menu video throughout (also outside the garage).
+- Doubled driver: the menu's blurred backdrop is a mip chain at 0xc3780000 (draw 264 copies the menu image in as
+  2048x720, draw 265 rebinds the address as 2048x1436 and halves it level by level, draw 277 reads 11 levels). The
+  new 2048x1436 surface lost `vr_has_3d`, so the chain counted as eye-invariant and the right eye read the left
+  eye's chain (left-right image shift 0 px against ~-900 in races). Inheriting the flag in surface_utils.h
+  (set_old_contents / set_old_contents_region) fixed it (-880 px) but was reverted (generic; not needed once the
+  menu went 2D).
+- Duplicate overlay: draws 277/279 (095a653b00894379, fc7082dabcd91a9a) blend that blur chain over the scene,
+  weighted by the depth buffer 0xc2880000 (format 129, read as a 2560x1440 colour texture): depth of field.
+  `min_scalable_dimension` 512 left the chain's 512x256 step native between 4x-scaled 2048-wide steps, so the
+  blurred layer landed enlarged and misplaced. 511 (or none) fixes it; the 256x511 reflection maps stay native.
+  Race cost not measured (512-wide post passes scaled again: GPU work; races are RSX-thread bound).
+- Profile: `screen_frame_draws` [095a653b00894379, 2560x1440]: the menu and the pre-race fly-by go on the fixed
+  screen whole (Matt: better, the fly-by now at full resolution).
+- Method notes: the simulator screenshot (simshot) is black for GT5 menus; RPCS3's SHOT hook (shot.py) works. The
+  boot dialog after a fresh ISO boot only shows on RPCS3's window. Compare per-eye images by left-right shift
+  (cross-correlation), not by pixel positions: each eye's projection centre differs (~900 px at 400%).
+  Do not compare menu shots taken at different moments: the sequence changes lighting fast.
+
