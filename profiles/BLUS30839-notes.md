@@ -85,3 +85,11 @@ Sustained: **90 Hz** with the default patch, 120 Hz with Wider view off.
 ## Head poses on the OpenXR Simulator (real head pose, 2026-10-05)
 
 Straight, yaw +-20, pitch +-10, roll 15 (`posecheck.sh`, 300%): world and HUD right, HUD in the world-fixed box at every pose. Sheet `evidence/headpose-2026-10-05/pc_sonic_sheet.png`.
+
+## Open: horizontal lines and per-eye shadow (Matt, 2026-10-05)
+
+Matt's state `BLUS30839_1_0` shows graphical corruption (many horizontal lines across the image) and a shadow that
+differs between the left and right eye. Not investigated yet. First steps: load the state on the simulator,
+take per-eye shots, and check whether the shadow is the cascade program `ed46d28a122d7235` (already remapped) or
+another shadow pass; for the lines, check flat vs stereo and with/without Wider view.
+No sound in that run was a test leftover (`Audio Renderer: Null` in the custom config), restored to Cubeb.

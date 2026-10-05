@@ -192,7 +192,7 @@ pass mark** for fully compatible.
 | inFamous | BCUS98119 | `vr-non-working/` + untracked `bin/` copy | no patch needed | not measured | not played | ~25 stereo: too slow |
 | Split/Second | BLUS30300 | `vr-non-working/` | yes (patch) | not measured | not played | race load-bound |
 | God of War III | BCUS98111 | `vr-non-working/` + untracked `bin/` copy | no (`max_fps 36`) | not measured | not played | early experimental; no notes |
-| Sonic & All-Stars Racing Transformed | BLUS30839 | `vr-non-working/` + untracked `bin/` copies (profile, patch) | yes (patch, measured time) | **90 Hz** with Wider view 3.0 (120 with it off), 2026-10-04 | simulator only (real head poses checked 2026-10-05) | ~~distant shadows differ per eye~~ fixed 2026-10-04 (depth remap ray variant); headset run |
+| Sonic & All-Stars Racing Transformed | BLUS30839 | `vr-non-working/` + untracked `bin/` copies (profile, patch) | yes (patch, measured time) | **90 Hz** with Wider view 3.0 (120 with it off), 2026-10-04 | simulator only (real head poses checked 2026-10-05) | ~~distant shadows differ per eye~~ fixed 2026-10-04 (depth remap ray variant); **horizontal-line corruption and a shadow that differs per eye in Matt's state `BLUS30839_1_0` (2026-10-05)**; headset run |
 | Dynasty Warriors: GUNDAM | BLUS30058 | `vr-non-working/` + untracked `bin/` copies (profile, patch) | yes (patch *Frame rate follows VR*) | **120 Hz** (with Wider view 3.0), 2026-10-04 | simulator only (real head poses checked 2026-10-05) | space mission checked 2026-10-04 (120 Hz, correct); cutscenes, cutscenes unchecked; turned left, dark wedge at the far left edge (likely the game culling the starfield) |
 | X-Men Origins: Wolverine | BLUS30268 | `vr-non-working/` + untracked `bin/` copies (profile, patch) | yes (measured time; the patch removes a 62 FPS cap) | **72 Hz** (Vblank 144, two vblanks a frame; 90 reaches 79), 2026-10-04 | simulator only (real head poses checked 2026-10-05) | top-left sky edge in the headset (not culling: a 75-degree FOV source found, widening it changes nothing); per-eye shading fixed 2026-10-04 |
 | SEGA Rally Revo | BLUS30068 | `vr-non-working/` + untracked `bin/` copies (profile, patch) | yes (fork patch *Unlocked frame rate*: 30 -> vblank rate, measured time) | **72 Hz** with Wider view 2.0 (71.9 FPS, 0% late; 2.5 gives 68, 1.0 gives 71.9), 2026-10-04 | simulator only (real head poses checked 2026-10-05) | ~~one-eye shadow blobs~~ fixed 2026-10-04 (right eye's stale shadow-map copy; generic renderer fix); savestates need Compatible Savestate Mode + GETLLAR spin optimisation off |
@@ -555,6 +555,10 @@ Notes: `profiles/BLUS30839-notes.md`. Profile and patch file in `vr-non-working/
 - **Distant shadows fixed 2026-10-04:** the half-resolution cascades (`ed46d28a122d7235`) rebuild positions from a
   game-camera view ray; new renderer variant `depth_remap_ray_texcoord` / `depth_remap_xyw` remaps the ray too (fork
   1aef7457b). Eyes agree; 90 Hz kept.
+- **Open (reported by Matt 2026-10-05, state `BLUS30839_1_0`):** graphical corruption: many horizontal lines
+  across the image; and a shadow that differs between the left and right eye (a new case: the distant-shadow
+  fix above covers `sonic_rock`). Not investigated yet. (The missing sound in the same run was not a game issue:
+  a test run had left `Audio Renderer: Null` in the custom config; restored to Cubeb.)
 - **Open:** headset run.
 
 ## Dynasty Warriors: GUNDAM (BLUS30058, disc 01.00)
