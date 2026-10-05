@@ -89,7 +89,19 @@ Straight, yaw +-20, pitch +-10, roll 15 (`posecheck.sh`, 300%): world and HUD ri
 ## Open: horizontal lines and per-eye shadow (Matt, 2026-10-05)
 
 Matt's state `BLUS30839_1_0` shows graphical corruption (many horizontal lines across the image) and a shadow that
-differs between the left and right eye. Not investigated yet. First steps: load the state on the simulator,
-take per-eye shots, and check whether the shadow is the cascade program `ed46d28a122d7235` (already remapped) or
-another shadow pass; for the lines, check flat vs stereo and with/without Wider view.
+differs between the left and right eye. 
+**Investigation 2026-10-05 (night):**
+- The state is the pre-race fly-by (character intro, "CONTINUE"). ~18 s after loading, the game pauses with "WARNING! A
+  Controller has been removed. Please reconnect to continue." (the state was made with Matt's pad); Cross on the
+  keyboard pad accepts it. While that dialog is up the headset view stays frozen on the last frame before it (VR frame
+  stats stop too) though the desktop window shows the dialog: not yet looked at.
+- **The lines:** rows of short light-blue bars on the inside of the loop (sky seen through gaps in the track surface),
+  `evidence/sonic-lines-2026-10-05/son_v4z.png`. Present at Wider view 3.0 and 2.0, gone at 1.0 (same moments,
+  `son_w_sheet.png`); flat at 3.0 shows the same ragged gaps. So the game's own rendering at the widened FOV (most
+  likely level of detail picked from the render camera's FOV), not the VR renderer.
+- **The per-eye shadow:** pillars lit in the left eye and black in the right (`son_v_sheet.png`); at Wider view 1.0
+  both eyes agree (`son_w3_both.png`); 2.0 still differs. The cascade fit reads the widened FOV too, and this frame
+  has none of `ed46d28a122d7235` (the remapped cascade program).
+- Direction: widen only the culling, not the render camera's FOV (as Asura's Wrath: a culling frustum copy), so
+  projection, LOD and shadow fit keep the game's FOV. Needs the culling code (readers of render camera `+0x38`).
 No sound in that run was a test leftover (`Audio Renderer: Null` in the custom config), restored to Cubeb.
