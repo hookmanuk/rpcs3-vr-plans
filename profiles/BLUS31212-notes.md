@@ -88,3 +88,12 @@ of staying fixed in place, and behind it a 3D background is drawn that should no
 the video). Not investigated yet. Likely the same shape as Dante's Inferno's intro movie: a scene rendered
 behind a full-screen movie draw makes the frame count as 3D; first try `screen_frame_draws` with the movie
 draw's program, and find what the background is (hidden in flat by the opaque video, or a pass flat never shows).
+
+## Open (Matt, 2026-10-05): world moves with head pitch and roll
+
+Matt's state `BLUS31212_1_4`: everywhere in that scene, looking up or down or tilting the head moves the world;
+turning left or right is fine. Not investigated yet. Yaw-only correctness suggests the head rotation is
+applied with the wrong axis convention or an extra/missing camera rotation about the view's horizontal axis
+(e.g. the game camera is pitched and the head pose is composed in world rather than view space, or the
+`camera_palette` bone matrices get only part of the rotation). First check on the simulator with
+`simpose.py 0 10 0` and `simpose.py 0 0 15` against straight ahead, and compare the world with the HUD box.
