@@ -1,0 +1,42 @@
+# path: OpenXR Simulator, RPCS3_VR_MULTIVIEW=default, build b55e72d34 VR: GT5 rear-view mirror stays its own shape when 
+# BCUS98259 vrtest_icosotc_1: ICO & SotC Collection (released): SotC, a valley
+BCUS98259 vrtest_icosotc_1 vblank 72 scale 300%:
+   576 frames over 8.0 s: avg 72.0 FPS, 1% low 68.9, 0.1% low 66.4 (worst frame 15.1 ms), median 14.00 ms, late 0.00%, RSX thread 10.69 ms/frame
+   576 frames over 8.0 s: avg 72.0 FPS, 1% low 66.7, 0.1% low 64.0 (worst frame 15.6 ms), median 14.00 ms, late 0.00%, RSX thread 11.22 ms/frame
+   575 frames over 8.0 s: avg 71.9 FPS, 1% low 66.6, 0.1% low 32.5 (worst frame 30.8 ms), median 14.00 ms, late 0.17%, RSX thread 11.31 ms/frame
+   => median of 3 windows: avg 72.0 FPS, 1% low 66.7, late frames 0.00%, RSX thread 11.22 ms/frame
+BCUS98259 vrtest_icosotc_1 vblank 90 scale 300%:
+   720 frames over 8.0 s: avg 90.0 FPS, 1% low 74.7, 0.1% low 72.2 (worst frame 13.9 ms), median 11.05 ms, late 0.00%, RSX thread 8.75 ms/frame
+   721 frames over 8.0 s: avg 90.0 FPS, 1% low 77.2, 0.1% low 69.3 (worst frame 14.4 ms), median 11.12 ms, late 0.00%, RSX thread 8.66 ms/frame
+   720 frames over 8.0 s: avg 89.9 FPS, 1% low 77.1, 0.1% low 46.4 (worst frame 21.6 ms), median 11.04 ms, late 0.14%, RSX thread 8.97 ms/frame
+   => median of 3 windows: avg 90.0 FPS, 1% low 77.1, late frames 0.00%, RSX thread 8.75 ms/frame
+BCUS98259 vrtest_icosotc_1 vblank 120 scale 300%:
+   868 frames over 8.0 s: avg 108.5 FPS, 1% low 55.6, 0.1% low 51.1 (worst frame 19.6 ms), median 8.53 ms, late 10.60%, RSX thread 8.34 ms/frame
+   879 frames over 8.0 s: avg 109.9 FPS, 1% low 57.1, 0.1% low 54.9 (worst frame 18.2 ms), median 8.52 ms, late 9.22%, RSX thread 8.41 ms/frame
+   889 frames over 8.0 s: avg 111.0 FPS, 1% low 55.7, 0.1% low 52.1 (worst frame 19.2 ms), median 8.50 ms, late 8.10%, RSX thread 8.24 ms/frame
+   => median of 3 windows: avg 109.9 FPS, 1% low 55.7, late frames 9.22%, RSX thread 8.34 ms/frame
+SUSTAINABLE BCUS98259 vrtest_icosotc_1: 90 Hz
+# BCUS98114 vrtest_gt5_race_start: Gran Turismo 5: race start
+BCUS98114 vrtest_gt5_race_start vblank 72 scale 300%:
+   576 frames over 8.0 s: avg 71.9 FPS, 1% low 65.5, 0.1% low 38.2 (worst frame 26.2 ms), median 14.01 ms, late 0.17%, RSX thread 10.17 ms/frame
+   577 frames over 8.0 s: avg 72.0 FPS, 1% low 68.7, 0.1% low 67.7 (worst frame 14.8 ms), median 14.01 ms, late 0.00%, RSX thread 11.26 ms/frame
+   576 frames over 8.0 s: avg 72.0 FPS, 1% low 68.8, 0.1% low 67.9 (worst frame 14.7 ms), median 14.01 ms, late 0.00%, RSX thread 11.78 ms/frame
+   => median of 3 windows: avg 72.0 FPS, 1% low 68.7, late frames 0.00%, RSX thread 11.26 ms/frame
+BCUS98114 vrtest_gt5_race_start vblank 90 scale 300%:
+   720 frames over 8.0 s: avg 90.0 FPS, 1% low 71.7, 0.1% low 64.9 (worst frame 15.4 ms), median 11.11 ms, late 0.00%, RSX thread 5.80 ms/frame
+   721 frames over 8.0 s: avg 90.0 FPS, 1% low 75.7, 0.1% low 68.9 (worst frame 14.5 ms), median 11.08 ms, late 0.00%, RSX thread 5.26 ms/frame
+   719 frames over 8.0 s: avg 89.8 FPS, 1% low 77.0, 0.1% low 37.2 (worst frame 26.9 ms), median 11.01 ms, late 0.14%, RSX thread 8.69 ms/frame
+   => median of 3 windows: avg 90.0 FPS, 1% low 75.7, late frames 0.00%, RSX thread 5.80 ms/frame
+BCUS98114 vrtest_gt5_race_start vblank 120 scale 300%:
+   959 frames over 8.0 s: avg 119.8 FPS, 1% low 93.1, 0.1% low 47.1 (worst frame 21.2 ms), median 8.33 ms, late 0.10%, RSX thread 5.13 ms/frame
+   961 frames over 8.0 s: avg 120.0 FPS, 1% low 97.3, 0.1% low 88.2 (worst frame 11.3 ms), median 8.33 ms, late 0.00%, RSX thread 4.92 ms/frame
+   => median of 2 windows: avg 119.8 FPS, 1% low 93.1, late frames 0.00%, RSX thread 4.92 ms/frame
+SUSTAINABLE BCUS98114 vrtest_gt5_race_start: 120 Hz
+# BCUS98259 vrtest_ico_bridge: ICO (released): Old Bridge, from a save (Continue, file 1); frame-locked at 30 in VR, rates=30
+BCUS98259 vrtest_ico_bridge vblank 60 scale 300%:
+   241 frames over 8.0 s: avg 30.0 FPS, 1% low 29.4, 0.1% low 29.4 (worst frame 34.0 ms), median 33.39 ms, late 0.00%, RSX thread 33.01 ms/frame
+   240 frames over 8.0 s: avg 30.0 FPS, 1% low 29.4, 0.1% low 29.1 (worst frame 34.4 ms), median 33.42 ms, late 0.00%, RSX thread 32.94 ms/frame
+   241 frames over 8.0 s: avg 30.0 FPS, 1% low 29.4, 0.1% low 29.0 (worst frame 34.5 ms), median 33.46 ms, late 0.00%, RSX thread 33.00 ms/frame
+   => median of 3 windows: avg 30.0 FPS, 1% low 29.4, late frames 0.00%, RSX thread 33.00 ms/frame
+SUSTAINABLE BCUS98259 vrtest_ico_bridge: 30 Hz
+DONE /f/rpsc3/source/plans/evidence/vrtest/2026-10-05-1017-keepdepth

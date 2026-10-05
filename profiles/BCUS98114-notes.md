@@ -381,3 +381,21 @@ More (same night):
   ~80 px strip (about 250 px straight ahead) while the panel around it is whole. `hud_keep_depth` is already on (all
   box draws keep the game's z/w, as the exact-depth card program does), so it is not the box's w changing depth.
   Next: find the card draws (RTDUMP / per-draw trace at yaw -20) and their scissor and clear rectangles.
+
+## 2026-10-05: arcade menu cards fixed (fork 34fb98183)
+
+Found with the simulator's real head pose (yaw -20), the inspector, `RTDUMP` of the display buffer and the depth
+surface `0xc1100000`, and probe `why=`:
+- Each card is drawn in two steps: the card art is copied into an 800x452 target (`0xc5a79380`, 2D program
+  `6f712431641e8509`, not boxed), then drawn as a perspective quad into the display buffer (program
+  `2f7d1792dfd94351`, exact depth, boxed).
+- **Fault 1:** the menus draw through a 1280x720 viewport into 2048x1080 buffers, which counted as a sub-viewport, so
+  the full-screen colour and depth clears were boxed like the mirror's. Turned, the boxed depth clear missed the
+  cards and each card failed its LESS test against its own depth from the frame before (the cut). Sub-viewports
+  are now measured against the shown part of the target.
+- **Fault 2:** `vr_keep_depth` scaled z by w'/w, but the box matrix's z row is the viewport's (`z' = s*z + o*w'`), so
+  depth moved with the head angle (0.99996 straight, 0.948-0.963 at yaw -20) and the stack's cards cut through
+  each other. The shader now writes the game's window depth (`s*z/w + o`) at the box's w.
+- Checked at yaw 0, +-20, pitch 10, roll 15 and combined (`evidence/gt5/2026-10-05-arcade-cards-fixed-poses.png`),
+  and with the selection changed at angles (`...-selection-angles.png`). Regression: SotC (the other keep-depth
+  game) 90, GT5 120, ICO 30, unchanged. Mirror rechecked with the real pose. **Needs Matt's headset check.**
