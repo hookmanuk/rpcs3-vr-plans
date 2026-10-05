@@ -81,3 +81,7 @@ Sustained: **90 Hz** with the default patch, 120 Hz with Wider view off.
   and depth are the eye's. A fix must remap both `tc0` and `tc1` (the existing `depth_remap_programs` path replaces
   only the position varying and assumes (x, y, z, w) packing and a full-size depth). The eye-invariant target fix
   (fork a3d6d1822) does not change it (the shadow map was already identical per eye).
+
+## Head poses on the OpenXR Simulator (real head pose, 2026-10-05)
+
+Straight, yaw +-20, pitch +-10, roll 15 (`posecheck.sh`, 300%): world and HUD right, HUD in the world-fixed box at every pose. Sheet `evidence/headpose-2026-10-05/pc_sonic_sheet.png`.

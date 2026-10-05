@@ -68,3 +68,7 @@ Sustained: **120 Hz**.
   briefing, Start Mission) is in space. Savestate `dwg_space0`. Simulator: stereo and HUD (gauge, minimap, Shot Down)
   right straight, turned 25 and pitched 25; the starfield fills the view. **120 Hz** (120.0 FPS, 0% late, RSX 4.8 ms).
 - Not seen: cutscenes, versus/original modes.
+
+## Head poses on the OpenXR Simulator (real head pose, 2026-10-05)
+
+Straight, yaw +-20, pitch +-10, roll 15 (`posecheck.sh`, space mission): stereo right, gauge and minimap in the world-fixed box. Turned left, a dark wedge shows at the far left edge (likely the game's LOD/culling of the starfield beyond its own view; not investigated). Sheet `evidence/headpose-2026-10-05/pc_dwg_sheet.png`.

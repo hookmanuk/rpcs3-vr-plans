@@ -1,0 +1,26 @@
+# path: OpenXR Simulator, RPCS3_VR_MULTIVIEW=default, build 34fb98183 VR: GT5 arcade menu cards stay whole when the head
+# BCUS98259 vrtest_icosotc_1: ICO & SotC Collection (released): SotC, a valley
+BCUS98259 vrtest_icosotc_1 vblank 72 scale 300%:
+   577 frames over 8.0 s: avg 72.0 FPS, 1% low 68.4, 0.1% low 60.4 (worst frame 16.6 ms), median 14.00 ms, late 0.00%, RSX thread 11.30 ms/frame
+   576 frames over 8.0 s: avg 72.0 FPS, 1% low 68.7, 0.1% low 66.8 (worst frame 15.0 ms), median 14.00 ms, late 0.00%, RSX thread 11.37 ms/frame
+   577 frames over 8.0 s: avg 72.0 FPS, 1% low 68.8, 0.1% low 67.2 (worst frame 14.9 ms), median 14.00 ms, late 0.00%, RSX thread 11.86 ms/frame
+   => median of 3 windows: avg 72.0 FPS, 1% low 68.7, late frames 0.00%, RSX thread 11.37 ms/frame
+BCUS98259 vrtest_icosotc_1 vblank 90 scale 300%:
+   719 frames over 8.0 s: avg 89.8 FPS, 1% low 76.1, 0.1% low 44.9 (worst frame 22.3 ms), median 11.04 ms, late 0.28%, RSX thread 9.52 ms/frame
+   713 frames over 8.0 s: avg 89.1 FPS, 1% low 74.2, 0.1% low 42.5 (worst frame 23.5 ms), median 11.03 ms, late 0.98%, RSX thread 10.17 ms/frame
+   720 frames over 8.0 s: avg 89.9 FPS, 1% low 82.7, 0.1% low 45.2 (worst frame 22.1 ms), median 11.02 ms, late 0.14%, RSX thread 10.55 ms/frame
+   => median of 3 windows: avg 89.8 FPS, 1% low 76.1, late frames 0.28%, RSX thread 10.17 ms/frame
+BCUS98259 vrtest_icosotc_1 vblank 120 scale 300%:
+   851 frames over 8.0 s: avg 106.2 FPS, 1% low 55.1, 0.1% low 51.4 (worst frame 19.5 ms), median 8.58 ms, late 13.04%, RSX thread 8.44 ms/frame
+   866 frames over 8.0 s: avg 108.1 FPS, 1% low 55.3, 0.1% low 50.0 (worst frame 20.0 ms), median 8.54 ms, late 10.97%, RSX thread 8.40 ms/frame
+   873 frames over 8.0 s: avg 109.1 FPS, 1% low 55.2, 0.1% low 52.2 (worst frame 19.1 ms), median 8.53 ms, late 9.97%, RSX thread 8.34 ms/frame
+   => median of 3 windows: avg 108.1 FPS, 1% low 55.2, late frames 10.97%, RSX thread 8.40 ms/frame
+SUSTAINABLE BCUS98259 vrtest_icosotc_1: 90 Hz
+# BCUS98259 vrtest_ico_bridge: ICO (released): Old Bridge, from a save (Continue, file 1); frame-locked at 30 in VR, rates=30
+BCUS98259 vrtest_ico_bridge vblank 60 scale 300%:
+   241 frames over 8.0 s: avg 30.0 FPS, 1% low 29.4, 0.1% low 29.3 (worst frame 34.1 ms), median 33.41 ms, late 0.00%, RSX thread 32.92 ms/frame
+   241 frames over 8.0 s: avg 30.0 FPS, 1% low 29.4, 0.1% low 29.3 (worst frame 34.1 ms), median 33.40 ms, late 0.00%, RSX thread 32.98 ms/frame
+   240 frames over 8.0 s: avg 30.0 FPS, 1% low 29.4, 0.1% low 29.3 (worst frame 34.2 ms), median 33.42 ms, late 0.00%, RSX thread 32.97 ms/frame
+   => median of 3 windows: avg 30.0 FPS, 1% low 29.4, late frames 0.00%, RSX thread 32.97 ms/frame
+SUSTAINABLE BCUS98259 vrtest_ico_bridge: 30 Hz
+DONE /f/rpsc3/source/plans/evidence/vrtest/2026-10-05-1058-hudrule

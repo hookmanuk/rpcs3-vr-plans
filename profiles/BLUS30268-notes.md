@@ -106,3 +106,7 @@ lighting reads. Removing `camera_position.slot` (the eye offset still goes throu
 match in both eyes (ratio 0.716 -> 0.927, the same as unaffected regions' parallax); straight / turned / pitched
 checked on multiview. Generator fixed (fork 3a40d9c82): a (0,0,0,1) constant never matches as the camera position;
 regenerating Wolverine now leaves the slot out.
+
+## Head poses on the OpenXR Simulator (real head pose, 2026-10-05)
+
+Straight, yaw +-20, pitch +-10, roll 15 (`posecheck.sh`): HUD boxed and world right; the known top-left sky edge shows when turned/pitched up (above). Sheet `evidence/headpose-2026-10-05/pc_xmen_sheet.png`.

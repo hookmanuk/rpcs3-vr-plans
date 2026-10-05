@@ -36,3 +36,7 @@ did not run. So DA II needs a quieter scene to pass 72, or the hitch found (PPU 
 ## Unchecked
 
 Kirkwall, cutscenes, the generator's deferred candidates (`181f214b007bab9c`, `9383cb6078b54701`).
+
+## Head poses on the OpenXR Simulator (real head pose, 2026-10-05)
+
+Straight, yaw +-20, pitch +-10, roll 15 (`posecheck.sh`, `vrtest_da2_fight`). **Found:** the HUD (tooltip, portrait, ability wheel, target name) stayed on the face. Dragon Age: Origins' program hashes don't apply (DA2's Scaleform programs differ). **Fixed:** `passthrough_hud` with `hud_programs` `fb607f82e6910e72`, `2fb564a1e6dc9ad1`, `f7fb6105c0d5ebac`, `2f3922b03a474047` (inspector capture: draws 627-683 of 685, all `c[0..1]` 2D; `4dd42ea0e6add336` just before them passes positions through untransformed and is left out). Probe `why=` takes one hash at a time. Before `evidence/headpose-2026-10-05/pc_da2b_sheet.png`, after `evidence/headpose-2026-10-05/pc_da2c_sheet.png`.

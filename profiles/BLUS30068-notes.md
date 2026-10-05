@@ -97,3 +97,7 @@ eyes' images are by definition the same. Renderer fix (fork, `VKGSRenderVR.cpp`)
 views and format-converting copies), and with multiview its layer 1 takes a copy of layer 0 after each write before
 it is read (`vr_restore_texture`). Result: the tree shadows on the road now appear in both eyes, at matching places,
 on two-draw and multiview; 72 Hz unchanged (71.9 FPS, RSX 12.0 ms).
+
+## Head poses on the OpenXR Simulator (real head pose, 2026-10-05)
+
+Straight, yaw +-20, pitch +-10, roll 15 (`posecheck.sh`, race): road, car and HUD right, HUD in the world-fixed box. Sheet `evidence/headpose-2026-10-05/pc_sr_sheet.png`.
