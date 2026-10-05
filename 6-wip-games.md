@@ -411,6 +411,15 @@ Notes: `profiles/BCUS98114-notes.md` (the most detailed). Evidence: `evidence/gt
   main menu (driver walking out differs between eyes; an overlay below in the wrong place when looking down).
 - **2026-10-05 evening:** main menu and pre-race fly-by on the fixed screen (`screen_frame_draws`), `min_scalable_dimension`
   511 (the 512 value ghosted the menu's depth-of-field layer); fork 72aaa988b. Matt: good. Notes "2026-10-05 evening".
+- **TODO: find GT5's car LOD switch and move it closer** (the remaining big frame-rate lever in busy races; 2_17 runs at
+  ~50 FPS with the car tiers, the RSX thread limited by draws and vertex uploads). The game draws each car with its
+  full model (110-165+ draws) out to ~75 m and switches to a complete far model of ~10 draws (glass included) from
+  ~95 m. Using the far model for cars 3+ would cut far more than `car_draw_limit` without holes. Not found yet: the
+  tables [16,76,88] 0x184057c, [50,80,350] 0x185fe38, [60.9,80.54,244.75] 0x18c3a80, [4.5,11.75,13.2,79] 0x190be50 had
+  no effect (written before unpausing). The switch may be screen-size based (FOV and distance) or decided on the SPUs.
+  Next: find where a car's model level is stored (per-car state that changes between the full and far model as a car
+  passes ~85 m in a running race: memory diff or write watch), then its threshold. Notes: "2026-10-05 late afternoon",
+  "2026-10-05 night".
 - **Open (from the notes):**
   1. Arcade menu cards: improved 2026-10-03 (exact depth for the card program), still obscured when the HMD turns or
      tilts (Matt, headset). The rear-view mirror image also resizes and is culled with the HMD angle.
