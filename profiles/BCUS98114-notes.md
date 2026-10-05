@@ -345,3 +345,18 @@ More (same night):
   the projection (A 1.3114, B 2.3314) and FOV values in live memory found only per-frame command-stream matrices
   (HUD orthographic) and curve tables. A Wider view patch needs the camera's culling found first; it would also add
   draws to the RSX-bound race start.
+
+## 2026-10-05 early morning: rear-view mirror vs head yaw, reproduced on the simulator
+
+- New dev hook `RPCS3_VR_YAW_FILE=<file>` (fork 2026-10-05): the rendered head yaw is the file's number (re-read every
+  30 frames; the value is the quaternion half-angle, so 20 = 40 degrees). Rome race start, yaw 0 / -20 / +20:
+  `evidence/gt5/2026-10-05-mirror-yaw-0-m20-p20.png`. At 0 the mirror sits between Position and Total Time at its
+  size; turned, it is ~1.7x wider and ~4x taller and pushed outwards, while the HUD text stays put: Matt's
+  "resizes and is culled with the HMD angle".
+- Cause (logged box map and scissor): the mirror is boxed correctly as a quad (`map_vr_screen_box` already places a
+  sub-viewport draw where its viewport puts it; `undo_viewport(..., inverse)`), but turned, that quad is a slanted
+  perspective trapezoid (input x feeds output y by ~0.95, w 0.62-0.92 across the mirror), and its scissor is the
+  axis-aligned bounding box (67 -> 304 host rows at 200%). The game relies on the scissor to clip its mirror camera,
+  whose image extends past the 448x86 viewport, so inside the bigger box the extra camera image shows.
+- Fix needed: clip the mirror draw to its own viewport in the shader (its clip-space x/y within +-w before the box),
+  not by a scissor. An attempt to re-map through the full output viewport double-applied the viewport (reverted).
