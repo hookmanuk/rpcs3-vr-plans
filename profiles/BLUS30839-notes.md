@@ -124,4 +124,12 @@ differs between the left and right eye.
     reliably in this run (the shots are 4 s apart under the interpreter).
   Next: a patch version doing only the getter widening (verify under LLVM, check the shadows and frame rate), then look
   for an LOD decision in the cull pass (`0x28a2c0` onwards) to keep the loop's full mesh.
+- **Tried 2026-10-06, reverted:** *Wider view* 2.0 doing only the culling getter (cave at `0xbe8f90`, `bl` at `0x1dd778`,
+  and `0xb8024` restored to `lfs f1,0x144(r31)`: Matt's savestates hold version 1.0's `bl` there, and without the
+  restore everything was culled). Under LLVM the view fills as with 1.0 (`son_cullonly_sheet.png`), but the loop's bars
+  remain and the pillars at the left are still lit in the left eye and black in the right (`son_cullonly_eyes.png`).
+  So the per-eye shadow is not the render FOV either: it appears whenever culling is wider than the game's view
+  (objects the game never draws at the screen edge get a shadow lookup from cascades fitted to its own frustum, which
+  differ per eye). Next: the shadow cascade fit's coverage (make it fit the culled area), or a per-eye shadow-mask
+  program to remap, from an inspector capture of this frame (none taken yet for Sonic).
 No sound in that run was a test leftover (`Audio Renderer: Null` in the custom config), restored to Cubeb.
