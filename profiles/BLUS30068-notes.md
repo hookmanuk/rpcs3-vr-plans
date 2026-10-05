@@ -101,3 +101,12 @@ on two-draw and multiview; 72 Hz unchanged (71.9 FPS, RSX 12.0 ms).
 ## Head poses on the OpenXR Simulator (real head pose, 2026-10-05)
 
 Straight, yaw +-20, pitch +-10, roll 15 (`posecheck.sh`, race): road, car and HUD right, HUD in the world-fixed box. Sheet `evidence/headpose-2026-10-05/pc_sr_sheet.png`.
+
+## Open (Matt, 2026-10-05)
+
+- **Main menu flicker:** Matt's state `BLUS30068_1_2` (main menu): the menu items flicker on and off. Not
+  investigated yet. First steps: load it on the simulator, check flat vs stereo, and whether the items are
+  one of the matrix-less HUD programs (`ae5d1f3fa4187794`, `f780e2c460d9eba2`) or fall to the scene path on
+  some frames (`passthrough_hud`).
+- **Performance: aim for 90 FPS.** 72 Hz (71.9 FPS, RSX ~12 ms) has no margin. Spend time on it: profile the
+  stereo frame per pass and find work that can be cut or shared between the eyes.
