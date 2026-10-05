@@ -399,3 +399,22 @@ surface `0xc1100000`, and probe `why=`:
 - Checked at yaw 0, +-20, pitch 10, roll 15 and combined (`evidence/gt5/2026-10-05-arcade-cards-fixed-poses.png`),
   and with the selection changed at angles (`...-selection-angles.png`). Regression: SotC (the other keep-depth
   game) 90, GT5 120, ICO 30, unchanged. Mirror rechecked with the real pose. **Needs Matt's headset check.**
+
+## 2026-10-05 midday: cars culled beside the player (Matt, savestates 2_11 and 2_12), not fixed
+
+- Symptom: a car beside the player is invisible (2_11, head turned left: its shadow on the track, no car); a car half
+  outside the game's view is drawn without its outside pieces (2_12, straight ahead: rear panels and rear window
+  missing, interior visible, paint a multicoloured dot pattern). Scenery is not culled.
+- Not the renderer: GT5 never enables user clip planes (logged on 2_12; dev hook reverted). Occlusion queries are
+  off in Matt's config (every query reports 0), so they are not the cars' visibility test either.
+- Not Sony EDGE: no `EdgeGeomViewportInfo` record in memory (scan for viewport scales 640/-360 next to a scissor and a
+  view-projection). The only viewport is the plain one at `0x1a39160`.
+- The camera view-projection (inspector, main 1280x720 target, rows 1.3103 ... / ... 2.3289 ...) exists only in the
+  RSX command buffer (13 copies at `0x41xxxxxx`), nowhere in PPU memory: the SPUs build the matrices and the draw
+  lists, so the per-piece culling runs on the SPUs.
+- FOV-looking values are not the camera: `0x1911930`, `0x19972dc`, `0x19cf53c`, `0x186e404`, `0x179a318` (static data)
+  and `0x30797488` (46.44) are never read or written by the PPU in a running race (read/write watches, interpreter);
+  `0x3053f6e4` (46.5) is read ~15,000/s through a generic accessor `0x8aeb58`, and setting it to 70 only changed a HUD
+  text line. Blind writes to the ~36 candidates (an earlier attempt) unpaused the game and switched its camera.
+- Next: find the camera parameters the PPU passes to the SPU jobs, or the SPU culling program itself (SPU patch).
+
