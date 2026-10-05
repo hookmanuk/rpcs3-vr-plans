@@ -45,3 +45,14 @@ Combat (spell effects), outdoor areas (Ostagar), cutscenes, the generator's defe
 ## Head poses on the OpenXR Simulator (real head pose, 2026-10-05)
 
 Straight, yaw +-20, pitch +-10, roll 15 (`posecheck.sh`, `vrtest_dao_castle`). **Found:** the HUD (portrait, minimap, ability bar) stayed on the face: it is Scaleform, 2D transform in `c[0..1]`, not the `c[260]` block, so the earlier rendered-pose checks (which turn the rendered pose, not the compositor) missed it. **Fixed:** `passthrough_hud` with `hud_programs` `fc6fc45502d91a9a`, `fbf8826148d91a90`, `f7f66105c0d5ebac` (from an inspector capture: the programs drawing into the output after the scene); listed programs are now boxed also untextured and with no colour target, since the game masks the minimap and portrait in depth/stencil with colour writes off (fork 0501cbdcc). Before `evidence/headpose-2026-10-05/pc_dao_sheet.png`, after `evidence/headpose-2026-10-05/pc_dao2_sheet.png`.
+
+## Open (Matt, 2026-10-05): culling, missing legs, overlay on head movement
+
+Matt's state `BLUS30415_1_2`:
+- Looking right, the view is all grey: Wider view x2.0 is not enough here, or this scene culls with another
+  camera/frustum than the one the patch widens (`0x71b85c`).
+- Characters have no visible legs: likely culled, or cut by the bottom of the game's view (vertical FOV), or a
+  near-plane/clip issue; check flat, then stereo at straight ahead.
+- Moving the head shows a strange overlay: an eye-invariant or screen-space layer that does not follow the
+  world (compare `simpose.py` yaw/pitch shots against straight ahead and find the layer's program).
+Not investigated yet.
