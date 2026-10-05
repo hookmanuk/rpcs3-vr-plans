@@ -199,7 +199,7 @@ pass mark** for fully compatible.
 | Dragon Age: Origins | BLUS30415 | `vr-non-working/` + untracked `bin/` copies (profile, patch) | yes (no patch needed: every vblank, measured time) | **120 Hz** (Castle Cousland hall), 2026-10-04 | simulator only (real head poses checked 2026-10-05) | combat and outdoor unchecked; Wider view default 2.0 (2.5 stretches fire); HUD stayed on the face at real head poses (Scaleform `c[0..1]`), fixed 2026-10-05 with `hud_programs` |
 | Dragon Age II | BLUS30645 | `vr-non-working/` + untracked `bin/` copy (profile) | yes (no patch needed, clocks at 1.0 measured) | **below 72**: 70.1-70.6 FPS at 72, 1.2-2.3% late (tutorial fight; PPU/SPU-bound) | simulator only (real head poses checked 2026-10-05) | just misses 72 in the busy fight: the game doubles ~1.7% of frames even flat at 60 Hz (not stereo); measure Kirkwall; HUD stayed on the face at real head poses, fixed 2026-10-05 with `hud_programs` |
 | Dragon Age: Inquisition | BLUS30997 | none | - | - | - | **emulation blocker:** hangs loading the start menu and each level (a GPU frame fence the SPU job system never kicks); Clocks scale 30 gets past it but runs at 9 FPS. `profiles/BLUS30997-notes.md` |
-| MX vs ATV Reflex | BLUS30321 | untracked `bin/` only | no (`max_fps 30`) | not measured | not played | generated 2026-09-28; no notes |
+| MX vs ATV Reflex | BLUS30321 | `vr-non-working/` + untracked `bin/` copy | no (`max_fps 30`) | not measured | not played | generated 2026-09-28; no notes |
 | Uncharted: Drake's Fortune | BCUS98103 | none | no: 42-46 flat | not measured | - | SPU/PPU-bound; not pursued |
 | Final Fantasy X/X-2 HD Remaster | BLUS31211 | none | no: 80-91 flat | not measured | - | RSX-bound flat; not pursued |
 
