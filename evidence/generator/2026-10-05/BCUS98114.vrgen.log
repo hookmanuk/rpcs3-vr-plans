@@ -1,0 +1,14 @@
+·S 0:00:43.127811 {RSX [0x138fe00]} VRGEN: VR profile generation requested for BCUS98114; sampling gameplay after the menu closes.
+·! 0:00:53.643343 {RSX [0x0ab4b80]} VRGEN: Frame rate 60.0 FPS at a 60.00 Hz vblank: a frame every 1 vblank(s), max_fps 60.
+·! 0:00:53.650436 {RSX [0x0ab4b80]} VRGEN: Sampled 20 frames over 10.0 s of play: 20490 draws, 13726 on output-aspect (1280x720) targets.
+·! 0:00:53.663292 {RSX [0x0ab4b80]} VRGEN: Candidate column_vectors c[0]: 11022 draws
+·! 0:00:53.663353 {RSX [0x0ab4b80]} VRGEN: Candidate row_vectors c[0]: 1355 draws
+·! 0:00:53.668464 {RSX [0x0ab4b80]} VRGEN: Program 5161: 80 output-aspect draws not covered (full-screen pass, HUD, or a camera the profile misses).
+·! 0:00:53.669842 {RSX [0x0ab4b80]} VRGEN: Camera blocks cover 8926 of 8926 depth-tested scene draws (100%).
+·! 0:00:53.669894 {RSX [0x0ab4b80]} VRGEN: Camera position: best c[467] matches 8437 of 13513 eye points.
+·! 0:00:53.673482 {RSX [0x0ab4b80]} VRGEN: Camera block w-row scale over 15870 draws: 10% 1, 90% 1.
+·! 0:00:53.674228 {RSX [0x0ab4b80]} VRGEN: Near plane 0.1087 units: eye_baseline 0.0640 (world units per metre 1.000).
+·! 0:00:53.674272 {RSX [0x0ab4b80]} VRGEN: GPU readbacks while sampling (601 frames): 0x4fef39c0+0x200 x0.33/frame; 0x4fef3bc0+0x200 x0.33/frame; 0x4fef3dc0+0x200 x0.33/frame; 0xc9db5a80+0x100000 x1.00/frame;
+·! 0:00:53.674296 {RSX [0x0ab4b80]} VRGEN: Small results read back every frame: late_readback_lengths [512] (check they still change).
+·! 0:00:53.674318 {RSX [0x0ab4b80]} VRGEN: Section 0xc9db5a80 (0x100000 bytes) is read back every frame, each waiting for the GPU. If the game never reads it (a stale render target over memory nothing draws into), skip_readback_sections ["0xc9db5a80"] removes the wait; never for data the game reads.
+·S 0:00:53.675205 {RSX [0x0ab4b80]} VRGEN: VR profile written to 'F:\rpsc3\source\rpcs3\bin/vr_profiles/BCUS98114.json': column_vectors c[0], camera position c[467], HUD none, projection A 1.3114 (13646 of 13726 camera-view draws covered), max_fps 60.

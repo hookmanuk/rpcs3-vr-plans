@@ -1,0 +1,15 @@
+·S 0:00:43.622962 {RSX [0x00100b4]} VRGEN: VR profile generation requested for BCES00664; sampling gameplay after the menu closes.
+·! 0:00:54.122798 {RSX [0x00120b4]} VRGEN: Frame rate 60.0 FPS at a 60.00 Hz vblank: a frame every 1 vblank(s), max_fps 60.
+·! 0:00:54.124513 {RSX [0x00120b4]} VRGEN: Sampled 20 frames over 10.0 s of play: 4485 draws, 3645 on output-aspect (1280x720) targets.
+·! 0:00:54.126396 {RSX [0x00120b4]} VRGEN: Candidate row_vectors c[260]: 1257 draws
+·! 0:00:54.126415 {RSX [0x00120b4]} VRGEN: Candidate row_vectors c[256]: 1208 draws
+·! 0:00:54.126424 {RSX [0x00120b4]} VRGEN: Candidate column_vectors_xyw c[256]: 820 draws
+·! 0:00:54.127188 {RSX [0x00120b4]} VRGEN: Program 726: 21 output-aspect draws not covered (full-screen pass, HUD, or a camera the profile misses).
+·! 0:00:54.127202 {RSX [0x00120b4]} VRGEN: Program 1181: 320 output-aspect draws not covered (full-screen pass, HUD, or a camera the profile misses).
+·! 0:00:54.127231 {RSX [0x00120b4]} VRGEN: Camera blocks cover 1741 of 1741 depth-tested scene draws (100%).
+·! 0:00:54.127241 {RSX [0x00120b4]} VRGEN: Camera position: best c[465] matches 1927 of 2225 eye points.
+·! 0:00:54.127927 {RSX [0x00120b4]} VRGEN: Camera block w-row scale over 2445 draws: 10% 1, 90% 1.
+·! 0:00:54.128108 {RSX [0x00120b4]} VRGEN: Near plane 0.5417 units: eye_baseline 0.0640 (world units per metre 1.000).
+·! 0:00:54.128131 {RSX [0x00120b4]} VRGEN: Targets 640 wide use 0.750x the projection: own stereo rule.
+·! 0:00:54.128178 {RSX [0x00120b4]} VRGEN: 1140 of 4485 draws go to render targets of 512 or less (160x90, 256x256, 320x180, 512x512). If the game is GPU-bound in VR, min_scalable_dimension 512 keeps them at their own size (Gran Turismo 5: about 2 ms a frame at 400%); compare pictures, a pass shown directly gets blurry.
+·S 0:00:54.128760 {RSX [0x00120b4]} VRGEN: VR profile written to 'F:\rpsc3\source\rpcs3\bin/vr_profiles/BCES00664.json': row_vectors c[260, 256], camera position c[465], HUD c[256], projection A 0.3247 (2505 of 3645 camera-view draws covered), max_fps 60.

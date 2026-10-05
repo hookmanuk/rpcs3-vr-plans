@@ -1,0 +1,30 @@
+{
+  "schema": 1,
+  "title_id": "BLUS30415",
+  "app_version": "01.00",
+  "name": "Dragon Age: Origins",
+  "max_fps": 60,
+  "default_fps": 60,
+
+  "matrix_layout": "row_vectors",
+  "camera_blocks": [256],
+  "camera_slots_read_directly": true,
+  "output_aspect_tolerance": 0.02,
+
+  "camera_position": {
+    "eye_baseline": 0.064
+  },
+
+  "stereo": {
+    "formula": "clip_x_shear",
+    "per_eye_separation": 0.0040595,
+    "convergence": 2.56,
+    "eye_offset": "baseline_per_w"
+  },
+
+  "screen_space": {
+    "passthrough_hud": true,
+    "hud_programs": ["f7f66105c0d5ebac", "fbf8826148d91a90", "fc6fc45502d91a9a"],
+    "orthographic_block": 260
+  }
+}

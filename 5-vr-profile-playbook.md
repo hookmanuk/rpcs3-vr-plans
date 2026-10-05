@@ -453,6 +453,19 @@ screen-space HUD: the generator writes `passthrough_hud`, plus `hud_programs` fo
 a target camera draws wrote that frame. World scale: a near plane from 0.01 to 1 means metres
 (`eye_baseline` 0.064); the near/0.1 rule only applies outside that range.
 
+**2D-transform HUDs and log suggestions** (added 2026-10-05; Dragon Age, Gran Turismo 5, SotC, ICO). Full-frame draws
+without depth test whose program reads two consecutive slots `x = (sx, 0, 0, tx)`, `y = (0, sy, 0, ty)` with
+pixel-sized scales and no HUD block are a Scaleform-style HUD. The generator writes `passthrough_hud` plus those programs
+in `hud_programs`, also beside a HUD block and also when they draw untextured (the renderer boxes listed programs' stencil
+masks). Tested (`evidence/generator/2026-10-05/`): regenerating Dragon Age: Origins and Dragon Age II gives exactly the hand-found programs; WipEout, Demon's Souls, Pure, Anarchy Reigns, Bayonetta and GT5 list none, and GT5's log names its hand-found `skip_readback_sections` address. Bayonetta's generated HUD keys already differed from the hand profile (`depth_offset_projection` vs `hud_skips_passes`); Ridge Racer 7's `vrtest_rr7_boot` state gives no camera to sample. The log
+(`VRGEN`) also suggests these, without writing them:
+- `screen_space.hud_keep_depth` / `hud_exact_depth_programs`: HUD-block draws that depth-test.
+- `screen_space.output_pixel_draws_not_hud`: the HUD block maps output pixels 1:1 for some draws and other units for the rest.
+- `screen_space.preprojected_programs`: depth-tested, matrix-less draws into this frame's scene.
+- `skip_readback_sections`: sections over 4 KB read back every frame.
+- `min_scalable_dimension`: a fifth or more of the draws go to targets of 512 or less.
+Each needs a look in the headset or a measurement before it goes in the profile.
+
 **Frame-locked games.** The generator writes the measured rate as `max_fps`. Check real-time speed before
 raising it: run at a faster Vblank Rate and compare an in-game timer with wall time. A frame-locked game can
 still reach the headset rate with a game patch plus the profile's frame-timing fields (Ridge Racer 7, 2026-09-26;
@@ -478,9 +491,9 @@ check for each symptom:
 
 | Symptom in the headset | Field (see `profiles/README.md`) | Found in |
 |---|---|---|
-| Menus or HUD fill the whole view instead of the HUD box | `screen_space.passthrough_hud: true` (generated since 2026-09-25 when the HUD is matrix-less) | ICO, Ridge Racer 7 |
+| Menus or HUD fill the whole view instead of the HUD box | `screen_space.passthrough_hud: true` (generated since 2026-09-25 when the HUD is matrix-less, since 2026-10-05 for 2D-transform HUDs) | ICO, Ridge Racer 7 |
 | Menu/title text drawn into the 3D scene's final image stays full-view | `screen_space.hud_programs` (the program's ucode hash from an inspector capture) | SotC |
-| HUD stays on the face at real head poses (simulator `simpose.py`) although the generator found a HUD block | the HUD is Scaleform-style: a 2D transform in `c[0..1]` (`dot(in_pos, c[0])`, `dot(in_pos, c[1])`), not the block; list the programs that draw into the output after the scene (inspector capture, last draws) in `screen_space.hud_programs` with `passthrough_hud: true`. Listed programs are boxed also untextured and colour-less (stencil masks). Hashes differ between sequels | Dragon Age: Origins, Dragon Age II |
+| HUD stays on the face at real head poses (simulator `simpose.py`) although the generator found a HUD block | the HUD is Scaleform-style: a 2D transform in `c[0..1]` (`dot(in_pos, c[0])`, `dot(in_pos, c[1])`), not the block; list the programs that draw into the output after the scene (inspector capture, last draws) in `screen_space.hud_programs` with `passthrough_hud: true`. Listed programs are boxed also untextured and colour-less (stencil masks). Hashes differ between sequels. Generated since 2026-10-05 | Dragon Age: Origins, Dragon Age II |
 | HUD box right, but menu text scrambled and HUD elements leave trails when the head turns | fills/clears in output-pixel units boxed with the HUD (they write text coverage and clear the screen): `screen_space.output_pixel_draws_not_hud`; font atlases in view-aspect targets: `hud_display_buffers_only`; text clip masks from the projected position: `hud_box_after_shader`. Test head motion with `RPCS3_VR_WOBBLE=20` | Gran Turismo 5 |
 | Rear-view mirror stuck to the head at the top of the view | `screen_space.subviewport_cameras_in_box` (with `hud_box_after_shader`) | Gran Turismo 5 |
 | Car/object shadows turn odd colours (green in one eye, magenta in the other) | a shadow map rendered into a display buffer's memory is being HUD-boxed; the display-buffer test must match size, not only address (fixed in the fork for `hud_display_buffers_only`) | Gran Turismo 5 |

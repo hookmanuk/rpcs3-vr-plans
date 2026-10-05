@@ -1,0 +1,48 @@
+·S 0:00:44.033343 {RSX [0x0011a00]} VRGEN: VR profile generation requested for BLUS30645; sampling gameplay after the menu closes.
+·! 0:00:54.538852 {RSX [0x002db00]} VRGEN: Frame rate 59.1 FPS at a 60.00 Hz vblank: a frame every 1 vblank(s), max_fps 60.
+·! 0:00:54.543056 {RSX [0x002db00]} VRGEN: Sampled 20 frames over 10.0 s of play: 13618 draws, 12299 on output-aspect (1280x720) targets.
+·! 0:00:54.550014 {RSX [0x002db00]} VRGEN: Candidate row_vectors c[256]: 6295 draws
+·! 0:00:54.550068 {RSX [0x002db00]} VRGEN: Candidate column_vectors c[258]: 1703 draws
+·! 0:00:54.550087 {RSX [0x002db00]} VRGEN: Candidate row_vectors c[269]: 1370 draws
+·! 0:00:54.550106 {RSX [0x002db00]} VRGEN: Candidate column_vectors c[256]: 846 draws
+·! 0:00:54.550125 {RSX [0x002db00]} VRGEN: Candidate column_vectors c[262]: 664 draws
+·! 0:00:54.550144 {RSX [0x002db00]} VRGEN: Candidate column_vectors_xyw c[257]: 120 draws
+·! 0:00:54.550163 {RSX [0x002db00]} VRGEN: Candidate column_vectors_xyw c[270]: 120 draws
+·! 0:00:54.550181 {RSX [0x002db00]} VRGEN: Candidate row_vectors c[263]: 71 draws
+·! 0:00:54.550201 {RSX [0x002db00]} VRGEN: Camera blocks overlap (the camera base varies per program): require_camera_aspect.
+·! 0:00:54.551269 {RSX [0x002db00]} VRGEN: Program 25 holds non-camera data in c[256]: require_rigid_camera.
+·! 0:00:54.551728 {RSX [0x002db00]} VRGEN: c[269]: 71 depth-tested scene draws with a non-rigid matrix: nonrigid_camera_blocks.
+·! 0:00:54.553043 {RSX [0x002db00]} VRGEN: Program 0: 1002 output-aspect draws not covered (full-screen pass, HUD, or a camera the profile misses).
+·! 0:00:54.553080 {RSX [0x002db00]} VRGEN: Program 108: 100 output-aspect draws not covered (full-screen pass, HUD, or a camera the profile misses).
+·! 0:00:54.553099 {RSX [0x002db00]} VRGEN: Program 118: 520 output-aspect draws not covered (full-screen pass, HUD, or a camera the profile misses).
+·! 0:00:54.553119 {RSX [0x002db00]} VRGEN: Program 141: 20 output-aspect draws not covered (full-screen pass, HUD, or a camera the profile misses).
+·! 0:00:54.553138 {RSX [0x002db00]} VRGEN: Program 180: 80 output-aspect draws not covered (full-screen pass, HUD, or a camera the profile misses).
+·! 0:00:54.553157 {RSX [0x002db00]} VRGEN: Program 187: 360 output-aspect draws not covered (full-screen pass, HUD, or a camera the profile misses).
+·! 0:00:54.553177 {RSX [0x002db00]} VRGEN: Program 251: 451 output-aspect draws not covered (full-screen pass, HUD, or a camera the profile misses).
+·! 0:00:54.553196 {RSX [0x002db00]} VRGEN: Program 269: 101 output-aspect draws not covered (full-screen pass, HUD, or a camera the profile misses).
+·! 0:00:54.553215 {RSX [0x002db00]} VRGEN: Program 273: 100 output-aspect draws not covered (full-screen pass, HUD, or a camera the profile misses).
+·! 0:00:54.553234 {RSX [0x002db00]} VRGEN: Program 292: 140 output-aspect draws not covered (full-screen pass, HUD, or a camera the profile misses).
+·! 0:00:54.553253 {RSX [0x002db00]} VRGEN: Program 297: 420 output-aspect draws not covered (full-screen pass, HUD, or a camera the profile misses).
+·! 0:00:54.553272 {RSX [0x002db00]} VRGEN: Program 305: 100 output-aspect draws not covered (full-screen pass, HUD, or a camera the profile misses).
+·! 0:00:54.553291 {RSX [0x002db00]} VRGEN: Program 313: 52 output-aspect draws not covered (full-screen pass, HUD, or a camera the profile misses).
+·! 0:00:54.553311 {RSX [0x002db00]} VRGEN: Program 321: 40 output-aspect draws not covered (full-screen pass, HUD, or a camera the profile misses).
+·! 0:00:54.553330 {RSX [0x002db00]} VRGEN: Program 328: 173 output-aspect draws not covered (full-screen pass, HUD, or a camera the profile misses).
+·! 0:00:54.553349 {RSX [0x002db00]} VRGEN: Program 340: 250 output-aspect draws not covered (full-screen pass, HUD, or a camera the profile misses).
+·! 0:00:54.553368 {RSX [0x002db00]} VRGEN: Program 356: 246 output-aspect draws not covered (full-screen pass, HUD, or a camera the profile misses).
+·! 0:00:54.553388 {RSX [0x002db00]} VRGEN: Program 358: 248 output-aspect draws not covered (full-screen pass, HUD, or a camera the profile misses).
+·! 0:00:54.553518 {RSX [0x002db00]} VRGEN: Camera blocks cover 7756 of 11021 depth-tested scene draws (70%): clip_space_scene_draws.
+·! 0:00:54.553542 {RSX [0x002db00]} VRGEN: Camera position: best c[-1] matches 0 of 7848 eye points.
+·! 0:00:54.555538 {RSX [0x002db00]} VRGEN: 420 HUD draws depth-test. If HUD layers reorder or vanish as the head moves, set screen_space.hud_keep_depth (Shadow of the Colossus' menus); if stacked 3D HUD art cuts through itself in slices, list its programs in screen_space.hud_exact_depth_programs (Gran Turismo 5).
+·! 0:00:54.556063 {RSX [0x002db00]} VRGEN: Camera block w-row scale over 11577 draws: 10% 1, 90% 1002: per-object matrices, eye_offset baseline_per_w (check eye_baseline in view units against a known size).
+·! 0:00:54.556843 {RSX [0x002db00]} VRGEN: 2D-transform HUD program 2f3922b03a474047: 100 draws.
+·! 0:00:54.556885 {RSX [0x002db00]} VRGEN: 2D-transform HUD program 2fb564a1e6dc9ad1: 520 draws.
+·! 0:00:54.556906 {RSX [0x002db00]} VRGEN: 2D-transform HUD program f7fb6105c0d5ebac: 250 draws.
+·! 0:00:54.556926 {RSX [0x002db00]} VRGEN: 2D-transform HUD program fb607f82e6910e72: 248 draws.
+·! 0:00:54.556946 {RSX [0x002db00]} VRGEN: 1118 full-frame draws through a 2D transform (x and y rows of pixel scale: a Scaleform-style HUD): passthrough_hud, their 4 programs in hud_programs (boxed also untextured, for their masks).
+·! 0:00:54.557210 {RSX [0x002db00]} VRGEN: Near plane 0.0750 units: eye_baseline 0.0640 (world units per metre 1.000).
+·! 0:00:54.557242 {RSX [0x002db00]} VRGEN: GPU readbacks while sampling (591 frames): 0x33000000+0x384000 x1.00/frame; 0xc0f70000+0x384000 x1.00/frame;
+·! 0:00:54.557262 {RSX [0x002db00]} VRGEN: Section 0x33000000 (0x384000 bytes) is read back every frame, each waiting for the GPU. If the game never reads it (a stale render target over memory nothing draws into), skip_readback_sections ["0x33000000"] removes the wait; never for data the game reads.
+·! 0:00:54.557282 {RSX [0x002db00]} VRGEN: Section 0xc0f70000 (0x384000 bytes) is read back every frame, each waiting for the GPU. If the game never reads it (a stale render target over memory nothing draws into), skip_readback_sections ["0xc0f70000"] removes the wait; never for data the game reads.
+·! 0:00:54.557328 {RSX [0x002db00]} VRGEN: Program 181f214b007bab9c: 40 camera draws read the depth buffer as colour (a deferred pass rebuilding positions from it). If its lighting or shadows slide over the scene as the head turns, list it in depth_remap_programs (Asura's Wrath); if its fragment program scales a view-ray texture coordinate by the depth, also depth_remap_ray_texcoord (and depth_remap_xyw for an (x, y, w) clip position), as for Sonic's shadow cascades.
+·! 0:00:54.557367 {RSX [0x002db00]} VRGEN: Program 9383cb6078b54701: 71 camera draws read the depth buffer as colour (a deferred pass rebuilding positions from it). If its lighting or shadows slide over the scene as the head turns, list it in depth_remap_programs (Asura's Wrath); if its fragment program scales a view-ray texture coordinate by the depth, also depth_remap_ray_texcoord (and depth_remap_xyw for an (x, y, w) clip position), as for Sonic's shadow cascades.
+·S 0:00:54.558070 {RSX [0x002db00]} VRGEN: VR profile written to 'F:\rpsc3\source\rpcs3\bin/vr_profiles/BLUS30645.json': row_vectors c[256, 269, 263, 271] (rigid), camera position none, HUD c[260], projection A 0.9743 (7848 of 12299 camera-view draws covered), max_fps 60.

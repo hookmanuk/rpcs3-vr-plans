@@ -1,0 +1,33 @@
+·S 0:00:42.843532 {RSX [0x0032a54]} VRGEN: VR profile generation requested for BLUS30632; sampling gameplay after the menu closes.
+·! 0:00:53.875133 {RSX [0x0144f34]} VRGEN: Frame rate 30.0 FPS at a 60.00 Hz vblank: a frame every 2 vblank(s), max_fps 30.
+·! 0:00:53.879090 {RSX [0x0144f34]} VRGEN: Camera views are rendered at 1024x720 (3002 draws, 0 at the output aspect): camera_target_aspect 1.4222.
+·! 0:00:53.879358 {RSX [0x0144f34]} VRGEN: Sampled 20 frames over 10.0 s of play: 7814 draws, 4122 on output-aspect (1280x720) targets.
+·! 0:00:53.882467 {RSX [0x0144f34]} VRGEN: Candidate row_vectors c[4]: 2962 draws
+·! 0:00:53.882541 {RSX [0x0144f34]} VRGEN: Candidate column_vectors c[4]: 2962 draws
+·! 0:00:53.882577 {RSX [0x0144f34]} VRGEN: Candidate row_vectors c[8]: 701 draws
+·! 0:00:53.882613 {RSX [0x0144f34]} VRGEN: Candidate row_vectors c[36]: 600 draws
+·! 0:00:53.882650 {RSX [0x0144f34]} VRGEN: Candidate row_vectors c[24]: 40 draws
+·! 0:00:53.883074 {RSX [0x0144f34]} VRGEN: Both layouts match c[4] equally: |w row| is off unit length by 0.0000 (rows), 0.8000 (columns); using row_vectors.
+·! 0:00:53.883844 {RSX [0x0144f34]} VRGEN: Program 374 holds non-camera data in c[24]: require_rigid_camera.
+·! 0:00:53.884376 {RSX [0x0144f34]} VRGEN: 2962 of 3002 camera draws are bare projections: the view is applied elsewhere, so the projection is the camera.
+·! 0:00:53.884438 {RSX [0x0144f34]} VRGEN: No rigid camera draws at the output width 1280: using the projection of 1024-wide targets (2962 draws).
+·! 0:00:53.884475 {RSX [0x0144f34]} VRGEN: Program 21: 20 output-aspect draws not covered (full-screen pass, HUD, or a camera the profile misses).
+·! 0:00:53.884510 {RSX [0x0144f34]} VRGEN: Program 39: 680 output-aspect draws not covered (full-screen pass, HUD, or a camera the profile misses).
+·! 0:00:53.884545 {RSX [0x0144f34]} VRGEN: Program 89: 20 output-aspect draws not covered (full-screen pass, HUD, or a camera the profile misses).
+·! 0:00:53.884580 {RSX [0x0144f34]} VRGEN: Program 175: 20 output-aspect draws not covered (full-screen pass, HUD, or a camera the profile misses).
+·! 0:00:53.884616 {RSX [0x0144f34]} VRGEN: Program 179: 20 output-aspect draws not covered (full-screen pass, HUD, or a camera the profile misses).
+·! 0:00:53.884651 {RSX [0x0144f34]} VRGEN: Program 237: 60 output-aspect draws not covered (full-screen pass, HUD, or a camera the profile misses).
+·! 0:00:53.884686 {RSX [0x0144f34]} VRGEN: Program 337: 40 output-aspect draws not covered (full-screen pass, HUD, or a camera the profile misses).
+·! 0:00:53.884720 {RSX [0x0144f34]} VRGEN: Program 374: 200 output-aspect draws not covered (full-screen pass, HUD, or a camera the profile misses).
+·! 0:00:53.884755 {RSX [0x0144f34]} VRGEN: Program 440: 40 output-aspect draws not covered (full-screen pass, HUD, or a camera the profile misses).
+·! 0:00:53.884790 {RSX [0x0144f34]} VRGEN: Program 450: 20 output-aspect draws not covered (full-screen pass, HUD, or a camera the profile misses).
+·! 0:00:53.884836 {RSX [0x0144f34]} VRGEN: Camera blocks cover 2301 of 3021 depth-tested scene draws (76%): clip_space_scene_draws.
+·! 0:00:53.884872 {RSX [0x0144f34]} VRGEN: Camera position: best c[-1] matches 0 of 40 eye points.
+·! 0:00:53.886935 {RSX [0x0144f34]} VRGEN: 20 HUD draws sample a small render target (a mask drawn by the HUD): hud_box_after_shader.
+·! 0:00:53.887352 {RSX [0x0144f34]} VRGEN: Camera block w-row scale over 3882 draws: 10% 1, 90% 60: per-object matrices, eye_offset baseline_per_w (check eye_baseline in view units against a known size).
+·! 0:00:53.888022 {RSX [0x0144f34]} VRGEN: Near plane 0.1000 units: eye_baseline 0.0640 (world units per metre 1.000).
+·! 0:00:53.888090 {RSX [0x0144f34]} VRGEN: c[8] is never bound (its draws all read an earlier camera block): left out.
+·! 0:00:53.888130 {RSX [0x0144f34]} VRGEN: c[36] is never bound (its draws all read an earlier camera block): left out.
+·! 0:00:53.888176 {RSX [0x0144f34]} VRGEN: GPU readbacks while sampling (301 frames): 0xcea75e00+0x2d0000 x0.25/frame; 0xced45e00+0x200 x0.25/frame; 0xced46000+0x200 x0.25/frame; 0xced46200+0x200 x0.25/frame; 0xced46400+0x200 x0.25/frame;
+·! 0:00:53.888213 {RSX [0x0144f34]} VRGEN: Small results read back every frame: late_readback_lengths [512] (check they still change).
+·S 0:00:53.889132 {RSX [0x0144f34]} VRGEN: VR profile written to 'F:\rpsc3\source\rpcs3\bin/vr_profiles/BLUS30632.json': row_vectors c[4, 24] (rigid), camera position none, HUD c[54], projection A 1.2063 (3002 of 4122 camera-view draws covered), max_fps 30.
