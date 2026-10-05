@@ -104,4 +104,13 @@ differs between the left and right eye.
   has none of `ed46d28a122d7235` (the remapped cascade program).
 - Direction: widen only the culling, not the render camera's FOV (as Asura's Wrath: a culling frustum copy), so
   projection, LOD and shadow fit keep the game's FOV. Needs the culling code (readers of render camera `+0x38`).
+- **Readers traced (2026-10-06):** render camera at `0x30696680` in `vrtest_sonic_race` (FOV 2.618 at +0x38, aspect
+  1.778, near 0.25, far 20000). PPU read watch (interpreter) on +0x38: the projection build `0x1dd974` (from `0xb8004`),
+  a getter `0x1dd778` (from `0x28a308`), and five render-pass setups under `0x244e24` that all compute
+  2 atan(aspect tan(fov x 0.5)) from a per-function 0.5: `0x23c6a0` (table `0x23c520`), `0x241fa0` (`0x241c60`),
+  `0x247bf8` (`0x247974`), `0x248d50` (`0x248aa8`), `0x24957c` (`0x249510`). Poking all five 0.5 -> 1/6 (they see the
+  game's own FOV) changes neither the loop's bars nor the per-eye pillar shadow, under LLVM and under the interpreter
+  (`son_pa`, `son_pi` sheets). Wider view 1.5 still has both, and culls the view edges (`son_s15_sheet.png`). Left: the
+  getter `0x1dd778`, and SPU code (SPURS jobs reading the camera by DMA are invisible to the PPU watch). Next: trace the
+  getter's callers' use, and an SPU-side search for the camera address (RSX/SPU DMA log of `0x30696680`).
 No sound in that run was a test leftover (`Audio Renderer: Null` in the custom config), restored to Cubeb.
