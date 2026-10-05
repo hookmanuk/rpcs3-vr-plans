@@ -72,3 +72,11 @@ Sustained: **120 Hz**.
 ## Head poses on the OpenXR Simulator (real head pose, 2026-10-05)
 
 Straight, yaw +-20, pitch +-10, roll 15 (`posecheck.sh`, space mission): stereo right, gauge and minimap in the world-fixed box. Turned left, a dark wedge shows at the far left edge (likely the game's LOD/culling of the starfield beyond its own view; not investigated). Sheet `evidence/headpose-2026-10-05/pc_dwg_sheet.png`.
+
+## Open (Matt, 2026-10-05): menus broken, talking portraits missing
+
+Matt: the menus are all broken, and the images of whoever is talking (character portraits in dialogue) are
+missing. No savestate. Not investigated yet. Menus and dialogue were never checked (only battles), so the
+profile's 2D handling there is untested: check flat vs stereo, whether the menu draws take the scene path
+(`row_vectors c[256, 0]`, `require_camera_aspect`) or `preprojected_programs`, and whether the portraits are
+hidden or drawn off-screen/behind the menu in one or both eyes.
