@@ -124,3 +124,19 @@ New state `BCUS98155_1_1` (10:18). Not investigated:
    the head still (simulator, `simpose.py 0 0 0`): if the view jitters in VR only, suspect pose/frame pacing (multiview
    is needed for 72 here) or the camera block changing between camera-like blocks per frame; if flat shakes too, it is
    the game's camera shake, which in VR may need damping or removing (a patch).
+
+## Fixed 2026-10-06 (fork 13da162b8; headset recheck needed)
+
+- **HUD head-locked:** at yaw 25 / pitch 15 the race HUD stayed at the same place in the view. `passthrough_hud: true`
+  puts it in the world-fixed box (`evidence/motorstorm-2026-10-06/msp` before, `msq` after). Car select unchecked.
+- **Patches did not apply to savestates** (no `Apply To Savestates`): a loaded state ran at the stock 60 FPS, i.e. 60
+  inside 90 Hz. All three now have it.
+- **View jitter:** the community Variable FPS clock (`0x436000`) steps by the difference of two stored time values
+  (microseconds: 10,660 per frame at ~94 FPS, measured with a diagnostic cave). The per-frame value swung 10,040 to
+  15,827 us at a steady frame rate, so world positions jittered against the headset's fixed display cadence. Patch 1.1:
+  calloc cave at `0x436030` (replaces `fcfid f13, f3`): if the word `0x145ff00` (unused page tail after the BSS,
+  verified all zero while racing) is 0, seed it with 1/60 and keep the measured step; else step = word x 1,000,000.
+  The profile writes 1/fps there (`game_frame_time_f32`), or the measured rate when the PC is slower (seen working:
+  0.0076 s at 132 FPS). A first try with the PS3 timebase (79.8 MHz) ran the race clock ~16x fast: the unit is
+  microseconds. Real-time speed against the race timer was not confirmed (the unattended bike crashes); the step
+  equals the average measured step by construction.
