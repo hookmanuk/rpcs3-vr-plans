@@ -112,3 +112,15 @@ Pause > Restart Race needs Up on the confirmation (default is No).
 
 Headset-path screenshots (`RPCS3_VR_SHOT` without `RPCS3_OPENXR=0`) of 3D frames come out upside down: the
 display buffer holds the headset-remapped frame. Menus without camera draws are upright.
+
+## Open (Matt, headset, 2026-10-06)
+
+New state `BCUS98155_1_1` (10:18). Not investigated:
+1. **HUD head-locked** in races, and sometimes on the car select screen: it stays fixed to the HMD instead of sitting
+   in the world-fixed HUD box. Check which HUD programs/blocks miss the box (`why=` on the HUD draws, inspector capture
+   of a race frame), and whether car select alternates between box and screen (a `screen_frame_draws` marker).
+2. **View jitter while driving:** start a race and hold R2: the view shakes a lot. Matt cannot tell whether it is the
+   game's camera shake gone wrong or a bug. Compare flat (does the game shake the camera at speed?), then stereo with
+   the head still (simulator, `simpose.py 0 0 0`): if the view jitters in VR only, suspect pose/frame pacing (multiview
+   is needed for 72 here) or the camera block changing between camera-like blocks per frame; if flat shakes too, it is
+   the game's camera shake, which in VR may need damping or removing (a patch).
