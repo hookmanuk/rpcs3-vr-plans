@@ -1,0 +1,67 @@
+# path: OpenXR Simulator, RPCS3_VR_MULTIVIEW=default, build ce4e262fc VR profile SEGA Rally: the title screen goes on th
+# BCUS98282 vrtest_rc1_veldin: Ratchet & Clank 1: Veldin, start (HelpDesk tip on screen)
+BCUS98282 vrtest_rc1_veldin vblank 72 scale 300%:
+   549 frames over 8.0 s: avg 68.5 FPS, 1% low 49.5, 0.1% low 46.4 (worst frame 21.5 ms), median 14.67 ms, late 0.00%, RSX thread 13.06 ms/frame, new frames 68.5/s
+   559 frames over 8.0 s: avg 69.8 FPS, 1% low 50.1, 0.1% low 47.1 (worst frame 21.3 ms), median 14.37 ms, late 0.00%, RSX thread 12.44 ms/frame, new frames 69.8/s
+   558 frames over 8.0 s: avg 69.7 FPS, 1% low 49.3, 0.1% low 46.9 (worst frame 21.3 ms), median 14.25 ms, late 0.00%, RSX thread 12.47 ms/frame, new frames 69.7/s
+   => median of 3 windows: avg 69.7 FPS, 1% low 49.5, late frames 0.00%, RSX thread 12.47 ms/frame
+SUSTAINABLE BCUS98282 vrtest_rc1_veldin: none Hz
+# BCUS98282 vrtest_rc3_veldin_battle: Ratchet & Clank 3: Veldin battle
+BCUS98282 vrtest_rc3_veldin_battle vblank 72 scale 300%:
+   575 frames over 8.0 s: avg 71.9 FPS, 1% low 53.1, 0.1% low 49.0 (worst frame 20.4 ms), median 13.83 ms, late 0.00%, RSX thread 9.89 ms/frame, new frames 71.9/s
+   576 frames over 8.0 s: avg 72.0 FPS, 1% low 54.5, 0.1% low 53.9 (worst frame 18.6 ms), median 13.85 ms, late 0.00%, RSX thread 9.31 ms/frame, new frames 72.0/s
+   577 frames over 8.0 s: avg 72.0 FPS, 1% low 54.3, 0.1% low 53.0 (worst frame 18.9 ms), median 13.98 ms, late 0.00%, RSX thread 9.27 ms/frame, new frames 72.0/s
+   => median of 3 windows: avg 72.0 FPS, 1% low 54.3, late frames 0.00%, RSX thread 9.31 ms/frame
+BCUS98282 vrtest_rc3_veldin_battle vblank 90 scale 300%:
+   702 frames over 8.0 s: avg 87.7 FPS, 1% low 63.0, 0.1% low 59.6 (worst frame 16.8 ms), median 11.48 ms, late 0.00%, RSX thread 9.67 ms/frame, new frames 87.7/s
+   707 frames over 8.0 s: avg 88.3 FPS, 1% low 64.4, 0.1% low 61.0 (worst frame 16.4 ms), median 11.39 ms, late 0.00%, RSX thread 9.56 ms/frame, new frames 88.3/s
+   706 frames over 8.0 s: avg 88.1 FPS, 1% low 63.0, 0.1% low 58.5 (worst frame 17.1 ms), median 11.44 ms, late 0.00%, RSX thread 9.68 ms/frame, new frames 88.1/s
+   => median of 3 windows: avg 88.1 FPS, 1% low 63.0, late frames 0.00%, RSX thread 9.67 ms/frame
+SUSTAINABLE BCUS98282 vrtest_rc3_veldin_battle: 72 Hz
+# BCUS98155 vrtest_mspr_race: MotorStorm: Pacific Rift: Free-Play, Kanaloa Bay, 11 AI, rally car, countdown "1" (holds R2)
+BCUS98155 vrtest_mspr_race vblank 72 scale 300%:
+   481 frames over 8.0 s: avg 60.1 FPS, 1% low 45.6, 0.1% low 42.0 (worst frame 23.8 ms), median 16.59 ms, late 0.00%, RSX thread 16.18 ms/frame, new frames 60.1/s
+   545 frames over 8.0 s: avg 68.0 FPS, 1% low 56.5, 0.1% low 2.3 (worst frame 438.9 ms), median 13.84 ms, late 0.37%, RSX thread 10.83 ms/frame, new frames 68.0/s
+   => median of 2 windows: avg 60.1 FPS, 1% low 45.6, late frames 0.00%, RSX thread 10.83 ms/frame
+SUSTAINABLE BCUS98155 vrtest_mspr_race: none Hz
+# BLUS30058 vrtest_dwg_odessa: Dynasty Warriors: GUNDAM: Official Mode, Mission 01 (Odessa), battle start (Frame rate follows VR + Wider view 3.0)
+BLUS30058 vrtest_dwg_odessa vblank 72 scale 300%:
+   577 frames over 8.0 s: avg 72.0 FPS, 1% low 63.4, 0.1% low 59.5 (worst frame 16.8 ms), median 13.88 ms, late 0.00%, RSX thread 3.23 ms/frame, new frames 72.0/s
+   577 frames over 8.0 s: avg 72.0 FPS, 1% low 63.8, 0.1% low 61.5 (worst frame 16.3 ms), median 13.92 ms, late 0.00%, RSX thread 3.33 ms/frame, new frames 72.0/s
+   576 frames over 8.0 s: avg 71.9 FPS, 1% low 62.3, 0.1% low 43.1 (worst frame 23.2 ms), median 13.88 ms, late 0.17%, RSX thread 4.99 ms/frame, new frames 71.9/s
+   => median of 3 windows: avg 72.0 FPS, 1% low 63.4, late frames 0.00%, RSX thread 3.33 ms/frame
+BLUS30058 vrtest_dwg_odessa vblank 90 scale 300%:
+   721 frames over 8.0 s: avg 90.0 FPS, 1% low 74.4, 0.1% low 73.8 (worst frame 13.5 ms), median 11.14 ms, late 0.00%, RSX thread 4.62 ms/frame, new frames 90.0/s
+   721 frames over 8.0 s: avg 90.0 FPS, 1% low 73.6, 0.1% low 69.6 (worst frame 14.4 ms), median 11.10 ms, late 0.00%, RSX thread 4.73 ms/frame, new frames 90.0/s
+   720 frames over 8.0 s: avg 90.0 FPS, 1% low 73.8, 0.1% low 71.6 (worst frame 14.0 ms), median 11.12 ms, late 0.00%, RSX thread 4.72 ms/frame, new frames 90.0/s
+   => median of 3 windows: avg 90.0 FPS, 1% low 73.8, late frames 0.00%, RSX thread 4.72 ms/frame
+SUSTAINABLE BLUS30058 vrtest_dwg_odessa: 90 Hz
+# BLUS30268 vrtest_xmen_jungle: X-Men Origins: Wolverine: jungle, first control after the intro (Unlocked frame rate (VR); 72 Hz = Vblank 144) rates=72
+BLUS30268 vrtest_xmen_jungle vblank 144 scale 300%:
+   421 frames over 8.0 s: avg 52.6 FPS, 1% low 43.3, 0.1% low 27.1 (worst frame 37.0 ms), median 18.90 ms, late 0.24%, RSX thread 18.87 ms/frame, new frames 43.1/s
+   => median of 1 windows: avg 52.6 FPS, 1% low 43.3, late frames 0.24%, RSX thread 18.87 ms/frame
+SUSTAINABLE BLUS30268 vrtest_xmen_jungle: none Hz
+# BLUS30068 vrtest_segarally_race: SEGA Rally Revo: Safari, race start (holds R2; Unlocked frame rate + Wider view 2.0)
+BLUS30068 vrtest_segarally_race vblank 72 scale 300%:
+   576 frames over 8.0 s: avg 71.9 FPS, 1% low 55.7, 0.1% low 46.2 (worst frame 21.6 ms), median 14.00 ms, late 0.35%, RSX thread 10.05 ms/frame, new frames 71.9/s
+   556 frames over 8.0 s: avg 69.4 FPS, 1% low 53.1, 0.1% low 21.8 (worst frame 45.9 ms), median 14.17 ms, late 0.54%, RSX thread 11.84 ms/frame, new frames 69.4/s
+   574 frames over 8.0 s: avg 71.7 FPS, 1% low 55.9, 0.1% low 38.0 (worst frame 26.3 ms), median 14.00 ms, late 0.35%, RSX thread 12.04 ms/frame, new frames 71.7/s
+   => median of 3 windows: avg 71.7 FPS, 1% low 55.7, late frames 0.35%, RSX thread 11.84 ms/frame
+BLUS30068 vrtest_segarally_race vblank 90 scale 300%:
+   712 frames over 8.0 s: avg 88.9 FPS, 1% low 63.1, 0.1% low 39.6 (worst frame 25.2 ms), median 11.13 ms, late 0.84%, RSX thread 7.84 ms/frame, new frames 88.9/s
+   634 frames over 8.0 s: avg 79.2 FPS, 1% low 58.6, 0.1% low 26.7 (worst frame 37.5 ms), median 11.99 ms, late 0.32%, RSX thread 12.15 ms/frame, new frames 79.2/s
+   673 frames over 8.0 s: avg 84.1 FPS, 1% low 65.2, 0.1% low 36.0 (worst frame 27.7 ms), median 11.90 ms, late 0.30%, RSX thread 11.46 ms/frame, new frames 84.1/s
+   => median of 3 windows: avg 84.1 FPS, 1% low 63.1, late frames 0.32%, RSX thread 11.46 ms/frame
+SUSTAINABLE BLUS30068 vrtest_segarally_race: 72 Hz
+# BLUS30415 vrtest_dao_castle: Dragon Age: Origins: Castle Cousland hall after the opening (Wider view 2.0)
+BLUS30415 vrtest_dao_castle vblank 72 scale 300%:
+   577 frames over 8.0 s: avg 72.0 FPS, 1% low 56.7, 0.1% low 44.0 (worst frame 22.7 ms), median 13.76 ms, late 0.17%, RSX thread 3.78 ms/frame, new frames 71.1/s
+   576 frames over 8.0 s: avg 72.0 FPS, 1% low 58.6, 0.1% low 40.1 (worst frame 24.9 ms), median 13.88 ms, late 0.17%, RSX thread 4.15 ms/frame, new frames 43.0/s
+   => median of 2 windows: avg 72.0 FPS, 1% low 56.7, late frames 0.17%, RSX thread 3.78 ms/frame
+BLUS30415 vrtest_dao_castle vblank 90 scale 300%:
+   721 frames over 8.0 s: avg 90.0 FPS, 1% low 67.2, 0.1% low 64.9 (worst frame 15.4 ms), median 11.01 ms, late 0.00%, RSX thread 3.82 ms/frame, new frames 88.9/s
+   720 frames over 8.0 s: avg 90.0 FPS, 1% low 68.9, 0.1% low 40.2 (worst frame 24.9 ms), median 10.98 ms, late 0.14%, RSX thread 3.71 ms/frame, new frames 89.0/s
+   720 frames over 8.0 s: avg 90.0 FPS, 1% low 71.3, 0.1% low 48.1 (worst frame 20.8 ms), median 11.09 ms, late 0.14%, RSX thread 4.28 ms/frame, new frames 24.6/s
+   => median of 3 windows: avg 90.0 FPS, 1% low 68.9, late frames 0.14%, RSX thread 3.82 ms/frame
+SUSTAINABLE BLUS30415 vrtest_dao_castle: 90 Hz
+DONE /f/rpsc3/source/plans/evidence/vrtest/2026-10-06-1413-newframes

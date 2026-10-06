@@ -11,7 +11,7 @@ id=$1; st=$2; tag=$3; steps=$4; settle=${5:-15}
 OUT=${OUT:-/f/rpsc3/source/plans/tools/re/drive_$3}
 B=/f/rpsc3/source/rpcs3/bin; CF=$B/config; C=$CF/custom_configs/config_$id.yml; P=$CF/input_configs/$id; D="$LOCALAPPDATA/OpenXR-Simulator"; O=$OUT
 mkdir -p $O; cd /f/rpsc3/source/plans/tools/re
-kill_rpcs3() { powershell -c "Get-Process rpcs3 -ErrorAction SilentlyContinue | Stop-Process -Force; while (Get-Process rpcs3 -ErrorAction SilentlyContinue) { Start-Sleep -Milliseconds 200 }"; }
+kill_rpcs3() { powershell -c "Get-Process rpcs3 -ErrorAction SilentlyContinue | Stop-Process -Force; \$t=0; while ((Get-Process rpcs3 -ErrorAction SilentlyContinue | Where-Object { \$_.Threads.Count -gt 1 }) -and \$t -lt 150) { Start-Sleep -Milliseconds 200; \$t++ }"; }
 [ "${KEEPCFG:-0}" = 1 ] && [ ! -f "$C" ] && { echo "KEEPCFG=1 but no custom config for $id"; exit 1; }
 [ "${KEEPCFG:-0}" != 1 ] && [ -f "$C" ] && { echo "custom config exists for $id: not touching it"; exit 1; }
 [ -d "$P" ] && { echo "input config exists for $id: not touching it"; exit 1; }

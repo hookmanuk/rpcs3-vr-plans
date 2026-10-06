@@ -14,7 +14,7 @@ for i in $(seq 1 $n); do
   sleep 38
   if grep -aq "Device lost" $L; then r=LOST; lost=$((lost+1)); else r=ok; fi
   echo "boot $i: $r ($(grep -a -c 'VR frame stats' $L) stats lines)"
-  powershell -c "Get-Process rpcs3 -ErrorAction SilentlyContinue | Stop-Process -Force; while (Get-Process rpcs3 -ErrorAction SilentlyContinue) { Start-Sleep -Milliseconds 200 }"
+  powershell -c "Get-Process rpcs3 -ErrorAction SilentlyContinue | Stop-Process -Force; \$t=0; while ((Get-Process rpcs3 -ErrorAction SilentlyContinue | Where-Object { \$_.Threads.Count -gt 1 }) -and \$t -lt 150) { Start-Sleep -Milliseconds 200; \$t++ }"
   sleep 1
 done
 echo "lost $lost of $n"

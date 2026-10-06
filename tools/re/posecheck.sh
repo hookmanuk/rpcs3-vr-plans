@@ -23,7 +23,7 @@ for p in "0 0 0" "-20 0 0" "20 0 0" "0 10 0" "0 -10 0" "0 0 15"; do
   n=$(echo $p | tr ' ' '_'); py -3.13 simshot.py "${out}_$n" 960 >/dev/null 2>&1; names="$names $n"
 done
 py -3.13 simpose.py 0 0 0 >/dev/null
-powershell -c "Get-Process rpcs3 -ErrorAction SilentlyContinue | Stop-Process -Force; while (Get-Process rpcs3 -ErrorAction SilentlyContinue) { Start-Sleep -Milliseconds 200 }"
+powershell -c "Get-Process rpcs3 -ErrorAction SilentlyContinue | Stop-Process -Force; \$t=0; while ((Get-Process rpcs3 -ErrorAction SilentlyContinue | Where-Object { \$_.Threads.Count -gt 1 }) -and \$t -lt 150) { Start-Sleep -Milliseconds 200; \$t++ }"
 sleep 1
 py -3.13 cfgtemp.py $id restore >/dev/null
 [ $padhad = 0 ] && rm -r "${P:?}"

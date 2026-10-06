@@ -318,6 +318,10 @@ jitter shows ~64 while every frame is on time, hence the late-frame count.
 
 - Fork hook `RPCS3_VR_FRAMESTATS=<seconds>` logs per window: frames, average, 1% low, 0.1% low, worst frame,
   median frame time, late %.
+  Since 2026-10-06 also **new frames/s**: flips whose first game camera matrix differs from the previous flip's. A
+  game that flips faster than it simulates repeats frames: the FPS looks fine but motion is not. Sonic & All-Stars
+  Racing Transformed: 72 / 90 / 120 flips but 60.0 new frames/s at each (a fixed 60 Hz step). Check it for every game:
+  the release rate is the new-frame rate. (A still camera also repeats; measure while moving.)
 - `tools/re/vr1pct.sh ID STATE VBLANK [WALK]` (env `SCALE` default 300, `SETTLE` default 10 s): one run from a
   savestate in desktop stereo with a temporary pad; merges only Vblank and Resolution Scale into the game's config;
   walks ~25 s; prints the windows after the settle and their median.

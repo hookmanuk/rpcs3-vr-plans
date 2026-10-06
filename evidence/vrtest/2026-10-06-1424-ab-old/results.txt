@@ -1,0 +1,15 @@
+# path: OpenXR Simulator, RPCS3_VR_MULTIVIEW=default, build ce4e262fc VR profile SEGA Rally: the title screen goes on th
+# BCUS98155 vrtest_mspr_race: MotorStorm: Pacific Rift: Free-Play, Kanaloa Bay, 11 AI, rally car, countdown "1" (holds R2)
+BCUS98155 vrtest_mspr_race vblank 72 scale 300%:
+   561 frames over 8.0 s: avg 70.1 FPS, 1% low 54.0, 0.1% low 46.7 (worst frame 21.4 ms), median 14.01 ms, late 0.18%, RSX thread 11.75 ms/frame
+   576 frames over 8.0 s: avg 71.9 FPS, 1% low 65.2, 0.1% low 37.9 (worst frame 26.4 ms), median 14.01 ms, late 0.17%, RSX thread 11.31 ms/frame
+   575 frames over 8.0 s: avg 71.9 FPS, 1% low 59.5, 0.1% low 39.5 (worst frame 25.3 ms), median 14.00 ms, late 0.17%, RSX thread 12.11 ms/frame
+   => median of 3 windows: avg 71.9 FPS, 1% low 59.5, late frames 0.17%, RSX thread 11.75 ms/frame
+SUSTAINABLE BCUS98155 vrtest_mspr_race: 72 Hz
+# BLUS30268 vrtest_xmen_jungle: X-Men Origins: Wolverine: jungle, first control after the intro (Unlocked frame rate (VR); 72 Hz = Vblank 144) rates=72
+BLUS30268 vrtest_xmen_jungle vblank 144 scale 300%:
+   463 frames over 8.0 s: avg 57.8 FPS, 1% low 46.4, 0.1% low 45.5 (worst frame 22.0 ms), median 17.20 ms, late 0.00%, RSX thread 17.19 ms/frame
+   442 frames over 8.0 s: avg 55.2 FPS, 1% low 45.2, 0.1% low 29.2 (worst frame 34.2 ms), median 18.00 ms, late 0.23%, RSX thread 17.99 ms/frame
+   => median of 2 windows: avg 55.2 FPS, 1% low 45.2, late frames 0.00%, RSX thread 17.19 ms/frame
+SUSTAINABLE BLUS30268 vrtest_xmen_jungle: none Hz
+DONE /f/rpsc3/source/plans/evidence/vrtest/2026-10-06-1424-ab-old

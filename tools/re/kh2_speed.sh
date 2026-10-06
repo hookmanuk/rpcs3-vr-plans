@@ -11,6 +11,6 @@ powershell -File ../launch.ps1 -Game "F:/rpsc3/source/rpcs3/bin/savestates/BLUS3
 sleep 6
 sh keys.sh "$keys"; sleep 4
 py -3.13 shot.py BLUS31460 "$out" 960 | tail -1
-powershell -c "Get-Process rpcs3 -ErrorAction SilentlyContinue | Stop-Process -Force; while (Get-Process rpcs3 -ErrorAction SilentlyContinue) { Start-Sleep -Milliseconds 200 }"
+powershell -c "Get-Process rpcs3 -ErrorAction SilentlyContinue | Stop-Process -Force; \$t=0; while ((Get-Process rpcs3 -ErrorAction SilentlyContinue | Where-Object { \$_.Threads.Count -gt 1 }) -and \$t -lt 150) { Start-Sleep -Milliseconds 200; \$t++ }"
 rm -f "$C"; [ -f "$C" ] && echo "WARNING: temporary $C still present"
 true

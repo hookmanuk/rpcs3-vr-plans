@@ -49,7 +49,7 @@ touch "$W/MEMDUMP"; until [ ! -f "$W/MEMDUMP" ]; do sleep 0.1; done
 sleep 3
 n=0; for f in $(ls -t "$W"/MEMDUMP.*.bin | head -2 | sort); do b=${f%.bin}; for x in bin idx txt; do mv "$b.$x" "dumps/$tag.$n.$x"; done; n=$((n + 1)); done
 py -3.13 ../pine.py read $word f32 1
-powershell -c "(Get-Process rpcs3).MainWindowTitle; Get-Process rpcs3 -ErrorAction SilentlyContinue | Stop-Process -Force; while (Get-Process rpcs3 -ErrorAction SilentlyContinue) { Start-Sleep -Milliseconds 200 }"
+powershell -c "(Get-Process rpcs3).MainWindowTitle; Get-Process rpcs3 -ErrorAction SilentlyContinue | Stop-Process -Force; \$t=0; while ((Get-Process rpcs3 -ErrorAction SilentlyContinue | Where-Object { \$_.Threads.Count -gt 1 }) -and \$t -lt 150) { Start-Sleep -Milliseconds 200; \$t++ }"
 rm -f "$C"; [ -f "$C" ] && echo "WARNING: temporary $C still present"
 [ $padhad = 0 ] && rm -r "${P:?}"
 ls dumps/$tag.* | wc -l

@@ -155,3 +155,9 @@ New state `BLUS30068_1_3` (10:11, a 147 MB state, so likely in a race; check wha
   `screen_frame_draws` (`0x0`): the title is now whole and flat on the fixed screen
   (`evidence/sr-title-2026-10-06/`). The attract-mode replay after it stays 3D (a race). The menus reached from the
   title (Championship, Quick Race track choice, leagues, cars) were already flat.
+- **Bird shadows / right-eye smear: fixed (fork b27f65716, generic).** From `sr_blob` the right eye showed a brown smear
+  on the car's rear window that moved with the car (not head-locked); flat shows only a small bird shadow there
+  (`evidence/sr-dust-2026-10-06/`). The soft dust particles (`ba8d669882cb85e2`, 640x360) read a 640x720 half-width
+  depth (`f78638bb` into `50610000`) that the renderer shared between the eyes as 2D content (a camera draw marked
+  only its colour targets as 3D). Depth buffers now count as 3D: both eyes clean. Matt's "bird shadows stuck to the
+  HMD" is probably this (dust drawn with the wrong eye's depth); recheck in the headset where birds fly.

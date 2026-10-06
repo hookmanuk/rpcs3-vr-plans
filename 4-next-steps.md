@@ -839,6 +839,17 @@ ran frame-locked games at the speed ratio. They now follow the smoothed time bet
 unchanged. Affects every profile with these keys (God of War, GT5, R&C, KH, Gundam, Dante's Inferno, ...): recheck a
 few at full rate in the next release smoke test. vr8 workaround: VR Frame Rate set to a rate the PC holds.
 
+## Depth buffers count as 3D; new-frame measure (2026-10-06, fork b27f65716)
+
+- `vr_mark_3d_targets` now also marks the bound depth buffer of a camera draw (a full depth clear resets it). A pass
+  that reads the scene depth into an off-aspect target (SEGA Rally's 640x720 half-width depth for its soft dust
+  particles) was treated as eye-invariant, so the right eye used the left eye's depth: a dust smear over the car in
+  one eye. Cost measured: none (MotorStorm 71.5-71.8 vs 71.9 at 72; SEGA Rally and X-Men equal on both builds).
+- `RPCS3_VR_FRAMESTATS` prints **new frames/s** (flips whose first game camera changed). Release rates must be the
+  new-frame rate: Sonic flips at 72-120 but simulates at 60. Checked 2026-10-06 (subset, simulator, 300%): R&C 1/3,
+  MotorStorm, Gundam, SEGA Rally, Dragon Age: Origins make a new frame on every flip.
+- R&C's character shadow: profile key `depth_remap_uv` (fork 5466b0d33), see `profiles/README.md`.
+
 ## Unreleased games
 
 Per-game state for everything not yet released (Split/Second, Blur, inFamous 1 and 2, MGS4, NFS Most Wanted,

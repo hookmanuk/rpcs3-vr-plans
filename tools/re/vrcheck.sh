@@ -32,7 +32,7 @@ if [ "${PITCH:-0}" = 1 ]; then pose 0 0.436; sleep 1; py -3.13 simshot.py "${out
 pose 0
 grep -a "OpenXR: Headset\|First stereo frame\|VR profile loaded" /f/rpsc3/source/rpcs3/bin/log/RPCS3.log | cut -c1-160 | head -4
 if [ "${KEEP:-0}" != 1 ]; then
-  powershell -c "Get-Process rpcs3 -ErrorAction SilentlyContinue | Stop-Process -Force; while (Get-Process rpcs3 -ErrorAction SilentlyContinue) { Start-Sleep -Milliseconds 200 }"; sleep 1
+  powershell -c "Get-Process rpcs3 -ErrorAction SilentlyContinue | Stop-Process -Force; \$t=0; while ((Get-Process rpcs3 -ErrorAction SilentlyContinue | Where-Object { \$_.Threads.Count -gt 1 }) -and \$t -lt 150) { Start-Sleep -Milliseconds 200; \$t++ }"; sleep 1
   if [ $had = 1 ]; then mv -f "$C.vrcheck.bak" "$C"; else rm -f "$C"; fi
   [ $padhad = 0 ] && rm -r "${P:?}"
 fi

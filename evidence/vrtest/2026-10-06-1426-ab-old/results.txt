@@ -1,0 +1,9 @@
+# path: OpenXR Simulator, RPCS3_VR_MULTIVIEW=default, build ce4e262fc VR profile SEGA Rally: the title screen goes on th
+# BLUS30068 vrtest_segarally_race: SEGA Rally Revo: Safari, race start (holds R2; Unlocked frame rate + Wider view 2.0)
+BLUS30068 vrtest_segarally_race vblank 90 scale 300%:
+   713 frames over 8.0 s: avg 89.1 FPS, 1% low 69.1, 0.1% low 63.7 (worst frame 15.7 ms), median 11.03 ms, late 0.00%, RSX thread 8.59 ms/frame
+   635 frames over 8.0 s: avg 79.3 FPS, 1% low 57.3, 0.1% low 22.7 (worst frame 44.1 ms), median 12.15 ms, late 0.47%, RSX thread 10.87 ms/frame
+   666 frames over 8.0 s: avg 83.2 FPS, 1% low 67.1, 0.1% low 35.6 (worst frame 28.1 ms), median 12.06 ms, late 0.15%, RSX thread 11.68 ms/frame
+   => median of 3 windows: avg 83.2 FPS, 1% low 67.1, late frames 0.15%, RSX thread 10.87 ms/frame
+SUSTAINABLE BLUS30068 vrtest_segarally_race: none Hz
+DONE /f/rpsc3/source/plans/evidence/vrtest/2026-10-06-1426-ab-old

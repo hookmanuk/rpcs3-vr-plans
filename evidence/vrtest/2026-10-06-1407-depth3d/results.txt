@@ -1,0 +1,14 @@
+# path: OpenXR Simulator, RPCS3_VR_MULTIVIEW=default, build ce4e262fc VR profile SEGA Rally: the title screen goes on th
+# BCUS98282 vrtest_rc1_veldin: Ratchet & Clank 1: Veldin, start (HelpDesk tip on screen)
+BCUS98282 vrtest_rc1_veldin vblank 72 scale 300%:
+   550 frames over 8.0 s: avg 68.7 FPS, 1% low 48.9, 0.1% low 46.3 (worst frame 21.6 ms), median 14.57 ms, late 0.00%, RSX thread 12.88 ms/frame, new frames 68.7/s
+   556 frames over 8.0 s: avg 69.5 FPS, 1% low 50.3, 0.1% low 48.8 (worst frame 20.5 ms), median 14.28 ms, late 0.00%, RSX thread 12.52 ms/frame, new frames 69.5/s
+   557 frames over 8.0 s: avg 69.5 FPS, 1% low 50.5, 0.1% low 47.7 (worst frame 21.0 ms), median 14.31 ms, late 0.00%, RSX thread 12.55 ms/frame, new frames 69.5/s
+   => median of 3 windows: avg 69.5 FPS, 1% low 50.3, late frames 0.00%, RSX thread 12.55 ms/frame
+SUSTAINABLE BCUS98282 vrtest_rc1_veldin: none Hz
+# BCUS98282 vrtest_rc2_aranos: Ratchet & Clank 2: Aranos interior (light scene)
+BCUS98282 vrtest_rc2_aranos vblank 72 scale 300%:
+   577 frames over 8.0 s: avg 72.0 FPS, 1% low 64.8, 0.1% low 62.7 (worst frame 15.9 ms), median 13.94 ms, late 0.00%, RSX thread 2.14 ms/frame, new frames 72.0/s
+   577 frames over 8.0 s: avg 72.0 FPS, 1% low 64.6, 0.1% low 62.9 (worst frame 15.9 ms), median 13.90 ms, late 0.00%, RSX thread 2.19 ms/frame, new frames 72.0/s
+   576 frames over 8.0 s: avg 72.0 FPS, 1% low 63.5, 0.1% low 43.3 (worst frame 23.1 ms), median 13.90 ms, late 0.17%, RSX thread 2.10 ms/frame, new frames 72.0/s
+   => median of 3 windows: avg 72.0 FPS, 1% low 64.6, late frames 0.00%, RSX thread 2.14 ms/frame

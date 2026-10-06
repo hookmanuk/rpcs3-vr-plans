@@ -18,7 +18,7 @@ sleep 5
 mark=$(grep -ac 'VR peek' /f/rpsc3/source/rpcs3/bin/log/RPCS3.log)
 sh keys.sh 'C 300 100\n'
 sleep 4
-powershell -c "Get-Process rpcs3 -ErrorAction SilentlyContinue | Stop-Process -Force; while (Get-Process rpcs3 -ErrorAction SilentlyContinue) { Start-Sleep -Milliseconds 200 }"
+powershell -c "Get-Process rpcs3 -ErrorAction SilentlyContinue | Stop-Process -Force; \$t=0; while ((Get-Process rpcs3 -ErrorAction SilentlyContinue | Where-Object { \$_.Threads.Count -gt 1 }) -and \$t -lt 150) { Start-Sleep -Milliseconds 200; \$t++ }"
 rm -f "$C"; [ -f "$C" ] && echo "WARNING: temporary $C still present"
 [ $padhad = 0 ] && rm -r "${P:?}"
 grep -a 'VR peek' /f/rpsc3/source/rpcs3/bin/log/RPCS3.log | tail -n +$((mark + 1)) | py -3.13 -c "

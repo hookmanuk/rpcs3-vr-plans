@@ -18,7 +18,7 @@ sleep 40; touch "$G"
 for i in $(seq 1 120); do grep -aq "VR profile written\|VRGEN.*fail\|cannot write" $L && break; sleep 1; done
 sleep 2
 grep -a "VRGEN" $L | cut -c1-600 > "$SP/$id.genlog.txt"
-powershell -c "Get-Process rpcs3 -ErrorAction SilentlyContinue | Stop-Process -Force; while (Get-Process rpcs3 -ErrorAction SilentlyContinue) { Start-Sleep -Milliseconds 200 }"
+powershell -c "Get-Process rpcs3 -ErrorAction SilentlyContinue | Stop-Process -Force; \$t=0; while ((Get-Process rpcs3 -ErrorAction SilentlyContinue | Where-Object { \$_.Threads.Count -gt 1 }) -and \$t -lt 150) { Start-Sleep -Milliseconds 200; \$t++ }"
 sleep 1
 for f in $B/vr_profiles/$id.json $B/vr_profiles/$id.*.json; do [ -f "$f" ] && mv "$f" "$SP/$id.gen.$(basename $f)"; done
 cp "$SP/$id.keep.json" "$J"
