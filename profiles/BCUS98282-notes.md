@@ -152,3 +152,23 @@ Tried and reverted: `frames_without_3d_as_screen: true` (R&C 1): no change (the 
 
 Sustained at 300%: R&C 1 **90 Hz** (was 72; RSX thread 13 -> 8.5 ms: the level no longer took the HUD-box path),
 R&C 2 120, R&C 3 90 (was 72), R&C 2 machinery hall 120.
+
+## 2026-10-06: menus flat, Wider view patches, shadow traced (open)
+
+- **Menus:** state `BCUS98282_1_4` (Veldin map). Frames put on the fixed screen kept each eye's image (the frozen level
+  behind the map had stereo; boxes did not line up): generic fix, both eyes show the left eye's image (fork 234cadcf6).
+  Map from the state and opened over the level: 0 px differ between eyes; pause menu 1 px. Matt approved in the headset.
+- **Culling:** projection matrix at `0x95db50` (R&C 1, A 1.15207, B 2.04813); written at `0x52cf7c` in the builder
+  `0x52cdc0` (args f1 = vertical FOV in degrees, f2/f3 near/far; table `0x52cd40`: 4/3, 16/9, deg->rad, 0.5, pi/2,
+  2; cot via `0x62af34`), called from `0x87a2c` after `fmuls f1, f1, f5` (FOV x zoom) at `0x87a28`. R&C 2: matrix
+  `0x14257d0`, builder `0x10b3010`, hook `0xb194d8` (same instruction). R&C 3: matrix `0xd05ea0`, builder ~`0x970148`,
+  hook `0x128d24` (`fmr f1, f4`). Patch `BCUS98282_patch.yml` (three executables), calloc cave: min(FOV x Scale, 150).
+  Evidence `evidence/rc-culling-2026-10-06/` (`rcw1` = 1.0: towers missing at yaw 40; `rcw` = 2.0: present).
+- **Shadow (open):** the frame ends with the character shadow chain: `f78638c5` copies the scene depth (`c0f80000` read
+  as 2560x720) into `c1ac0000`; Ratchet is drawn from the light by `ef49d731` (orthographic, 512x512 `c0000000`, depth
+  `c1e80000`); `1459aa3afca2e172` draws projector volumes (stencil pass into depth only, then colour into `c1700000`)
+  whose fragment program rebuilds the view position from `wpos` x fc0 and the depth texel at tc0/tc0.w with fc4-fc6,
+  then fc7-fc10 (view -> light) and a shadow-compare lookup; `f78638c5` blends `c1700000` onto the scene. In VR the
+  window position and depth are the eye's but fc4-fc10 assume the game camera, so the lookup slides off with head
+  pitch. A fix needs the per-eye correction of fc7-fc10 (light matrix x eye-to-game view transform) or of `wpos`;
+  the depth-remap extension to `wpos` did not work because tc0 is not a clip position (vertex program not read yet).

@@ -33,9 +33,16 @@ State `BCUS98282_1_4` (map menu open). Open items, in order:
 1. ~~Menus rendered in 3D (boxes not lined up between the eyes)~~ **fixed 2026-10-06 (fork 234cadcf6):** frames on the
    fixed screen as menus/pauses are flat (both eyes see the left eye's image); Matt checked it in the headset. Generic.
 2. **Ratchet's shadow appears and disappears as the head pitches** (Triangle to close the map, then look up/down):
-   reproduced on the simulator (there at 0 and +8 degrees, gone at +16, +24, -16). Being traced.
-3. **Culling: the background draws in too late** (the game culls to its own view; needs a Wider view patch).
-4. Then the same fixes for R&C 2 and 3.
+   reproduced on the simulator (there at 0 and +8 degrees, gone at +16, +24, -16). **Open:** traced to the shadow
+   projector `1459aa3afca2e172`, which rebuilds each pixel's view position from its window position and the scene depth
+   with the game camera's constants; the eye's rotation breaks it. Tried, no fix (reverted): `require_camera_aspect`,
+   `game_camera_target_widths [512]`, `gamecam`, `depth_remap_programs` (also extended to the window position),
+   `unboxed_draws` for the full-screen passes. See notes.
+3. ~~Culling: the background draws in too late~~ **patch 2026-10-06 (fork 0402d6b9f, 2/3 in the next commit):**
+   *Wider view (VR culling)* for R&C 1, 2 and 3 (hook where each game passes the field of view to its projection
+   builder). Default Scale 1.25: R&C 1 is RSX-bound and pays for every extra object (VR 72: 72 -> 69.5 FPS at 1.25;
+   uncapped 109 / 92 / 72 / 58 FPS at 1.0 / 1.25 / 1.5 / 2.0). R&C 2 (168 uncapped) and R&C 3 (119) have headroom.
+4. Menus flat in R&C 2 and 3 too (generic). The shadow issue is probably the same engine in 2 and 3 (unchecked).
 
 ## Second headset test (Matt, 90 Hz, 2026-10-01 late): continue here
 
