@@ -58,7 +58,16 @@ State `BCUS98282_1_4` (map menu open). Open items, in order:
    uncapped 109 / 92 / 72 / 58 FPS at 1.0 / 1.25 / 1.5 / 2.0). R&C 2 (168 uncapped) and R&C 3 (119) have headroom.
 4. Menus flat in R&C 2 and 3 too (generic). Shadow fix applied to 2 and 3 (same projector, checked on the simulator).
 5. **Matt, headset, 2026-10-07: R&C 1 looks good now (menus, shadow, culling); performance is the remaining issue.**
-   New state `BCUS98282_1_5` (2026-10-06 22:14) runs at about 70 FPS. Task: improve performance there (in progress).
+   New state `BCUS98282_1_5` (2026-10-06 22:14, loads with the Start menu open) runs at about 70 FPS. **2026-10-07
+   measurements** (simulator, 300%, VR 72, standing after closing the menu; this PC's `dwm.exe` was using ~3.7 cores
+   throughout, so absolute numbers read low): Wider view 1.25 (default) 60 FPS, RSX thread 16.3 ms/frame; Scale 1.0
+   70 FPS, 13.4 ms; flat (render=0) at 1.25 72 FPS, 11.0 ms. So the scene is RSX-thread-bound: ~4,650 camera draws a
+   frame, the culling widening adds ~3 ms here and the VR per-draw work ~5 ms (~1 us/draw, spread thinly: eye
+   constants pair ~18%, probe apply/bind ~7%, no single hot spot; `RPCS3_RSX_SAMPLE=3`).
+   Tried: Multithreaded RSX on: +1.5 FPS (61.7 vs 60.0). Horizontal-only widening (aspect constant `0x52cd44`
+   16/9 -> 2.222 with Scale 1.0): 66 FPS, but the image is squeezed horizontally in the headset (the eye remap does not
+   follow the changed aspect): not usable as is. Options left: per-draw VR path optimisation (measured A/B), or a lower
+   default Scale. **Matt: `dwm.exe` using ~3.7 cores with nothing running is likely costing your own runs too.**
 6. **Open:** R&C 1 at VR 72 (`rc1_veldin`, simulator, 300%) by Wider view Scale: 1.0 72.0 FPS, 1.1 71.7, 1.15 71.2,
    1.25 69.5-70.0 (four runs). 1.1 brings the late scenery back (gate arch at yaw -40, plants ahead and at +40:
    `evidence/ratchet/culling-scale-2026-10-06/`), so 1.25 stays the default. Not resolution-bound (200%: 69.7). At
