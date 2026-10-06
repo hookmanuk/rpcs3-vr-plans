@@ -25,6 +25,13 @@ half angle): x Scale, capped at 1.3 rad (149 degrees). Scale 1.0: rooms end in b
 turns (`evidence/heavy-rain-2026-10-07/vr_poses_scale_1.0_culled.png`); 2.5 fills the room
 (`vr_poses_scale_2.5.png`), some black remains past the doorway/window at yaw 20.
 
+## Pause menu (fixed 2026-10-07)
+
+The pause menu (Start) followed the head over a stereo background: its frames have no camera draws (a 320x180 blurred
+copy of the scene plus the menu, `2f7d1784dfd94351`). `frames_without_3d_as_screen: true` puts them on the world-fixed
+screen (`pause_before_headlocked.png` / `pause_after_fixed_screen.png`). Watch for short flashes onto the screen in
+gameplay transitions or cutscene black frames.
+
 ## Open
 
 - Headset check of the whole game: menus, QTE prompts (drawn in the world), cinematic camera cuts (the camera changes
