@@ -149,3 +149,9 @@ New state `BLUS30068_1_3` (10:11, a 147 MB state, so likely in a race; check wha
   scene draws and no birds on screen. Needs the place where birds appear.
 - **3D "SEGA Rally" logo behind the track choice:** not found yet: the league, car and event screens reached from
   `BLUS30068_1_2` are all flat on the fixed screen; the logo screen is elsewhere in the menus.
+- **Fixed (later 2026-10-06): the title screen** ("SEGA RALLY REVO" logo, PRESS START BUTTON, after the boot logos) was
+  drawn in the headset view in stereo: a small panel with the text below it. Its frame has neither menu marker; it
+  draws a 3D background with `9e0f6220216133cc` (texture on unit 1, unit 0 unbound), which no race uses. Added to
+  `screen_frame_draws` (`0x0`): the title is now whole and flat on the fixed screen
+  (`evidence/sr-title-2026-10-06/`). The attract-mode replay after it stays 3D (a race). The menus reached from the
+  title (Championship, Quick Race track choice, leagues, cars) were already flat.
