@@ -107,3 +107,5 @@ unchanged after every run), character Amuro, Mission 1. Scripts: scratchpad `gdr
   a target-width rule. No draw renders into the portrait's memory. Next: compare that draw's bound texture, sampler and
   vertex output between render=0 and render=1 (inspector capture of the same dialogue frame each way), and hide the
   frame pieces (`hidden_draws` 2f66 @64x256) during a dialogue.
+  Ruled out too: the 256x256 render target `0xca310000` the dialogue frame samples is the minimap (RTDUMP), not a
+  portrait.
