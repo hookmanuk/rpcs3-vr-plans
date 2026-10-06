@@ -132,4 +132,14 @@ differs between the left and right eye.
   (objects the game never draws at the screen edge get a shadow lookup from cascades fitted to its own frustum, which
   differ per eye). Next: the shadow cascade fit's coverage (make it fit the culled area), or a per-eye shadow-mask
   program to remap, from an inspector capture of this frame (none taken yet for Sonic).
+- **Shadow mask per eye (2026-10-06):** inspector capture of the fly-by: the deferred shadow mask is `c1d38000`
+  (1280x720, white = lit), drawn by `ed46d28a122d7235` cascade boxes with stencil passes `2fe8ebfb47d877be` (draws
+  1414-1423, three cascades), plus the 640x360 pass into `c0dc0000`. Per-eye RTDUMPs (multiview off, 100%):
+  `m_wv1.png` (Wider view 1.0): masks agree. `m_cur.png` (3.0, profile as is): the masks differ along the cascade
+  boundaries (the right eye has a shadowed ring over the loop and the left pillars). `m_noremap.png` (depth remap off):
+  they differ too, differently. Hiding every `ed46` draw removes the loop's shadow on the track but leaves stale mask
+  contents, so that test proves nothing. Also tried, no change: cascade-fit FOV readers x2 with the cull-only patch
+  (`son_cw`). So the 2026-10-04 ray remap is right at the game FOV but not when the game's projection is widened
+  ~3x: next, check `game_projection_scale` (A, B) against the cascades' own camera rows at Wider view 3.0 (log them for
+  `why=ed46d28a122d7235`), and whether the box draws' eye transform and the remap use the same projection.
 No sound in that run was a test leftover (`Audio Renderer: Null` in the custom config), restored to Cubeb.
