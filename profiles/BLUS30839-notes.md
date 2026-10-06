@@ -220,3 +220,27 @@ replay) re-presents its last frame on the other vblanks. Likely a fixed 1/60 sim
 Tried: poking each 1/60 float in the ELF (`0x30611c` .. `0x85c894`, 14) to 1/120 live: no clear change, but the
 measure was confounded (the unattended car stops, and a still camera repeats too). Next: find the step with a counter
 that increments once per simulation step (not the camera), or trace the game thread's wait on the render thread.
+
+## 2026-10-06 (later): the simulation is CPU-bound at about 30 Hz in VR 90
+
+Measured on the simulator, `vrtest_sonic_race`, accelerating, VR 90 Hz: 90 flips/s but the render camera (`0xcf1810`,
+16 words, `RPCS3_VR_PEEK`) changes on 33% of frames: **~30 simulation steps per second** (at Vblank 180 it was ~58).
+So each step takes about three vblanks at either rate.
+
+Frame pipeline (code read, `elf/BLUS30839.elf`):
+- Main thread (`0x212d98`): queues the frame for the renderer, sets event flag `[0xcf2e80]`, then waits in
+  `sys_semaphore_wait([0xcf23f0])` (`0x212e7c`) until the renderer takes the frame (posted in `0x214208` / `0x214d70`).
+- Renderer (`SlRenderer`, loop `0x20cdd8`): waits in `sys_event_queue_receive([0xcf2f34])` (`0x218018`) for the
+  event the **flip handler** (`0x2181e4`, registered at `0x217bbc` with the vblank handler `0x21821c` and flip mode 1)
+  sends on every flip, then replays the latest command list (the last frame again when no new one is ready).
+- The vblank handler releases the flip label every `[0xc2e4d8]` vblanks; the unlock patch makes it 1. Writing 1 to the
+  variable itself changes nothing (30/s before and after).
+- `RPCS3_PPU_SAMPLE`: main thread 55-59% in that semaphore wait, the rest spread over game code: **~13-14 ms of PPU
+  work per step**. Renderer 51% waiting for the flip event, 15% polling (`0x259700`, 30 us usleeps until outstanding
+  SPU jobs reach 0).
+
+A step is ~13.7 ms of main-thread work plus the hand-off to the renderer, which only takes a frame on a flip event: at
+90 Hz that is more than two vblanks (22 ms), so a new frame shows every third flip (30 Hz); at 180 Hz three vblanks are
+16.7 ms (~58 Hz). Even with no hand-off latency the main thread caps the simulation near 73 Hz, so **72 Hz VR with a new
+frame every refresh is out of reach on this PC** (Ryzen 7 9800X3D). This is what Matt felt as "60 inside 90". The
+frame-rate column (90 Hz) counted flips, not new frames.
