@@ -124,3 +124,17 @@ Straight, yaw +-20, pitch +-10, roll 15 (`posecheck.sh`, race): road, car and HU
   | profile `zcull_relaxed_sync` (new) | 90.0 / 88.8, late 0-0.28% | |
   After: the RSX thread waits on the game ~35% of the time (6.8-10 ms a frame); race burst shots relaxed vs strict
   show nothing missing or flickering. Profile now `zcull_relaxed_sync: true`.
+
+## Open (Matt, headset, 2026-10-06)
+
+New state `BLUS30068_1_3` (10:11, a 147 MB state, so likely in a race; check what it shows). Not investigated:
+1. **Main menu, track choice:** a "SEGA Rally" text logo behind the track choice is drawn in 3D, wrongly and painfully;
+   it should be flat. The 2026-10-05 fix put frames with the menu background `860c2ce6c6398a2c` or the cards
+   `5e4fd5886053bfac` on the fixed screen; the track-choice screen is probably drawn without either, so it stays in
+   the headset view. Find its own marker program (inspector capture of that screen vs a race) and add it to
+   `screen_frame_draws`.
+2. **Bird shadows head-locked in races:** when birds appear, their shadows stay fixed to the HMD wherever the birds are.
+   Probably a shadow/decal program drawn without a camera block (projected by the game), as `preprojected_programs`.
+3. **Rear-view mirror head-locked** instead of sitting at the top of the HUD box. GT5's mirror used
+   `subviewport_cameras_in_box` (with `hud_box_after_shader`); check how SEGA Rally draws its mirror (its own target
+   copied in, or a sub-viewport of the scene).
