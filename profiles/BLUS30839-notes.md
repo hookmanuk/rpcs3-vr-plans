@@ -258,4 +258,4 @@ does, and each eye's mask matches its own scene but the right one has shadows th
 computed per eye in `apply_render_eye` and written right after it (per eye in both paths). Next ideas: the cascades are
 fitted to the game camera's frustum (50 degrees) and the right eye sees past its right edge, where the mask samples
 outside the fitted cascade; compare the mask with the cascade split constants per eye, and test a wider culling Scale
-(the fit may follow the culling camera).
+(the fit may follow the culling camera). **Tested:** Wider view Scale 1.0 shows the same right-eye shadow, so not the culling camera.
