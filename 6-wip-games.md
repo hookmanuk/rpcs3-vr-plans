@@ -42,7 +42,11 @@ State `BCUS98282_1_4` (map menu open). Open items, in order:
    builder). Default Scale 1.25: R&C 1 is RSX-bound and pays for every extra object (VR 72: 72 -> 69.5 FPS at 1.25;
    uncapped 109 / 92 / 72 / 58 FPS at 1.0 / 1.25 / 1.5 / 2.0). R&C 2 (168 uncapped) and R&C 3 (119) have headroom.
 4. Menus flat in R&C 2 and 3 too (generic). Shadow fix applied to 2 and 3 (same projector, checked on the simulator).
-5. **Open:** R&C 1 drops to 69.5 FPS at VR 72 with the Wider view default 1.25 (below the 72 minimum).
+5. **Open:** R&C 1 at VR 72 (`rc1_veldin`, simulator, 300%) by Wider view Scale: 1.0 72.0 FPS, 1.1 71.7, 1.15 71.2,
+   1.25 69.5-70.0 (four runs). 1.1 brings the late scenery back (gate arch at yaw -40, plants ahead and at +40:
+   `evidence/ratchet/culling-scale-2026-10-06/`), so 1.25 stays the default. Not resolution-bound (200%: 69.7). At
+   vblank 120 the same scene runs 94 FPS (RSX thread 10.5 ms/frame, 12.2 at vblank 72), so the shortfall at 72 is in
+   how the game paces to the vblank, not raw speed. Next: why a 10.5 ms frame cannot hold 13.9 ms vblanks.
 
 ## Second headset test (Matt, 90 Hz, 2026-10-01 late): continue here
 
