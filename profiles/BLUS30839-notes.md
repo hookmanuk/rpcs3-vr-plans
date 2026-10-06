@@ -158,3 +158,19 @@ differs between the left and right eye.
   3. Wider view 1.0 (off): shadows and loop right, sky and scenery cut when turning or looking up.
   The loop bars are culling-related (they come with any wider culling).
 No sound in that run was a test leftover (`Audio Renderer: Null` in the custom config), restored to Cubeb.
+
+## Proper fix in progress (2026-10-06)
+
+- The getter `0x1dd760` ("cull-only" 2.0 above) is not cull-only: flat with it the game renders a 150-degree fisheye.
+  It builds the camera's projection; `0x1e1174` multiplies it with the view into the camera object, then `0x1e3dfc`
+  copies the view-projection (transposed) to `0xcf1810` and the 0x80-byte block `0xcf1800` (header, VP, viewport
+  640/-360/1, 640.5/360.5) into a per-frame buffer whose pointer (`0xcf1884`) goes into every SPU render job
+  descriptor (`0x1e5734`); `0xcf1888` is a per-object 3x4. So the SPU jobs transform and cull with one matrix.
+- **Candidate *Wider view* 3.0** (`tools/re/son_wider_v3_candidate.yml`, not shipped): the camera is built twice a
+  frame, first at the game FOV (render matrices for the RSX and the SPU jobs), then widened with the global copy
+  skipped, so only the camera object's own matrices are wide (caves at `0xbe8f90`/`0xbe8fbc`/`0xbe8fe8`, calls told
+  apart by return-address bit 2; `0xb8024` restored). Result (`son_v3_twocall_sheet.png`): near scenery and the loop are
+  filled, with no blue slits on the loop and the pillars' shading alike in both eyes; but the sky dome and the distant
+  land and sea still stop at the game's frame (cyan beyond): those are culled by the SPU jobs with the narrow matrix.
+- Next: find the SPU job's frustum test (the job image the descriptor at `0x1e5708` launches) and widen only its clip
+  comparison (an SPU patch), keeping the transform. Then check shadows and frame rate.

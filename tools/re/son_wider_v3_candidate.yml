@@ -1,0 +1,70 @@
+Version: 1.2
+
+PPU-ffd4f8966a67f15ea02a903c3a9bc96c39fa7087:
+  "Unlocked frame rate (follows Vblank Rate)":
+    Games:
+      "Sonic & All-Stars Racing Transformed":
+        BLUS30839: [ 01.00 ]
+    Author: "VR fork"
+    Notes: "Presents a frame on every vblank instead of every second one: the game runs at the vblank rate (60 on a TV, the headset's refresh rate in VR) instead of 30. The game steps by measured time, so it stays real-time at any rate. The vblank handler (0x21821c) releases the flip label every [0xc2e4d8] vblanks (2); this makes it 1."
+    Patch Version: 1.0
+    Enabled By Default: true
+    Apply To Savestates: true
+    Patch:
+      - [ be32, 0x00218230, 0x38a00001 ] # li r5, 1 (was lwz r5, -0x1b28(r5): the flip interval, 2)
+
+  "Wider view (VR culling)":
+    Games:
+      "Sonic & All-Stars Racing Transformed":
+        BLUS30839: [ 01.00 ]
+    Author: "VR fork"
+    Notes: "Widens the race camera's field of view (50 degrees high on the grid, up to about 80 with boost) by the chosen scale, up to 150 degrees, where the game copies it into the render camera (0xb8024). The game culls the scenery and the sky against this frustum, so the parts of the track and sky the headset shows beyond the game's own view are no longer missing. The VR renderer remaps from the game's projection, so the headset image keeps its scale; flat play shows a wide-angle view (choose 1.0 to play flat). The code is in the unused tail of the code segment (0xbe8f90)."
+    Configurable Values:
+      "Scale":
+        Type: double_enum
+        Value: 3.0
+        Allowed Values:
+          "1.0 (off: 50 degrees high)": 1.0
+          "1.5 (75 degrees)": 1.5
+          "2.0 (100 degrees)": 2.0
+          "2.5 (125 degrees)": 2.5
+          "3.0 (150 degrees, maximum, recommended)": 3.0
+    Patch Version: 3.0
+    Enabled By Default: true
+    Apply To Savestates: true
+    Patch:
+      - [ be32, 0x000b8024, 0xc03f0144 ] # lfs f1, 0x144(r31): the render camera keeps the game's field of view (restores version 1.0's hook)
+      # The culling camera is built twice a frame: at the game's field of view (the render matrices for the RSX and the SPU jobs),
+      # then widened with the global copy skipped, so only the culling camera's own matrices are wide. The two calls are told apart
+      # by their return address (bit 2): 0xbe8fa0 first, 0xbe8fac second.
+      - [ be32, 0x0028a304, 0x4895ec8d ] # bl 0xbe8f90 (was bl 0x1dd75c: build the culling camera)
+      - [ be32, 0x00be8f90, 0x7c0802a6 ] # mflr r0
+      - [ be32, 0x00be8f94, 0xf821ff91 ] # stdu r1, -0x70(r1)
+      - [ be32, 0x00be8f98, 0xf8010080 ] # std r0, 0x80(r1)
+      - [ be32, 0x00be8f9c, 0x4b5f47c1 ] # bl 0x1dd75c (game field of view)
+      - [ be32, 0x00be8fa0, 0x807b001c ] # lwz r3, 0x1c(r27)
+      - [ be32, 0x00be8fa4, 0x63c40000 ] # ori r4, r30, 0
+      - [ be32, 0x00be8fa8, 0x4b5f47b5 ] # bl 0x1dd75c (widened)
+      - [ be32, 0x00be8fac, 0xe8010080 ] # ld r0, 0x80(r1)
+      - [ be32, 0x00be8fb0, 0x38210070 ] # addi r1, r1, 0x70
+      - [ be32, 0x00be8fb4, 0x7c0803a6 ] # mtlr r0
+      - [ be32, 0x00be8fb8, 0x4e800020 ] # blr
+      - [ be32, 0x001dd778, 0x48a0b845 ] # bl 0xbe8fbc (was lfs f28, 0x38(r3): the field of view)
+      - [ be32, 0x00be8fbc, 0xc3830038 ] # lfs f28, 0x38(r3)
+      - [ be32, 0x00be8fc0, 0xe9810100 ] # ld r12, 0x100(r1): this call's return address
+      - [ be32, 0x00be8fc4, 0x71800004 ] # andi. r0, r12, 4
+      - [ be32, 0x00be8fc8, 0x4d820020 ] # beqlr (first call: game field of view)
+      - [ be32, 0x00be8fcc, 0x3d8000bf ] # lis r12, 0xbf
+      - [ be32, 0x00be8fd0, 0xc00c8f88 ] # lfs f0, -0x7078(r12)   Scale
+      - [ be32, 0x00be8fd4, 0xef9c0032 ] # fmuls f28, f28, f0
+      - [ be32, 0x00be8fd8, 0xc00c8f8c ] # lfs f0, -0x7074(r12)   maximum
+      - [ be32, 0x00be8fdc, 0xedbc0028 ] # fsubs f13, f28, f0
+      - [ be32, 0x00be8fe0, 0xff8de02e ] # fsel f28, f13, f0, f28
+      - [ be32, 0x00be8fe4, 0x4e800020 ] # blr
+      - [ be32, 0x001e1470, 0x48a07b79 ] # bl 0xbe8fe8 (was bl 0x1e3dfc: copy the matrices for the RSX and SPU jobs)
+      - [ be32, 0x00be8fe8, 0xe9810210 ] # ld r12, 0x210(r1): the camera build's return address
+      - [ be32, 0x00be8fec, 0x71800004 ] # andi. r0, r12, 4
+      - [ be32, 0x00be8ff0, 0x4c820020 ] # bnelr (second call: keep the game field of view copy)
+      - [ be32, 0x00be8ff4, 0x4b5fae08 ] # b 0x1e3dfc
+      - [ bef32, 0x00be8f88, "Scale" ]
+      - [ bef32, 0x00be8f8c, 2.61799 ]   # 150 degrees (radians)
