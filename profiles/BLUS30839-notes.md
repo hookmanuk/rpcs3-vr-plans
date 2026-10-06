@@ -174,3 +174,11 @@ No sound in that run was a test leftover (`Audio Renderer: Null` in the custom c
   land and sea still stop at the game's frame (cyan beyond): those are culled by the SPU jobs with the narrow matrix.
 - Next: find the SPU job's frustum test (the job image the descriptor at `0x1e5708` launches) and widen only its clip
   comparison (an SPU patch), keeping the transform. Then check shadows and frame rate.
+- **Candidate 4.0** (`tools/re/son_wider_v4_candidate.yml`): a `calloc` cave builds the camera at the game FOV, then
+  widened, then copies the first build's block back over `0xcf1800`. Same result as 3.0 (`son_v4_restore_sheet.png`):
+  near scene filled, render normal, far sky/land/sea cut at the game's frame. Reason: `0x1e3cf8` (from `0x1e3ff4`)
+  re-copies `0xcf1800` into a fresh SPU buffer per render pass and updates `0xcf1884`, so the SPU jobs always see the
+  render block. The SPU jobs both build the draws (transform) and cull from that one copy.
+- **Remaining step:** an SPU patch that widens only the job's clip/cull comparison. Needs: the job image (descriptor
+  built around `0x1e5588`..`0x1e5800`, list head `0xcf188c`), its SPU disassembly, and the frustum test on the matrix
+  it DMAs. RPCS3 SPU patches are keyed by the SPU program hash.
