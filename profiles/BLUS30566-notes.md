@@ -46,3 +46,13 @@ Executable `PPU-edd75fcdb84e1c33c0c4d05a93143832e374b5d1`. No community patch ex
 
 Status: **not 90 yet.** 60 FPS real time works; 72/90 needs the simulation step changed to 1/72 or 1/90 (or the flip
 count kept at 2 and Vblank 144/180, which still simulates at 60).
+
+## 2026-10-07: per-eye car shadow (open)
+
+The car's shadow sits left of the car in the left eye and right of it in the right eye, at every pose: the parallax of
+something at the wrong depth, or a shadow lookup built for the game camera. Not a depth-reading pass (the generator
+lists none), not `depth_offset_projection` (off: unchanged, and a rectangle outline appeared, so kept on). HUD check:
+the speedometer, mirror and bounty stay in the HUD box (they turn with it at yaw and roll), so the 2D HUD is fine.
+Next: find the program that draws the car shadow (inspector, `prog=` RTDUMP before/after) and how its shadow matrix
+is built (likely world -> light from the camera inverse in vertex constants: `game_camera_programs` for it, or a
+depth-remap variant).
