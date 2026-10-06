@@ -90,3 +90,20 @@ last: title and main menu whole on the fixed screen, world-fixed at yaw 20 / pit
 `dwg_odessa0` and `BLUS30058_1_0` stay in the headset view. The pause menu in a mission (Start) was already on the
 fixed screen and world-fixed (`gd_pf_sheet.png`). Portraits: no dialogue showed in ~50 s of either battle state;
 menu navigation by script kept falling back to the title, so a dialogue was not reached.
+
+## Talking portraits (2026-10-06)
+
+Route: disc, Load Save Yes, title Start x2, Right x3 to Official Mode, Cross, "Interim Save Data will be lost" Left+Cross
+(**that discards the in-game interim save**; Matt's `savedata/BLUS30058-00` was backed up with checksums first and was
+unchanged after every run), character Amuro, Mission 1. Scripts: scratchpad `gdroute2.sh`, `gdtolaunch.sh`.
+- **Briefing / pre-mission portraits: fixed** (fork vr-non-working profile). They are 3D head models (`6ee03b711bca1ae1`)
+  drawn into the UI target `cd8a0000`; the head transform moved them out of their frame (empty frame). Profile
+  `game_camera_programs: ["6ee03b711bca1ae1"]`: the heads sit in their frames, world-fixed (`g4_sheet.png`).
+- **Battle dialogue portraits: still blank.** A different path: `2f663733efd6add1` draws a 256x256 **DXT5** texture at
+  `0xcadaf500` (64x256 frame pieces at `0xcadab500`) into `cd8a0000`; the game's own UI layer already has the empty tile
+  (`gdp_ui.png`). Switching the probe to `render=0` live shows the portrait at once, `render=1` hides it again
+  (`gtog_sheet.png`), so it is per draw, not a stale texture. Not the cause (each tested live or on a fresh run):
+  the HUD box (`unboxed_draws`), `hud_keep_depth`, multiview (`RPCS3_VR_MULTIVIEW=0`), `gamecam=2f66...`, probe dev 1/2,
+  a target-width rule. No draw renders into the portrait's memory. Next: compare that draw's bound texture, sampler and
+  vertex output between render=0 and render=1 (inspector capture of the same dialogue frame each way), and hide the
+  frame pieces (`hidden_draws` 2f66 @64x256) during a dialogue.
