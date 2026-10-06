@@ -246,3 +246,16 @@ Where the 60 Hz comes from is not found yet:
   Patching the rounding out (`0x4080c` `beq` -> `b`): still 60.0 new frames/s at Vblank 120. So not this path either.
 Next: sample the main thread with stacks (`RPCS3_PPU_SAMPLE_STACK=main_thread`) at Vblank 120 to see whether its loop
 runs 60 or 120 times a second, then follow whichever wait sets the 60.
+
+## 2026-10-06: per-eye shadows reproduced (open)
+
+Matt's fly-by state `BLUS30839_1_0`, first frame: the **right eye** has a large dark shadow under the roof of the
+building on the right that the left eye and the flat game do not (`evidence/sonic-shadows-2026-10-06/`). Same with:
+the profile's depth remap removed (`depth_remap_*` keys), eye-invariant sharing off (`RPCS3_VR_NO_INVARIANT=1`), and
+two-draw (`RPCS3_VR_MULTIVIEW=0`). So none of those is the cause. Two-draw RTDUMP: shadow map `c0000000` (1024x3072,
+three cascades, 450 draws) has no per-eye copies; the screen-space shadow mask `c1d38000` (pass `ed46d28a122d7235`)
+does, and each eye's mask matches its own scene but the right one has shadows the left lacks. The remap matrix is
+computed per eye in `apply_render_eye` and written right after it (per eye in both paths). Next ideas: the cascades are
+fitted to the game camera's frustum (50 degrees) and the right eye sees past its right edge, where the mask samples
+outside the fitted cascade; compare the mask with the cascade split constants per eye, and test a wider culling Scale
+(the fit may follow the culling camera).
