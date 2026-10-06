@@ -192,3 +192,20 @@ without slits, shadows alike in both eyes (`son_v5_sheet.png`, fly-by poses `pc_
 `pc_son5_sheet.png`). Frame rate went up: 152 FPS vs 114 with 1.0 at Vblank 180, 300% (the narrow render frustum
 draws less). Shipped as *Wider view (VR culling)* 2.0 (fork vr-non-working). Headset recheck: the race, the loop,
 shadows near the edges of the view.
+
+## Not ready (Matt, headset, 2026-10-06, Wider view 2.0 build)
+
+1. **Shadows misaligned between the eyes:** they look wrong. Not investigated. To check first: the profile's shadow
+   remap (`depth_remap_programs: [ed46d28a122d7235]`, `depth_remap_ray_texcoord`, `depth_remap_xyw`) was tuned on
+   2026-10-04 while 1.0 widened the render camera; with 2.0 the render camera is the game's own again, so the remap
+   (or its need) may have changed. A/B with the remap keys removed, per-eye RTDUMP of the shadow mask `c1d38000`.
+2. **Shadows in the wrong place on the track:** some stay in the middle of the track while driving. Not investigated.
+   Candidates: the shadow cascades are fitted from the camera object, and 2.0 rebuilds that object widened for culling
+   after the render copy, so code reading it later for the shadow fit may see the wide camera (the 1.0 note says the
+   cascade fit reads the FOV too); or blob shadows (cars, items) projected with a stale or other-eye matrix.
+3. **Feels like 60 FPS inside 90 Hz** although the frame counter shows 90 locked. Not investigated. Candidates: the
+   game advances its simulation at a fixed 60 Hz and the extra frames repeat positions (check object positions per
+   frame with `RPCS3_VR_PEEK`, as `peekspeed.py`: distinct values per second); or frame pacing (each pair of frames
+   shown unevenly). Was it there with 1.0? Ask Matt / A-B both versions.
+
+Stopped here at Matt's request.
