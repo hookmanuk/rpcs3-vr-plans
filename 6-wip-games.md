@@ -27,6 +27,12 @@ verified at several rates), a generated and hand-fixed profile, and checks on th
 also got a *Wider view (VR culling)* patch. Files in `rpcs3/vr-non-working/` (+ untracked `bin/` copies); regression
 states `vrtest_sonic_race`, `vrtest_dwg_odessa`, `vrtest_xmen_jungle`. Sections below; detail in the notes files.
 
+**Measurement caveat (2026-10-06 afternoon):** an RPCS3 run hung at 12:49 (an R&C savestate run that used Cubeb audio
+with the desktop locked; the process cannot be ended) and the Desktop Window Manager (`dwm.exe`, PID 34288) has used 4
+CPU cores continuously since. Frame rates measured after 12:49 today may be low on CPU-bound games. Ending that
+`dwm.exe` (Windows restarts it) or a reboot clears it; I was not allowed to do that unattended. The A/B comparisons
+(same conditions both sides) still hold.
+
 ## Priority: Ratchet & Clank 1 (almost ready, Matt 2026-10-06), then the same fixes in R&C 2 and 3
 
 State `BCUS98282_1_4` (map menu open). Open items, in order:
