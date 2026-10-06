@@ -182,3 +182,13 @@ No sound in that run was a test leftover (`Audio Renderer: Null` in the custom c
 - **Remaining step:** an SPU patch that widens only the job's clip/cull comparison. Needs: the job image (descriptor
   built around `0x1e5588`..`0x1e5800`, list head `0xcf188c`), its SPU disassembly, and the frustum test on the matrix
   it DMAs. RPCS3 SPU patches are keyed by the SPU program hash.
+
+## Fixed 2026-10-06: Wider view 2.0 (cull-only)
+
+The SPU render job (image at `0xb54280`, 0xcfa qwords, launched from the descriptors built at `0x1e5628`) tests each
+object against the frustum with six `fcgt` at job offsets 0x5730..0x5758 (`0xb599b0`..`0xb599d8`). Forcing them false
+(`il rt, 0`) with the two-build camera (candidate 4.0) gives a full view: sky dome, distant land and sea, the loop
+without slits, shadows alike in both eyes (`son_v5_sheet.png`, fly-by poses `pc_son5b_sheet.png`, race poses
+`pc_son5_sheet.png`). Frame rate went up: 152 FPS vs 114 with 1.0 at Vblank 180, 300% (the narrow render frustum
+draws less). Shipped as *Wider view (VR culling)* 2.0 (fork vr-non-working). Headset recheck: the race, the loop,
+shadows near the edges of the view.
