@@ -118,3 +118,16 @@ applied with the wrong axis convention or an extra/missing camera rotation about
 (e.g. the game camera is pitched and the head pose is composed in world rather than view space, or the
 `camera_palette` bone matrices get only part of the rotation). First check on the simulator with
 `simpose.py 0 10 0` and `simpose.py 0 0 15` against straight ahead, and compare the world with the HUD box.
+
+## 2026-10-06 (Matt: the whole world moves as if the camera stick were used, looking up or down)
+
+Rechecked on the simulator from `BLUS31212_1_4`, with head position as well as rotation:
+- **Live play:** with `view_y_down` the world stays put at pitch +-15/20, yaw 20 and roll; 2 cm head moves up, forward
+  and sideways shift it only slightly (right). Before the fix, looking up 15 degrees moved the world up in view instead
+  of down, so it swung twice the head angle, which looks like the camera being steered. The flat game camera also sits
+  low after unpausing this state (`khs_sheet.png`).
+- **Pause (in play):** the game stops drawing 3D and re-shows the last frame plus the PAUSE text. That frame was shown in
+  the headset view with the current pose, so the world followed the head on every axis (`khy_sheet.png`). Fixed with
+  `frames_without_3d_as_screen: true` (fork 6c2b50308, also KH 2.5, which had the same: `kh2p` before, `kh2q` after):
+  the paused frame goes on the world-fixed screen; play is unchanged (`khw_sheet.png`). Evidence
+  `evidence/kh-pause-2026-10-06/`.
