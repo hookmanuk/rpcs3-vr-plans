@@ -244,8 +244,14 @@ Where the 60 Hz comes from is not found yet:
   frame time, initialised 0 and never set: off); with `+0x184` (initialised 1) it rounds dt down to whole steps of
   1/`[r28+0x14]` (`fctidz`, count at `+0x188`, remainder carried in `+0x180`); `+0x14c` = 60.0 at init, later 1/dt.
   Patching the rounding out (`0x4080c` `beq` -> `b`): still 60.0 new frames/s at Vblank 120. So not this path either.
-Next: sample the main thread with stacks (`RPCS3_PPU_SAMPLE_STACK=main_thread`) at Vblank 120 to see whether its loop
-runs 60 or 120 times a second, then follow whichever wait sets the 60.
+- Main thread stacks at Vblank 120 (`RPCS3_PPU_SAMPLE_STACK=main_thread`): loop `0x1cdc8 -> 0x1d034 -> 0x37580 ->
+  0x3cc40 -> 0x3be..`; each pass calls `0x398f8` (update every module in a list: `0x39994` vcall -> `0xa7880` ->
+  `0xbb518`, an entity scheduler over a bitset -> `0xbb740` -> `0xce3fc`/`0xce054` -> `0xf1948`) and `0x39b68` (render
+  submit, `0x39be8 -> 0xa7cb0 -> 0x212e7c`, the renderer hand-off wait: 1517 of ~1900 samples). The VR trace shows the
+  game draws a full frame on every flip (its targets alternate `c1608000` / `c19a0000` each flip) while the camera
+  changes every other flip: render 120, update 60. So some module skips its update when less than 1/60 s has passed.
+  Next: find which module's update returns early (break in the entity update, e.g. RPCS3_PPU_TRACE on `0xbb740` with a
+  counter per frame), or watch the race clock / car position word per flip with `RPCS3_VR_PEEK` to see it step at 60.
 
 ## 2026-10-06: per-eye shadows reproduced (open)
 
