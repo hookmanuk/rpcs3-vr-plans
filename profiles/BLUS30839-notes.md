@@ -142,4 +142,11 @@ differs between the left and right eye.
   (`son_cw`). So the 2026-10-04 ray remap is right at the game FOV but not when the game's projection is widened
   ~3x: next, check `game_projection_scale` (A, B) against the cascades' own camera rows at Wider view 3.0 (log them for
   `why=ed46d28a122d7235`), and whether the box draws' eye transform and the remap use the same projection.
+  **Logged (temporary, reverted):** the remap's game projection scales follow Wider view (A 0.151 / B 0.268 at 3.0,
+  0.605 / 1.075 at 1.0) and the eye -> game matrix is exact (`store_depth_remap`: eye^-1 x game of the stored camera
+  draw); its x-on-depth term stays ~0.455 at both settings while its x scale follows A, so the remap is not the simple
+  culprit. Remaining suspects: the cascade box volumes (stencil `2fe8ebfb47d877be`, depth-tested) clipped differently
+  per eye at the 150-degree projection, or the ray variant's assumption of a symmetric game projection. In the masks
+  the right eye has the loop's ring shadow that the left lacks, so which eye is wrong is not settled: compare with a
+  flat 3.0 mask (VR off, same moment) first.
 No sound in that run was a test leftover (`Audio Renderer: Null` in the custom config), restored to Cubeb.
