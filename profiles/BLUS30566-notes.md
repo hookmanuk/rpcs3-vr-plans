@@ -24,5 +24,25 @@ Executable `PPU-edd75fcdb84e1c33c0c4d05a93143832e374b5d1`. No community patch ex
 - Flat image: the player's car is blown out (almost white) in the garage and in races: an emulation lighting issue,
   separate from VR.
 
+## 2026-10-07 (later): 90 FPS real time flat; VR profile generated
+
+- The simulation step: per-step code `0x2a1d1c` makes dt = (clock delta in us) / 1e6 from a game clock object
+  `[[0xd3bcec]+4]+0x38` (getter `0x3e5834`), advanced in `0x4ac950` by `+0x10 x +0x18 x 1e6` per step; `+0x18`
+  (`[[0xd3bcec]+4]+0x48`) is the step, 1/60. `game_frame_time_f32: ["[[0xd3bcec]+0x4]+0x48"]` (new nested-pointer
+  address form, fork 13d7ad184) sets it to 1/fps.
+- Patch 1.0 (`vr-non-working`): `0xe9bf4` `li r4, 1`; `0x4acb78` skip the limiter wait; the vblank handler's countdown
+  reload `0x742c60`, the per-frame label `0x738e78` and the RSX label command `0x7410b0` all 1: a flip every vblank.
+  Flat: 110 FPS at Vblank 120 (RSX thread 8.9 ms). **Race clock real time at VR 90** (10.99 s over 11.01 s).
+- Found on the way (fixed in the fork, generic): the measured-rate fallback wrote 0.14 s during a load stall and never
+  replaced it: the race ran 12x fast. Rates under 40% of the VR rate are now ignored.
+- Generated profile: `column_vectors_xyw c[212]`, camera slots read directly, `depth_offset_projection`, frame step
+  key added by hand, `max_fps 0`.
+- **VR frame rate (simulator, 300%, `vrtest_boot/BLUS30566_1_0.walk`):** 72.9 FPS at Vblank 90 (RSX thread 13.6 ms), 70.2
+  at 72: RSX-bound, **below 90 and just below 72** (DWM was using ~3.7 cores; remeasure on a clean boot).
+- **Simulator pose check** (`evidence/nfs-hp-2026-10-07/`): the car's shadow differs between the eyes (left of the car
+  in the left eye, right in the right: a screen-space shadow pass, as Sonic/R&C); the 2D HUD (speedometer, mirror,
+  bounty, position) is drawn in the scene in stereo, no HUD box (`HUD none`: needs `hud_programs`/`passthrough_hud`);
+  stripes at the sky's edge on yaw/roll; the player's car is near-white (flat too: emulation).
+
 Status: **not 90 yet.** 60 FPS real time works; 72/90 needs the simulation step changed to 1/72 or 1/90 (or the flip
 count kept at 2 and Vblank 144/180, which still simulates at 60).

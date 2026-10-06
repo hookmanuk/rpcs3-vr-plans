@@ -1,0 +1,4 @@
+# NFS HP: skip the race intro, then accelerate
+X 250
+wait 3000
+W 60000
