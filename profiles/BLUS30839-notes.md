@@ -149,4 +149,12 @@ differs between the left and right eye.
   per eye at the 150-degree projection, or the ray variant's assumption of a symmetric game projection. In the masks
   the right eye has the loop's ring shadow that the left lacks, so which eye is wrong is not settled: compare with a
   flat 3.0 mask (VR off, same moment) first.
+- **Flat at Wider view 3.0 (VR off): the game's own shadow mask is already broken** (`flat_wv3_mask.png`): large flat
+  shadowed areas and streaks across the ground. The shadow cascades cannot cover a 150-degree frustum, so the per-eye
+  differences in VR are reads of a broken mask, not a VR renderer fault. **Options for Matt:**
+  1. Keep 1.0 (render FOV widened x3): view filled, broken shadows, loop bars.
+  2. Cull-only widening (tried as *Wider view* 2.0, see above): view filled, game-FOV shadows and projection; geometry
+     beyond the game's own frustum still gets per-eye shadow differences (outside the cascades) and the loop bars stay.
+  3. Wider view 1.0 (off): shadows and loop right, sky and scenery cut when turning or looking up.
+  The loop bars are culling-related (they come with any wider culling).
 No sound in that run was a test leftover (`Audio Renderer: Null` in the custom config), restored to Cubeb.
