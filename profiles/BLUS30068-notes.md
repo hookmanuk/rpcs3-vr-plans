@@ -161,3 +161,12 @@ New state `BLUS30068_1_3` (10:11, a 147 MB state, so likely in a race; check wha
   depth (`f78638bb` into `50610000`) that the renderer shared between the eyes as 2D content (a camera draw marked
   only its colour targets as 3D). Depth buffers now count as 3D: both eyes clean. Matt's "bird shadows stuck to the
   HMD" is probably this (dust drawn with the wrong eye's depth); recheck in the headset where birds fly.
+
+## Open (Matt, headset, 2026-10-07): shadows slide across the ground with head yaw
+
+Matt confirmed the menu (title screen) fix. New: start the first race (press Cross through all the menus) and turn the
+HMD left and right: shadows move across the ground, which they should not (they must stay fixed to the world). Not
+investigated yet. Candidates: a screen-space shadow/projection pass rebuilding positions from depth with the game
+camera's constants (as Asura's Wrath, Sonic and R&C: `depth_remap_programs`, `depth_remap_uv` / ray variants); or the
+shadow map / tree-shadow blobs tied to the eye's view. Check with `tools/re/simpose.py` yaw -20 / 0 / +20 on the
+simulator from a fresh load of the first race.
