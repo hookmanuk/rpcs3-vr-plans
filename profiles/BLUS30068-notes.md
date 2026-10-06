@@ -138,3 +138,14 @@ New state `BLUS30068_1_3` (10:11, a 147 MB state, so likely in a race; check wha
 3. **Rear-view mirror head-locked** instead of sitting at the top of the HUD box. GT5's mirror used
    `subviewport_cameras_in_box` (with `hud_box_after_shader`); check how SEGA Rally draws its mirror (its own target
    copied in, or a sub-viewport of the scene).
+
+## 2026-10-06
+
+- **Mirror fixed (fork d65dc5c7b):** the rear-view mirror is rendered into a 512x512 target (`0xc3470000`, the first
+  ~800 draws) and put onto the scene by a matrix-less quad `5c0d80187ad91a90` before post-processing, so it stayed fixed
+  to the HMD while the HUD box was world-fixed. Listed in `hud_programs`: it sits at the top of the HUD box
+  (`evidence/sr-mirror-2026-10-06/`).
+- **Bird shadows:** not reproduced: 12 captures over a minute of driving from `BLUS30068_1_3` had no extra matrix-less
+  scene draws and no birds on screen. Needs the place where birds appear.
+- **3D "SEGA Rally" logo behind the track choice:** not found yet: the league, car and event screens reached from
+  `BLUS30068_1_2` are all flat on the fixed screen; the logo screen is elsewhere in the menus.

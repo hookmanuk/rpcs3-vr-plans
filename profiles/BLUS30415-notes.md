@@ -76,3 +76,13 @@ menu open; closing it shows trees that follow the head instead of staying in the
 the tree (foliage/billboard) programs' camera classification with `why=` (likely camera-facing sprites or another
 camera block, as `nonrigid_camera_blocks` / `require_rigid_camera` cases in the playbook), and whether it only happens
 after the pause (a stale camera block or projection cached during the menu).
+
+## Fixed 2026-10-06: trees head-locked (fork 11323754a)
+
+`BLUS30415_1_5` opens on the quest journal (Circle closes it). In the forest every frame had `N x332` non-camera draws:
+the foliage `e2f574f69e3e346a` (1024x1024 leaves) draws with a DP4 camera `c[258..261]` (its shader reads c1-c4 with
+the transform constant offset), while the profile knew only `c[256]` in the row layout. So all foliage stayed fixed to
+the view (most visible on a near branch at the upper right). Found with profile `hidden_draws` (probe `hide=` did not
+act in this game). Fix: `camera_blocks [256, 258]` + new key `column_vector_blocks [258]`. After: no non-camera scene
+draws, the forest whole and world-fixed at yaw 25 / pitch 15 (`evidence/dao-foliage-2026-10-06/`); castle and
+Bayonetta pose checks unchanged.
