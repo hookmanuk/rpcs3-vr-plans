@@ -131,3 +131,24 @@ Rechecked on the simulator from `BLUS31212_1_4`, with head position as well as r
   `frames_without_3d_as_screen: true` (fork 6c2b50308, also KH 2.5, which had the same: `kh2p` before, `kh2q` after):
   the paused frame goes on the world-fixed screen; play is unchanged (`khw_sheet.png`). Evidence
   `evidence/kh-pause-2026-10-06/`.
+
+## Not ready for release (Matt, headset, 2026-10-06; state `BLUS31212_1_5`, the Dive)
+
+Open, in Matt's order:
+1. **Pause squashed vertically** (only when paused). Cause: the fix above (`frames_without_3d_as_screen`) puts the paused
+   frame on the 16:9 fixed screen, but that frame is the last eye image, rendered for the headset's near-square view,
+   so it is squeezed. **Uncommitted attempt, built into `bin/rpcs3.exe`, not headset-checked:** the setting is removed
+   from both KH profiles in `bin/` (the copies in `vr-non-working/` still have it), and the renderer keeps a frozen
+   frame's own pose (a frame with no camera draws showing earlier 3D content is drawn and declared with that content's
+   pose: `VKGSRenderVR.cpp` `vr_update_view` / flip, `VKOpenXR.cpp` `keep_render_pose` / `recall_render_pose`). On the
+   simulator the paused frame now has the right shape and every paused frame is declared with the same pose (578), but
+   the simulator does not turn projection layers by their declared pose, so whether it stays world-fixed can only be
+   seen in a headset. If it does not, revert those four files and the two `bin/` profiles.
+2. **Black wedges in the floor, in and out of pause.** Pieces of the Dive platform near the bottom/edges of the view are
+   missing. Most likely culling: the game camera is 77 x 48 degrees (camera block `c[256]`, A 1.2636, B 2.2464), the
+   headset shows ~101 x 89, and whole floor segments outside the game's view are dropped. Not proven yet; KH has no
+   *Wider view* patch. Next: find the FOV (memory search for 0.8378 rad / 48.0 / 2.2464 / tan 24 degrees) and widen
+   culling only (as Sonic 2.0).
+3. **Character textures blink differently** (Sora's arms and head) on the same screen. Not looked at.
+
+The pitch/roll fix (`view_y_down`) and the opening movie stand. Stopped here at Matt's request.
