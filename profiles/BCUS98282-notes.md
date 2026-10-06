@@ -153,7 +153,7 @@ Tried and reverted: `frames_without_3d_as_screen: true` (R&C 1): no change (the 
 Sustained at 300%: R&C 1 **90 Hz** (was 72; RSX thread 13 -> 8.5 ms: the level no longer took the HUD-box path),
 R&C 2 120, R&C 3 90 (was 72), R&C 2 machinery hall 120.
 
-## 2026-10-06: menus flat, Wider view patches, shadow traced (open)
+## 2026-10-06: menus flat, Wider view patches, shadow fixed
 
 - **Menus:** state `BCUS98282_1_4` (Veldin map). Frames put on the fixed screen kept each eye's image (the frozen level
   behind the map had stereo; boxes did not line up): generic fix, both eyes show the left eye's image (fork 234cadcf6).
@@ -172,3 +172,9 @@ R&C 2 120, R&C 3 90 (was 72), R&C 2 machinery hall 120.
   window position and depth are the eye's but fc4-fc10 assume the game camera, so the lookup slides off with head
   pitch. A fix needs the per-eye correction of fc7-fc10 (light matrix x eye-to-game view transform) or of `wpos`;
   the depth-remap extension to `wpos` did not work because tc0 is not a clip position (vertex program not read yet).
+- **Shadow fixed:** the projector's vertex program writes `tc0 = ((x+w)*0.5, (w-y)*0.5, c9.x, w)` from the camera clip
+  position (world c4-c7, clip c0-c3): a screen uv, not a clip position. New key `depth_remap_uv` (fork): the remap takes
+  tc0/w back to NDC, remaps (eye depth, eye NDC) to the game camera, writes the game uv back with w = 1, and moves
+  `wpos` by the NDC change (scale from screen derivatives). R&C 2 (`vrtest_rc2_aranos`) and R&C 3
+  (`vrtest_rc3_veldin_battle`) run the same chain with the same programs (`f78638c5` copy, `1459aa3a` fp5/fp7/fp11,
+  `f78638c5` blend); the same two keys fix them. Six-pose sheets in `evidence/ratchet/shadow-2026-10-06/`.
