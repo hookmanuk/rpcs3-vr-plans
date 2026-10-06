@@ -27,6 +27,16 @@ verified at several rates), a generated and hand-fixed profile, and checks on th
 also got a *Wider view (VR culling)* patch. Files in `rpcs3/vr-non-working/` (+ untracked `bin/` copies); regression
 states `vrtest_sonic_race`, `vrtest_dwg_odessa`, `vrtest_xmen_jungle`. Sections below; detail in the notes files.
 
+## Priority: Ratchet & Clank 1 (almost ready, Matt 2026-10-06), then the same fixes in R&C 2 and 3
+
+State `BCUS98282_1_4` (map menu open). Open items, in order:
+1. ~~Menus rendered in 3D (boxes not lined up between the eyes)~~ **fixed 2026-10-06 (fork 234cadcf6):** frames on the
+   fixed screen as menus/pauses are flat (both eyes see the left eye's image); Matt checked it in the headset. Generic.
+2. **Ratchet's shadow appears and disappears as the head pitches** (Triangle to close the map, then look up/down):
+   reproduced on the simulator (there at 0 and +8 degrees, gone at +16, +24, -16). Being traced.
+3. **Culling: the background draws in too late** (the game culls to its own view; needs a Wider view patch).
+4. Then the same fixes for R&C 2 and 3.
+
 ## Second headset test (Matt, 90 Hz, 2026-10-01 late): continue here
 
 Matt's recheck after the evening fixes (fork up to 03abf3550). New savestates (hard links):
