@@ -265,3 +265,17 @@ computed per eye in `apply_render_eye` and written right after it (per eye in bo
 fitted to the game camera's frustum (50 degrees) and the right eye sees past its right edge, where the mask samples
 outside the fitted cascade; compare the mask with the cascade split constants per eye, and test a wider culling Scale
 (the fit may follow the culling camera). **Tested:** Wider view Scale 1.0 shows the same right-eye shadow, so not the culling camera.
+
+## 2026-10-07: the 60 Hz step, more ruled out
+
+- The main thread's loop runs ~60 times a second; the VR trace's alternating targets per flip are the renderer
+  replaying the command list. The main thread blocks in `sys_semaphore_wait([0xcf23f0])` (78% of its samples).
+- `SlRenderer` stacks (Vblank 90, 60.8 new frames/s): 78% in `cellSpursEventFlagWait` (`0x219460`, via `0x218138`
+  from the loop `0x20ce0c`; import slot `0xbf5b6c`), i.e. waiting for SPU work; 5% on the flip event (`0x218018`); 7%
+  polling SPU job counts (`0x259738`). PPU-side `cellSpursEventFlagSet` (slot `0xbf5bcc`, stub `0xa1e384`) is called
+  from job-system code at `0x8a2ce8` (bits 0x8000) and `0x8a30c0` (bit 1).
+- Not the frame timer's minimum frame time (`+0x154` has no setter for that object; the setters found are other
+  types, e.g. `0x1416c8`).
+Still unknown where 60 comes from: it holds at 72, 90 and 120 Hz, so it is a time rule, not a vblank count. Next: find
+the SPU job/taskset that sets the renderer's flag and whether it is driven by a 60 Hz timer (a `sys_timer` or
+`sys_event` periodic source: list the game's timers, `sys_timer_create` / `sys_timer_connect_event_queue` usage).
