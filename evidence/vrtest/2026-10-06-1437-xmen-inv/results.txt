@@ -1,0 +1,8 @@
+# path: OpenXR Simulator, RPCS3_VR_MULTIVIEW=default, build b27f65716 VR: a camera draw's depth buffer counts as 3D; fra
+# BLUS30268 vrtest_xmen_jungle: X-Men Origins: Wolverine: jungle, first control after the intro (Unlocked frame rate (VR); 72 Hz = Vblank 144) rates=72
+BLUS30268 vrtest_xmen_jungle vblank 144 scale 300%:
+   433 frames over 8.0 s: avg 54.0 FPS, 1% low 44.3, 0.1% low 43.7 (worst frame 22.9 ms), median 18.41 ms, late 0.00%, RSX thread 18.38 ms/frame, new frames 51.8/s
+   449 frames over 8.0 s: avg 56.0 FPS, 1% low 45.5, 0.1% low 44.6 (worst frame 22.4 ms), median 17.72 ms, late 0.00%, RSX thread 17.73 ms/frame, new frames 53.0/s
+   => median of 2 windows: avg 54.0 FPS, 1% low 44.3, late frames 0.00%, RSX thread 17.73 ms/frame
+SUSTAINABLE BLUS30268 vrtest_xmen_jungle: none Hz
+DONE /f/rpsc3/source/plans/evidence/vrtest/2026-10-06-1437-xmen-inv
