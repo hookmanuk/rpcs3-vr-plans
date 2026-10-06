@@ -165,3 +165,11 @@ Open, in Matt's order:
   the geometry path (PPU/SPU code that writes the floor's vertex buffers) and relax it.
 
 The pitch/roll fix (`view_y_down`) and the opening movie stand. Stopped here at Matt's request.
+
+## 2026-10-06: blinking textures (open)
+
+Not reproduced in a way I could measure: from `BLUS31212_1_5` unpaused, Sora's model changes between simulator shots
+(~3 a second), but he animates, so a blink cannot be told from motion at that rate. KH runs multiview (both eyes in one
+draw), so the eyes cannot get different texture uploads, and the KH 2.5 atlas flicker fix (`d6acea81e`) is on `openxr`.
+Next: per-frame dumps (RTDUMP at the flip, several in a row) of a still Sora, or Matt's description of which eye and
+how often.

@@ -27,6 +27,15 @@ verified at several rates), a generated and hand-fixed profile, and checks on th
 also got a *Wider view (VR culling)* patch. Files in `rpcs3/vr-non-working/` (+ untracked `bin/` copies); regression
 states `vrtest_sonic_race`, `vrtest_dwg_odessa`, `vrtest_xmen_jungle`. Sections below; detail in the notes files.
 
+**Matt, while you were out (2026-10-06):** fixed and pushed: R&C 1/2/3 character shadow (`depth_remap_uv`); SEGA
+Rally title screen flat, and the right-eye dust smear on the car (generic: depth buffers count as 3D; probably your
+"bird shadows"). Found, not fixed: KH floor wedges are the game's own triangle drop (flat has them too); Sonic simulates
+at a fixed 60 Hz at any rate (new frame-stats "new frames/s" shows it); Sonic's right eye has an extra shadow (not the
+remap, sharing or multiview); X-Men is ~55 at 72 since 10-04 (multiview path ~2 ms slower than two-draw). Needs your
+headset: R&C shadows, SEGA Rally title and dust, KH pause (uncommitted pose-hold build in `bin/`, KH `bin/` profiles
+without `frames_without_3d_as_screen`). Needs you: a hung `rpcs3.exe` (PID 54120) and `dwm.exe` on 4 cores, see below
+(end that dwm.exe or reboot; `bin/rpcs3.zombie.exe`, `bin/RPCS3.buf.zombie` and `log/RPCS3.zombie.log` can go after).
+
 **Measurement caveat (2026-10-06 afternoon):** an RPCS3 run hung at 12:49 (an R&C savestate run that used Cubeb audio
 with the desktop locked; the process cannot be ended) and the Desktop Window Manager (`dwm.exe`, PID 34288) has used 4
 CPU cores continuously since. Frame rates measured after 12:49 today may be low on CPU-bound games. Ending that
