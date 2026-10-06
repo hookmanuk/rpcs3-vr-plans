@@ -209,3 +209,14 @@ shadows near the edges of the view.
    shown unevenly). Was it there with 1.0? Ask Matt / A-B both versions.
 
 Stopped here at Matt's request.
+
+## 2026-10-06: "60 FPS inside 90 Hz" confirmed
+
+`RPCS3_VR_PEEK` of the render view-projection copy `0xcf1810` (16 words) every frame while driving
+(`vrtest_sonic_race`, Vblank 180): 700 frames in 5.6 s (125 FPS), 54% identical to the previous frame, so the camera
+updates about 58 times a second. The unlock patch only frees the flips (the vblank handler `0x21821c` just releases
+the flip label); the game thread still advances at about 60 Hz and the render thread (`0x2144a0..`, command-list
+replay) re-presents its last frame on the other vblanks. Likely a fixed 1/60 simulation step taken from measured time.
+Tried: poking each 1/60 float in the ELF (`0x30611c` .. `0x85c894`, 14) to 1/120 live: no clear change, but the
+measure was confounded (the unattended car stops, and a still camera repeats too). Next: find the step with a counter
+that increments once per simulation step (not the camera), or trace the game thread's wait on the render thread.
