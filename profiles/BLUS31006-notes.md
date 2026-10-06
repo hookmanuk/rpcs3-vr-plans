@@ -107,3 +107,14 @@ in the headset.
 The community *60 FPS* patch (Aphelion, illusion: two words, `0x710694` and `0x23f114`) is copied into
 `BLUS31006_patch.yml` as *60 FPS (VR)*, on by default, so the release needs no community patches; *Frame rate follows
 VR* still scales the game's tick. From the extracted zip (no `patch.yml`) both apply.
+
+## Slow motion on slower PCs (users, 2026-10-06), fixed (fork 147ca6fb2)
+
+Reports: smooth in the headset, but gameplay at half speed. The profile wrote 1/(VR rate) into the frame time word
+`0xf11ac8` every frame. A PC below the VR rate (the runtime then halves to ASW/SSW, which keeps head tracking smooth)
+still told the game 1/120 per frame. Reproduced on the simulator at 120 Hz with Resolution Scale 800% (56 FPS): the
+frame-timing object's ticks (`0xe341c0`, summed per second; 60 = real time) were 28/s. Fix: the frame-rate words use
+the smoothed time between game flips when it is more than 3% below the VR rate: 60 ticks/s at 56 FPS (told 1/56);
+at full rate unchanged (120 FPS, told 1/120, 60 ticks/s). Walking speed (`peekspeed.py`) is too noisy at low frame
+rates to judge this; use the tick sum. Workaround for the vr8 build: VR Frame Rate = a rate the PC holds (60: 60 ticks/s,
+walking at reference speed).

@@ -830,6 +830,15 @@ which samples a couple of seconds of gameplay, writes `bin/vr_profiles/<TITLE_ID
 tab). Verified on Pure: the generated profile equals the hand-made one apart from an equivalent
 sep/conv split. Details and limits: `plans/5-vr-profile-playbook.md`, "In-emulator generation".
 
+## Frame-rate words follow the measured rate (2026-10-06, fork 147ca6fb2)
+
+Users reported Tales of Xillia smooth in the headset but in slow motion. Every profile frame-rate word
+(`game_frame_time_f32` and the rest) was written from the VR rate, so a PC below it (runtime ASW/SSW at half rate)
+ran frame-locked games at the speed ratio. They now follow the smoothed time between game flips when it is more than
+3% below the VR rate. Measured on ToX (simulator, 120 Hz): 56 FPS gave 28 game ticks/s before, 60 after; full rate
+unchanged. Affects every profile with these keys (God of War, GT5, R&C, KH, Gundam, Dante's Inferno, ...): recheck a
+few at full rate in the next release smoke test. vr8 workaround: VR Frame Rate set to a rate the PC holds.
+
 ## Unreleased games
 
 Per-game state for everything not yet released (Split/Second, Blur, inFamous 1 and 2, MGS4, NFS Most Wanted,
