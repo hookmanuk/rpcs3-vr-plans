@@ -239,5 +239,10 @@ Where the 60 Hz comes from is not found yet:
   port `[0xcf2f30]`, queue `[0xcf2f34]`) and posts the semaphore in `0x214208` / `0x214d70`; renderer frame counter
   `[0xc2e428]`, mode word `[0xc2e434]` (setter `0x20cf1c` writes 2, `0x20cf2c` tests == 2: a candidate 30/60 mode).
 - `RPCS3_VR_MEMDUMP` crashed RPCS3 here (14:05); PINE was blocked by a hung instance holding port 28012.
-Next: find the time source (`sys_time_get_system_time` / timebase reads) on the main thread's step path and the
-comparison against a 1/60 s period (it may be integer microseconds or timebase ticks built at run time).
+- The game's frame timer (object initialised at `0x3fef0`; update around `0x40380..0x40920`): reads `mftb`, dt =
+  ticks / timebase frequency, clamps dt to `+0x170` (0.066 s) when `+0x174`; a busy-wait while dt < `+0x154` (minimum
+  frame time, initialised 0 and never set: off); with `+0x184` (initialised 1) it rounds dt down to whole steps of
+  1/`[r28+0x14]` (`fctidz`, count at `+0x188`, remainder carried in `+0x180`); `+0x14c` = 60.0 at init, later 1/dt.
+  Patching the rounding out (`0x4080c` `beq` -> `b`): still 60.0 new frames/s at Vblank 120. So not this path either.
+Next: sample the main thread with stacks (`RPCS3_PPU_SAMPLE_STACK=main_thread`) at Vblank 120 to see whether its loop
+runs 60 or 120 times a second, then follow whichever wait sets the 60.
