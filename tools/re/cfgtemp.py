@@ -8,7 +8,8 @@ rewrite), so the rest of the file stays byte-identical. No BOM is written.
 import os, sys, shutil
 
 ID = sys.argv[1]
-C = rf'F:\rpsc3\source\rpcs3\bin\config\custom_configs\config_{ID}.yml'
+# ID 'global': the global config (bin/config/config.yml); a savestate boot did not apply a custom config's Audio section
+C = r'F:\rpsc3\source\rpcs3\bin\config\config.yml' if ID == 'global' else rf'F:\rpsc3\source\rpcs3\bin\config\custom_configs\config_{ID}.yml'
 BAK = C + '.cfgtemp.bak'
 
 if sys.argv[2] == 'restore':

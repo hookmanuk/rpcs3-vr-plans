@@ -151,4 +151,17 @@ Open, in Matt's order:
    culling only (as Sonic 2.0).
 3. **Character textures blink differently** (Sora's arms and head) on the same screen. Not looked at.
 
+## 2026-10-06: black floor wedges are the game's own triangle drop, not view culling
+
+- Camera builder `0x36b50` (argument f1 = a PS2-style projection distance, kept in f29; constants table `0x36b20`:
+  near 4.0 at `0x36b38`, 916, 457.14, 0.8/0.84, 2048/2048). It builds the projection (copied to `0x20d1030`, A 1.2636,
+  B -2.2464, z rows (1, 1) and (-4, 0)) and three view-screen matrices with `0x12418`, all from f29. It saves the
+  matrices to `0x20d0900` first and restores them after (`0x37118`), so memory reads mostly see the restored copy.
+- A *Wider view* patch (calloc at `0x36bb0`, f29 / Scale) works (Scale 0.5 adds large wedges), but Scale 1.5 and 2.5
+  leave the wedges exactly as at 1.0. Poking the near plane 4.0 -> 0.5 changes nothing either. The flat game has the
+  same fault: a black triangle at the bottom-left of its own frame (`evidence/kh-floor-2026-10-06/`). So the game drops
+  whole floor triangles near the bottom/edges of its view (probably those crossing the camera plane or a guard band, in
+  the PS2-derived geometry code), and the headset shows more of that area. Patch reverted. Next: find the drop test in
+  the geometry path (PPU/SPU code that writes the floor's vertex buffers) and relax it.
+
 The pitch/roll fix (`view_y_down`) and the opening movie stand. Stopped here at Matt's request.
