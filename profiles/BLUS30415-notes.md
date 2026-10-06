@@ -68,3 +68,11 @@ Matt's state `BLUS30415_1_2`:
 - Moving the head shows a strange overlay: an eye-invariant or screen-space layer that does not follow the
   world (compare `simpose.py` yaw/pitch shots against straight ahead and find the layer's program).
 Not investigated yet.
+
+## Open (Matt, headset, 2026-10-06): trees attached to the head after the pause menu
+
+New state `BLUS30415_1_5` (10:06; `BLUS30415_1_4` from 10:04 may be the same place): the state loads with the pause
+menu open; closing it shows trees that follow the head instead of staying in the world. Not investigated. First checks:
+the tree (foliage/billboard) programs' camera classification with `why=` (likely camera-facing sprites or another
+camera block, as `nonrigid_camera_blocks` / `require_rigid_camera` cases in the playbook), and whether it only happens
+after the pause (a stale camera block or projection cached during the menu).
