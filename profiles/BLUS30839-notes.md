@@ -342,3 +342,18 @@ negated. `RPCS3_VR_REMAP_RAY_SIGN` variants: `--` matches flat (`state_1_2_ray_s
 After: pagoda and statues lit in both eyes, car shadows back, at yaw +-20 and pitch 10
 (`state_1_2_before_after_both_eyes.png`). The earlier "fixed" (eea6166d7, ray scale from the scene camera) was needed
 but not enough; the 2026-10-04 tuning had been judged with the wrong scale.
+
+## 2026-10-07 (third pass): the volumes' eye offset (fork 81fedb836)
+
+Matt (headset, after the sign fix): track shadows fine, but the right eye still darker (the totem above the car, the
+green lumps' shadows differ between the eyes). Per-eye mask dumps: each eye shadowed its own outer side (left eye the
+hedge on the left, right eye the cliff on the right); with zero eye separation both masks matched flat. Cause: the mask
+volumes `ed46d28a122d7235` and the stencil pre-pass `2fe8ebfb47d877be` draw through a projection times a non-uniform
+scale; the probe sizes the eye offset by each matrix's own clip x per unit, which that scale distorts, so each eye's
+volumes covered shifted pixels and the depth remap (built from the volume) shifted the rebuilt positions. A debug log
+showed the stencil pass had also become the "scene" source (X with -5.2/+5.3 terms). Fix: remap passes and the new
+profile key `depth_remap_volume_programs: ["2fe8ebfb47d877be"]` take the last scene camera draw's eye transform as a
+clip-space map X = scene game^-1 x scene eye (their rows = game x X) and the remap is built from the scene matrices.
+Result (`state_1_2_masks_after_volume_fix.png`, `..._yaw20_pitch_roll.png`): both masks match flat and each other
+(shadowed 1.90% / 1.88% vs 2.89% / 3.57% before); pagoda, totems and green lumps alike in both eyes on the simulator;
+fly-by tower lit in both; R&C 1 shadow unchanged.
