@@ -86,3 +86,13 @@ the view (most visible on a near branch at the upper right). Found with profile 
 act in this game). Fix: `camera_blocks [256, 258]` + new key `column_vector_blocks [258]`. After: no non-camera scene
 draws, the forest whole and world-fixed at yaw 25 / pitch 15 (`evidence/dao-foliage-2026-10-06/`); castle and
 Bayonetta pose checks unchanged.
+
+## 2026-10-07: outdoors and conversations (Matt's forest states)
+
+- `BLUS30415_1_4` (forest conversation, cinematic camera with depth of field): pose sheet clean; the dark rectangles in the
+  box are the dialogue's subtitle and reply panels (`fc6fc45502d91a9a`, boxed as HUD: hiding the program removes exactly
+  them). The DOF composite `4dd42ea0e6add336` also grades the colour (hidden, the scene turns yellow): left as drawn.
+- Frame rate in VR (simulator, 300%): `_1_4` (forest, no input) **120 Hz** (119.8, 0.21% late; 90: 0% late), RSX thread
+  6.7 ms. `_1_5` opens on the quest journal, which Circle does not close (the close button is another key); `_1_3` is
+  character creation. So DAO holds 120 outdoors as in the castle.
+- Combat still unchecked: the forest conversation leads to a fight but the dialogue runs several minutes.

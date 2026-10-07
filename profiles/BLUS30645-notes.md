@@ -49,3 +49,28 @@ frame's last draw (`1c7935c330cbbbd8`, after the HUD). If the game never reads t
 remove a GPU wait per frame from a game that misses 72 by 1-2 FPS; if its SPUs read the frame (post-processing,
 pause-screen capture), it can't be skipped. **Checked 2026-10-05: no.** The read comes from the game's SPU job thread (`EclipseGameSPUCellSpursKernel3`: the game uses the frame), and skipping both made no difference anyway: 70.5 FPS / 1.59% late without, 70.5 / 2.12% with (`evidence/vrtest/2026-10-05-1134-da2base`, `-1135-da2skip`). Reverted.
 
+
+## 2026-10-07: 72 Hz re-measured (after the DWM fix)
+
+`vrtest_da2_fight` at VR 72, 300%, 30-45 s settle, no input: baseline 71.0-71.3 FPS, 0.17-1.05% late; SPU Block Size
+Mega 71.0-71.7, 0.35-0.87%; Sleep Timers Accuracy All Timers 71.1-71.4; Multithreaded RSX 71.5 / 0.70%. All within
+noise of each other: **right at the 72 bar** (roughly half the runs pass both criteria). Where the time goes:
+- `Eclipse::Update` (the game thread, 85% of a core) spends ~45% in a `usleep(30)` poll at `0x2998d8` waiting for an SPU
+  job (`[r30+0xc]`, stacks through `0x3c8948`/`0x8c5000`); the SPURS kernels run 42-74%.
+- The RSX thread is 12.2 ms of a 13.9 ms frame (flat at Vblank 120 it is 95% busy and the game settles on two vblanks,
+  66 FPS): `region_intersects_cache` 9.4%, nv3089 `image_in` / `scaled_image_from_memory` / blit / `upload_scaled_image`
+  ~23% together (the game blits images from main memory every frame), the VR per-draw work ~6%.
+Next: what the per-frame nv3089 blits are (sizes, sources) and whether they repeat identical data.
+
+## Fixed 2026-10-07: both eyes showed the same scene (fork 7c91de0b5)
+
+A disparity check on a simulator shot (`parallax.py`, `vrtest_da2_fight`) gave 0 px for every region (hills, rocks,
+characters, ground) with match score 1.0: both eyes showed the identical scene; only the sky differed. The frame (inspector
+blit notes after the scene's last draw): blit main `0x33000000` -> `0xc0f70000` (the previous frame's copy, which the
+SPUs read: the generator's per-frame readback), then blit the scene target -> `0x33000000`; bloom and the composite read
+`0xc0f70000`, the HUD goes on top. Main memory holds one eye. Fix: `texture_redirects` now also redirect blits, and
+`"to": "camera"` picks this frame's scene target, because the game alternates two (`0xc03c0000` / `0xc0000000`; a fixed
+target, or "the target last copied into the buffer", read the other one, which by then holds the finished frame, and
+the image fed back into itself to white). After: far rocks -162 px, characters -166..-170 px at every pose, no white
+frames; VR 72: 71.5-71.6 FPS, 0.5-0.7% late (passes; was 71.0-71.7, 0.2-1.05%). The SPU pass on the copy (bloom input?) is
+skipped in VR; the scene looks the same as flat at a glance. `0x33000000` is the same after a fresh boot.

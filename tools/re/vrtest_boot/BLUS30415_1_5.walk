@@ -1,0 +1,16 @@
+# DAO forest (Matt 1_5): close the quest journal, then walk back and forth
+wait 4000
+C 300 2000
+C 300 2000
+I 1500 50
+K 1500 50
+I 1500 50
+K 1500 50
+I 1500 50
+K 1500 50
+I 1500 50
+K 1500 50
+I 1500 50
+K 1500 50
+I 1500 50
+K 1500 50
