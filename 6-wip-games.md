@@ -404,6 +404,10 @@ Practice. Open: campaign, HUD sprite timers at 3x, headset run.
 
 ## Killzone 2 (BCUS98116)
 
+**2026-10-07: both eyes show the same scene** (`tools/re/eyesame.py` on the 10-04 regression shot: best shift 0, residual 2.5;
+only the HUD differs). Probably the Dragon Age II case (the scene comes back from a main-memory copy the SPUs process):
+check the inspector blit notes and use `texture_redirects` (`"to": "camera"` covers blits since fork 7c91de0b5).
+
 Notes: `profiles/BCUS98116-notes.md`. Evidence: `evidence/killzone2/`. Fork d12f50a6e.
 
 - **Config:** Write Color Buffers and Read Color Buffers on. Without them the loading screens are garbage

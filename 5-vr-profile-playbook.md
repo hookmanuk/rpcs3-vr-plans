@@ -332,6 +332,8 @@ jitter shows ~64 while every frame is on time, hence the late-frame count.
   walks ~25 s; prints the windows after the settle and their median.
 - `tools/re/vr_regress.sh [filter]`: every state in `tools/re/vrtest_states.txt`, climbing 72 -> 90 -> 120 and
   stopping at the first failing rate; writes `evidence/vrtest/<date-time>/results.txt` (+ screenshots).
+  Each shot also gets `tools/re/eyesame.py` (`eyes:` lines): the best left/right alignment shift; **best shift 0 means both
+  eyes show the same image** (Dragon Age II and Killzone 2 had it unnoticed: an SPU copy of the scene shown to both eyes).
 - Results move by ~10% between runs; re-run borderline games. Desktop stereo approximates the headset path.
 - **Regression set:** one named savestate per game (`bin/savestates/<ID>/vrtest_<game>_<scene>.SAVESTAT.zst`).
   Run `vr_regress.sh` after renderer changes and compare with the previous run. Add a state for every new game.

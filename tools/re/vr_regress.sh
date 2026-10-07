@@ -23,6 +23,8 @@ grep -v '^#' vrtest_states.txt | grep -- "${1:-.}" | while read id st vpf walk s
       echo "$out" | tee -a "$D/results.txt"
     fi
     [ -f "p1_${st}_$((rate * vpf)).png" ] && cp "p1_${st}_$((rate * vpf)).png" "$D/${st}_$rate.png"
+    # both eyes the same image (an SPU copy shown to both eyes: Dragon Age II, Killzone 2) shows as best shift 0
+    [ -f "sim_${st}_$((rate * vpf)).full.png" ] && py -3.13 eyesame.py "sim_${st}_$((rate * vpf)).full.png" | sed 's/^[^:]*:/   eyes:/' | tee -a "$D/results.txt"
     [ -f "sim_${st}_$((rate * vpf)).png" ] && cp "sim_${st}_$((rate * vpf)).png" "$D/sim_${st}_$rate.png" && rm -f "sim_${st}_$((rate * vpf)).png" "sim_${st}_$((rate * vpf)).full.png"
     late=$(echo "$out" | grep -o "late frames [0-9.]*%" | grep -o "[0-9.]*")
     avg=$(echo "$out" | grep -o "median of [0-9]* windows: avg [0-9.]*" | grep -o "[0-9.]*$")
