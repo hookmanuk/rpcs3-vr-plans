@@ -178,3 +178,13 @@ R&C 2 120, R&C 3 90 (was 72), R&C 2 machinery hall 120.
   `wpos` by the NDC change (scale from screen derivatives). R&C 2 (`vrtest_rc2_aranos`) and R&C 3
   (`vrtest_rc3_veldin_battle`) run the same chain with the same programs (`f78638c5` copy, `1459aa3a` fp5/fp7/fp11,
   `f78638c5` blend); the same two keys fix them. Six-pose sheets in `evidence/ratchet/shadow-2026-10-06/`.
+
+## 2026-10-08: status
+
+- R&C 2 (`vrtest_rc2_aranos`) and R&C 3 (`vrtest_rc3_veldin_battle`) pose sheets clean (yaw, pitch, roll directions right;
+  HUD in its box). Eyes differ by the expected frusta offset (`eyesame.py`).
+- R&C 1 `BCUS98282_1_5` (Matt's heavy scene; walk script `vrtest_boot/BCUS98282_1_5.walk` closes the Start menu after
+  8 s): VR 72 **71.7 FPS, 0% late** (RSX thread 12.2 ms) with `dwm.exe` spinning on ~4 cores; 90: 77.6, 2.25% late.
+  RSX sample (`RPCS3_RSX_SAMPLE=3`): 11% idle in flip, `vr_setup_draw` 19% inclusive (eye constants pair 11%,
+  `apply_render_eye` ~8%), vertex upload 8%, texture env 8%. 90 Hz needs ~10% off the whole RSX thread: the VR per-draw
+  path alone cannot give it. 72 Hz holds.
