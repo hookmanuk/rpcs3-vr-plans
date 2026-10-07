@@ -50,6 +50,11 @@ VR rate: **90.0 new frames/s at 90**, 120 at 120, real time (checked). Needs Mat
 projection; both eyes now match flat in the fly-by. Probably also the shadows stuck mid-track. Headset recheck.
 **Sonic 2026-10-08: the no-car-moves freeze fixed** (the VR step rate anywhere in the menus broke the next race start; new profile key `frame_rate_draws` applies the VR rate only in races: fresh boots 3/3, pause, second race OK). FXAA override verified and committed. Matt's frozen states stay frozen (the bad state is in them): make new ones. Open: an occasional hang during race loads at Vblank 120 (`SlFile` lwcond EPERM). See the Sonic section.
 
+**Measurement caveat again (2026-10-08 00:30):** a new `dwm.exe` (PID 34824, started 2026-10-07 10:59) uses ~3.9 cores
+continuously, so CPU-bound frame rates measured since then read low (R&C 1 `_1_5`: 66.5 FPS at VR 72, RSX thread 13.2 ms;
+72.0 / 10.8 ms on the clean morning run). Same-session A/B comparisons hold. Not ended (needs Matt). Affected: the
+Journey, Dragon Age II, Flower and DAO numbers of 2026-10-07/08 (they may be higher on a clean desktop).
+
 **Measurement caveat (2026-10-06 afternoon):** an RPCS3 run hung at 12:49 (an R&C savestate run that used Cubeb audio
 with the desktop locked; the process cannot be ended) and the Desktop Window Manager (`dwm.exe`, PID 34288) has used 4
 CPU cores continuously since. Frame rates measured after 12:49 today may be low on CPU-bound games. Ending that
