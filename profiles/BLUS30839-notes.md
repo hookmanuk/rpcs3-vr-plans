@@ -317,3 +317,17 @@ the SPU job/taskset that sets the renderer's flag and whether it is driven by a 
   with the remap on and off: either the remapped ray or depth (`vr_depth_remap[4]` scales, the depth linearisation
   fc4-fc6 on the eye's depth) or the cascade volume selection (`c[0]` remapped as a camera block) is off for points away
   from the game view's centre.
+
+## Fixed 2026-10-07: per-eye shadows (fork eea6166d7)
+
+Cause: the shadow pass's ray remap scales the view ray by 1 / the game projection, taken from the probe's cached
+projection, which follows whichever camera drew last. A debug log of the refreshes showed several projections per
+frame: the scene camera (about 0.47 x 0.84), the shadow-map and other cameras (0.15 x 0.27, 3x wider) and the shadow
+volumes themselves (a projection times a non-uniform scale). The mask pass got a wrong scale, so its rebuilt view
+positions were off in proportion to the distance from the view's centre: wrong cascades and lookups away from the
+centre (the right eye's dark tower and roof; the game FOV log showed 162.9 x 150 degrees). Fix: `depth_remap_programs`
+draws no longer refresh the cached projection, and the ray scale uses the last projection measured on a draw into a
+view target. Fly-by: tower and roof lit in both eyes as in flat; four fly-by shots match between the eyes
+(`after_fix_roof_left_right_flat.png`, `after_fix_flyby_pairs.png`). R&C 1's shadow pose check unchanged. Matt's
+"shadows stuck in the middle of the track" is probably the same fault (shadows placed with the wrong ray); recheck
+in the headset.
