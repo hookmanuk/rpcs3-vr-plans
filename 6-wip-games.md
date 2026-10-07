@@ -48,6 +48,7 @@ frame on every flip **except Sonic**: it passes 90 Hz on flips but makes **60 ne
 VR rate: **90.0 new frames/s at 90**, 120 at 120, real time (checked). Needs Matt's headset check (feel, shadows).
 **Sonic per-eye shadows: third fix 2026-10-07 (fork 81fedb836): the shadow volumes take the scene camera's eye transform; per-eye masks match flat and each other at several head poses (simulator). Headset recheck.** Second fix (861614444): the remap's ray signs. Earlier step (fork eea6166d7): the shadow pass rebuilt its rays with another camera's
 projection; both eyes now match flat in the fly-by. Probably also the shadows stuck mid-track. Headset recheck.
+**Sonic open 2026-10-07 (Matt): no car can move in some races (stuck state survives savestates, Restart Race and 60 Hz; not dropped steps), and FXAA blurs the image at high resolution scale (override in the profile, unverified).** See the Sonic section.
 
 **Measurement caveat (2026-10-06 afternoon):** an RPCS3 run hung at 12:49 (an R&C savestate run that used Cubeb audio
 with the desktop locked; the process cannot be ended) and the Desktop Window Manager (`dwm.exe`, PID 34288) has used 4
@@ -621,6 +622,18 @@ Notes: `profiles/BLUS30839-notes.md`. Profile and patch file in `vr-non-working/
   across the image; and a shadow that differs between the left and right eye (a new case: the distant-shadow
   fix above covers `sonic_rock`). Not investigated yet. (The missing sound in the same run was not a game issue:
   a test run had left `Audio Renderer: Null` in the custom config; restored to Cubeb.)
+- **Open (Matt 2026-10-07): no car can move (player and AI), in his states `BLUS30839_1_1`/`_1_2` and sometimes
+  from a fresh boot.** The race HUD appears (10th, lap 1) but the 3-2-1 countdown never starts; race clocks run, audio
+  plays. Matt's states stay stuck even at 60 Hz, with patch 2.0 off, and after Restart Race, so the stuck state is
+  saved in the savestate. Fresh boots: sim at 60 OK 5/5; patch 2.0 at 90 froze 4/7, at 120 2/2. **Ruled out:** dropped
+  fixed steps (a test patch that never drops steps, `0x1f97f8 -> b 0x1f981c`, still froze 3/3 at 120), Wider view,
+  the measured-rate fallback. A fresh-boot fly-by state made at 60 (`son_fly60`, mine) starts the race normally at 60
+  and 90, so the freeze is decided before the fly-by (loading / race setup), not at the race start. Next: repeat
+  `son_fly60` at 120 a few times to confirm, then find the race-start gate. Details in the notes.
+- **Open (Matt 2026-10-07): the image looks low resolution even at 400%.** Cause found: the final FXAA pass
+  (`ad9998b4d5599447`) has its tap offsets (fc5, fc7, fc10, fc12) sized in guest pixels, so at high resolution scale it
+  blurs over several real pixels. `fragment_constant_overrides` setting them to 0 (FXAA off) is in the
+  `vr-non-working` profile and the bin copy, **not yet checked visually or committed**.
 - **Open:** headset run.
 
 ## Dynasty Warriors: GUNDAM (BLUS30058, disc 01.00)

@@ -357,3 +357,39 @@ clip-space map X = scene game^-1 x scene eye (their rows = game x X) and the rem
 Result (`state_1_2_masks_after_volume_fix.png`, `..._yaw20_pitch_roll.png`): both masks match flat and each other
 (shadowed 1.90% / 1.88% vs 2.89% / 3.57% before); pagoda, totems and green lumps alike in both eyes on the simulator;
 fly-by tower lit in both; R&C 1 shadow unchanged.
+
+## 2026-10-07 (open): cars cannot move; FXAA blur
+
+**Freeze.** Matt: in his states `BLUS30839_1_1` / `_1_2` (and sometimes from a fresh boot) no car moves, neither his
+nor the AI. What happens: after Continue on the fly-by the camera swoops behind the car and the race HUD appears
+(10th, lap 1), but the 3-2-1-GO countdown never comes; the AI cars stay on the grid (`evidence/sonic-freeze/sq_frz_sheet.png`, 1 s shots).
+Race clocks run (`0xcfd754..0xcfd778`, ten per-racer floats, all equal and rising at 1/s), audio plays.
+
+- Matt's states stay stuck at 60 Hz, with frame patch 2.0 off, and after Restart Race from the pause menu: the bad
+  state is in the saved game state, not in the running rate.
+- Fresh boots (sonfresh: Cross through the menus into the first career race, hold R2): rate word at 60 (flip every
+  vblank, sim at 60) OK 5/5; patch 2.0 at 90 froze 4/7; at 120 froze 2/2.
+- **Not dropped steps.** The second accumulator `[[0xc14ee4]+0xdc]` (live `0x3048a200`: step `+8`, max steps a frame
+  `+0x24` = 3, dropped this frame `+0x28`, dropped total `+0x2c`, code `0x1f9698`, drop branch `0x1f97f8`) had
+  `+0x2c` = 2 in the frozen state and 0 in a working one, and the 0.066 s dt clamp at 90-120 Hz allows more steps than
+  the cap. But a test patch that never drops (`[ be32, 0x001f97f8, 0x48000024 ]`) still froze 3/3 fresh boots at 120
+  (`evidence/sonic-freeze/fs_nd.png`). Removed. The frame timer `[0xc14e84]` and accumulator objects are otherwise identical frozen vs
+  working, with the same single step subscriber (vtable `0xb382c0`, update `0x43afcc`).
+- Memory dumps frozen vs working (`dumps/sd_frz_*`, `sd_ok_*`: Matt's `_1_1` at 60 vs `vrtest_sonic_race`, two
+  dumps 4 s apart each): too different to diff usefully (different race moments); everything above `0xed0000` is
+  shifted by 0x20000 in Matt's state (patch caves allocated before it was saved). No NaN or stuck global found yet.
+- **Fresh fly-by state** (mine, `bin/savestates/BLUS30839/son_fly60`, made at 60 with patch 2.0 + Wider view, at the
+  fly-by Continue screen; Matt's savestate folder backed up first): Continue starts the race normally at **60 and 90**
+  (countdown, AI drives off; `evidence/sonic-freeze/sq_f6090.png`, top 60, bottom 90). So the freeze is decided before the fly-by: while the race loads or
+  sets up at the high rate, and is then baked into a savestate. Not yet run: `son_fly60` at 120 several times
+  (confirms it), then compare a frozen and a working state at the same fly-by screen (fresh boots at 90-120 until
+  one freezes, save at the fly-by both times) to find the race-start gate (the countdown's state word).
+- Tools (scratchpad, this session): `sondump.sh` (two MEMDUMP dumps; gboot's trigger is `g_dump`),
+  `sonseq.sh` (Continue, 1.5 s shots), `sonwalk.sh` (fresh boot, a shot per Cross), `statdiff.py`, `clk2.py`,
+  `ddis.py` (disassemble a dump). Savestate hook trigger: `%TEMP%/rpcs3-vrprofile/SAVESTATE`.
+
+**Low resolution.** Matt: the image looks low-res even at 400%. The final pass `ad9998b4d5599447` is FXAA whose tap
+offsets (fragment constants 5, 7, 10, 12, 1/2560 each) are sized in guest pixels, so at a high resolution scale it
+blurs across several real pixels. `fragment_constant_overrides` zeroing them is in the `vr-non-working` profile and
+the bin copy; not yet compared zoomed against before (300-400%), not committed. Also still to check: other blur
+(depth of field, motion blur).
