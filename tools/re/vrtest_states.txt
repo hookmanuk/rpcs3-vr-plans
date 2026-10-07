@@ -38,3 +38,5 @@ BCUS98116   vrtest_kz2_carrier           2  1    10     Killzone 2: Campaign > C
 BLUS30068   vrtest_segarally_race        1  W    10     SEGA Rally Revo: Safari, race start (holds R2; Unlocked frame rate + Wider view 2.0)
 BLUS30415   vrtest_dao_castle            1  1    10     Dragon Age: Origins: Castle Cousland hall after the opening (Wider view 2.0)
 BLUS30645   vrtest_da2_fight             1  0    10     Dragon Age II: prologue, first fight (no input)
+NPUA80083   vrtest_flower_l1             1  X    10     Flower: level 1 field (holds X: flies; Unlocked frame rate)
+NPUA70218   vrtest_journey_dune          1  I    40     Journey: first dune (holds forward; SPU MLAA patched in the state; SPU Block Size Mega in the game config)
