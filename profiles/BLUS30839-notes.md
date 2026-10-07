@@ -299,3 +299,21 @@ the SPU job/taskset that sets the renderer's flag and whether it is driven by a 
   outliers within the run-to-run noise of two unpatched runs).
 - Tools: `tools/re/spudis.py` (minimal SPU disassembler for job images in a PPU ELF), scratchpad `clockfind.py` (clock-like
   floats between two dumps, rate per wall second).
+
+## 2026-10-07: per-eye shadow, narrowed (open)
+
+- The screen-space shadow mask `c1d38000` is built per cascade: program `ed46d28a122d7235` draws a 660-vertex volume per
+  cascade through `c[0..3]` (a projection times a view-space scale; near/far in row 2: 2.86, 9.03, 12.5, 34.1, 200),
+  each paired with a stencil draw `2fe8ebfb47d877be`; a coarse 640x360 pass `c0dc0000` comes first and `f7863935`
+  seeds the mask. The fragment program rebuilds the view position from the depth (fc4-fc6) and the view ray (tc1,
+  replaced by the profile's ray remap), then projects with one view-to-light matrix fc11-fc13 into the 3-cascade map
+  `c0000000` (1024x3072).
+- Fly-by state, building at the right: **flat has no shadow on the tower and roof; the left eye matches flat; the right
+  eye has a dark tower and roof shadows.** With `eye_baseline` and `per_eye_separation` 0 (both eyes at the head's
+  centre) **both eyes show the wrong shadows**. So it does not come from the eye offset but from each eye's projection
+  (the field-of-view remap); the left eye being right is probably chance
+  (`evidence/sonic-shadows-2026-10-06/roof_normal_vs_zero_separation.png`, `roof_flat_reference.png`).
+- Next: compare the mask pass's inputs per eye for one tower pixel (the rebuilt view position against the flat game's),
+  with the remap on and off: either the remapped ray or depth (`vr_depth_remap[4]` scales, the depth linearisation
+  fc4-fc6 on the eye's depth) or the cascade volume selection (`c[0]` remapped as a camera block) is off for points away
+  from the game view's centre.
