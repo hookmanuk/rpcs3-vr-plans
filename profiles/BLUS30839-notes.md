@@ -393,3 +393,23 @@ offsets (fragment constants 5, 7, 10, 12, 1/2560 each) are sized in guest pixels
 blurs across several real pixels. `fragment_constant_overrides` zeroing them is in the `vr-non-working` profile and
 the bin copy; not yet compared zoomed against before (300-400%), not committed. Also still to check: other blur
 (depth of field, motion blur).
+
+## 2026-10-07 (evening): the freeze is made in the menus at the high step rate
+
+Fresh boots (`tools/re/sonic/sonphase.sh TAG RATE MENU LOAD`: the profile's rate keys removed or restored live, so the
+simulation steps at 60 or at the VR rate in each phase; 12 X presses to the first career race):
+
+| menus | race load + fly-by + race | result (Vblank 120) |
+|---|---|---|
+| 60 | 60, then 120 from the grid | races 4/4 (`sonload60.sh`) |
+| 60 | 120 | races 2/2 |
+| 120 | 60, then 120 from the grid | **frozen 2/2** |
+| 120 | 120 | frozen (2/2 before; 4/7 at 90) |
+
+So the bad state is created while the menus (or the boot) run with the 1/120 step, and survives into the race (hence
+Matt's frozen savestates stay frozen at 60). Not the race load and not the fly-by. Also seen: a block of static words
+(`0xdca2bc` + 0x24k: a 256-entry registry filled by `0x8d53a8`, sound voices; `0xdae288` a voice count, written thousands
+of times by `0x8d1d90`) start only at the countdown: consequences, not the gate. `0xdac624` 0 -> 1 at GO -> 2 at pause and
+stays 2 after quitting; `0xdafa88` 0 -> 1 at the countdown and stays 1: neither marks "in a race".
+Frozen state for study: `son_frz90` (= `BLUS30839_1_3`, mine, after the fly-by; Matt's folder backed up to
+`F:\rpsc3\backup_savestates_BLUS30839_20261007` first).
