@@ -96,3 +96,7 @@ Bayonetta pose checks unchanged.
   6.7 ms. `_1_5` opens on the quest journal, which Circle does not close (the close button is another key); `_1_3` is
   character creation. So DAO holds 120 outdoors as in the castle.
 - Combat still unchecked: the forest conversation leads to a fight but the dialogue runs several minutes.
+- Forest gameplay state `vrtest_dao_forest` (mine, from Matt's `_1_4`: X through the elves' conversation, walk up the path;
+  saving it cost Matt's `_1_2` to the per-game cap for a moment: restored from the backup made first). Pose sheet clean
+  (HUD portraits, minimap, party bar world-fixed in the box; foliage, rocks and trees world-fixed). **120 Hz** walking
+  (120.0, 0.10% late, RSX thread 2.9 ms; 90: 0% late).

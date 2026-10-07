@@ -40,3 +40,4 @@ BLUS30415   vrtest_dao_castle            1  1    10     Dragon Age: Origins: Cas
 BLUS30645   vrtest_da2_fight             1  0    10     Dragon Age II: prologue, first fight (no input)
 NPUA80083   vrtest_flower_l1             1  X    10     Flower: level 1 field (holds X: flies; Unlocked frame rate)
 NPUA70218   vrtest_journey_dune          1  I    40     Journey: first dune (holds forward; SPU MLAA patched in the state; SPU Block Size Mega in the game config)
+BLUS30415   vrtest_dao_forest            1  1    10     Dragon Age: Origins: Dalish forest path, gameplay with HUD (after the elves conversation)
