@@ -318,6 +318,11 @@ jitter shows ~64 while every frame is on time, hence the late-frame count.
 
 - Fork hook `RPCS3_VR_FRAMESTATS=<seconds>` logs per window: frames, average, 1% low, 0.1% low, worst frame,
   median frame time, late %.
+  **New frames below the flip rate:** run at Core/Clocks scale 200%. If new frames double, the game uses a fixed
+  simulation step tied to guest time (Sonic: steps of 1/60 with a remainder, at 90 Hz 0 or 1 steps a frame). Find the
+  step rate and every step size (Sonic had two accumulators), make the rate a data word the profile sets
+  (`game_refresh_rate_f32`) and the step sizes `game_frame_time_f32` (nested pointers allowed); verify real time with
+  memory dumps (game clocks advance ~1 per wall second as at 60).
   Since 2026-10-06 also **new frames/s**: flips whose first game camera matrix differs from the previous flip's. A
   game that flips faster than it simulates repeats frames: the FPS looks fine but motion is not. Sonic & All-Stars
   Racing Transformed: 72 / 90 / 120 flips but 60.0 new frames/s at each (a fixed 60 Hz step). Check it for every game:

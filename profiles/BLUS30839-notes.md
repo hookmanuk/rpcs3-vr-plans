@@ -279,3 +279,23 @@ outside the fitted cascade; compare the mask with the cascade split constants pe
 Still unknown where 60 comes from: it holds at 72, 90 and 120 Hz, so it is a time rule, not a vblank count. Next: find
 the SPU job/taskset that sets the renderer's flag and whether it is driven by a 60 Hz timer (a `sys_timer` or
 `sys_event` periodic source: list the game's timers, `sys_timer_create` / `sys_timer_connect_event_queue` usage).
+
+## Fixed 2026-10-07: 60 Hz simulation (frame patch 2.0)
+
+- **Clocks scale test:** at Core/Clocks scale 200% the game made 116-120 new frames/s at Vblank 120 (60 at 100%): the
+  limit is guest time, not CPU or vblanks.
+- Cause: a fixed-step simulation. The frame timer (`0x40150..`, object `[0xc14e84]`) splits measured time (`mftb`) into
+  whole steps of 1/`[0x402d4]` (60.0, read at `0x40810` via r28 = `0x402c0`), carrying the remainder; at 90/120 Hz
+  that is 0 or 1 steps a frame. The step count `+0x188` and total `+0x144` go (`0x75f70`) to a second accumulator
+  (`0x1f9938` -> `0x1f9698`) whose step size is `[[[0xc14ee4]+0xdc]+8]` (0.0166667, set at run time, so the ELF's 1/60
+  constants did not matter). Each step advances game clocks through commands the renderer replays (`0x28de70`).
+- Changing only `[0x402d4]` to 120 gave 120 new frames/s but the second accumulator still stepped by 1/60 (some
+  clocks ran 2x). Both together: real time.
+- **Patch 2.0:** cave at `0x40810` reads the rate from free word `0xec7ff0` (page tail after the data segment; seeded
+  with the game's 60 if zero). **Profile:** `game_refresh_rate_f32: ["0xec7ff0"]`, `game_frame_time_f32:
+  ["[[0xc14ee4]+0xdc]+0x8"]`. Without the profile (flat) the word stays 60: unchanged game.
+- **Measured (simulator, 300%):** 90.0 new frames/s at VR 90, 119-120 at 120. Real time at VR 90: memory dumps 2.5 s
+  apart vs the unpatched 60 Hz run: game clocks 0.920 vs 0.932 per wall second, object speeds peak x1.0 (3458 positions,
+  outliers within the run-to-run noise of two unpatched runs).
+- Tools: `tools/re/spudis.py` (minimal SPU disassembler for job images in a PPU ELF), scratchpad `clockfind.py` (clock-like
+  floats between two dumps, rate per wall second).

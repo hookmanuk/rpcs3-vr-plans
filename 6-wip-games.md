@@ -44,6 +44,8 @@ Clean regression subset (`evidence/vrtest/2026-10-07-0856-clean/`, simulator, 30
 R&C 1 Veldin **90** (101 at 120), R&C 2 Aranos **120**, R&C 3 Veldin battle **90** (118 at 120), KH 1.5 Dive **120**,
 MotorStorm **72** (87 at 90), Gundam **120**, SEGA Rally **72** (87 at 90), Dragon Age: Origins **120**. All make a new
 frame on every flip **except Sonic**: it passes 90 Hz on flips but makes **60 new frames/s at every rate**.
+**Sonic fixed 2026-10-07 (fork d54c9982b, frame patch 2.0 + profile):** the 60 Hz fixed simulation step now follows the
+VR rate: **90.0 new frames/s at 90**, 120 at 120, real time (checked). Needs Matt's headset check (feel, shadows).
 
 **Measurement caveat (2026-10-06 afternoon):** an RPCS3 run hung at 12:49 (an R&C savestate run that used Cubeb audio
 with the desktop locked; the process cannot be ended) and the Desktop Window Manager (`dwm.exe`, PID 34288) has used 4
