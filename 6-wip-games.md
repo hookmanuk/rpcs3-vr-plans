@@ -46,7 +46,7 @@ MotorStorm **72** (87 at 90), Gundam **120**, SEGA Rally **72** (87 at 90), Drag
 frame on every flip **except Sonic**: it passes 90 Hz on flips but makes **60 new frames/s at every rate**.
 **Sonic fixed 2026-10-07 (fork d54c9982b, frame patch 2.0 + profile):** the 60 Hz fixed simulation step now follows the
 VR rate: **90.0 new frames/s at 90**, 120 at 120, real time (checked). Needs Matt's headset check (feel, shadows).
-**Sonic per-eye shadows fixed 2026-10-07 (fork eea6166d7):** the shadow pass rebuilt its rays with another camera's
+**Sonic per-eye shadows: Matt still saw them (state `BLUS30839_1_2`); second fix 2026-10-07 (fork 861614444): the remap's ray signs; both eyes now match flat.** Earlier step (fork eea6166d7): the shadow pass rebuilt its rays with another camera's
 projection; both eyes now match flat in the fly-by. Probably also the shadows stuck mid-track. Headset recheck.
 
 **Measurement caveat (2026-10-06 afternoon):** an RPCS3 run hung at 12:49 (an R&C savestate run that used Cubeb audio

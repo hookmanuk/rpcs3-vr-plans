@@ -331,3 +331,14 @@ view target. Fly-by: tower and roof lit in both eyes as in flat; four fly-by sho
 (`after_fix_roof_left_right_flat.png`, `after_fix_flyby_pairs.png`). R&C 1's shadow pose check unchanged. Matt's
 "shadows stuck in the middle of the track" is probably the same fault (shadows placed with the wrong ray); recheck
 in the headset.
+
+## 2026-10-07 (later): still wrong in Matt's headset; ray signs fixed (fork 861614444)
+
+Matt (headset, new state `BLUS30839_1_2`, unpause): shadows still mismatched per eye; the pagoda is much darker in the
+left eye. Per-eye mask dumps against the flat game's mask: flat has the pagoda and statues lit and the cars' own
+shadows; **both** VR eyes had black blobs on the pagoda (left worse) and no car shadows. The remap's ray had the wrong
+signs: it is built as (x/A, y/B, +1), but the game's view looks down -z (its pass divides by -z), so x and y must be
+negated. `RPCS3_VR_REMAP_RAY_SIGN` variants: `--` matches flat (`state_1_2_ray_sign_variants.png`), now the default.
+After: pagoda and statues lit in both eyes, car shadows back, at yaw +-20 and pitch 10
+(`state_1_2_before_after_both_eyes.png`). The earlier "fixed" (eea6166d7, ray scale from the scene camera) was needed
+but not enough; the 2026-10-04 tuning had been judged with the wrong scale.
