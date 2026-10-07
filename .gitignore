@@ -6,3 +6,4 @@ tools/re/*.png
 # Decrypted game executables (RPCS3_DUMP_ELF): never commit
 tools/re/elf/
 tools/re/dumps/
+tools/re/sonic/*.log
