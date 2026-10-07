@@ -40,6 +40,10 @@ without `frames_without_3d_as_screen`). Needs you: a hung `rpcs3.exe` (PID 54120
 `BCUS98282_1_5` (Wider view 1.25): **72.0 at VR 72** (RSX thread 10.8 ms; was 60 / 16.3 under DWM), 88.7-89.3 at 90.
 Need for Speed: Hot Pursuit: **71.6 at 72, 83.4 at 90**. X-Men: 69.3 at 72 (was 55). Everything measured on 2026-10-06
 after 12:49 and on 2026-10-07 before this note was under the DWM load.
+Clean regression subset (`evidence/vrtest/2026-10-07-0856-clean/`, simulator, 300%; sustainable rate, new frames/s):
+R&C 1 Veldin **90** (101 at 120), R&C 2 Aranos **120**, R&C 3 Veldin battle **90** (118 at 120), KH 1.5 Dive **120**,
+MotorStorm **72** (87 at 90), Gundam **120**, SEGA Rally **72** (87 at 90), Dragon Age: Origins **120**. All make a new
+frame on every flip **except Sonic**: it passes 90 Hz on flips but makes **60 new frames/s at every rate**.
 
 **Measurement caveat (2026-10-06 afternoon):** an RPCS3 run hung at 12:49 (an R&C savestate run that used Cubeb audio
 with the desktop locked; the process cannot be ended) and the Desktop Window Manager (`dwm.exe`, PID 34288) has used 4
