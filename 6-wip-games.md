@@ -259,6 +259,8 @@ pass mark** for fully compatible.
 | SEGA Rally Revo | BLUS30068 | `vr-non-working/` + untracked `bin/` copies (profile, patch) | yes (fork patch *Unlocked frame rate*: 30 -> vblank rate, measured time) | **72 Hz** with Wider view 2.0 (71.9 FPS, 0% late; 2.5 gives 68, 1.0 gives 71.9), 2026-10-04 | simulator only (real head poses checked 2026-10-05) | ~~one-eye shadow blobs~~ fixed 2026-10-04 (right eye's stale shadow-map copy; generic renderer fix); savestates need Compatible Savestate Mode + GETLLAR spin optimisation off; ~~main-menu items flicker (state `BLUS30068_1_2`)~~ fixed 2026-10-05 (menus on the fixed screen); performance: **90 Hz** with `zcull_relaxed_sync` (2026-10-06; was 72); **not ready (Matt, headset, 2026-10-06): ~~SEGA Rally logo drawn in 3D~~ fixed 2026-10-06: the title screen (logo, PRESS START) goes on the fixed screen (`screen_frame_draws` `9e0f6220216133cc`; recheck in the headset that this is the screen Matt meant); ~~bird shadows head-locked in races~~ probably the right-eye dust smear fixed 2026-10-06 (fork b27f65716: depth buffers count as 3D; recheck where birds fly); **2026-10-06 regression subset: 72 sustained, 83-84 at 90** (was 90 with `zcull_relaxed_sync` this morning; same on the pre-fix build, so not the depth change); ~~rear-view mirror head-locked~~ fixed 2026-10-06 (fork d65dc5c7b, `hud_programs`). See notes** ; **open (Matt, headset, 2026-10-07): menus now fixed, but in the first race (Cross through all the menus) shadows move across the ground as the HMD yaws left/right; they should stay put. See notes** |
 | Need for Speed: Hot Pursuit | BLUS30566 | `vr-non-working/` + untracked `bin/` copies (profile, patch) | yes (patch: limiter + flip every vblank; profile frame step) | flat 110 at 120; **VR 73 at 90, 70 at 72** (RSX-bound) | simulator only (2026-10-07) | new (Matt, 2026-10-07: wants 90). Open: per-eye car shadow; sky-edge stripes; below 72 in VR (73 at 90). HUD in the box is fine (rechecked). See notes |
 | Heavy Rain | BCUS98164 | `vr-non-working/` + untracked `bin/` copies (profile, patch) | yes (no patch needed: real time at 120, checked) | **VR 90 sustained** (with Wider view 2.5), 2026-10-07 | simulator only (2026-10-07) | new (Matt, 2026-10-07: wants 90): culling fixed by patch; needs the headset pass (menus, QTE prompts, camera cuts, deferred lighting). See notes |
+| Flower | NPUA80083 (PSN; also on Journey Collector's Edition) | `vr-non-working/` + untracked `bin/` copies (profile, patch) | yes (fork patch *Unlocked frame rate*, measured time) | **90 Hz** (level 1, 0% late; 120 reaches the game's ~104 ceiling), 2026-10-07 | simulator only (real head poses checked 2026-10-07) | new (Matt, 2026-10-07, at 90): only level 1 seen; steers by SIXAXIS tilt (dev key script `motion`). See notes |
+| Journey | NPUA70218 (installed from Journey Collector's Edition BCUS98377) | `vr-non-working/` + untracked `bin/` copies (profile, patch) | yes (fork patch, measured time) | **72 Hz** (0% late with SPU Block Size Mega); 90 reaches 75: SPU-bound (flat 70 with MLAA off) | simulator only (real head poses checked 2026-10-07) | new (Matt, 2026-10-07, wants 90): SPU-bound at ~75 in VR; *Wider view* 2.5 fills the dunes at head turns; only the first dune seen. See notes |
 | Dragon Age: Origins | BLUS30415 | `vr-non-working/` + untracked `bin/` copies (profile, patch) | yes (no patch needed: every vblank, measured time) | **120 Hz** (Castle Cousland hall), 2026-10-04 | simulator only (real head poses checked 2026-10-05) | combat and outdoor unchecked; Wider view default 2.0 (2.5 stretches fire); HUD stayed on the face at real head poses (Scaleform `c[0..1]`), fixed 2026-10-05 with `hud_programs`; ~~conversation culling (state `BLUS30415_1_2`: grey to the right, legless characters, a ghost overlay)~~ **fixed 2026-10-05:** Wider view 1.1 floors the FOV at 60 x Scale (close-ups were x2 of a narrow FOV); ~~trees head-locked after the pause menu (`BLUS30415_1_5`)~~ **fixed 2026-10-06 (fork 11323754a):** the foliage uses a DP4 camera at `c[258]`; new key `column_vector_blocks` |
 | Dragon Age II | BLUS30645 | `vr-non-working/` + untracked `bin/` copy (profile) | yes (no patch needed, clocks at 1.0 measured) | **below 72**: 70.1-70.6 FPS at 72, 1.2-2.3% late (tutorial fight; PPU/SPU-bound) | simulator only (real head poses checked 2026-10-05) | just misses 72 in the busy fight: the game doubles ~1.7% of frames even flat at 60 Hz (not stereo); measure Kirkwall; HUD stayed on the face at real head poses, fixed 2026-10-05 with `hud_programs` |
 | Dragon Age: Inquisition | BLUS30997 | none | - | - | - | **emulation blocker:** hangs loading the start menu and each level (a GPU frame fence the SPU job system never kicks); Clocks scale 30 gets past it but runs at 9 FPS. `profiles/BLUS30997-notes.md` |
@@ -692,6 +694,27 @@ view 2.0 (now the default; 2.5 drops to 68 FPS).
   175-225 FPS); Wider view 1.0 and 2.0 cost the same. Profile where the time goes (`RPCS3_VR_FRAMESTATS`,
   `RPCS3_VR_GPUPROF`, draw counts per pass) and look for passes to drop or share between the eyes (shadow
   maps, reflections, post effects).
+
+## Flower (NPUA80083, PSN 01.00)
+
+Notes: `profiles/NPUA80083-notes.md`. Patch *Unlocked frame rate* (PhyreEngine vblank handler 2 -> 1 vblanks); real
+time (clocks 1.0x at 120). Generated profile + hand fixes: the sky's camera `c[260]`, `view_y_down` removed (inverted
+pitch/roll), the "Hold Any Button" prompt boxed. **90 Hz** sustained at 300%. Savestate `vrtest_flower_l1`.
+Open: later levels, the hub in VR, headset run.
+
+## Journey (NPUA70218, from Journey Collector's Edition BCUS98377)
+
+Notes: `profiles/NPUA70218-notes.md`. The collection disc installs its games from PKGs (flOw NPUA80001, Flower
+NPUA80083, Journey, three game-jam games); installed 2026-10-07. Patches: *Unlocked frame rate*, *Wider view (VR
+culling)* (Scale 2.5: the dunes are tiles chosen by the camera's FOV), *Disable SPU MLAA (VR)*. Profile: SPU post
+buffers redirected per eye (`texture_redirects`), their readbacks late, `view_y_down` removed. **72 Hz** sustained; the
+game is SPU-bound (~67 flat, 70 with MLAA off; ~75 in VR, where the late readbacks help). Savestate
+`vrtest_journey_dune`. Open: 90 Hz (SPU), later levels, headset run.
+
+## flOw and the bonus games (Journey Collector's Edition)
+
+flOw (NPUA80001, APP_VER 02.10), Grave Diggers (NPUA80788), Duke War!! (NPUA80789), Nostril Shot (NPUA80790) installed
+2026-10-07; not profiled yet.
 
 ## Dragon Age: Origins (BLUS30415, disc 01.00)
 
