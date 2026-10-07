@@ -413,3 +413,25 @@ of times by `0x8d1d90`) start only at the countdown: consequences, not the gate.
 stays 2 after quitting; `0xdafa88` 0 -> 1 at the countdown and stays 1: neither marks "in a race".
 Frozen state for study: `son_frz90` (= `BLUS30839_1_3`, mine, after the fly-by; Matt's folder backed up to
 `F:\rpsc3\backup_savestates_BLUS30839_20261007` first).
+
+More phase tests (`sonphase2.sh` / `sonphase3.sh` / `sonphase4.sh`): the VR step only until the 1st or 4th menu press, then 60:
+frozen 2/2 each; 60 for the first 9 s then the VR step for the rest of the menus: frozen 2/2; only the rate word or only the
+step size at the VR value early: frozen both. The game's own values in the menus are 60 and 1/60 (PINE). The frame timer
+(`0x40150`) keeps its remainder in seconds, so a rate change there is clean; the bad state comes from elsewhere (not found).
+Switching up during the race load and back down for the fly-by also failed (frozen or no frames, 4/4).
+
+## Fixed 2026-10-08: the VR step only in races (fork 2112da0f3)
+
+New profile key `frame_rate_draws`: the frame-rate words get the VR rate only while the race HUD icons are drawn
+(`cca8ac02bde0a575` with a 256x256 atlas, 10 a race frame, `min_count 5`: the loading screen draws one; found by comparing
+inspector captures of 11 menu screens, the loading screen, the fly-by and the grid). Menus, the load and the fly-by run at
+the game's own 60 Hz step; the grid and the race at the VR rate (log `Game frame-rate words: the VR rate` at the grid).
+Fresh boots at Vblank 120: races start 3/3 (`sf_h*`); at 90: first race, pause 6 s (60 Hz in the pause) and resume, quit to
+the menu, second race: all fine (`st_p2`). Matt's frozen savestates stay frozen (the bad state is saved in them).
+
+Also seen (separate): at Vblank 120 some boots stopped presenting during a race load right after the file thread's
+`_sys_lwcond_signal ... CELL_EPERM` (`SlFile`, also logged without a hang): 4 of ~25 boots today, all during loads. Not
+seen at 90 so far. Open.
+
+**FXAA override checked 2026-10-08:** `vrtest_sonic_race` at 300%, same moment: with the taps zeroed the eye image is
+sharper (Laplacian mean 6.3 vs 5.3) and loses the dotted artefacts along the track lines; committed with the profile.

@@ -8,6 +8,7 @@
 
   "game_refresh_rate_f32": ["0xec7ff0"],
   "game_frame_time_f32": ["[[0xc14ee4]+0xdc]+0x8"],
+  "frame_rate_draws": [ { "program": "cca8ac02bde0a575", "texture": "256x256", "min_count": 5 } ],
 
   "matrix_layout": "column_vectors",
   "depth_remap_programs": ["ed46d28a122d7235"],

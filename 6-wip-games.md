@@ -48,7 +48,7 @@ frame on every flip **except Sonic**: it passes 90 Hz on flips but makes **60 ne
 VR rate: **90.0 new frames/s at 90**, 120 at 120, real time (checked). Needs Matt's headset check (feel, shadows).
 **Sonic per-eye shadows: third fix 2026-10-07 (fork 81fedb836): the shadow volumes take the scene camera's eye transform; per-eye masks match flat and each other at several head poses (simulator). Headset recheck.** Second fix (861614444): the remap's ray signs. Earlier step (fork eea6166d7): the shadow pass rebuilt its rays with another camera's
 projection; both eyes now match flat in the fly-by. Probably also the shadows stuck mid-track. Headset recheck.
-**Sonic open 2026-10-07 (Matt): no car can move in some races (stuck state survives savestates, Restart Race and 60 Hz; not dropped steps), and FXAA blurs the image at high resolution scale (override in the profile, unverified).** See the Sonic section.
+**Sonic 2026-10-08: the no-car-moves freeze fixed** (the VR step rate anywhere in the menus broke the next race start; new profile key `frame_rate_draws` applies the VR rate only in races: fresh boots 3/3, pause, second race OK). FXAA override verified and committed. Matt's frozen states stay frozen (the bad state is in them): make new ones. Open: an occasional hang during race loads at Vblank 120 (`SlFile` lwcond EPERM). See the Sonic section.
 
 **Measurement caveat (2026-10-06 afternoon):** an RPCS3 run hung at 12:49 (an R&C savestate run that used Cubeb audio
 with the desktop locked; the process cannot be ended) and the Desktop Window Manager (`dwm.exe`, PID 34288) has used 4
