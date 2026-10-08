@@ -86,3 +86,13 @@ VR 72 **72.0** (0.17% late), VR 90 **86.3-87.6** (several runs). 200% gives 87.3
 Wider view 1.0 88.6, 2.0 86.8 (2.5 the same). Thread Scheduler RPCS3 84.1, Preferred SPU Threads 6 86.0, Max SPURS
 Threads 4 67 (worse), SPU loop detection 85.7, Processor idle disable 77.5 (needs boost clocks). Sustained stays 72;
 90 needs ~4% less game work (the SPU jobs). The RPCS3 SPU profiler only prints at a clean exit (the scripts kill it).
+
+## Open (Matt, headset, 2026-10-08): needs a lot of work
+
+Matt's savestate `NPUA70218_1_2` (2026-10-08 10:48), hard-linked as `vrtest_journey_matt` (safe from the per-game cap).
+1. **The traveller is not rendered correctly, and differently in each eye.** Check the character's programs (cloth,
+   scarf, glyph glow) against flat and between the eyes: a per-eye difference suggests a pass that reads another
+   target or the readback copy (the post chain's `texture_redirects`), or a second camera block for skinned meshes.
+2. **The world culls badly at the edge when looking right**, despite *Wider view* 2.5 (which filled straight, yaw
+   +-20 on the first dune). Check larger yaw (+30..+45) to the right on Matt's state; the culling may be asymmetric
+   (a frustum test that is not the FOV setter's), or the dune tiles use a separate culling path.
