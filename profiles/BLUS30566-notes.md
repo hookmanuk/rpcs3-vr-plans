@@ -56,3 +56,12 @@ the speedometer, mirror and bounty stay in the HUD box (they turn with it at yaw
 Next: find the program that draws the car shadow (inspector, `prog=` RTDUMP before/after) and how its shadow matrix
 is built (likely world -> light from the camera inverse in vertex constants: `game_camera_programs` for it, or a
 depth-remap variant).
+
+## Open (Matt, headset, 2026-10-08): menu lights move with the head; double vision in races
+
+Matt's states (hard-linked so the per-game cap cannot delete them):
+1. `BLUS30566_1_1` = `vrtest_nfshp_matt_menu` (15:56, the menu): moving the HMD makes lights move on the screen.
+2. `BLUS30566_1_2` = `vrtest_nfshp_matt_race_paused` (15:57, a race, paused): the car ahead shows double vision, and
+   the whole race looks low resolution, probably from that misalignment (two images not lining up read as blur).
+To fix (not started): check the menu on the fixed screen with `simpose.py` (which layer the lights are in), and in the
+race compare the eyes (`eyesame.py`, full-resolution crops of the car ahead) for a per-eye offset on scene or post passes.
