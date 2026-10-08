@@ -737,7 +737,7 @@ profile generated; notes `profiles/NPUA80001-notes.md`). Was: flOw (NPUA80001, A
 2026-10-07. flOw: 60 native and flips every vblank (120 at 120), game clock real time but a time value at `0xe960c0` (and
 few positions) advance 1/60 per frame (2x at 120; written by an SPU job, no PPU store seen): generated profile kept at
 `max_fps 60` (perspective camera `column_vectors c[256]`, 72 degrees; no depth buffer); the camera follows the creature
-constantly, so the pose sheet could not separate head-locked layers yet. Bonus games not looked at.
+constantly, so the pose sheet could not separate head-locked layers yet. Bonus games (2026-10-08): Grave Diggers, Duke War!! and Nostril Shot are 2D local-multiplayer game-jam prototypes (sprites only, no camera matrices: `profile_survey.py` finds no camera block); 60 FPS flat. Nothing to profile for VR (they would only be a flat screen); left without profiles.
 
 ## Dragon Age: Origins (BLUS30415, disc 01.00)
 
