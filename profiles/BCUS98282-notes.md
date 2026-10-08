@@ -225,3 +225,7 @@ have the same fixes but still need his headset run before they count as working.
   State `rc2_newgame_movie` (during the movie). **Measurement note:** simulator screenshots (`simshot.py`) are not
   square-pixel: each eye's 100.6 x 89.1 degree view is saved at 480x514, so everything looks ~1.31x taller there (the
   "4:3 collection menu" noted before was this, not a bug). Compare shapes in-game (flat) or correct by that factor.
+- **R&C 1 cutscenes: already real time.** State `rc1_open_cutscene` (new game, opening; slot 5 overwritten, all R&C 1
+  slots were empty test saves). VR 60 vs VR 90 at 3 s and 5 s show the same frames (`rc1_mid.png`): its frame-time
+  values cover the cutscenes. (An 8 s shot differed: a scene change whose timing varies; not speed.) Its state word
+  would be `0x782b90` (1 in the opening ~90 s, 2 in play) if ever needed; not added.

@@ -10,7 +10,7 @@ ARG=-Desktop; [ "${VR:-false}" = true ] && ARG="-Probe render=1"
 RPCS3_VR_FRAMESTATS=1 timeout 60 powershell -File gboot.ps1 -Iso "F:/rpsc3/source/rpcs3/bin/savestates/BCUS98282/${3:-rc3_open_cutscene}.SAVESTAT.zst" $ARG >/dev/null 2>&1
 for i in $(seq 1 240); do grep -aq "VR frame stats" $L && break; sleep 0.5; done
 sleep 2; SHOT_MOVE=1 py -3.13 shot.py BCUS98282 rc_cut_$1_3 960 >/dev/null 2>&1
-sleep 4.5; SHOT_MOVE=1 py -3.13 shot.py BCUS98282 rc_cut_$1_8 960 >/dev/null 2>&1
+sleep ${T2:-4.5}; SHOT_MOVE=1 py -3.13 shot.py BCUS98282 rc_cut_$1_8 960 >/dev/null 2>&1
 powershell -c "Get-Process rpcs3 -ErrorAction SilentlyContinue | Stop-Process -Force"; sleep 2
 py -3.13 cfgtemp.py BCUS98282 restore >/dev/null
 [ $padhad = 0 ] && rm -r "${P:?}"
