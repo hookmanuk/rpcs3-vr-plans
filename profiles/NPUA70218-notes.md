@@ -116,3 +116,10 @@ Matt's savestate `NPUA70218_1_2` (2026-10-08 10:48), hard-linked as `vrtest_jour
   the FOV at camera+0xf4: `0x1e410` (an LOD apex 350/tan(fov/2) behind the camera), `0x5ab44`, `0xf87c8`, `0xfa5b8`,
   `0x257ae4`, `0x24d248`, `0x4c316c`). The trace hook (`RPCS3_PPU_TRACE`) did not install in Journey (no
   `sys_timer_usleep` call reached it under the interpreter).
+- **The sand grid's origin (tested, rejected):** `0x1e3e0` (called from `0xb8034`, `0xb8c40`) places a point
+  350 / tan(FOV/2) behind the camera (`0x71633c` = 350.0, read only at `0x1e43c`): the sand is drawn from that virtual
+  camera, so the sand beside the camera is +-350 units wide whatever the FOV. Raising it widens the sand at head turns
+  (700 or 1000: yaw 35 shows only a thin strip near the horizon; `ap2_sheet.png`; 3500 removes the sand entirely), but
+  the same grid is the ground the traveller interacts with: at the same moment after load the traveller is in a
+  different (crouched) pose and a dark smudge appears (`q_cmp.png`). A gameplay change: not used. The culling at large
+  head turns stays open.
