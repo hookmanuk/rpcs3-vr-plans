@@ -474,3 +474,7 @@ fresh loads:
   far structure program `34b524f7491b7af2` is hidden (`flat_hide_sweep.png`): depth fighting between that structure and
   the surfaces drawn over it at long range (D24S8, depth func LEQUAL, no MSAA). Depth bias is applied (NVIDIA D24 path).
   Not found: whether the PS3 shows the same (compare real hardware footage), or an RPCS3 depth difference. Open.
+- Depth bias ruled out (2026-10-08, temporary log in `VKDraw.cpp`, reverted): no draw in the race enables polygon
+  offset, so RPCS3's NVIDIA D24 bias scaling is not involved. With Force High Precision Z also changing nothing, the
+  far surfaces are coplanar or nearly so (true depth ties), which a real PS3 would likely show too; VR makes the far
+  track larger and the fight easier to see. Next idea if needed: compare with PS3 footage of the Ocean View start.
