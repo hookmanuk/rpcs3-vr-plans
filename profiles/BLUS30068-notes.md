@@ -176,3 +176,24 @@ the large dark shadow shapes on the ground (a bird-like silhouette bottom left, 
 birds' shadows, and they slide over the ground as the head turns instead of staying put. Matt's shot:
 `evidence/segarally/matt-bird-shadows-2026-10-08.png`. The 2026-10-06 dust/depth fix did not cure it. Reproduce on the
 simulator from a fresh first-race start with `simpose.py` yaw -20 / 0 / +20 (compare against flat).
+
+## 2026-10-08: bird shadows investigated (not fixed)
+
+- Reproduced on the simulator: `tools/re/sr_boot_vr.sh` (boot to the Safari grid in VR, `gclean.sh BLUS30068` after);
+  bird silhouettes and a large dark wedge right of the car show on the ground at the start line, best seen at pitch
+  -15 (`evidence/segarally/birds/p_sheet.png`). New state `vrtest_sr_birds` (start line, birds flying; saving it cost
+  Matt's `_1_0` to the cap for a moment: restored from `F:psc3ackup_savestates_BLUS30068_20261008`).
+- Same game moment, flat vs VR (`ab_sheet.png`): the wedge right of the car is in VR at yaw 0, not in flat. Hiding draws
+  live: the wedge goes only with the road (`1965d57fee836671`, `h_sheet.png`), i.e. it comes from the road's
+  shadow-map lookup. The road computes the shadow coordinate from world position (`tc2` = `c[5..8]` x local position),
+  eye-independent.
+- Shadow map `0xc8250000` (912x912, perspective light in `c[0..3]` of `87d6a020f69e1d79`, blurred via `0xc85f8000`):
+  dumps (`RPCS3_VR_RTDUMP`, 2736x2736 at 300%) at the same moment differ by ~197k pixels between head yaw 0 and 25 in VR
+  (`smap_cmp.png`), ~1.3k between two moments at yaw 0, ~7.7k between yaw 0 and 25 flat, and VR vs flat at yaw 0 by
+  ~321k. Not the cause: occlusion queries (Disable ZCull Occlusion Queries + no `zcull_relaxed_sync`: same),
+  `game_camera_target_widths [912]` (no change), `camera_blocks [8]` (worse), the camera-position slot. The guest light
+  matrix and scene camera are the same at both yaws; the shadow-pass draws are never classified by the probe
+  (`why=` logs nothing; the trace has no camera draws before the scene). The skinned spectators' bone rows `c[28..90]`
+  vary over time in flat too, so the dumps are confounded by animation timing and by when in the frame the dump
+  lands (the map is reused as a blur target). Next: dump the map right after the last shadow draw (a capture hook at
+  the end of the 912 pass), and a frame-exact A/B (same frame number after load) before concluding what changes it.
