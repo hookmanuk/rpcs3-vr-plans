@@ -436,3 +436,11 @@ fine (`st_q1`..`q4`): the hangs were in runs with the menus at the VR rate.
 
 **FXAA override checked 2026-10-08:** `vrtest_sonic_race` at 300%, same moment: with the taps zeroed the eye image is
 sharper (Laplacian mean 6.3 vs 5.3) and loses the dotted artefacts along the track lines; committed with the profile.
+
+## Open (Matt, headset, 2026-10-08): horizontal banding still there
+
+Matt: there is still some horizontal banding, in the distance on the track ahead. His savestate `BLUS30839_1_3`
+(2026-10-08 10:38), hard-linked as `vrtest_sonic_matt_banding` so the per-game cap cannot delete it. The 2026-10-06 fix
+(Wider view 2.0: culling-only widening, SPU frustum test off) removed most of the lines; what is left is far down the
+track. Start from a fresh load of that state, compare against flat and both eyes, and check whether it changes with the
+Wider view Scale (1.0 / 2.0 / 3.0) and with head yaw.
