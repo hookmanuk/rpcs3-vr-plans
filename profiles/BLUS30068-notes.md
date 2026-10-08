@@ -170,3 +170,9 @@ investigated yet. Candidates: a screen-space shadow/projection pass rebuilding p
 camera's constants (as Asura's Wrath, Sonic and R&C: `depth_remap_programs`, `depth_remap_uv` / ray variants); or the
 shadow map / tree-shadow blobs tied to the eye's view. Check with `tools/re/simpose.py` yaw -20 / 0 / +20 on the
 simulator from a fresh load of the first race.
+
+**Matt, headset, 2026-10-08: still wrong (bird shadows).** Start the first race, sit on the start line and turn the head:
+the large dark shadow shapes on the ground (a bird-like silhouette bottom left, a big dark wedge beside the car) are the
+birds' shadows, and they slide over the ground as the head turns instead of staying put. Matt's shot:
+`evidence/segarally/matt-bird-shadows-2026-10-08.png`. The 2026-10-06 dust/depth fix did not cure it. Reproduce on the
+simulator from a fresh first-race start with `simpose.py` yaw -20 / 0 / +20 (compare against flat).
