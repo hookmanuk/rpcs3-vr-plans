@@ -850,6 +850,25 @@ few at full rate in the next release smoke test. vr8 workaround: VR Frame Rate s
   MotorStorm, Gundam, SEGA Rally, Dragon Age: Origins make a new frame on every flip.
 - R&C's character shadow: profile key `depth_remap_uv` (fork 5466b0d33), see `profiles/README.md`.
 
+## Generic work from the 2026-10-07/08 new games and fixes
+
+- **Orthographic games** (fork 82c80ffdc): profile key `orthographic_stereo` `{angle, convergence | convergence_z}`: the
+  game goes on the fixed screen in stereo, each eye's orthographic view turned by the angle about a convergence plane
+  (FEZ). The generator writes it when an orthographic camera covers most depth-tested draws.
+- **Blit-aware `texture_redirects`, `"to": "camera"`** (fork 7c91de0b5): blits out of a redirected main-memory copy read
+  the render target too; `"camera"` picks this frame's scene target for games alternating two (Dragon Age II, whose eyes
+  were identical).
+- **`frame_rate_draws`** (fork 2112da0f3): the frame-rate words follow the VR rate only while given draws are made (Sonic:
+  the VR step in its menus broke the next race start).
+- **Linked camera block = bound camera block** no longer transformed twice (fork 3be12902e; Flower's sky).
+- **720p forced for profiled games** (`force_vr_resolution`, fork 13532f761): had been in use since 2026-10-04 but not
+  committed.
+- **Dev:** key script `motion X Y Z G` (SIXAXIS sensors: Flower, flOw steer by tilt); `tools/re/eyesame.py` in
+  `vr_regress.sh` flags shots whose eyes are the same image (found Dragon Age II and Killzone 2);
+  `tools/re/findproj3.py` (projection matrices in live memory).
+- Experiments reverted: SPU-decrementer-only and sleep-only clock scaling (Dragon Age: Inquisition's load hang; the PPU
+  timebase is the trigger); a timebase-read histogram hook (`RPCS3_TB_TRACE`, interpreter).
+
 ## Unreleased games
 
 Per-game state for everything not yet released (Split/Second, Blur, inFamous 1 and 2, MGS4, NFS Most Wanted,
