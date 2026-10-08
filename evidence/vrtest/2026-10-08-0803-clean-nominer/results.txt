@@ -1,0 +1,74 @@
+# path: OpenXR Simulator, RPCS3_VR_MULTIVIEW=default, build 2c0c0524a VR: flOw (Journey Collector's Edition): real-time 
+# BCUS98282 vrtest_rc1_veldin: Ratchet & Clank 1: Veldin, start (HelpDesk tip on screen)
+BCUS98282 vrtest_rc1_veldin vblank 72 scale 300%:
+   576 frames over 8.0 s: avg 71.9 FPS, 1% low 56.9, 0.1% low 52.9 (worst frame 18.9 ms), median 13.90 ms, late 0.00%, RSX thread 10.35 ms/frame, new frames 71.9/s
+   576 frames over 8.0 s: avg 71.9 FPS, 1% low 54.4, 0.1% low 52.4 (worst frame 19.1 ms), median 13.91 ms, late 0.00%, RSX thread 10.28 ms/frame, new frames 71.9/s
+   576 frames over 8.0 s: avg 72.0 FPS, 1% low 56.9, 0.1% low 54.4 (worst frame 18.4 ms), median 13.90 ms, late 0.00%, RSX thread 9.93 ms/frame, new frames 72.0/s
+   => median of 3 windows: avg 71.9 FPS, 1% low 56.9, late frames 0.00%, RSX thread 10.28 ms/frame
+   eyes: residual at 0 24.94, best shift -162 (3.24) 
+BCUS98282 vrtest_rc1_veldin vblank 90 scale 300%:
+   708 frames over 8.0 s: avg 88.5 FPS, 1% low 65.1, 0.1% low 61.5 (worst frame 16.3 ms), median 11.20 ms, late 0.00%, RSX thread 10.22 ms/frame, new frames 88.5/s
+   708 frames over 8.0 s: avg 88.4 FPS, 1% low 64.0, 0.1% low 57.5 (worst frame 17.4 ms), median 11.17 ms, late 0.42%, RSX thread 10.07 ms/frame, new frames 88.4/s
+   713 frames over 8.0 s: avg 89.1 FPS, 1% low 68.7, 0.1% low 62.0 (worst frame 16.1 ms), median 11.20 ms, late 0.00%, RSX thread 9.79 ms/frame, new frames 89.1/s
+   => median of 3 windows: avg 88.5 FPS, 1% low 65.1, late frames 0.00%, RSX thread 10.07 ms/frame
+   eyes: residual at 0 24.99, best shift -162 (3.30) 
+SUSTAINABLE BCUS98282 vrtest_rc1_veldin: 72 Hz
+# BLUS30268 vrtest_xmen_jungle: X-Men Origins: Wolverine: jungle, first control after the intro (Unlocked frame rate (VR); 72 Hz = Vblank 144) rates=72
+BLUS30268 vrtest_xmen_jungle vblank 144 scale 300%:
+   501 frames over 8.0 s: avg 62.6 FPS, 1% low 52.5, 0.1% low 48.2 (worst frame 20.8 ms), median 15.86 ms, late 0.00%, RSX thread 15.85 ms/frame, new frames 58.0/s
+   511 frames over 8.0 s: avg 63.8 FPS, 1% low 54.3, 0.1% low 52.7 (worst frame 19.0 ms), median 15.59 ms, late 0.00%, RSX thread 15.55 ms/frame, new frames 59.6/s
+   => median of 2 windows: avg 62.6 FPS, 1% low 52.5, late frames 0.00%, RSX thread 15.55 ms/frame
+   eyes: residual at 0 44.18, best shift -184 (15.59) 
+SUSTAINABLE BLUS30268 vrtest_xmen_jungle: none Hz
+# BCUS98116 vrtest_kz2_carrier: Killzone 2: Campaign > Continue, the carrier walk (Write/Read Color Buffers in the game config)
+BCUS98116 vrtest_kz2_carrier vblank 144 scale 300%:
+   519 frames over 8.0 s: avg 64.8 FPS, 1% low 57.9, 0.1% low 55.2 (worst frame 18.1 ms), median 15.37 ms, late 0.00%, RSX thread 15.31 ms/frame, new frames 64.8/s
+   516 frames over 8.0 s: avg 64.4 FPS, 1% low 57.6, 0.1% low 52.9 (worst frame 18.9 ms), median 15.51 ms, late 0.00%, RSX thread 15.43 ms/frame, new frames 64.4/s
+   515 frames over 8.0 s: avg 64.3 FPS, 1% low 57.0, 0.1% low 33.2 (worst frame 30.1 ms), median 15.45 ms, late 0.19%, RSX thread 15.41 ms/frame, new frames 39.6/s
+   => median of 3 windows: avg 64.4 FPS, 1% low 57.6, late frames 0.00%, RSX thread 15.41 ms/frame
+   eyes: residual at 0 41.60, best shift -168 (31.42) 
+SUSTAINABLE BCUS98116 vrtest_kz2_carrier: none Hz
+# BLUS30645 vrtest_da2_fight: Dragon Age II: prologue, first fight (no input)
+BLUS30645 vrtest_da2_fight vblank 72 scale 300%:
+   540 frames over 8.0 s: avg 67.5 FPS, 1% low 35.7, 0.1% low 35.6 (worst frame 28.1 ms), median 14.00 ms, late 6.67%, RSX thread 13.38 ms/frame, new frames 55.6/s
+   541 frames over 8.0 s: avg 67.6 FPS, 1% low 35.7, 0.1% low 35.6 (worst frame 28.1 ms), median 14.00 ms, late 6.47%, RSX thread 13.30 ms/frame, new frames 51.6/s
+   541 frames over 8.0 s: avg 67.5 FPS, 1% low 35.7, 0.1% low 35.6 (worst frame 28.1 ms), median 14.00 ms, late 6.65%, RSX thread 13.34 ms/frame, new frames 48.2/s
+   => median of 3 windows: avg 67.5 FPS, 1% low 35.7, late frames 6.65%, RSX thread 13.34 ms/frame
+   eyes: residual at 0 39.53, best shift -168 (15.11) 
+SUSTAINABLE BLUS30645 vrtest_da2_fight: none Hz
+# NPUA80083 vrtest_flower_l1: Flower: level 1 field (holds X: flies; Unlocked frame rate)
+NPUA80083 vrtest_flower_l1 vblank 72 scale 300%:
+   576 frames over 8.0 s: avg 72.0 FPS, 1% low 68.9, 0.1% low 67.2 (worst frame 14.9 ms), median 14.00 ms, late 0.00%, RSX thread 13.83 ms/frame, new frames 72.0/s
+   577 frames over 8.0 s: avg 72.0 FPS, 1% low 68.5, 0.1% low 66.2 (worst frame 15.1 ms), median 14.00 ms, late 0.00%, RSX thread 13.69 ms/frame, new frames 72.0/s
+   576 frames over 8.0 s: avg 72.0 FPS, 1% low 68.9, 0.1% low 64.7 (worst frame 15.5 ms), median 14.00 ms, late 0.00%, RSX thread 12.30 ms/frame, new frames 72.0/s
+   => median of 3 windows: avg 72.0 FPS, 1% low 68.9, late frames 0.00%, RSX thread 13.69 ms/frame
+   eyes: residual at 0 29.94, best shift -170 (4.88) 
+NPUA80083 vrtest_flower_l1 vblank 90 scale 300%:
+   720 frames over 8.0 s: avg 90.0 FPS, 1% low 84.4, 0.1% low 82.2 (worst frame 12.2 ms), median 11.01 ms, late 0.00%, RSX thread 10.78 ms/frame, new frames 90.0/s
+   720 frames over 8.0 s: avg 90.0 FPS, 1% low 84.2, 0.1% low 82.3 (worst frame 12.1 ms), median 11.01 ms, late 0.00%, RSX thread 10.61 ms/frame, new frames 90.0/s
+   => median of 2 windows: avg 90.0 FPS, 1% low 84.2, late frames 0.00%, RSX thread 10.61 ms/frame
+   eyes: residual at 0 22.62, best shift -164 (9.32) 
+NPUA80083 vrtest_flower_l1 vblank 120 scale 300%:
+   958 frames over 8.0 s: avg 119.7 FPS, 1% low 105.6, 0.1% low 97.5 (worst frame 10.3 ms), median 8.40 ms, late 0.00%, RSX thread 7.93 ms/frame, new frames 119.7/s
+   923 frames over 8.0 s: avg 115.3 FPS, 1% low 93.6, 0.1% low 79.2 (worst frame 12.6 ms), median 8.56 ms, late 0.00%, RSX thread 7.38 ms/frame, new frames 115.3/s
+   => median of 2 windows: avg 115.3 FPS, 1% low 93.6, late frames 0.00%, RSX thread 7.38 ms/frame
+   eyes: residual at 0 25.20, best shift -164 (3.08) 
+SUSTAINABLE NPUA80083 vrtest_flower_l1: 90 Hz
+# NPUA70218 vrtest_journey_dune: Journey: first dune (holds forward; SPU MLAA patched in the state; SPU Block Size Mega in the game config)
+NPUA70218 vrtest_journey_dune vblank 72 scale 300%:
+   
+   => no frame stats (did not run)
+   (no frame stats: retrying once)
+NPUA70218 vrtest_journey_dune vblank 72 scale 300%:
+   576 frames over 8.0 s: avg 72.0 FPS, 1% low 68.0, 0.1% low 65.8 (worst frame 15.2 ms), median 14.00 ms, late 0.00%, RSX thread 13.27 ms/frame, new frames 72.0/s
+   577 frames over 8.0 s: avg 72.0 FPS, 1% low 65.0, 0.1% low 44.6 (worst frame 22.4 ms), median 13.98 ms, late 0.17%, RSX thread 8.52 ms/frame, new frames 72.0/s
+   576 frames over 8.0 s: avg 72.0 FPS, 1% low 64.5, 0.1% low 40.2 (worst frame 24.9 ms), median 13.99 ms, late 0.17%, RSX thread 5.61 ms/frame, new frames 72.0/s
+   => median of 3 windows: avg 72.0 FPS, 1% low 65.0, late frames 0.17%, RSX thread 8.52 ms/frame
+   eyes: residual at 0 4.74, best shift -174 (3.26) 
+NPUA70218 vrtest_journey_dune vblank 90 scale 300%:
+   691 frames over 8.0 s: avg 86.3 FPS, 1% low 70.2, 0.1% low 65.0 (worst frame 15.4 ms), median 11.43 ms, late 0.00%, RSX thread 11.29 ms/frame, new frames 86.3/s
+   700 frames over 8.0 s: avg 87.5 FPS, 1% low 73.1, 0.1% low 69.6 (worst frame 14.4 ms), median 11.35 ms, late 0.00%, RSX thread 11.01 ms/frame, new frames 87.5/s
+   => median of 2 windows: avg 86.3 FPS, 1% low 70.2, late frames 0.00%, RSX thread 11.01 ms/frame
+   eyes: residual at 0 4.77, best shift -174 (3.26) 
+SUSTAINABLE NPUA70218 vrtest_journey_dune: 72 Hz
+DONE /f/rpsc3/source/plans/evidence/vrtest/2026-10-08-0803-clean-nominer

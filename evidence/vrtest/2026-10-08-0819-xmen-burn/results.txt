@@ -1,0 +1,9 @@
+# path: OpenXR Simulator, RPCS3_VR_MULTIVIEW=default, build 2c0c0524a VR: flOw (Journey Collector's Edition): real-time 
+# BLUS30268 vrtest_xmen_jungle: X-Men Origins: Wolverine: jungle, first control after the intro (Unlocked frame rate (VR); 72 Hz = Vblank 144) rates=72
+BLUS30268 vrtest_xmen_jungle vblank 144 scale 300%:
+   452 frames over 8.0 s: avg 56.4 FPS, 1% low 46.9, 0.1% low 22.6 (worst frame 44.2 ms), median 17.61 ms, late 0.22%, RSX thread 17.63 ms/frame, new frames 52.1/s
+   471 frames over 8.0 s: avg 58.8 FPS, 1% low 50.5, 0.1% low 49.0 (worst frame 20.4 ms), median 17.04 ms, late 0.00%, RSX thread 16.89 ms/frame, new frames 56.2/s
+   => median of 2 windows: avg 56.4 FPS, 1% low 46.9, late frames 0.00%, RSX thread 16.89 ms/frame
+   eyes: residual at 0 41.67, best shift -186 (17.79) 
+SUSTAINABLE BLUS30268 vrtest_xmen_jungle: none Hz
+DONE /f/rpsc3/source/plans/evidence/vrtest/2026-10-08-0819-xmen-burn

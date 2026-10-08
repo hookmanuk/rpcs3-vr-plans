@@ -1,0 +1,10 @@
+# path: OpenXR Simulator, RPCS3_VR_MULTIVIEW=default, build 2c0c0524a VR: flOw (Journey Collector's Edition): real-time 
+# BLUS30645 vrtest_da2_fight: Dragon Age II: prologue, first fight (no input)
+BLUS30645 vrtest_da2_fight vblank 72 scale 300%:
+   547 frames over 8.0 s: avg 68.3 FPS, 1% low 35.7, 0.1% low 35.7 (worst frame 28.0 ms), median 14.00 ms, late 5.48%, RSX thread 13.08 ms/frame, new frames 45.8/s
+   560 frames over 8.0 s: avg 70.0 FPS, 1% low 35.7, 0.1% low 35.6 (worst frame 28.1 ms), median 14.00 ms, late 2.86%, RSX thread 12.64 ms/frame, new frames 53.4/s
+   552 frames over 8.0 s: avg 68.9 FPS, 1% low 35.7, 0.1% low 35.3 (worst frame 28.3 ms), median 14.00 ms, late 4.53%, RSX thread 12.84 ms/frame, new frames 46.8/s
+   => median of 3 windows: avg 68.9 FPS, 1% low 35.7, late frames 4.53%, RSX thread 12.84 ms/frame
+   eyes: residual at 0 39.55, best shift -168 (15.00) 
+SUSTAINABLE BLUS30645 vrtest_da2_fight: none Hz
+DONE /f/rpsc3/source/plans/evidence/vrtest/2026-10-08-0816-da2-recheck

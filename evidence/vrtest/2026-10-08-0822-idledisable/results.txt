@@ -1,0 +1,17 @@
+# path: OpenXR Simulator, RPCS3_VR_MULTIVIEW=default, build 2c0c0524a VR: flOw (Journey Collector's Edition): real-time 
+# BLUS30268 vrtest_xmen_jungle: X-Men Origins: Wolverine: jungle, first control after the intro (Unlocked frame rate (VR); 72 Hz = Vblank 144) rates=72
+BLUS30268 vrtest_xmen_jungle vblank 144 scale 300%:
+   447 frames over 8.0 s: avg 55.8 FPS, 1% low 47.0, 0.1% low 45.2 (worst frame 22.1 ms), median 17.82 ms, late 0.00%, RSX thread 17.82 ms/frame, new frames 51.7/s
+   446 frames over 8.0 s: avg 55.6 FPS, 1% low 49.1, 0.1% low 48.1 (worst frame 20.8 ms), median 17.90 ms, late 0.00%, RSX thread 17.84 ms/frame, new frames 51.4/s
+   => median of 2 windows: avg 55.6 FPS, 1% low 47.0, late frames 0.00%, RSX thread 17.82 ms/frame
+   eyes: residual at 0 44.17, best shift -184 (18.23) 
+SUSTAINABLE BLUS30268 vrtest_xmen_jungle: none Hz
+# BLUS30645 vrtest_da2_fight: Dragon Age II: prologue, first fight (no input)
+BLUS30645 vrtest_da2_fight vblank 72 scale 300%:
+   571 frames over 8.0 s: avg 71.4 FPS, 1% low 68.0, 0.1% low 35.7 (worst frame 28.0 ms), median 14.00 ms, late 0.88%, RSX thread 12.49 ms/frame, new frames 56.4/s
+   573 frames over 8.0 s: avg 71.5 FPS, 1% low 68.9, 0.1% low 35.3 (worst frame 28.3 ms), median 14.00 ms, late 0.70%, RSX thread 12.48 ms/frame, new frames 50.2/s
+   571 frames over 8.0 s: avg 71.4 FPS, 1% low 67.6, 0.1% low 35.7 (worst frame 28.0 ms), median 14.00 ms, late 0.88%, RSX thread 12.33 ms/frame, new frames 50.6/s
+   => median of 3 windows: avg 71.4 FPS, 1% low 68.0, late frames 0.88%, RSX thread 12.48 ms/frame
+   eyes: residual at 0 39.67, best shift -168 (14.72) 
+SUSTAINABLE BLUS30645 vrtest_da2_fight: 72 Hz
+DONE /f/rpsc3/source/plans/evidence/vrtest/2026-10-08-0822-idledisable

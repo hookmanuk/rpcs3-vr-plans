@@ -67,6 +67,9 @@ continuously, so CPU-bound frame rates measured since then read low (R&C 1 `_1_5
 72.0 / 10.8 ms on the clean morning run). Same-session A/B comparisons hold. Not ended (needs Matt). Affected: the
 Journey, Dragon Age II, Flower and DAO numbers of 2026-10-07/08 (they may be higher on a clean desktop).
 
+**2026-10-08 08:00: the spinning `dwm.exe` was malware** (an XMRig miner injected into a fake `dwm.exe`, started at logon; removed, Matt informed). Clean subset (`evidence/vrtest/2026-10-08-0803-clean-nominer/`): R&C 1 **72** (88.5 at 90), Flower **90**, Journey **72** (86-87 at 90; was 75 under the miner), Killzone 2 64 at 72, X-Men 62.6 at 72, Dragon Age II 67.5-68.9 at 72 with 4.5-6.7% late (it passed with the miner running).
+**Power-plan sensitivity (A/B, settings restored afterwards):** this PC's plan has Minimum processor state 0% (autonomous frequency control) and idle states on. Dragon Age II is bound by thread wake-up latency: 4 idle-priority busy threads or *Processor idle disable* bring it to 71.2-71.4 / 0.9-1.05% late (passes 72); Minimum processor state 100% alone does not. X-Men is RSX-thread-bound: Minimum processor state 100% raises it 62.6 -> **68.7** (RSX thread 15.5 -> 14.3 ms), while busy threads or idle disable drop it to 55-56 (less boost for the busy core). So headroom figures depend on the plan; Matt's own play uses the same plan. Suggest to Matt: Minimum processor state 100% (the High performance default), no downside seen.
+
 **Measurement caveat (2026-10-06 afternoon):** an RPCS3 run hung at 12:49 (an R&C savestate run that used Cubeb audio
 with the desktop locked; the process cannot be ended) and the Desktop Window Manager (`dwm.exe`, PID 34288) has used 4
 CPU cores continuously since. Frame rates measured after 12:49 today may be low on CPU-bound games. Ending that
