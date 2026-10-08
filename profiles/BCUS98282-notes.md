@@ -204,3 +204,8 @@ have the same fixes but still need his headset run before they count as working.
    spaceship cockpit) has audio and video out of sync (`matt-ship-cutscene-desync.png`). Matt suspects the 90 Hz rate:
    the cutscene probably runs on frame count, so at 90 it plays 1.5x fast against its audio. Check whether R&C 2's
    unlock patch / frame-time values cover cutscenes (compare cutscene length at 60 vs 90 against the audio).
+3. **R&C 3: opening in-engine cutscene runs too fast** (Matt, headset, 2026-10-08): the cutscene at the start of a new
+   game (Ratchet beside his ship on Veldin) plays about 1.5x fast, like R&C 2's ship cutscene: probably the same cause,
+   cutscenes stepped per frame at the 90 Hz VR rate (`evidence/ratchet/rc2-newgame-2026-10-08/matt-rc3-opening-cutscene-fast.png`).
+   Fix both together: find what drives cutscene time in each game (the unlock patches cover gameplay) and check
+   against the audio at 60 vs 90.
