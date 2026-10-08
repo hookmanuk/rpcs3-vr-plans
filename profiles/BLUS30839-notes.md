@@ -457,3 +457,20 @@ and looks low-res with horizontal stripes, only in some places (so it is a fault
 road surface ahead of the car in `evidence/sonic-banding/matt-track-stripes-2026-10-08.png` (Ocean View start). The
 regression state `vrtest_sonic_race` (Ocean View, mid-lap 1) should show it near the start; compare against flat at the
 same moment.
+
+## 2026-10-08 (evening): the track stripes are far-distance z-fighting, also in flat RPCS3
+
+Reproduced at the race start (`sonic_race0`, Ocean View grid): at the far bend the road and the buildings beyond show
+short black/dark-grey horizontal dashes (`evidence/sonic-banding/hide_bend.png`, `flat_bend_2x.png`). Same moment, all
+fresh loads:
+- **Flat RPCS3 has it too**, at 300% and at **100%** (`flat100_bend.png`), with the *Wider view* patch disabled
+  (`nowv.png`): not caused by VR or the fork's patches. VR makes it more visible (the headset shows the distance larger).
+- Not changed by: FXAA (off, game's, taps scaled to the resolution: `fxaa_bend.png`), anisotropic 16x, Force High
+  Precision Z, two-draw stereo, *Wider view* 1.0, the depth-remap keys, game camera for the 1024 target, zero stereo
+  separation, Strict Rendering, Shader Precision Ultra, Accurate ZCULL off, Handle RSX Memory Tiling, Write Color
+  Buffers, Disable Vertex Cache (`flat_settings*.png`). The game FOV (`RPCS3_OPENXR_FOV=game`) makes it as small as
+  flat.
+- The dashes are already in the scene's MRT target B (`0xc1608000`) before post-processing, and they go away when the
+  far structure program `34b524f7491b7af2` is hidden (`flat_hide_sweep.png`): depth fighting between that structure and
+  the surfaces drawn over it at long range (D24S8, depth func LEQUAL, no MSAA). Depth bias is applied (NVIDIA D24 path).
+  Not found: whether the PS3 shows the same (compare real hardware footage), or an RPCS3 depth difference. Open.
