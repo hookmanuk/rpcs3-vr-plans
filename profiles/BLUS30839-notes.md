@@ -451,3 +451,9 @@ and Matt's own config untouched; a Start press changes nothing). `vrtest_sonic_r
 Perhaps it needs Matt's real pad connected (as GT5's states). The regression race's track ahead at full resolution
 showed no banding in the frames checked (`evidence/sonic-banding/`). Needs Matt: does the state load for him, and
 where exactly (track, lap position) the bands show.
+
+Matt, headset, 2026-10-08 (where to see the banding): just start a race and look ahead. The track in front shimmers
+and looks low-res with horizontal stripes, only in some places (so it is a fault, not the texture): the white and red
+road surface ahead of the car in `evidence/sonic-banding/matt-track-stripes-2026-10-08.png` (Ocean View start). The
+regression state `vrtest_sonic_race` (Ocean View, mid-lap 1) should show it near the start; compare against flat at the
+same moment.
