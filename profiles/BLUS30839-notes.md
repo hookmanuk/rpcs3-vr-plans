@@ -444,3 +444,10 @@ Matt: there is still some horizontal banding, in the distance on the track ahead
 (Wider view 2.0: culling-only widening, SPU frustum test off) removed most of the lines; what is left is far down the
 track. Start from a fresh load of that state, compare against flat and both eyes, and check whether it changes with the
 Wider view Scale (1.0 / 2.0 / 3.0) and with head yaw.
+
+2026-10-08 (later): Matt's state does not run here. `vrtest_sonic_matt_banding` (= `BLUS30839_1_3`, made 10:38 with
+build 4b97dc47) loads, builds its SPU cache in 7.5 s and then never presents a frame (3 tries: the test config, a retry,
+and Matt's own config untouched; a Start press changes nothing). `vrtest_sonic_race` loads and runs in the same setup.
+Perhaps it needs Matt's real pad connected (as GT5's states). The regression race's track ahead at full resolution
+showed no banding in the frames checked (`evidence/sonic-banding/`). Needs Matt: does the state load for him, and
+where exactly (track, lap position) the bands show.
