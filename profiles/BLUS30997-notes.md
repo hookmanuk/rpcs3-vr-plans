@@ -59,3 +59,10 @@ Even with the load hang worked around, Inquisition is a 30 FPS Frostbite 3 game 
 RPCS3 from the 30%-made savestate; an unlocked rate plus stereo would be far below the 72 Hz bar on current hardware.
 Kept as an emulation blocker; the next step (a time scale that drops only during loads, continuous across switches)
 needs changes in RPCS3's timebase (`sys_time.cpp`) and only pays off if the game can also run fast enough.
+
+## 2026-10-08: live clock scale (experiment, reverted)
+
+A dev hook let the clock scale change while running, continuous at each change (sys_time + lv2 sleeps). From
+`dai_title30` at 100%: switching 100 -> 30 -> 100 works (title, main menu at 30% 9 FPS, character creation at 100% 30
+FPS). But the level load after character creation (World State > Confirm) **also hangs at 30%**: loading spinner, no
+frames for 10 minutes. So a slow clock during loads is not enough; the hook was reverted. Still an emulation blocker.
