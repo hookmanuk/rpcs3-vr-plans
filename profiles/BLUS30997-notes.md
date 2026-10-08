@@ -37,3 +37,18 @@ Disc 01.01 (`Dragon Age - Inquisition (USA) (En,Fr,Es).iso`), PPU hash `PPU-22a1
 - Test patch: the PPU proxy's event wait (`sys_event_queue_receive` at `0xb6b090`, timeout 1.67 s, which stamps a
   timebase heartbeat into each job context +0x330 on every timeout) cut to 10 ms (`0xb6b080` `li r5, 10000`,
   `0xb6b088` nop; patch versions must name APP_VER 01.00): still hangs. Removed.
+
+## 2026-10-08: which time matters (experiments, reverted)
+
+- Scaling only the SPU decrementer to 30% (`read_dec`, LLVM fast path off): hangs the same at ~26 s.
+- Scaling only the lv2 sleeps/timeouts by 100/30 (`lv2_obj::wait_timeout`, `sys_timer`): hangs the same.
+- So the trigger is the PPU-visible timebase (mftb / `sys_time_get_system_time`), as at Clocks scale 30.
+- Timebase-read histogram (PPU interpreter, `RPCS3_TB_TRACE` test hook: per mftb site and caller): during the last load
+  window the main thread calls the game-timer update `0x24c740` (timer object: last tb, total, delta s, total s at
+  +0..+0x18, scale +0x20) ~775k times in 5 s from `0x86e958`, a busy-wait frame pacer (compares the timer delta `0x24c890`
+  with a target in f29; config at `[r30+0x2c]+0x10/0x14/0x1c`, falls back to `[r30+0x30]` Hz); other readers in that
+  window: `0x2316ec`, `0x24c8b0` (from `0x74d6b0`, `0x750dc0`), `0x2359c0`/`0x2359fc` (from the job manager `0xb64734`),
+  `0x24d944` (from `0xa28bb4`), `0x706570`, `0xb674a4`. After the hang only the job manager's frame-fence wait
+  (`0xa10064` from `0xa100ac`, ~26k/s), `0xf8f428`, `0x20756b4`, `0x63bfa4` and the PPU proxy `0xb6b12c` read time.
+- Candidates to try next: the job manager's `0xb64734` time reads (a job timeout or a frame budget) and the pacer's
+  target; compare the branch taken after each at 30% and 100% with `RPCS3_PPU_TRACE`.
