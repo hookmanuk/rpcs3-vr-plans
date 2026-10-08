@@ -132,3 +132,8 @@ Straight, yaw +-20, pitch +-10, roll 15 (`posecheck.sh`): HUD boxed and world ri
   19.8 down (400%: 42 across, 26 down), against roughly 35 per degree in a current headset panel. Vertical is the
   short axis in every game; X-Men's dense foliage with no anti-aliasing shows it most. A fix is an anisotropic
   resolution scale (more rows than columns, ~1.6x for this headset): a generic renderer change, proposed, not done.
+
+## Parked (Matt, headset, 2026-10-08)
+
+Graphics look terrible and low resolution, and it performs badly (62.6-68.7 FPS at VR 72 on 2026-10-08, depending on
+the power plan). Parked with The Darkness and Anarchy Reigns.
