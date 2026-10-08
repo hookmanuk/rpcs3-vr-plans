@@ -82,3 +82,7 @@ uncapped at vblank 120. So the 2026-10-07 pass (71.5) was helped by the miner ke
 busy threads 71.2 / 1.05%; Processor idle disable 71.4 / 0.88% (passes); Minimum processor state 100% 68.8 (no help).
 RPCS3 settings: Sleep Timers All/As Host 68.6-68.7, RPCS3 Scheduler 66.9, Multithreaded RSX 68.4, SPU reservation
 busy waiting 70.3 / 2.5%, both 69.9. Game-side CPU bound near 72 with wake-up latency on top; no fix found.
+
+## Parked (Matt, 2026-10-08)
+
+Corrupted graphics and poor performance. Parked with The Darkness, Anarchy Reigns and X-Men Origins.

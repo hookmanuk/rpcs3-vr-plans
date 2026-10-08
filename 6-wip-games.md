@@ -241,7 +241,7 @@ OpenXR Simulator unless noted). Recheck in the headset:**
 | Dante's Inferno | splash, menus, intro movie, pause menu | culling at the wide headset FOV (needs a patch) |
 | GT5 | | 60 on the grid state; need a savestate where it drops |
 | Asura's Wrath | | cutscene letterbox: need a cutscene savestate |
-| The Darkness, Anarchy Reigns, X-Men Origins: Wolverine | parked | |
+| The Darkness, Anarchy Reigns, X-Men Origins: Wolverine, Dragon Age II, Dragon Age: Inquisition | parked | |
 
 **Fix in progress (2026-10-01 evening, fork c7b092610, local): boot screens no longer follow the head.** Frames
 without 3D now go on the fixed screen by default (render targets carry `vr_has_3d`; a frame with no camera draws
@@ -313,8 +313,8 @@ pass mark** for fully compatible.
 | flOw | NPUA80001 (from Journey Collector's Edition) | `vr-non-working/` + untracked `bin/` copies (profile, patch) | yes (fork patch: no 1/60 lower clamp on dt) | **120 Hz**, 2026-10-08 | simulator only | new: steers by tilt; only the first depth seen. See notes |
 | Journey | NPUA70218 (installed from Journey Collector's Edition BCUS98377) | `vr-non-working/` + untracked `bin/` copies (profile, patch) | yes (fork patch, measured time) | **72 Hz** (0% late with SPU Block Size Mega); 90 reaches **86-88 on a clean CPU** (75 under the miner): the game's own SPU work, flat the same (84-88); Wider view 1.0 88.6, 2.5 86.8; scheduler/XFloat/SPU threads no help | simulator only (real head poses checked 2026-10-07) | **Matt, headset, 2026-10-08: needs a lot of work:** ~~the traveller renders differently in each eye~~ **fixed 2026-10-08 (fork 650d17969): world scale, `eye_baseline` 0.02 (a unit is ~3 m)**; **the world culls at the edge on large head turns: open** (the game's frustum reaches ~+-77 degrees at Wider view 2.5; head yaw past ~35 degrees shows the edge; FOV patches cannot pass +-90: needs the sand's tile culling disabled; see notes) (state `NPUA70218_1_2` = `vrtest_journey_matt`). new (Matt, 2026-10-07, wants 90): SPU-bound at ~75 in VR; *Wider view* 2.5 fills the dunes at head turns; only the first dune seen. See notes |
 | Dragon Age: Origins | BLUS30415 | `vr-non-working/` + untracked `bin/` copies (profile, patch) | yes (no patch needed: every vblank, measured time) | **120 Hz** (Castle Cousland hall), 2026-10-04 | simulator only (real head poses checked 2026-10-05; combat 2026-10-08) | ~~Open (Matt, headset, 2026-10-08): sun rays and the skybox rotate with the head; black box in the sky~~ **fixed 2026-10-08 (fork 2e6f8d7c5): sky and window shafts world-fixed (`either_layout_blocks`), black box gone, sun shafts hidden in VR (world-fixed they showed edges). Headset recheck.** **2026-10-08: combat checked (wolf fight, `vrtest_dao_wolves`: poses clean); party portraits and the equipment figure were tiny full-body views (Wider view floored their FOV): fixed, patch 1.2**; Wider view default 2.0 (2.5 stretches fire); HUD stayed on the face at real head poses (Scaleform `c[0..1]`), fixed 2026-10-05 with `hud_programs`; ~~conversation culling (state `BLUS30415_1_2`: grey to the right, legless characters, a ghost overlay)~~ **fixed 2026-10-05:** Wider view 1.1 floors the FOV at 60 x Scale (close-ups were x2 of a narrow FOV); ~~trees head-locked after the pause menu (`BLUS30415_1_5`)~~ **fixed 2026-10-06 (fork 11323754a):** the foliage uses a DP4 camera at `c[258]`; new key `column_vector_blocks` |
-| Dragon Age II | BLUS30645 | `vr-non-working/` + untracked `bin/` copy (profile) | yes (no patch needed, clocks at 1.0 measured) | **72 Hz, at the edge** (71.5-71.6 FPS, 0.5-0.7% late after the stereo fix, 2026-10-07, measured with the miner busy). **2026-10-08 on a clean idle CPU: 67.5-69.0, 4.3-6.7% late (fails)**; flat the same (69.0; 74.7 uncapped): the game is CPU-bound near 72 and sensitive to wake-up latency (passes with idle states off or a background load). No RPCS3 setting fixes it (Sleep Timers, scheduler, Multithreaded RSX, SPU busy-wait 70.3) | simulator only (real head poses checked 2026-10-07) | **stereo fixed 2026-10-07** (both eyes had shown the same scene: SPU copy blitted back; `texture_redirects` "camera"); Kirkwall, cutscenes unchecked |
-| Dragon Age: Inquisition | BLUS30997 | none | - | - | - | **emulation blocker:** hangs loading the start menu and each level (a GPU frame fence the SPU job system never kicks); Clocks scale 30 gets past it but runs at 9 FPS. `profiles/BLUS30997-notes.md` |
+| Dragon Age II | BLUS30645 | `vr-non-working/` + untracked `bin/` copy (profile) | yes (no patch needed, clocks at 1.0 measured) | **Parked (Matt, 2026-10-08): corrupted graphics and poor performance.** **72 Hz, at the edge** (71.5-71.6 FPS, 0.5-0.7% late after the stereo fix, 2026-10-07, measured with the miner busy). **2026-10-08 on a clean idle CPU: 67.5-69.0, 4.3-6.7% late (fails)**; flat the same (69.0; 74.7 uncapped): the game is CPU-bound near 72 and sensitive to wake-up latency (passes with idle states off or a background load). No RPCS3 setting fixes it (Sleep Timers, scheduler, Multithreaded RSX, SPU busy-wait 70.3) | simulator only (real head poses checked 2026-10-07) | **stereo fixed 2026-10-07** (both eyes had shown the same scene: SPU copy blitted back; `texture_redirects` "camera"); Kirkwall, cutscenes unchecked |
+| Dragon Age: Inquisition | BLUS30997 | none | - | - | - | **Parked (Matt, 2026-10-08): corrupted graphics and poor performance.** **emulation blocker:** hangs loading the start menu and each level (a GPU frame fence the SPU job system never kicks); Clocks scale 30 gets past it but runs at 9 FPS. `profiles/BLUS30997-notes.md` |
 | MX vs ATV Reflex | BLUS30321 | `vr-non-working/` + untracked `bin/` copy | no (`max_fps 30`) | not measured | not played | generated 2026-09-28; no notes |
 | Uncharted: Drake's Fortune | BCUS98103 | none | no: 42-46 flat | not measured | - | SPU/PPU-bound; not pursued |
 | Final Fantasy X/X-2 HD Remaster | BLUS31211 | none | no: 80-91 flat | not measured | - | RSX-bound flat; not pursued |
@@ -802,6 +802,8 @@ enough); *Wider view* 1.1 takes at least 60 degrees x Scale (fork 9f525a4c4).
 
 ## Dragon Age II (BLUS30645, disc 01.01)
 
+**Parked (Matt, 2026-10-08): corrupted graphics and poor performance.** Not worked on until the other games are done.
+
 Notes: `profiles/BLUS30645-notes.md`. **2026-10-07: both eyes had shown the same scene (the scene comes back from a
 main-memory copy by blit): fixed with blit-aware `texture_redirects` to "camera"; 72 Hz passes (71.5-71.6, <1% late).**
 Real time without a patch. Generated profile (`c[256, 269, 263, 271]`,
@@ -810,6 +812,8 @@ Real time without a patch. Generated profile (`c[256, 269, 263, 271]`,
 FPS, 1.2-2.3% late), limited by the game's PPU/SPU work (RSX thread mostly waiting); measure a town scene next.
 
 ## Dragon Age: Inquisition (BLUS30997, disc 01.01)
+
+**Parked (Matt, 2026-10-08): corrupted graphics and poor performance.** Not worked on until the other games are done.
 
 The first boot installs 5.3 GB (`dev_hdd0/game/BLUS30997install`), then the game sits at a black screen. Every later
 boot stops presenting ~26 s in, while loading the start menu (log: trophy check, content permit, then the main
