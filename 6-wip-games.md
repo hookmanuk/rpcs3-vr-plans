@@ -36,6 +36,18 @@ headset: R&C shadows, SEGA Rally title and dust, KH pause (uncommitted pose-hold
 without `frames_without_3d_as_screen`). Needs you: a hung `rpcs3.exe` (PID 54120) and `dwm.exe` on 4 cores, see below
 (end that dwm.exe or reboot; `bin/rpcs3.zombie.exe`, `bin/RPCS3.buf.zombie` and `log/RPCS3.zombie.log` can go after).
 
+**Matt, 2026-10-08 (new games and fixes; all on the OpenXR Simulator, needs your headset):**
+- **FEZ** 120 Hz: an orthographic game, shown as a 3D diorama on the world-fixed screen (new profile key). Savestates do not load.
+- **Flower** 90 Hz (unlock patch; level 1). **flOw** 120 Hz (real-time step patch). Both steer by SIXAXIS tilt.
+- **Journey** 72 Hz (SPU-bound: ~75 max in VR); install it from the collection disc's PKG (see `vr-games.md`).
+- **Dragon Age II**: both eyes had shown the same picture; fixed; 72 Hz just passes. **Dragon Age: Origins**: forest
+  gameplay 120 Hz, poses clean. **Inquisition**: still an emulation blocker (and too slow for VR even if fixed).
+- **Sonic**: the "no car moves" freeze fixed (your frozen savestates stay frozen: make new ones); FXAA blur fixed.
+- **R&C**: 2 and 3 poses clean; R&C 1 holds 72 (not 90).
+- **Killzone 2** both eyes the same (diagnosed, not fixed). A new `dwm.exe` spins on ~4 cores again (since 10-07
+  10:59): CPU-bound frame rates read low until it is ended or the PC restarts. Restored `Audio Renderer: Cubeb` in the
+  Heavy Rain and NFS Hot Pursuit configs (left at Null by an earlier test run).
+
 **DWM fixed 2026-10-07 (Matt asked; the spinning `dwm.exe` was ended, CPU idle 2%). Clean re-measurements:** R&C 1 on
 `BCUS98282_1_5` (Wider view 1.25): **72.0 at VR 72** (RSX thread 10.8 ms; was 60 / 16.3 under DWM), 88.7-89.3 at 90.
 Need for Speed: Hot Pursuit: **71.6 at 72, 83.4 at 90**. X-Men: 69.3 at 72 (was 55). Everything measured on 2026-10-06
@@ -48,7 +60,7 @@ frame on every flip **except Sonic**: it passes 90 Hz on flips but makes **60 ne
 VR rate: **90.0 new frames/s at 90**, 120 at 120, real time (checked). Needs Matt's headset check (feel, shadows).
 **Sonic per-eye shadows: third fix 2026-10-07 (fork 81fedb836): the shadow volumes take the scene camera's eye transform; per-eye masks match flat and each other at several head poses (simulator). Headset recheck.** Second fix (861614444): the remap's ray signs. Earlier step (fork eea6166d7): the shadow pass rebuilt its rays with another camera's
 projection; both eyes now match flat in the fly-by. Probably also the shadows stuck mid-track. Headset recheck.
-**Sonic 2026-10-08: the no-car-moves freeze fixed** (the VR step rate anywhere in the menus broke the next race start; new profile key `frame_rate_draws` applies the VR rate only in races: fresh boots 3/3, pause, second race OK). FXAA override verified and committed. Matt's frozen states stay frozen (the bad state is in them): make new ones. Open: an occasional hang during race loads at Vblank 120 (`SlFile` lwcond EPERM). See the Sonic section.
+**Sonic 2026-10-08: the no-car-moves freeze fixed** (the VR step rate anywhere in the menus broke the next race start; new profile key `frame_rate_draws` applies the VR rate only in races: fresh boots 3/3, pause, second race OK). FXAA override verified and committed. Matt's frozen states stay frozen (the bad state is in them): make new ones. The race-load hangs seen at 120 were in runs with the menus at the VR rate; with the fix 4 more fresh boots (two races each) at 120 were all fine. See the Sonic section.
 
 **Measurement caveat again (2026-10-08 00:30):** a new `dwm.exe` (PID 34824, started 2026-10-07 10:59) uses ~3.9 cores
 continuously, so CPU-bound frame rates measured since then read low (R&C 1 `_1_5`: 66.5 FPS at VR 72, RSX thread 13.2 ms;
