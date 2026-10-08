@@ -51,3 +51,14 @@ Keyboard pad from `tools/keyboard-pad-template.yml` plus right stick A/D/R/F int
 (deleted after the session). First boot: language (X), gamma (X), then the intro can be skipped with X.
 New Campaign's intro cutscene cannot be skipped (~4 min). With a campaign save, `tools/re/kz2_boot.ps1
 [-Headset] [-Probe render=1] [-Audit 25]` reaches the carrier walk (Continue).
+
+## 2026-10-08: both eyes show the same scene
+
+`eyesame.py` on the 2026-10-04 regression shot: best shift 0, residual 2.5 (only the HUD differs). An inspector frame
+(`vrtest_kz2_carrier`, 1000 draws): the scene is drawn into `0xc07b0000`, then the last three draws (HUD, `e47548c5`,
+`4d6a8c2b`, `d7bb3f7c`) go straight into the display buffer `0xc0010000`, sampling main-memory textures (`0x31d2e300`
+160x90, `0x31a7d200` 640x360). No blit or draw copies the scene into the display buffer: it gets there outside the draw
+stream, most likely the SPU post chain (Write/Read Color Buffers: the left eye's scene read back to memory, processed
+on the SPUs, written into the display buffer). So both eyes show the left eye's post-processed image. A fix needs the
+display buffer per eye: present the scene target (`0xc07b0000`) per eye and redraw the HUD on it (the SPU post effects
+would be lost in VR, as in Puppeteer), or a new "display_redirect" profile key. Not done: Killzone 2 is also below 72 Hz.
