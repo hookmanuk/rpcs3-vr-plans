@@ -214,4 +214,15 @@ Needs Matt's headset check.
 
 ## Open (Matt, headset, 2026-10-08 evening): very high CPU use and stutter in races
 
-Racing around a track: very high CPU usage and stutter. To fix (not started).
+Racing around a track: very high CPU usage and stutter.
+
+2026-10-08 evening, measured on the simulator (300%, `vrtest_segarally_race`, holding R2 for 60 s, fresh load):
+- **CPU:** rpcs3 uses 1.5-2.0 cores the whole drive (about 12% of this 16-thread CPU), at 72 and at 90, with and
+  without *Disable SPU GETLLAR Spin Optimization* (90 Hz: 1.3-1.8 cores on, 1.5-2.0 off; 88.9 / 89.0 FPS). The
+  busiest threads are the game's SPU physics/tessellation threads (20-30% of a core each). Not reproduced as "very high":
+  if Matt saw high CPU, check his run for the old cryptominer (it was removed 2026-10-08 after his earlier tests) or a
+  first run compiling shaders/SPU code (here only in the first 5 s after load).
+- **Stutter:** at 90 Hz the race drops to 84-86 FPS for several seconds in dense sections (33-36 s and 42-47 s into
+  the drive; render thread), plus a 33 ms hitch: on a 90 Hz headset that is the stutter. At 72 the same drive holds
+  71.5-72.0 throughout.
+- **Fix (fork 501898a82):** the profile's `default_fps` is now 72 (90 still selectable in the VR menu, `max_fps 0`).
