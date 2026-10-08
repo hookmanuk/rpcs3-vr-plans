@@ -211,3 +211,7 @@ display-buffer draws can be passthrough HUD. After: the map no longer depends on
 -15 and -20, and VR matches flat at the same moment (`fx_sheet.png`, `fix_flat_vs_vr.png`). GT5 (the other profile
 with the key): HUD and mirror boxed, 120 Hz; SEGA Rally 72 Hz (`evidence/vrtest/2026-10-08-1516-sr-hudfix`).
 Needs Matt's headset check.
+
+## Open (Matt, headset, 2026-10-08 evening): very high CPU use and stutter in races
+
+Racing around a track: very high CPU usage and stutter. Investigating (see below).
