@@ -46,5 +46,7 @@ screen, not mono. The VR menu's Screen Depth scales the angle.
 ## Open
 
 - Other scenes (inside buildings, the rotations, night, the black-hole levels) unchecked; whether 0.507 holds there.
-- Fez's camera rotation key not found with the keyboard pad (L1/Q did nothing in the village).
+- World rotation not testable yet: at the village the ability is not unlocked (L1, R1, L2, R2 did nothing; Fez grants it
+  after the opening sequence). A rotation's in-between frames, if they use a perspective camera, would be drawn flat on
+  the screen by `orthographic_stereo` (only orthographic blocks get the toe-in).
 - Headset run: screen size (HUD Scale), depth strength (Screen Depth).
