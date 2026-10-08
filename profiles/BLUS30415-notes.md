@@ -118,3 +118,16 @@ Bayonetta pose checks unchanged.
   savestate does not keep (Write Color Buffers off). Not a VR problem; judge them after a fresh boot ("Resume").
 - Pad note: the template has no PS mapping, and RPCS3's default PS key is Backspace (= our Select), so Select opens
   RPCS3's home menu. For DAO's game menu (map, inventory, character) map Select to another key (N) for the run.
+
+## Open (Matt, headset, 2026-10-08): sun rays and sky follow the head; black box in the sky
+
+1. **Sun rays rotate with the head** (the light shafts through the trees): they should stay fixed in the world. Likely a
+   screen-space light-shaft pass placed from the game's own view (a `preprojected_programs` / `depth_remap` case, or a
+   post pass that needs the eye's rotation).
+2. **The skybox rotates with the head** as well: the sky draw does not take the eye rotation (another camera block or a
+   rotation-only sky matrix that the profile does not cover).
+3. **Black box in the sky:** after loading a game, looking up shows a large black rectangle across the upper sky, with
+   the tree tops cut along its edge (Matt's shot `evidence/dao/matt-sky-black-box-2026-10-08.png`, forest). Probably
+   the region beyond the game's own view at high pitch (sky or fog not drawn there), and may share a cause with 2.
+Reproduce in the forest (`vrtest_dao_forest` or a fresh Resume) with `simpose.py` pitch +30/+45 and yaw +-20; compare
+the sky and rays against flat.
