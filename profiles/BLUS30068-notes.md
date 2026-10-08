@@ -214,4 +214,4 @@ Needs Matt's headset check.
 
 ## Open (Matt, headset, 2026-10-08 evening): very high CPU use and stutter in races
 
-Racing around a track: very high CPU usage and stutter. Investigating (see below).
+Racing around a track: very high CPU usage and stutter. To fix (not started).
