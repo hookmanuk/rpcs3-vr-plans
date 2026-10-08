@@ -1,0 +1,8 @@
+# path: OpenXR Simulator, RPCS3_VR_MULTIVIEW=default, build 39fdd3c1d VR profile Heavy Rain: pause menu on the fixed scr
+# BLUS30268 vrtest_xmen_jungle: X-Men Origins: Wolverine: jungle, first control after the intro (Unlocked frame rate (VR); 72 Hz = Vblank 144) rates=72
+BLUS30268 vrtest_xmen_jungle vblank 144 scale 300%:
+   555 frames over 8.0 s: avg 69.3 FPS, 1% low 59.0, 0.1% low 51.6 (worst frame 19.4 ms), median 14.29 ms, late 0.00%, RSX thread 14.36 ms/frame, new frames 64.7/s
+   565 frames over 8.0 s: avg 70.6 FPS, 1% low 58.7, 0.1% low 54.0 (worst frame 18.5 ms), median 14.01 ms, late 0.00%, RSX thread 14.11 ms/frame, new frames 67.1/s
+   => median of 2 windows: avg 69.3 FPS, 1% low 58.7, late frames 0.00%, RSX thread 14.11 ms/frame
+SUSTAINABLE BLUS30268 vrtest_xmen_jungle: none Hz
+DONE /f/rpsc3/source/plans/evidence/vrtest/2026-10-07-0854-clean-xmen

@@ -1,0 +1,15 @@
+# path: OpenXR Simulator, RPCS3_VR_MULTIVIEW=default, build 2e6f8d7c5 VR: either_layout_blocks; DAO sky, clouds and wind
+# NPUA70218 vrtest_journey_dune: Journey: first dune (holds forward; SPU MLAA patched in the state; SPU Block Size Mega in the game config)
+NPUA70218 vrtest_journey_dune vblank 72 scale 300%:
+   576 frames over 8.0 s: avg 72.0 FPS, 1% low 63.9, 0.1% low 63.3 (worst frame 15.8 ms), median 13.91 ms, late 0.00%, RSX thread 5.12 ms/frame, new frames 72.0/s
+   577 frames over 8.0 s: avg 72.0 FPS, 1% low 66.0, 0.1% low 57.0 (worst frame 17.6 ms), median 13.99 ms, late 0.00%, RSX thread 5.42 ms/frame, new frames 72.0/s
+   575 frames over 8.0 s: avg 71.8 FPS, 1% low 67.5, 0.1% low 26.2 (worst frame 38.2 ms), median 13.99 ms, late 0.35%, RSX thread 10.67 ms/frame, new frames 71.8/s
+   => median of 3 windows: avg 72.0 FPS, 1% low 66.0, late frames 0.00%, RSX thread 5.42 ms/frame
+   eyes: residual at 0 4.74, best shift -172 (3.11) 
+NPUA70218 vrtest_journey_dune vblank 90 scale 300%:
+   696 frames over 8.0 s: avg 87.0 FPS, 1% low 72.4, 0.1% low 68.9 (worst frame 14.5 ms), median 11.43 ms, late 0.00%, RSX thread 11.16 ms/frame, new frames 87.0/s
+   685 frames over 8.0 s: avg 85.6 FPS, 1% low 70.2, 0.1% low 65.1 (worst frame 15.4 ms), median 11.58 ms, late 0.00%, RSX thread 11.38 ms/frame, new frames 85.6/s
+   => median of 2 windows: avg 85.6 FPS, 1% low 70.2, late frames 0.00%, RSX thread 11.16 ms/frame
+   eyes: residual at 0 4.78, best shift -174 (3.26) 
+SUSTAINABLE NPUA70218 vrtest_journey_dune: 72 Hz
+DONE /f/rpsc3/source/plans/evidence/vrtest/2026-10-08-1140-journey-b002

@@ -96,3 +96,23 @@ Matt's savestate `NPUA70218_1_2` (2026-10-08 10:48), hard-linked as `vrtest_jour
 2. **The world culls badly at the edge when looking right**, despite *Wider view* 2.5 (which filled straight, yaw
    +-20 on the first dune). Check larger yaw (+30..+45) to the right on Matt's state; the culling may be asymmetric
    (a frustum test that is not the FOV setter's), or the dune tiles use a separate culling path.
+
+## 2026-10-08: traveller per eye fixed (eye baseline); culling at large head turns analysed
+
+- **Traveller different in each eye: fixed (fork 650d17969).** The world scale was wrong: the camera sits ~1.7 units
+  from a traveller ~0.5 units tall (bone positions `c[452..465]`), so a unit is ~3 m and the generated `eye_baseline`
+  0.064 gave ~20 cm between the eyes: each eye saw a different side of the cloak (full-resolution crops,
+  `evidence/journey/trav_full.png`). `eye_baseline` 0.02: both eyes agree, normal parallax (`trav_full3.png`). Pose
+  sheet clean (`evidence/journey/b002_sheet.png`), 72 Hz holds (85.6 at 90). Matt's state `vrtest_journey_matt` loads
+  into the title flythrough; Start + X begins the opening.
+- Not the cause: the two non-camera scene draws (`6b2dd9400c7c962b`, a non-uniformly scaled mesh under the traveller,
+  and `caf799902e53d91f` x4, sheared world matrices); `nonrigid_camera_blocks [256]` changed nothing (reverted).
+- **Culling at large head turns (open):** with *Wider view* 2.5 the sand is culled against the game's real frustum,
+  ~+-77 degrees horizontally (vertical 137.5 x 16:9). Yaw +-20 is whole; from ~35 degrees of head yaw the view's outer
+  edge (yaw + ~45 degrees of the eye's half FOV) passes it and the dunes end in a jagged diagonal edge (`cull_sheet.png`).
+  Scale 3.0 with a 170-degree cap moved the edge ~8 degrees only (`c3_sheet.png`; horizontal half-FOV 85.8): a
+  perspective frustum cannot pass +-90, so FOV patches cannot cover big turns. Needs the sand's tile culling switched
+  off or turned with the head (find the frustum test: the tiles are drawn by `fb30aa1a5bdb0e75`, ~20 draws; readers of
+  the FOV at camera+0xf4: `0x1e410` (an LOD apex 350/tan(fov/2) behind the camera), `0x5ab44`, `0xf87c8`, `0xfa5b8`,
+  `0x257ae4`, `0x24d248`, `0x4c316c`). The trace hook (`RPCS3_PPU_TRACE`) did not install in Journey (no
+  `sys_timer_usleep` call reached it under the interpreter).
