@@ -1,0 +1,59 @@
+# path: OpenXR Simulator, RPCS3_VR_MULTIVIEW=default, build 4b97dc471 DAO: Wider view leaves non-16:9 cameras alone (par
+# BLUS30415 vrtest_dao_castle: Dragon Age: Origins: Castle Cousland hall after the opening (Wider view 2.0)
+BLUS30415 vrtest_dao_castle vblank 72 scale 300%:
+   577 frames over 8.0 s: avg 72.0 FPS, 1% low 59.0, 0.1% low 51.6 (worst frame 19.4 ms), median 13.81 ms, late 0.00%, RSX thread 3.29 ms/frame, new frames 71.3/s
+   576 frames over 8.0 s: avg 72.0 FPS, 1% low 57.8, 0.1% low 55.5 (worst frame 18.0 ms), median 13.67 ms, late 0.00%, RSX thread 3.34 ms/frame, new frames 70.9/s
+   577 frames over 8.0 s: avg 72.0 FPS, 1% low 58.1, 0.1% low 43.9 (worst frame 22.8 ms), median 13.78 ms, late 0.17%, RSX thread 3.71 ms/frame, new frames 39.4/s
+   => median of 3 windows: avg 72.0 FPS, 1% low 58.1, late frames 0.00%, RSX thread 3.34 ms/frame
+   eyes: residual at 0 44.29, best shift -162 (9.65) 
+BLUS30415 vrtest_dao_castle vblank 90 scale 300%:
+   720 frames over 8.0 s: avg 90.0 FPS, 1% low 69.9, 0.1% low 65.7 (worst frame 15.2 ms), median 11.05 ms, late 0.00%, RSX thread 3.29 ms/frame, new frames 89.2/s
+   721 frames over 8.0 s: avg 90.0 FPS, 1% low 69.0, 0.1% low 52.0 (worst frame 19.2 ms), median 11.03 ms, late 0.14%, RSX thread 3.35 ms/frame, new frames 88.6/s
+   720 frames over 8.0 s: avg 90.0 FPS, 1% low 69.9, 0.1% low 45.5 (worst frame 22.0 ms), median 10.96 ms, late 0.14%, RSX thread 3.62 ms/frame, new frames 51.0/s
+   => median of 3 windows: avg 90.0 FPS, 1% low 69.9, late frames 0.14%, RSX thread 3.35 ms/frame
+   eyes: residual at 0 44.99, best shift -162 (9.53) 
+BLUS30415 vrtest_dao_castle vblank 120 scale 300%:
+   960 frames over 8.0 s: avg 120.0 FPS, 1% low 89.5, 0.1% low 83.6 (worst frame 12.0 ms), median 8.24 ms, late 0.00%, RSX thread 3.18 ms/frame, new frames 118.9/s
+   961 frames over 8.0 s: avg 120.0 FPS, 1% low 89.5, 0.1% low 81.3 (worst frame 12.3 ms), median 8.20 ms, late 0.10%, RSX thread 3.20 ms/frame, new frames 117.0/s
+   960 frames over 8.0 s: avg 119.9 FPS, 1% low 88.2, 0.1% low 65.2 (worst frame 15.3 ms), median 8.28 ms, late 0.21%, RSX thread 3.56 ms/frame, new frames 76.2/s
+   => median of 3 windows: avg 120.0 FPS, 1% low 89.5, late frames 0.10%, RSX thread 3.20 ms/frame
+   eyes: residual at 0 45.69, best shift -162 (9.49) 
+SUSTAINABLE BLUS30415 vrtest_dao_castle: 120 Hz
+# BLUS30415 vrtest_dao_forest: Dragon Age: Origins: Dalish forest path, gameplay with HUD (after the elves conversation)
+BLUS30415 vrtest_dao_forest vblank 72 scale 300%:
+   577 frames over 8.0 s: avg 72.0 FPS, 1% low 65.8, 0.1% low 64.0 (worst frame 15.6 ms), median 13.89 ms, late 0.00%, RSX thread 2.58 ms/frame, new frames 70.9/s
+   577 frames over 8.0 s: avg 72.0 FPS, 1% low 65.3, 0.1% low 63.7 (worst frame 15.7 ms), median 13.91 ms, late 0.00%, RSX thread 2.60 ms/frame, new frames 71.0/s
+   576 frames over 8.0 s: avg 71.9 FPS, 1% low 64.2, 0.1% low 27.9 (worst frame 35.9 ms), median 13.88 ms, late 0.52%, RSX thread 2.76 ms/frame, new frames 36.8/s
+   => median of 3 windows: avg 72.0 FPS, 1% low 65.3, late frames 0.00%, RSX thread 2.60 ms/frame
+   eyes: residual at 0 29.36, best shift -162 (10.50) 
+BLUS30415 vrtest_dao_forest vblank 90 scale 300%:
+   721 frames over 8.0 s: avg 90.0 FPS, 1% low 79.6, 0.1% low 76.1 (worst frame 13.1 ms), median 11.11 ms, late 0.00%, RSX thread 2.59 ms/frame, new frames 88.1/s
+   720 frames over 8.0 s: avg 90.0 FPS, 1% low 78.0, 0.1% low 75.0 (worst frame 13.3 ms), median 11.10 ms, late 0.00%, RSX thread 2.56 ms/frame, new frames 88.2/s
+   719 frames over 8.0 s: avg 89.8 FPS, 1% low 79.8, 0.1% low 29.5 (worst frame 33.9 ms), median 11.09 ms, late 0.14%, RSX thread 2.71 ms/frame, new frames 54.0/s
+   => median of 3 windows: avg 90.0 FPS, 1% low 79.6, late frames 0.00%, RSX thread 2.59 ms/frame
+   eyes: residual at 0 29.14, best shift -162 (10.42) 
+BLUS30415 vrtest_dao_forest vblank 120 scale 300%:
+   961 frames over 8.0 s: avg 120.0 FPS, 1% low 102.3, 0.1% low 98.6 (worst frame 10.1 ms), median 8.33 ms, late 0.00%, RSX thread 2.53 ms/frame, new frames 117.5/s
+   960 frames over 8.0 s: avg 120.0 FPS, 1% low 101.5, 0.1% low 96.1 (worst frame 10.4 ms), median 8.33 ms, late 0.00%, RSX thread 2.48 ms/frame, new frames 118.1/s
+   958 frames over 8.0 s: avg 119.7 FPS, 1% low 99.7, 0.1% low 30.6 (worst frame 32.7 ms), median 8.34 ms, late 0.10%, RSX thread 2.71 ms/frame, new frames 56.4/s
+   => median of 3 windows: avg 120.0 FPS, 1% low 101.5, late frames 0.00%, RSX thread 2.53 ms/frame
+   eyes: residual at 0 29.05, best shift -162 (10.24) 
+SUSTAINABLE BLUS30415 vrtest_dao_forest: 120 Hz
+# BLUS30415 vrtest_dao_wolves: Dragon Age: Origins: first wolf fight in the forest (loads on the combat tutorial; no input)
+BLUS30415 vrtest_dao_wolves vblank 72 scale 300%:
+   577 frames over 8.0 s: avg 72.0 FPS, 1% low 63.1, 0.1% low 58.5 (worst frame 17.1 ms), median 13.86 ms, late 0.00%, RSX thread 4.12 ms/frame, new frames 0.0/s
+   577 frames over 8.0 s: avg 72.0 FPS, 1% low 62.7, 0.1% low 62.0 (worst frame 16.1 ms), median 13.87 ms, late 0.00%, RSX thread 4.18 ms/frame, new frames 0.0/s
+   => median of 2 windows: avg 72.0 FPS, 1% low 62.7, late frames 0.00%, RSX thread 4.12 ms/frame
+   eyes: residual at 0 53.40, best shift -162 (12.08) 
+BLUS30415 vrtest_dao_wolves vblank 90 scale 300%:
+   721 frames over 8.0 s: avg 90.0 FPS, 1% low 79.2, 0.1% low 70.6 (worst frame 14.2 ms), median 11.14 ms, late 0.00%, RSX thread 4.14 ms/frame, new frames 0.0/s
+   720 frames over 8.0 s: avg 90.0 FPS, 1% low 78.0, 0.1% low 63.6 (worst frame 15.7 ms), median 11.07 ms, late 0.00%, RSX thread 4.14 ms/frame, new frames 0.0/s
+   => median of 2 windows: avg 90.0 FPS, 1% low 78.0, late frames 0.00%, RSX thread 4.14 ms/frame
+   eyes: residual at 0 53.40, best shift -162 (12.08) 
+BLUS30415 vrtest_dao_wolves vblank 120 scale 300%:
+   960 frames over 8.0 s: avg 120.0 FPS, 1% low 96.0, 0.1% low 87.1 (worst frame 11.5 ms), median 8.28 ms, late 0.00%, RSX thread 4.11 ms/frame, new frames 0.0/s
+   961 frames over 8.0 s: avg 120.0 FPS, 1% low 98.1, 0.1% low 86.9 (worst frame 11.5 ms), median 8.34 ms, late 0.00%, RSX thread 4.08 ms/frame, new frames 0.0/s
+   => median of 2 windows: avg 120.0 FPS, 1% low 96.0, late frames 0.00%, RSX thread 4.08 ms/frame
+   eyes: residual at 0 53.40, best shift -162 (12.08) 
+SUSTAINABLE BLUS30415 vrtest_dao_wolves: 120 Hz
+DONE /f/rpsc3/source/plans/evidence/vrtest/2026-10-08-1116-dao-skyfix

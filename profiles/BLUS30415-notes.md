@@ -131,3 +131,19 @@ Bayonetta pose checks unchanged.
    the region beyond the game's own view at high pitch (sky or fog not drawn there), and may share a cause with 2.
 Reproduce in the forest (`vrtest_dao_forest` or a fresh Resume) with `simpose.py` pitch +30/+45 and yaw +-20; compare
 the sky and rays against flat.
+
+## Fixed 2026-10-08 (fork 2e6f8d7c5): sky, clouds and shafts world-fixed; black box gone; sun shafts hidden
+
+- **Sky and black box:** the sky dome (`eddfb2bc80cdd138`) draws through the camera's view-projection transposed at
+  `c[265]` (DP4 columns, no z slot: far plane); the cloud / window light-shaft layer (`b75ae40facde292c`) reads `c[256]`
+  itself as DP4 columns (no `c[258]`), while every other program reads `c[256]` as rows. Both were non-camera draws
+  (`N x2` in the trace), so the sky followed the head, and after a game load looking up showed a black box (reproduced
+  on the simulator from a fresh Resume at pitch +40 with the old profile, gone with the new one; also gone at +60).
+  Profile: `camera_blocks [256, 258, 265]`, `column_vector_blocks [258, 265]`, new key `either_layout_blocks [256]`.
+  The castle hall's window shafts are now world-fixed and agree between the eyes (they differed before).
+- **Sun rays:** three quads the game projects on the CPU (`1c7935c330cbbbd8`, texture 256x512) added after tone
+  mapping, into the display target. Made world-fixed (a test build: `preprojected_programs` with a texture filter for
+  any target) they stayed with the world but showed a hard edge at yaw +20 (the quads end just outside the game's view):
+  reverted, and the shafts are hidden in VR (`hidden_draws`). The effect is subtle in the forest.
+- Regression: castle, forest, wolves **120 Hz**. Pose sheet `evidence/dao/skyfix/final_sheet.png`; A/B shots in
+  `evidence/dao/sky/` (`freshold_0_40_0` = the black box, `fresh_0_40_0` / `fresh_0_60_0` = fixed).
