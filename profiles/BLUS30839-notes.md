@@ -431,7 +431,8 @@ the menu, second race: all fine (`st_p2`). Matt's frozen savestates stay frozen 
 
 Also seen (separate): at Vblank 120 some boots stopped presenting during a race load right after the file thread's
 `_sys_lwcond_signal ... CELL_EPERM` (`SlFile`, also logged without a hang): 4 of ~25 boots today, all during loads. Not
-seen at 90 so far. Open.
+seen at 90 so far. Later: 4 more fresh boots at 120 with the fix, two races each (quit and restart between), all
+fine (`st_q1`..`q4`): the hangs were in runs with the menus at the VR rate.
 
 **FXAA override checked 2026-10-08:** `vrtest_sonic_race` at 300%, same moment: with the taps zeroed the eye image is
 sharper (Laplacian mean 6.3 vs 5.3) and loses the dotted artefacts along the track lines; committed with the profile.
