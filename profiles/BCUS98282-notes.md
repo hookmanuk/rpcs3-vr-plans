@@ -219,7 +219,9 @@ have the same fixes but still need his headset run before they count as working.
   `rc2_cut_nr.png`); gameplay returns to 90. `game_vblank_frames_f32` on the timing block's leading 1.0 only partly
   slowed it (not used). New states `rc2_ship_cutscene`, `rc3_open_cutscene` (made from new save slot 3 in each game;
   Matt's slots untouched). Headset recheck: audio sync, and other cutscenes later in the games (R&C 1 not checked).
-- **Movie / fixed-screen aspect (open, diagnosed):** in VR every frame on the fixed screen in this collection is shown
-  at about 4:3 (the 16:9 collection menu: 250x186 px per eye; the 4:3 movies then look stretched tall), while flat
-  is correct. The game config's aspect is 16:9 and the display buffer 1280x720. Next: where `vr_update_view` sizes the
-  fixed screen for no-3D frames (`VKGSRenderVR.cpp` ~1634-1720) and what aspect it takes for this game.
+- **R&C 2 new-game movie stretched: fixed (fork 03b8d29ec).** The movie after New Game (armchairs) was drawn
+  full-view over the headset's FOV, stretched tall. Its frame quad (`007f5efab1d12ef7`, texture 1176x720) is now in
+  `screen_frame_draws`: the movie is on the world-fixed 16:9 screen (`v3_movie_y25.png`: world-fixed at yaw 25).
+  State `rc2_newgame_movie` (during the movie). **Measurement note:** simulator screenshots (`simshot.py`) are not
+  square-pixel: each eye's 100.6 x 89.1 degree view is saved at 480x514, so everything looks ~1.31x taller there (the
+  "4:3 collection menu" noted before was this, not a bug). Compare shapes in-game (flat) or correct by that factor.
