@@ -52,3 +52,10 @@ Disc 01.01 (`Dragon Age - Inquisition (USA) (En,Fr,Es).iso`), PPU hash `PPU-22a1
   (`0xa10064` from `0xa100ac`, ~26k/s), `0xf8f428`, `0x20756b4`, `0x63bfa4` and the PPU proxy `0xb6b12c` read time.
 - Candidates to try next: the job manager's `0xb64734` time reads (a job timeout or a frame budget) and the pacer's
   target; compare the branch taken after each at 30% and 100% with `RPCS3_PPU_TRACE`.
+
+## 2026-10-08: priority
+
+Even with the load hang worked around, Inquisition is a 30 FPS Frostbite 3 game whose title screen runs 30 FPS in
+RPCS3 from the 30%-made savestate; an unlocked rate plus stereo would be far below the 72 Hz bar on current hardware.
+Kept as an emulation blocker; the next step (a time scale that drops only during loads, continuous across switches)
+needs changes in RPCS3's timebase (`sys_time.cpp`) and only pays off if the game can also run fast enough.
