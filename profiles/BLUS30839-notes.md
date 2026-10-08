@@ -478,3 +478,29 @@ fresh loads:
   offset, so RPCS3's NVIDIA D24 bias scaling is not involved. With Force High Precision Z also changing nothing, the
   far surfaces are coplanar or nearly so (true depth ties), which a real PS3 would likely show too; VR makes the far
   track larger and the fight easier to see. Next idea if needed: compare with PS3 footage of the Ocean View start.
+
+## 2026-10-08 (night): the stripes are vertical under-sampling in VR, not depth fighting and not motion blur
+
+Matt: flat at 300% is clean, so the VR path must cause it; the lines are not motion blur. Findings (fresh loads of
+`sonic_race0`, `RPCS3_VR_RTDUMP` of the albedo target `0xc1608000` and depth `0xc0840000` before the composite):
+- The lines are already in the scene's albedo target. No post pass makes them, and motion blur is not involved.
+- **Not the VR depth.** The VR camera rewrite keeps the z and w columns bit-identical (`remap_to_eye_fov` and
+  `undo_viewport` touch x/y only; with the simulator's identity pose the rotation leaves z/w alone). All scene draws use
+  the same block c[138..141]. A temporary check found no game block producing two different eye blocks in a frame. Forcing
+  depth clamp changed nothing (the game has clip on, clamp off). A Texture LOD Bias of -1.5 and -3 sharpened the textures
+  but left the stair-steps and lines (`vr_lod_bias.png`). Hiding each scene program in turn removed none (the structure
+  program 34b524f7 is the whole level). The same draws and vertex counts run in VR and with the game FOV (no LOD change).
+- **It follows the pixel density of the far geometry.** Flat at **150%** shows the same palace stair-steps, track checker
+  stripes and pagoda dashes as VR at 300%; flat 300% is clean (`density_flat300_flat150_vr300.png`). Game FOV at 125%
+  (VR 300%'s vertical density, less horizontal) looks like VR 300% (`gamefov125_vs_vr300.png`). VR renders the guest's
+  16:9 frame over the headset's 100.6 x 89.1 degrees: in tangent space that is 2.1x the game's vertical extent but only
+  1.45x its horizontal one, so VR 300% has the vertical detail of flat ~140%. The far palace, roofs and track bend are
+  seen almost edge-on: their slivers fall between the rows (stair-stepped edges, rows of the layer behind showing
+  through). The game has the same at its native 720p.
+- Fix: more resolution. Sonic VR at 90 Hz (`vrtest_sonic_race`, R2 held): 300% 90.0 FPS 0% late; 450% 90.0, 0% late
+  (RSX 6.0 ms); 500% 90.0, 0% late; 550% 83.8, 7.5% late; 600% 74.3; 700% 52. Set the game's dev config to **450%**
+  (vertical detail of flat ~210%; 500% is the GPU limit on the RTX 5090 with the simulator, the real headset's compositor
+  adds load). VR 500% is clearly better than 300% but not as clean as flat 300% (`flat300_vr300_vr500.png`).
+- Not done (larger change): render each eye at the headset's aspect (a separate vertical resolution scale). RPCS3's
+  resolution scale is one factor for both axes throughout the surface cache, blits, viewport and scissor code, so this
+  touches many upstream files. It would help every game in VR, not just Sonic.
