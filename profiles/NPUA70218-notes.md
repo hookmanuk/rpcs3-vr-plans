@@ -66,6 +66,9 @@ matrices in live memory: P11 = 1.7778 x P00) and a PPU write watch on the projec
 | 90 | 75.2 FPS (the game's SPU-bound ceiling) |
 
 Sustained: **72 Hz**. 90 needs the SPU load cut (unknown SPU programs `scr` x3, `cor`; EDGE post).
+Tried 2026-10-08: skipping the EDGE `PostTask` SPU job's body (its output is unused in VR, the profile reads the render
+targets): SPU patch `SPU-7cf5017b...` at LS `0x30d8` (`brsl` to the task body -> nop). The game then waits ~50 ms a frame
+for the task's results (20 FPS): the job's output is a dependency. Reverted.
 
 ## Open
 
