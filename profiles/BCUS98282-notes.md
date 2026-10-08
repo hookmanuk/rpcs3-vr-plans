@@ -209,3 +209,17 @@ have the same fixes but still need his headset run before they count as working.
    cutscenes stepped per frame at the 90 Hz VR rate (`evidence/ratchet/rc2-newgame-2026-10-08/matt-rc3-opening-cutscene-fast.png`).
    Fix both together: find what drives cutscene time in each game (the unlock patches cover gameplay) and check
    against the audio at 60 vs 90.
+
+## 2026-10-08 (evening): cutscene speed fixed; movie aspect diagnosed
+
+- **Cutscenes 1.5x fast: fixed (fork 6017df830).** R&C 2 and 3 step their in-engine cutscenes per frame. New profile
+  key `native_rate_when` caps the vblank while a guest word holds a value: R&C 2 `0x146c804`, R&C 3 `0xf17060`
+  (1 in a cutscene, 2 in play; found with `tools/re/rc_dumps.sh` + `statevar.py` + `rc_peek.sh`). Simulator: the
+  opening cutscenes at VR 90 match VR 60 frame for frame (`evidence/ratchet/rc2-newgame-2026-10-08/cut_nr.png`,
+  `rc2_cut_nr.png`); gameplay returns to 90. `game_vblank_frames_f32` on the timing block's leading 1.0 only partly
+  slowed it (not used). New states `rc2_ship_cutscene`, `rc3_open_cutscene` (made from new save slot 3 in each game;
+  Matt's slots untouched). Headset recheck: audio sync, and other cutscenes later in the games (R&C 1 not checked).
+- **Movie / fixed-screen aspect (open, diagnosed):** in VR every frame on the fixed screen in this collection is shown
+  at about 4:3 (the 16:9 collection menu: 250x186 px per eye; the 4:3 movies then look stretched tall), while flat
+  is correct. The game config's aspect is 16:9 and the display buffer 1280x720. Next: where `vr_update_view` sizes the
+  fixed screen for no-3D frames (`VKGSRenderVR.cpp` ~1634-1720) and what aspect it takes for this game.
