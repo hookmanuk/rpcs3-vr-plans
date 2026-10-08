@@ -78,6 +78,9 @@ CPU cores continuously since. Frame rates measured after 12:49 today may be low 
 
 ## Priority: Ratchet & Clank 1 (almost ready, Matt 2026-10-06), then the same fixes in R&C 2 and 3
 
+**Matt, headset, 2026-10-08: R&C 1 is working.** Ready to move from `vr-non-working/` to the shipped profiles in the next
+release (with R&C 2 and 3 once Matt has played them in the headset).
+
 State `BCUS98282_1_4` (map menu open). Open items, in order:
 1. ~~Menus rendered in 3D (boxes not lined up between the eyes)~~ **fixed 2026-10-06 (fork 234cadcf6):** frames on the
    fixed screen as menus/pauses are flat (both eyes see the left eye's image); Matt checked it in the headset. Generic.
@@ -257,7 +260,7 @@ pass mark** for fully compatible.
 | Game | ID | Profile | Real-time above 60 | Sustained in VR, 300% | Headset | Blocker |
 |---|---|---|---|---|---|---|
 | Dragon's Dogma: Dark Arisen | BLUS31155 | `vr-non-working/` + untracked `bin/` copy | yes (community Unlock FPS, real-time) | **120 Hz** (prologue, 2026-10-02 run; 72 on 2026-10-01); Matt's slow save **90 Hz with multiview** (72 two-draw), 2026-10-03 | **WIP: graphics errors in the headset** (Matt 2026-10-03: many render errors, text cut off and a phantom layer when the head turns) | open-world frame rate and outdoor flares with `zcull_approximate` unchecked; headset frame rate (risk); needs update 01.02 |
-| Ratchet & Clank Collection | BCUS98282 | `vr-non-working/` + untracked `bin/` copies (base + rc1/rc2/rc3 executable profiles) | R&C 1, 2, 3 yes (profile frame-time values, run speed verified) | **R&C 1 90 Hz**, **R&C 3 90 Hz** (2026-10-02 run, desktop stereo; both 72 before), **R&C 2 120 Hz** (Aranos and the machinery hall). Headset path (simulator, 2026-10-03): R&C 1 **72 on multiview** (90 averages 85.4), two-draw 69.4 at 72; R&C 3 90 on multiview | **broken** (R&C 1 unplayable: scene as a fixed 2D window; loader and menus head-locked) | R&C 1 has little margin at 72; R&C 1 pause menu |
+| Ratchet & Clank Collection | BCUS98282 | `vr-non-working/` + untracked `bin/` copies (base + rc1/rc2/rc3 executable profiles) | R&C 1, 2, 3 yes (profile frame-time values, run speed verified) | **R&C 1 90 Hz**, **R&C 3 90 Hz** (2026-10-02 run, desktop stereo; both 72 before), **R&C 2 120 Hz** (Aranos and the machinery hall). Headset path (simulator, 2026-10-03): R&C 1 **72 on multiview** (90 averages 85.4), two-draw 69.4 at 72; R&C 3 90 on multiview | **R&C 1 working (Matt, headset, 2026-10-08)**; R&C 2 and 3 not yet played in the headset (was: R&C 1 unplayable, scene as a fixed 2D window; loader and menus head-locked) | R&C 1 has little margin at 72; R&C 1 pause menu |
 | The Darkness | BLUS30035 | `vr-non-working/` + untracked `bin/` copy | yes (community 60 FPS patch, real-time) | below 72: 53 FPS at 72 in Matt's save (2026-10-04, multiview; 48 on 2026-10-01), 32 in the opening car scene | **parked**: under 60 FPS in Matt's save; intro black for a long time, videos missing | too slow at 300%; stereo and headset view fixed in the opening |
 | Dynasty Warriors 6 Empires | BLUS30306 | `vr-non-working/` + untracked `bin/` copy | no: frame-locked, profile at 60 (180 flat possible) | 120, but frame-locked: plays at 60 | not played | 90 FPS needs a logic-step patch |
 | Puppeteer | BCUS98227 | `vr-non-working/` + untracked `bin/` copy | yes (profile frame time, Vblank 180 = 90 FPS, real-time) | 90 (2026-10-02; 72 before) | **barely works**: graphics trails, very dark, world far away and small; the head-locked intro light fixed 2026-10-01 evening | stage small in the headset view; SPU post skipped in VR |

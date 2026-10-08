@@ -188,3 +188,8 @@ R&C 2 120, R&C 3 90 (was 72), R&C 2 machinery hall 120.
   RSX sample (`RPCS3_RSX_SAMPLE=3`): 11% idle in flip, `vr_setup_draw` 19% inclusive (eye constants pair 11%,
   `apply_render_eye` ~8%), vertex upload 8%, texture env 8%. 90 Hz needs ~10% off the whole RSX thread: the VR per-draw
   path alone cannot give it. 72 Hz holds.
+
+## 2026-10-08: R&C 1 working (Matt, headset)
+
+Matt: "I think R&C 1 is finally working!" (menus, shadow, culling and frame rate all fine in the headset). R&C 2 and 3
+have the same fixes but still need his headset run before they count as working.
