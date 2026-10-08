@@ -197,3 +197,17 @@ simulator from a fresh first-race start with `simpose.py` yaw -20 / 0 / +20 (com
   vary over time in flat too, so the dumps are confounded by animation timing and by when in the frame the dump
   lands (the map is reused as a blur target). Next: dump the map right after the last shadow draw (a capture hook at
   the end of the 912 pass), and a frame-exact A/B (same frame number after load) before concluding what changes it.
+
+## Fixed 2026-10-08 (fork 9d39f9c93): bird and car shadows slid with the head
+
+Frame-matched tests (fresh load, same delay; pitch alternating -15/-20 within one run; shadow map dumped just before
+the road's first draw with `RPCS3_VR_RTDUMP` `prog=1965d57fee836671`, script `tools/re/sr_pd_test.sh`): the map changed
+with the head pose (~160k pixels at -20 vs ~3k at -15), while the game's draws and constants were identical. A
+temporary log of HUD-boxed draws showed the shadow-map passes (`819644c26148110e`, `52b1a611ea2a63a8`, the blur
+`f780e2c460d9eba2` into `0xc8250000`/`0xc85f8000`, 912x912) going into the head-fixed HUD box: `vr_is_passthrough_hud`
+compared the target's width with the latest camera target, which here is often a small view (the 512x512 rear-view
+mirror, the 384/768 trackside screens). Fix (generic, for profiles with `hud_display_buffers_only`): only
+display-buffer draws can be passthrough HUD. After: the map no longer depends on the pose, the shadows are the same at
+-15 and -20, and VR matches flat at the same moment (`fx_sheet.png`, `fix_flat_vs_vr.png`). GT5 (the other profile
+with the key): HUD and mirror boxed, 120 Hz; SEGA Rally 72 Hz (`evidence/vrtest/2026-10-08-1516-sr-hudfix`).
+Needs Matt's headset check.

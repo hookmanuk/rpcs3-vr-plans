@@ -1,0 +1,34 @@
+# path: OpenXR Simulator, RPCS3_VR_MULTIVIEW=default, build 650d17969 Journey: eye baseline 0.02 (a world unit is ~3 m)
+# BCUS98114 vrtest_gt5_race_start: Gran Turismo 5: race start
+BCUS98114 vrtest_gt5_race_start vblank 72 scale 300%:
+   577 frames over 8.0 s: avg 72.0 FPS, 1% low 68.9, 0.1% low 67.9 (worst frame 14.7 ms), median 14.00 ms, late 0.00%, RSX thread 10.03 ms/frame, new frames 72.0/s
+   576 frames over 8.0 s: avg 72.0 FPS, 1% low 69.0, 0.1% low 67.7 (worst frame 14.8 ms), median 14.00 ms, late 0.00%, RSX thread 10.52 ms/frame, new frames 72.0/s
+   576 frames over 8.0 s: avg 71.9 FPS, 1% low 61.0, 0.1% low 40.1 (worst frame 24.9 ms), median 13.99 ms, late 0.17%, RSX thread 8.45 ms/frame, new frames 71.9/s
+   => median of 3 windows: avg 72.0 FPS, 1% low 68.9, late frames 0.00%, RSX thread 10.03 ms/frame
+   eyes: residual at 0 54.78, best shift -162 (10.13) 
+BCUS98114 vrtest_gt5_race_start vblank 90 scale 300%:
+   721 frames over 8.0 s: avg 90.0 FPS, 1% low 74.8, 0.1% low 66.3 (worst frame 15.1 ms), median 11.08 ms, late 0.00%, RSX thread 5.77 ms/frame, new frames 90.0/s
+   721 frames over 8.0 s: avg 90.0 FPS, 1% low 76.6, 0.1% low 70.7 (worst frame 14.1 ms), median 11.07 ms, late 0.00%, RSX thread 5.14 ms/frame, new frames 90.0/s
+   => median of 2 windows: avg 90.0 FPS, 1% low 74.8, late frames 0.00%, RSX thread 5.14 ms/frame
+   eyes: residual at 0 54.18, best shift -162 (10.65) 
+BCUS98114 vrtest_gt5_race_start vblank 120 scale 300%:
+   960 frames over 8.0 s: avg 119.9 FPS, 1% low 109.6, 0.1% low 64.3 (worst frame 15.6 ms), median 8.42 ms, late 0.10%, RSX thread 7.63 ms/frame, new frames 119.9/s
+   960 frames over 8.0 s: avg 120.0 FPS, 1% low 110.9, 0.1% low 100.4 (worst frame 10.0 ms), median 8.45 ms, late 0.00%, RSX thread 6.94 ms/frame, new frames 120.0/s
+   => median of 2 windows: avg 119.9 FPS, 1% low 109.6, late frames 0.00%, RSX thread 6.94 ms/frame
+   eyes: residual at 0 55.69, best shift -162 (11.47) 
+SUSTAINABLE BCUS98114 vrtest_gt5_race_start: 120 Hz
+# BLUS30068 vrtest_segarally_race: SEGA Rally Revo: Safari, race start (holds R2; Unlocked frame rate + Wider view 2.0)
+BLUS30068 vrtest_segarally_race vblank 72 scale 300%:
+   577 frames over 8.0 s: avg 72.0 FPS, 1% low 53.9, 0.1% low 44.9 (worst frame 22.3 ms), median 13.86 ms, late 0.17%, RSX thread 7.11 ms/frame, new frames 72.0/s
+   574 frames over 8.0 s: avg 71.7 FPS, 1% low 54.5, 0.1% low 52.7 (worst frame 19.0 ms), median 13.98 ms, late 0.00%, RSX thread 8.42 ms/frame, new frames 71.7/s
+   575 frames over 8.0 s: avg 71.9 FPS, 1% low 55.2, 0.1% low 30.9 (worst frame 32.3 ms), median 13.82 ms, late 0.17%, RSX thread 9.45 ms/frame, new frames 71.9/s
+   => median of 3 windows: avg 71.9 FPS, 1% low 54.5, late frames 0.17%, RSX thread 8.42 ms/frame
+   eyes: residual at 0 21.40, best shift -172 (5.98) 
+BLUS30068 vrtest_segarally_race vblank 90 scale 300%:
+   720 frames over 8.0 s: avg 89.9 FPS, 1% low 81.4, 0.1% low 66.4 (worst frame 15.1 ms), median 11.01 ms, late 0.00%, RSX thread 10.68 ms/frame, new frames 89.9/s
+   689 frames over 8.0 s: avg 86.1 FPS, 1% low 62.0, 0.1% low 29.7 (worst frame 33.7 ms), median 11.14 ms, late 0.29%, RSX thread 10.56 ms/frame, new frames 86.1/s
+   711 frames over 8.0 s: avg 88.8 FPS, 1% low 64.7, 0.1% low 24.7 (worst frame 40.4 ms), median 11.06 ms, late 0.14%, RSX thread 9.81 ms/frame, new frames 88.8/s
+   => median of 3 windows: avg 88.8 FPS, 1% low 64.7, late frames 0.14%, RSX thread 10.56 ms/frame
+   eyes: residual at 0 21.38, best shift -172 (5.80) 
+SUSTAINABLE BLUS30068 vrtest_segarally_race: 72 Hz
+DONE /f/rpsc3/source/plans/evidence/vrtest/2026-10-08-1516-sr-hudfix
