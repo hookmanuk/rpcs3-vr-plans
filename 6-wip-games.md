@@ -91,6 +91,8 @@ CPU cores continuously since. Frame rates measured after 12:49 today may be low 
 
 ## Priority: Ratchet & Clank 1 (almost ready, Matt 2026-10-06), then the same fixes in R&C 2 and 3
 
+**Matt, headset, 2026-10-08: R&C 2 new game: (1) the opening video is stretched vertically; (2) after Start skips it, the in-engine spaceship cutscene's audio and video are out of sync (likely the 90 Hz rate: cutscene on frame count). Shots in `evidence/ratchet/rc2-newgame-2026-10-08/`; see notes.**
+
 **Matt, headset, 2026-10-08: R&C 1 is working.** Ready to move from `vr-non-working/` to the shipped profiles in the next
 release (with R&C 2 and 3 once Matt has played them in the headset).
 

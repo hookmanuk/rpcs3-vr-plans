@@ -193,3 +193,14 @@ R&C 2 120, R&C 3 90 (was 72), R&C 2 machinery hall 120.
 
 Matt: "I think R&C 1 is finally working!" (menus, shadow, culling and frame rate all fine in the headset). R&C 2 and 3
 have the same fixes but still need his headset run before they count as working.
+
+## Open (Matt, headset, 2026-10-08): R&C 2 new game
+
+1. **Opening video stretched vertically.** Start a new game in R&C 2: the opening video (Ratchet and Clank in
+   armchairs) is shown with the wrong aspect ratio, stretched tall
+   (`evidence/ratchet/rc2-newgame-2026-10-08/matt-intro-video-stretched.png`). Check how the movie is presented on the
+   fixed screen (its frame size vs the screen box aspect).
+2. **In-engine cutscene out of sync.** Press Start to skip the video: the next in-engine cutscene (Ratchet in a
+   spaceship cockpit) has audio and video out of sync (`matt-ship-cutscene-desync.png`). Matt suspects the 90 Hz rate:
+   the cutscene probably runs on frame count, so at 90 it plays 1.5x fast against its audio. Check whether R&C 2's
+   unlock patch / frame-time values cover cutscenes (compare cutscene length at 60 vs 90 against the audio).
