@@ -74,3 +74,11 @@ target, or "the target last copied into the buffer", read the other one, which b
 the image fed back into itself to white). After: far rocks -162 px, characters -166..-170 px at every pose, no white
 frames; VR 72: 71.5-71.6 FPS, 0.5-0.7% late (passes; was 71.0-71.7, 0.2-1.05%). The SPU pass on the copy (bloom input?) is
 skipped in VR; the scene looks the same as flat at a glance. `0x33000000` is the same after a fresh boot.
+
+## 2026-10-08: 72 Hz on a clean CPU (after the miner removal)
+
+`vrtest_da2_fight` at VR 72: 67.5-69.0 FPS, 4.3-6.7% late (fails); flat (render=0) the same, 69.0 / 4.35%, and 74.7
+uncapped at vblank 120. So the 2026-10-07 pass (71.5) was helped by the miner keeping the CPU awake. A/B: 4 idle-priority
+busy threads 71.2 / 1.05%; Processor idle disable 71.4 / 0.88% (passes); Minimum processor state 100% 68.8 (no help).
+RPCS3 settings: Sleep Timers All/As Host 68.6-68.7, RPCS3 Scheduler 66.9, Multithreaded RSX 68.4, SPU reservation
+busy waiting 70.3 / 2.5%, both 69.9. Game-side CPU bound near 72 with wake-up latency on top; no fix found.

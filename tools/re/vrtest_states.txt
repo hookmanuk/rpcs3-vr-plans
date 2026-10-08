@@ -42,3 +42,4 @@ NPUA80083   vrtest_flower_l1             1  X    10     Flower: level 1 field (h
 NPUA70218   vrtest_journey_dune          1  I    40     Journey: first dune (holds forward; SPU MLAA patched in the state; SPU Block Size Mega in the game config)
 BLUS30415   vrtest_dao_forest            1  1    10     Dragon Age: Origins: Dalish forest path, gameplay with HUD (after the elves conversation)
 NPUA80001   vrtest_flow_title            1  script 10   flOw: title playfield (tilts and boosts; walk script)
+BLUS30415   vrtest_dao_wolves            1  0    6      Dragon Age: Origins: first wolf fight in the forest (loads on the combat tutorial; no input)

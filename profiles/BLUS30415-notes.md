@@ -100,3 +100,21 @@ Bayonetta pose checks unchanged.
   saving it cost Matt's `_1_2` to the per-game cap for a moment: restored from the backup made first). Pose sheet clean
   (HUD portraits, minimap, party bar world-fixed in the box; foliage, rocks and trees world-fixed). **120 Hz** walking
   (120.0, 0.10% late, RSX thread 2.9 ms; 90: 0% late).
+
+## 2026-10-08: combat; portraits fixed (Wider view 1.2, fork 4b97dc471)
+
+- Combat on the OpenXR Simulator: state `vrtest_dao_wolves` (mine, from `vrtest_dao_forest`: up the path to the clearing,
+  the first wolf fight; loads with the combat tutorial: L2 (S), then X x3 to continue; Matt's `_1_2` hit the per-game cap
+  and was restored from the backup made first). Head poses mid-fight (straight, yaw +-20, pitch +-10, roll 15,
+  `evidence/dao-combat-2026-10-08/fight2_sheet.png`): both eyes agree; blood spray, red target rings, floating
+  "Miss!"/damage numbers and enemy name plates sit in the world; portraits, minimap, party bar and the "Codex updated"
+  notice stay in the HUD box. The equipment screen (fight_sheet) is world-fixed in the box with the blurred world behind.
+- **Party portraits showed a tiny full-body figure** (flat and VR, VR off too): the Wider view cave floored every
+  camera's FOV at 60 degrees x Scale, including the portrait cameras (square 160x160 targets, `0xc41b4000`) and the
+  equipment screen's figure. Patch 1.2: below aspect 1.5 (`[r31+0x134] x f1`) the game's FOV is kept; gameplay and
+  conversations (16:9) are widened as before (fresh boot: portraits are head close-ups again, the paper doll full size,
+  the gameplay framing unchanged; regression castle and forest 120 Hz, `evidence/vrtest/2026-10-08-0937-dao-portraitfix`).
+- Portraits in **savestates** show noise instead: they are rendered once and live only in RPCS3's surface cache, which a
+  savestate does not keep (Write Color Buffers off). Not a VR problem; judge them after a fresh boot ("Resume").
+- Pad note: the template has no PS mapping, and RPCS3's default PS key is Backspace (= our Select), so Select opens
+  RPCS3's home menu. For DAO's game menu (map, inventory, character) map Select to another key (N) for the run.

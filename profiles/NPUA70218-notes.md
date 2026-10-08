@@ -78,3 +78,11 @@ for the task's results (20 FPS): the job's output is a dependency. Reverted.
 - One run at Wider view 2.5 drew no frame at all after loading the savestate (threads parked in waits); the retry and
   the pose runs were fine. Watch for it.
 - Headset run.
+
+## 2026-10-08: after the miner removal (clean CPU)
+
+The 90 Hz numbers above were taken while a cryptominer used ~4 cores. Clean (`vrtest_journey_dune`, simulator, 300%):
+VR 72 **72.0** (0.17% late), VR 90 **86.3-87.6** (several runs). 200% gives 87.3 and flat (render=0) 84-88: not the VR path.
+Wider view 1.0 88.6, 2.0 86.8 (2.5 the same). Thread Scheduler RPCS3 84.1, Preferred SPU Threads 6 86.0, Max SPURS
+Threads 4 67 (worse), SPU loop detection 85.7, Processor idle disable 77.5 (needs boost clocks). Sustained stays 72;
+90 needs ~4% less game work (the SPU jobs). The RPCS3 SPU profiler only prints at a clean exit (the scripts kill it).
