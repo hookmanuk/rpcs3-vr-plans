@@ -36,6 +36,19 @@ headset: R&C shadows, SEGA Rally title and dust, KH pause (uncommitted pose-hold
 without `frames_without_3d_as_screen`). Needs you: a hung `rpcs3.exe` (PID 54120) and `dwm.exe` on 4 cores, see below
 (end that dwm.exe or reboot; `bin/rpcs3.zombie.exe`, `bin/RPCS3.buf.zombie` and `log/RPCS3.zombie.log` can go after).
 
+**Matt, 2026-10-08 afternoon (your headset notes; simulator-checked, needs your headset):**
+- **Dragon Age: Origins:** sky and window light shafts now stay in the world, and the black box when looking up after a
+  load is gone (new profile key `either_layout_blocks`, fork 2e6f8d7c5). The sun rays are hidden in VR: made
+  world-fixed they showed hard edges on head turns. Party portraits and the equipment figure fixed (Wider view 1.2).
+- **Journey:** the traveller looked different in each eye because the world scale was 3x off: fixed (eye baseline,
+  fork 650d17969). The sand edge on big head turns (past ~35 degrees) is still open: FOV patches cannot cover it, and
+  widening the sand grid changes the traveller's ground (tested, rejected).
+- **SEGA Rally bird shadows:** investigated, not fixed. The dark wedge by the car is VR-only and comes through the
+  road's shadow-map lookup; details and next steps in the notes.
+- **Sonic banding:** your state `BLUS30839_1_3` never presents a frame here (hangs after load; the regression state
+  runs). Does it load for you? Where on the track are the bands?
+- **R&C 1:** marked working. Ship it with R&C 2 and 3 once you have played those.
+
 **Matt, 2026-10-08 (new games and fixes; all on the OpenXR Simulator, needs your headset):**
 - **FEZ** 120 Hz: an orthographic game, shown as a 3D diorama on the world-fixed screen (new profile key). Savestates do not load.
 - **Flower** 90 Hz (unlock patch; level 1). **flOw** 120 Hz (real-time step patch). Both steer by SIXAXIS tilt.
