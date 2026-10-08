@@ -17,6 +17,17 @@ untracked in `bin/` for testing without being released. Unreleased profiles and 
 `rpcs3/vr-non-working/` (see its README). God of War Collection and Killzone 2, once tracked in `bin/`, moved to
 `vr-non-working/` for vr7 (untracked copies stay in `bin/`).
 
+## Release list: approved for the next release
+
+Games Matt has signed off in the headset. At packaging time: move the profile and patch from
+`rpcs3/vr-non-working/` into `rpcs3/bin/` (git-tracked), add the game to `rpcs3/vr-games.md` (and out of its
+"Not yet playable" table and the `vr-non-working/README.md` table), smoke-test it from the zip, then delete its section
+here (its notes file keeps the history).
+
+| Game | ID | Approved | Files | Notes for vr-games.md |
+|---|---|---|---|---|
+| Dragon Age: Origins | BLUS30415 | Matt, 2026-10-08 | `vr_profiles/BLUS30415.json`, `patches/BLUS30415_patch.yml` (*Wider view (VR culling)* 1.2, on by default) | 120 Hz (castle, forest, combat); no frame-rate patch needed. Needs fork 2e6f8d7c5 (`either_layout_blocks`) and 4b97dc471. Sun rays hidden in VR |
+
 **Shipped in vr7 (2026-10-02): Tales of Xillia and Super Stardust HD** (sections removed; history in their notes files).
 **Shipped in vr8 (2026-10-03): God of War and God of War II (God of War Collection), Dante's Inferno, Asura's Wrath**
 (sections removed; history in `profiles/BCES00800-notes.md`, `BLUS30405-notes.md`, `BLUS30721-notes.md`).
