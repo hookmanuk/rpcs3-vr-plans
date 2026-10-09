@@ -550,3 +550,7 @@ VP analysis 2.3 with heap allocations), submits 4.2, blits + inline transfers ~6
   shader-read, non-flushable sections whose other sections do not lock the page qualify; dev `RPCS3_TEX_EDGE=0`.
   67.1 / 14.79 and 67.8 / 14.64 (from 16.1). The Indy race start (`gt5_race.sh`) still 90 locked, RSX 5.4-8 ms, no new
   log errors, picture clean. Running total 19.2 -> 14.7 ms, 52 -> 67.5 FPS.
+- Tried and reverted: a memo of texture lookups by the texture unit's registers (valid per update tag, invalidation
+  count and frame). Alternating runs off/on: 15.64/15.41 and 14.83/14.72 ms: 0.1-0.2 ms at best, below the run-to-run
+  drift. Note the drift: the same build measured 14.6-15.9 ms over an hour (VS Code's cpptools re-indexes after source
+  edits; measure A/B alternately, never one run against an old number).
