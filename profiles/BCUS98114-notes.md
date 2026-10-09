@@ -559,3 +559,8 @@ VP analysis 2.3 with heap allocations), submits 4.2, blits + inline transfers ~6
   (false: no backend interrupt after every draw), fork 3b6288a8f: alternating A/B within the drift either way (memo on
   14.68/14.63 vs off 14.34/14.48; interrupt off 14.69/14.28). Both off in the profile. Best runs so far: 14.3-14.5 ms,
   68-69 FPS (from 19.2 / 52).
+- Memo and interrupt keys removed again (Matt: no improvement, no code). Eye-constants fast path (fork, the block cache
+  reuses the previous draw's slot offsets): 14.51/14.18 with, 14.49/14.43 without any block cache.
+- **Config, with Matt's go-ahead: `RSX FIFO Fetch Accuracy: Fast`** set in `config_BCUS98114.yml` (was Atomic).
+  Alternating A/B: 13.92/13.98 vs 14.37/14.24 ms, no FIFO errors in 2 runs. `Disable FIFO Reordering: true`:
+  14.11/14.53 vs 14.37-14.47, inconclusive, left as is. Now 13.9-14.0 ms, 71 FPS on 2_17.
