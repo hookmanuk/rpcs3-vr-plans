@@ -1,5 +1,7 @@
 # FEZ (NPUB31448, PSN 01.00 / VERSION 01.02)
 
+**Parked (Matt, 2026-10-09).**
+
 Added 2026-10-07 (Matt: new game, at 90 FPS). Installed PSN copy (`dev_hdd0/game/NPUB31448`, licence
 `UP4427-NPUB31448_00-FEZKEY0000000000`). Profile `bin/vr_profiles/NPUB31448.json` (copy in `vr-non-working/`). No patch.
 BlitWorks port (XNA content: `Content_PS3/*.xnb`).
