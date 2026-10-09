@@ -57,7 +57,8 @@ without `frames_without_3d_as_screen`). Needs you: a hung `rpcs3.exe` (PID 54120
   or trails behind bright areas?
 - **Sorry:** my R&C 2 test (Quit Game from a test savestate) saved over **in-game slot 4** at 18:37 before I had a
   backup; if slot 4 was yours, that progress is gone. **F: was full** (my test screenshots and old dumps): moved to
-  `C:pcs3-scratch` (nothing deleted; delete it or move it back as you like). Sonic's config had been left at 300% /
+  `C:
+pcs3-scratch` (nothing deleted; delete it or move it back as you like). Sonic's config had been left at 300% /
   Null audio by an earlier test run at 17:50: restored to 450% / Cubeb.
 
 **Matt, 2026-10-08 afternoon (your headset notes; simulator-checked, needs your headset):**
@@ -508,6 +509,17 @@ Notes: `profiles/BCUS98116-notes.md`. Evidence: `evidence/killzone2/`. Fork d12f
 ## Gran Turismo 5 (BCUS98114, XL Edition, US; disc 01.00 since 2026-10-03, was v02.11)
 
 Notes: `profiles/BCUS98114-notes.md` (the most detailed). Evidence: `evidence/gt5/`. Parked at vr5.
+
+- **2026-10-09 night: RSX-thread work on Matt's paused busy scene (2_17, nine cars ahead; simulator, 400% stereo,
+  multiview): 19.2 -> 13.9 ms a frame, 52 -> 71 FPS.** Code (generic, fork commits 5fa168307..7820e2159): fragment
+  programs hashed in their analysis pass and compared by two hashes, a lookup cache in front of the pipeline map, the
+  FIFO's cached-word fetch inline, a vertex program analysis cache, the texture cache keeps sections whose edge page
+  another writer shares (hashed instead of dropped: GT5 re-uploaded ~60 car textures a frame), VR per-draw trims and
+  an eye-constants fast path. Profile: `shared_frame_targets` (two of the six 256x256 cube faces refreshed a frame),
+  `camera_block_cache`. Config (Matt's go-ahead): `RSX FIFO Fetch Accuracy: Fast` (-0.35 ms). Tried, no gain: a
+  texture-lookup memo, skipping the per-draw backend interrupt, SPURS/loop-detection/vertex-cache settings, one cube
+  face a frame. Headset check pending: car paint reflections may lag up to 2 frames. Details and the LOD leads
+  (reflection metadata naming `EnvironmentSetting::LOD` members, script natives `setStaticLOD`/`changeLodCar`) in the notes.
 
 - **2026-10-05 night: frame rate (simulator, Matt's config at 400% stereo, 90 Hz).** Races hold 90: the Indy race
   start with the pack ahead 83-89 then 90 (was 60-65), a tree-lined track 90 locked (was 78). The pre-race grid runs
