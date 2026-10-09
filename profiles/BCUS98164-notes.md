@@ -34,6 +34,9 @@ gameplay transitions or cutscene black frames.
 
 ## Open
 
+**Parked (Matt, headset, 2026-10-09): full of graphics glitches and stutters.** Not worked on until the other games
+are done; no specific scenes or savestate given.
+
 - Headset check of the whole game: menus, QTE prompts (drawn in the world), cinematic camera cuts (the camera changes
   shot while the head stays: comfort), the deferred passes listed above (lighting/shadows sliding?).
 - Default Scale 2.5 vs 3.0 (the black past the window at yaw 20).
