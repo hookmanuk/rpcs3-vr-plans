@@ -523,7 +523,7 @@ The race camera (`0x3781bbe0` in that state; update `0x394570`, component `0x396
 - impact shake (collisions, spring + Perlin, struct `Shake`): `0x86a0c8` (state at camera `+0x4e0`), same pattern.
 - Parameters are reflected (names in the ELF: ShakeDef, BumpShake, Lean, Shake/Impact, GenShakeDef = drift levels,
   LandShake, CameraShake); definitions are read only when the camera is built, so poking them mid-race does nothing.
-Patch *Disable camera shake (VR)*, **off by default**: both functions always take their reset path (`nop` the
+Patch *Disable camera shake (VR)*, **on by default** (Matt, 2026-10-09): both functions always take their reset path (`nop` the
 `beq` at `0x86a718` and `0x86a0f4`), so the shake state stays zero and the camera keeps the computed view. Measured
 (60-frame-apart A/B, same inputs, frame-to-frame second difference of the camera's forward and up vectors): at speed
 4-15 -> 0-2; a collision at ~17 s 18.8 -> 4.3 with the pitch/roll jitter (1-2 degrees per frame) gone. The boost's
