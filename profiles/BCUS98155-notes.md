@@ -140,3 +140,13 @@ New state `BCUS98155_1_1` (10:18). Not investigated:
   0.0076 s at 132 FPS). A first try with the PS3 timebase (79.8 MHz) ran the race clock ~16x fast: the unit is
   microseconds. Real-time speed against the race timer was not confirmed (the unattended bike crashes); the step
   equals the average measured step by construction.
+
+## 2026-10-09: four bugs (Matt, headset)
+
+State `BCUS98155_1_2` (18:05), hard link `vrtest_mspr_matt_bugs`. Not investigated yet.
+
+1. While paused, turning the head moves several black menu bars.
+2. While unpaused, a light grey box below the car.
+3. While unpaused, turning the head moves a shadow inside that grey box.
+4. Tree shadows very aliased. Check the shadow map size against Resolution Scale (and any `min_scalable_dimension`) and
+   its filtering; Matt does not know if anything can be done.

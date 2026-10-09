@@ -572,6 +572,14 @@ Notes: `profiles/BCUS98155-notes.md`. Evidence: `evidence/motorstorm/`. Moved to
   late; the start window with the pack in view 69.6 FPS, 0.36%). Two-draw on the same build: 69.1 FPS, start
   window 62.9 FPS with 7.9% late. 90 Hz: 87.1 FPS, 0.14% late, but the start window 80.9 FPS and 1.08% late.
   New regression state `vrtest_mspr_race` (countdown "1"; route in `7-vr-regression.md`).
+- **Open (Matt, headset, 2026-10-09; state `BCUS98155_1_2`, hard link `vrtest_mspr_matt_bugs`):**
+  1. Paused: turning the head moves several black menu bars (the pause menu is not whole on the fixed screen).
+  2. Unpaused: a light grey box below the car.
+  3. Unpaused: turning the head moves a shadow inside that grey box (likely the car shadow or a screen-space pass
+     drawn in a box that does not follow the eye).
+  4. Tree shadows very aliased. Possibly the shadow map is at native size or filtered per guest pixel; check whether
+     it scales with Resolution Scale. Matt does not know if it can be helped.
+  Not investigated yet. See notes.
 
 ## Blur (BLUS30295 v01.00)
 
