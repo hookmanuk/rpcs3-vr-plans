@@ -554,3 +554,8 @@ VP analysis 2.3 with heap allocations), submits 4.2, blits + inline transfers ~6
   count and frame). Alternating runs off/on: 15.64/15.41 and 14.83/14.72 ms: 0.1-0.2 ms at best, below the run-to-run
   drift. Note the drift: the same build measured 14.6-15.9 ms over an hour (VS Code's cpptools re-indexes after source
   edits; measure A/B alternately, never one run against an old number).
+- Vertex program analysis cache (fork 37cc824f7): A/B pairs 14.80/14.59, 14.65/14.52. Kept.
+- Profile keys `texture_lookup_memo` (the memo above, Matt asked to keep it available) and `backend_interrupt_per_draw`
+  (false: no backend interrupt after every draw), fork 3b6288a8f: alternating A/B within the drift either way (memo on
+  14.68/14.63 vs off 14.34/14.48; interrupt off 14.69/14.28). Both off in the profile. Best runs so far: 14.3-14.5 ms,
+  68-69 FPS (from 19.2 / 52).
