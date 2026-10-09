@@ -261,3 +261,21 @@ flight ran at 90 with `0x146c804` = 3. Cause: `0x146c804` is the index of a five
   cutscene object in R&C 3 (camera init / state 2 store), or a PPU write watch on the scene object during a cutscene.
 - Lost (my mistake): Quit Game from the Aranos test state saved that test game into R&C 2 slot 4 at 18:37 (before the
   backup), over whatever was there. Later runs auto-saved into slots 3/4 again; those were restored from the backup.
+
+## 2026-10-09 (late): R&C 3 fixed (fork bc568bef8)
+
+- R&C 2's scene-streaming function `0xc0b870` sets `0x1477a24` = 1 and `0x1477a28` = 0x34 as a scene starts
+  (`0xc0bbe4`) and clears both at the end (`0xc0be20`). R&C 3's counterpart `0x29a028` does the same with `0xd79cb4` /
+  `0xd79cb8` (`0x29a37c`, `0x29a6d4`); dozens of level objects also write `0xd79cb4` (in-level cutscenes, planet
+  transitions), as in R&C 2.
+- R&C 3's new-game opening is not a scene: `0xd79cb4` stays 0 through it. It plays before the level starts: the level
+  manager (`0xc1eb78`; current level `+0x190` = `0xc1ed08`, previous `+0x150`) sets `+0x30` = `0xc1eba8` to 1 when the
+  level starts (22.7 s, exactly when the opening ends; current level 1 throughout, previous 0 -> 1).
+- Profile: `native_rate_when` [`0xd79cb4` = 1, `0xc1eba8` = 0] at 60. Checks (simulator, VR 90): `rc3_open_cutscene`
+  matches the 60 Hz run at 4/8/12/16 s, cap on 6.0-21.9 s then 90; `vrtest_rc3_veldin_battle` (walk, jump, shoot, pause)
+  90 throughout, flags 0/1. Not checked: a second New Game (the rule no longer depends on a counter) and in-level
+  cutscenes (no save; Matt checks).
+- Ruled out: `0xd97610` (+0x94 of an audio block: a ducking state set by `0x24595c` from several callers, with a gap
+  mid-opening); the function-shape scan's candidates `0xc611b8`, `0xf00370`, `0xda51f8` (always 0).
+- Note: savestate boots keep Cubeb even with Null in both configs; the device-change loop (Bluetooth / Sonar devices)
+  intermittently stalls a load after one frame. Retry when a run logs one peek and no frame stats.

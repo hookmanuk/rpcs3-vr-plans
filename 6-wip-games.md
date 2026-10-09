@@ -49,8 +49,8 @@ without `frames_without_3d_as_screen`). Needs you: a hung `rpcs3.exe` (PID 54120
 
 **Matt, 2026-10-09 evening (simulator-checked; headset recheck):**
 - **SEGA Rally:** the hang before a race is fixed (fork f2c09242b, a write into the read-only patch cave).
-- **R&C 2:** cutscene detection now uses the game's cutscene flag (fork 844d4933c); the second New Game stays at 60
-  through the ship flight. **R&C 3 has the same wrong word and is still open.**
+- **R&C 2 and 3:** cutscene detection now uses each game's scene flag (forks 844d4933c, bc568bef8); the second New
+  Game stays at 60 through the ship flight. In-level cutscenes: untested here, Matt checks.
 - **MotorStorm:** pause-menu bars and the grey box / sliding shadow under the car fixed (fork 800c13c3a). Tree-shadow
   aliasing is the game's shadow-map resolution (no change).
 - **Sonic ghosting:** not reproduced clearly. A turned eye shows stray shadow pieces on the road; is that what you see,
@@ -123,8 +123,10 @@ chance. The profile now drops to 60 while `0x1477a24` = 1 (set by the cutscene o
 ends) or `0x1329e20` = 0 (outside a level: the ship flights between planets, menus). Simulator: the ship cutscene at 90
 matches the 60 Hz run frame for frame; after Quit Game and a second New Game it stays at 60 through the flight and
 returns to 90 when Aranos loads; gameplay (walk, jump, shoot, pause) stays at 90. Headset recheck, including a later
-in-level cutscene. **R&C 3 is still open:** its `0xf17060` is the same string ring, so it will fail the same way; the
-R&C 2 method (cutscene object's flag) did not carry over directly (different layout). See notes.
+in-level cutscene. **R&C 3 fixed too (fork bc568bef8):** 60 while `0xd79cb4` = 1 (its scene flag, set and cleared
+by the scene code exactly like R&C 2's) or `0xc1eba8` = 0 (the level has not started: the new-game opening, which R&C 3
+does not play as a scene). Opening at 90 matches 60 at 4/8/12/16 s; battle with movement and pause stays at 90.
+In-level cutscenes in both games are untested (no save at one): Matt to check in the headset. See notes.
 
 **Matt, headset, 2026-10-08: R&C 1 is working.** Ready to move from `vr-non-working/` to the shipped profiles in the next
 release (with R&C 2 and 3 once Matt has played them in the headset).
