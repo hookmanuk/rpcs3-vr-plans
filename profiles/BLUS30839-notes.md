@@ -504,3 +504,31 @@ Matt: flat at 300% is clean, so the VR path must cause it; the lines are not mot
 - Not done (larger change): render each eye at the headset's aspect (a separate vertical resolution scale). RPCS3's
   resolution scale is one factor for both axes throughout the surface cache, blits, viewport and scissor code, so this
   touches many upstream files. It would help every game in VR, not just Sonic.
+
+## 2026-10-09: road gaps fixed (mesh trimming), optional camera shake patch
+
+**Road gaps / sky through the road** (Matt, state `BLUS30839_1_4`: the flat blue incline joints): not resolution.
+The EDGE geometry jobs (SPU) drop triangles that cover no pixel centre of the PS3's 1280x720 grid; far road slivers
+were culled and the sky showed through, in flat RPCS3 at 300% too. The viewport block the jobs cull against
+(`0xcf1800`: scissor u16 x4, depth, VP, scales `+0x50`, offsets `+0x60`; set by `0x1e4018`) is scaled 16x about its
+origin before it is copied to the job buffer (`calloc` at `0x1e4150`): frustum and scissor tests unchanged, the
+no-pixel test on a 16x finer grid. Patch *Disable mesh trimming (VR)*, on by default. Flat and VR A/B
+(`evidence/sonic-banding/`): road solid, stair-stepped palm and wall edges gone; 90 FPS at 300% (0.14% late). One
+450% measurement produced no frame stats (not followed up; Matt testing).
+
+**Camera shake** (Matt: uncomfortable in VR; speed, boost and impacts; state `BLUS30839_1_5`, one boost item).
+The race camera (`0x3781bbe0` in that state; update `0x394570`, component `0x396878`) applies:
+- speed / boost / slope shake: `0x86a680` (ShakeDef at camera `+0x570`; Perlin rotation applied to the camera
+  matrix in place). Entry: `[r4+8]` set = reset path, `bEnabled` (`[r6]`) 0 = skip.
+- impact shake (collisions, spring + Perlin, struct `Shake`): `0x86a0c8` (state at camera `+0x4e0`), same pattern.
+- Parameters are reflected (names in the ELF: ShakeDef, BumpShake, Lean, Shake/Impact, GenShakeDef = drift levels,
+  LandShake, CameraShake); definitions are read only when the camera is built, so poking them mid-race does nothing.
+Patch *Disable camera shake (VR)*, **off by default**: both functions always take their reset path (`nop` the
+`beq` at `0x86a718` and `0x86a0f4`), so the shake state stays zero and the camera keeps the computed view. Measured
+(60-frame-apart A/B, same inputs, frame-to-frame second difference of the camera's forward and up vectors): at speed
+4-15 -> 0-2; a collision at ~17 s 18.8 -> 4.3 with the pitch/roll jitter (1-2 degrees per frame) gone. The boost's
+smooth camera dip (pitch -3 to -19.5 degrees and back) is a camera move, not shake, and is kept. Not covered: drift
+shake (GenShakeDef, drift levels 1-3) and LandShake, if they turn out to be separate paths.
+How found: memory dumps across a boost (`RPCS3_VR_MEMDUMP`), PPU write/read watches and trace breakpoints (interpreter
+runs; the key script runs in real time, so the game must be driven after the watch is installed), the render
+command's setter descriptor (`0xbfd7a0`) back to the poster `0xaa8e8` and the camera holder.
