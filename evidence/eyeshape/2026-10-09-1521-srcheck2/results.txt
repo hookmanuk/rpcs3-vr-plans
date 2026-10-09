@@ -1,0 +1,4 @@
+# build de49c4744 VR eye shape: set the per-axis scale before the ga; simulator "headset_profile": "meganex"
+# state | mode | rate | avg FPS 1%-low late% | GPU use and power over the measured windows | profiler GPU ms/frame | eye image
+vrtest_segarally_race | 16:9 | 120 | 100.7 66.7 1.51 | GPU 73% 371 W | profiler 8.54 ms | scale 1.924
+vrtest_segarally_race | shaped | 120 | 105.5 69.8 2.63 | GPU 55% 275 W | profiler 8.44 ms | scale 1.924

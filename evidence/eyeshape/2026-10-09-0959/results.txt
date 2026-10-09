@@ -1,0 +1,35 @@
+# build a6da2e05a VR: headset-shaped eyes (per-axis resolution scale; simulator "headset_profile": "meganex"
+# state | mode | rate | avg FPS 1%-low late% | GPU use and power over the measured windows | profiler GPU ms/frame | eye image
+vrtest_rc1_veldin | 16:9 | 120 | 95.9 70.8 0.13 | GPU 26% 151 W | profiler 10.84 ms | scale 1.924
+vrtest_rc1_veldin | shaped | 120 | 93.9 69.5 0.38 | GPU 21% 117 W | profiler 10.93 ms | scale 1.924
+vrtest_rc2_aranos | 16:9 | 120 | 120.0 107.0 0.00 | GPU 27% 160 W | profiler 8.33 ms | scale 1.924
+vrtest_rc2_aranos | shaped | 120 | 120.0 103.7 0.00 | GPU 19% 116 W | profiler 8.33 ms | scale 1.924
+vrtest_rc3_veldin_battle | 16:9 | 120 | 117.6 84.7 0.53 | GPU 32% 172 W | profiler 8.52 ms | scale 1.924
+vrtest_rc3_veldin_battle | shaped | 120 | 117.7 83.9 0.85 | GPU 24% 122 W | profiler 8.51 ms | scale 1.924
+vrtest_anarchy_practice | 16:9 | 120 | 114.9 71.0 1.63 | GPU 95% 260 W | profiler 8.69 ms | scale 1.924
+vrtest_anarchy_practice | shaped | 120 | 120.0 100.5 0.00 | GPU 56% 179 W | profiler 8.33 ms | scale 1.924
+vrtest_dante_acre_v3 | 16:9 | 120 | 120.0 102.8 0.00 | GPU 30% 143 W | profiler 8.33 ms | scale 1.924
+vrtest_dante_acre_v3 | shaped | 120 | 120.0 98.8 0.00 | GPU 26% 115 W | profiler 8.33 ms | scale 1.924
+vrtest_darkness_opening | 16:9 | 120 | 32.5 31.4 0.00 | GPU 87% 156 W | profiler 30.85 ms | scale 1.924
+vrtest_darkness_opening | shaped | 120 | 48.7 46.6 0.00 | GPU 81% 144 W | profiler 20.55 ms | scale 1.924
+vrtest_puppeteer_cage | 16:9 | 120 | 119.9 107.7 0.10 | GPU 35% 160 W | profiler 8.33 ms | scale 1.924
+vrtest_puppeteer_cage | shaped | 120 | 120.0 109.3 0.00 | GPU 29% 125 W | profiler 8.33 ms | scale 1.924
+vrtest_xillia_field | 16:9 | 120 | 120.0 111.1 0.00 | GPU 46% 250 W | profiler 8.33 ms | scale 1.924
+vrtest_xillia_field | shaped | 120 | 120.0 99.4 0.00 | GPU 33% 166 W | profiler 8.33 ms | scale 1.924
+vrtest_ddda_prologue | 16:9 | 120 | 119.9 96.5 0.21 | GPU 55% 219 W | profiler 8.35 ms | scale 1.924
+vrtest_ddda_prologue | shaped | 120 | 119.8 96.4 0.10 | GPU 56% 215 W | profiler 8.34 ms | scale 1.924
+vrtest_jak1_hut | 16:9 | 120 | 60.0 52.7 0.21 | GPU 16% 94 W | profiler 16.66 ms | scale 1.931
+vrtest_jak1_hut | shaped | 120 | 60.0 52.8 0.00 | GPU 14% 83 W | profiler 16.66 ms | scale 1.931
+vrtest_jak2_prison | 16:9 | 120 | 84.9 62.3 0.29 | GPU 39% 131 W | profiler 12.33 ms | scale 1.924
+vrtest_jak2_prison | shaped | 120 | 80.4 54.4 0.00 | GPU 37% 118 W | profiler 11.94 ms | scale 1.924
+vrtest_jak3_spargus | 16:9 | 120 | 55.3 45.6 0.00 | GPU 25% 106 W | profiler 17.96 ms | scale 1.931
+vrtest_jak3_spargus | shaped | 120 | no stats | GPU 6% 36 W | profiler - ms | scale 1.931
+vrtest_dw6e_battle | 16:9 | 120 | 60.0 57.3 0.00 | GPU 12% 78 W | profiler 16.66 ms | scale 1.931
+vrtest_dw6e_battle | shaped | 120 | 60.0 55.9 0.00 | GPU 10% 70 W | profiler 16.66 ms | scale 1.931
+vrtest_wipeout_race | 16:9 | 120 | 32.3 10.9 33.20 | GPU 15% 67 W | profiler 31.03 ms | scale 1.924
+vrtest_wipeout_race | shaped | 120 | 32.3 30.0 0.00 | GPU 16% 64 W | profiler - ms | scale 1.924
+vrtest_gowc_boat | 16:9 | 120 | 120.0 109.8 0.00 | GPU 21% 126 W | profiler 8.33 ms | 3840x2160 eye image
+vrtest_gowc_boat | shaped | 120 | 120.0 110.1 0.00 | GPU 16% 94 W | profiler 8.33 ms | 1920x2160 eye image
+vrtest_gow2_rhodes | 16:9 | 120 | 120.0 109.5 0.00 | GPU 20% 111 W | profiler 8.33 ms | 3840x2160 eye image
+vrtest_gow2_rhodes | shaped | 120 | 120.0 105.1 0.00 | GPU 16% 92 W | profiler 8.33 ms | 1920x2160 eye image
+vrtest_icosotc_1 | 16:9 | 120 | 92.4 49.2 29.86 | GPU 73% 232 W | profiler 10.83 ms | scale 1.924

@@ -850,6 +850,32 @@ few at full rate in the next release smoke test. vr8 workaround: VR Frame Rate s
   MotorStorm, Gundam, SEGA Rally, Dragon Age: Origins make a new frame on every flip.
 - R&C's character shadow: profile key `depth_remap_uv` (fork 5466b0d33), see `profiles/README.md`.
 
+## Headset-shaped eyes (branch `vr-eye-shape`, 2026-10-09, not merged)
+
+Each eye showed the game's 16:9 frame stretched over the headset's view, which is relatively taller (MeganeX
+superlight 8K: panel 3552x3840, about 0.925:1), so an eye had ~1.9x the pixels per degree across that it had up and
+down. The branch splits the Resolution Scale per axis in the headset view: the axis with fewer pixels per degree keeps
+the configured scale and the other drops to match (MeganeX shape at 300%: 150% x 300%, half the pixels; the vertical
+detail is unchanged, fine horizontal detail drops to the vertical's level). Code in `Emu/RSX/Capture/rsx_vr_eye_shape.*`;
+upstream hooks: `surface_scaling_config_t::scale_percent_y` (heights in `apply_resolution_scale`), the active, starting
+and blit-engine configs, the fragment window position (x percent carried in `wpos_bias.x`), ZCULL pixel counts.
+Video > VR > Headset Eye Shape (default on), `RPCS3_VR_EYE_SHAPE=0/1`. Fork commits a6da2e05a, 60f07dfc7, de49c4744.
+- Fixed on the way: the fixed screen took its height from the eye image's shape (SEGA Rally's intro videos tall); the
+  shaped scale applied at the end of the first frame rebuilt every surface of a frame in flight and hung ICO / SotC in
+  about one boot in four; it now applies before the first frame (RSX thread start config and an empty-cache apply).
+- Snapped to 25% steps: at 251% x 358% the blit engine's halving of a 320x180 target asked for one column too many.
+- Simulator: profile "Shiftall MeganeX superlight 8K" added (OpenXR-Simulator, frustum with the panel's 0.925 shape, no
+  measured FOV published) and selected in its settings.
+- Savings, all 42 regression states at 120 Hz (`tools/re/eyeshape_bench.sh`, watchdog for crashes/hangs;
+  `evidence/eyeshape/table.md`): GPU use 46% -> 37%, power 209 -> 169 W (-19%) on average. Frame rate up where the GPU
+  limited it: The Darkness 32.5 -> 48.7, Killzone 2 57.5 -> 75.1, ICO/SotC 98.6 -> 117.5 (late frames 21.7% -> 2.1%),
+  MotorStorm 97.1 -> 105.0, X-Men 59.3 -> 63.3, SEGA Rally ~101 -> ~106 (three runs each); CPU-bound games unchanged.
+  Captures at the same moment show no rendering differences (GoW HUD, WipEout, The Darkness checked A/B).
+- Seen once, not reproduced (4 retries): ICO bridge state, eye shape **off**, Vulkan device lost (GPU write fault at
+  0x0) 10 s after load. Not from this branch as far as known; the watchdog now records such runs.
+- Open: screenshots/recordings keep the eye image's pixel shape (squashed); a "quality" mode that raises the weaker axis
+  instead (MeganeX panel-matched: ~275% x 525%) for Sonic's far-track lines; GUI checkbox.
+
 ## Generic work from the 2026-10-07/08 new games and fixes
 
 - **Orthographic games** (fork 82c80ffdc): profile key `orthographic_stereo` `{angle, convergence | convergence_z}`: the

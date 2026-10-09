@@ -1,0 +1,18 @@
+# build de49c4744 VR eye shape: set the per-axis scale before the ga; simulator "headset_profile": "meganex"
+# state | mode | rate | avg FPS 1%-low late% | GPU use and power over the measured windows | profiler GPU ms/frame | eye image
+vrtest_icosotc_1 | 16:9 | 120 | 98.6 50.5 21.65 | GPU 71% 228 W | profiler 10.09 ms | scale 1.924
+vrtest_icosotc_1 | shaped | 120 | 117.5 60.1 2.13 | GPU 54% 199 W | profiler 8.49 ms | scale 1.924
+vrtest_demons_1 | 16:9 | 120 | 119.6 100.1 0.00 | GPU 34% 198 W | profiler 8.33 ms | scale 1.924
+vrtest_demons_1 | shaped | 120 | 120.0 104.5 0.00 | GPU 29% 170 W | profiler 8.32 ms | scale 1.924
+vrtest_bayonetta_play | 16:9 | 120 | 119.6 104.1 0.31 | GPU 43% 231 W | profiler 8.33 ms | scale 1.924
+vrtest_bayonetta_play | shaped | 120 | 119.6 106.7 0.31 | GPU 37% 191 W | profiler 8.33 ms | scale 1.924
+vrtest_gt5_race_start | 16:9 | 120 | 120.0 94.5 0.00 | GPU 75% 299 W | profiler 8.35 ms | scale 1.924
+vrtest_gt5_race_start | shaped | 120 | 119.9 95.8 0.00 | GPU 59% 232 W | profiler 8.35 ms | scale 1.924
+vrtest_pure_race | 16:9 | 120 | 115.8 110.5 0.10 | GPU 53% 281 W | profiler 8.33 ms | scale 1.924
+vrtest_pure_race | shaped | 120 | 119.4 111.9 0.10 | GPU 41% 227 W | profiler 8.33 ms | scale 1.924
+vrtest_rr7_boot | 16:9 | 120 | 119.3 101.2 0.63 | GPU 31% 189 W | profiler 8.33 ms | scale 1.924
+vrtest_rr7_boot | shaped | 120 | 119.1 96.9 0.42 | GPU 25% 158 W | profiler 8.33 ms | scale 1.924
+vrtest_kz_trench | 16:9 | 120 | 90.0 77.4 0.28 | GPU 35% 176 W | profiler 11.11 ms | scale 1.931
+vrtest_kz_trench | shaped | 120 | 89.9 63.4 0.28 | GPU 31% 161 W | profiler 11.11 ms | scale 1.931
+vrtest_asura_space | 16:9 | 120 | 119.7 111.1 0.00 | GPU 43% 215 W | profiler 8.33 ms | scale 1.924
+vrtest_asura_space | shaped | 120 | 119.7 113.3 0.10 | GPU 37% 180 W | profiler 8.33 ms | scale 1.924

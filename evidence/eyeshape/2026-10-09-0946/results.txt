@@ -1,0 +1,14 @@
+# build a6da2e05a VR: headset-shaped eyes (per-axis resolution scale; simulator "headset_profile": "meganex"
+# state | mode | rate | avg FPS | 1% low | late | GPU ms/frame | eye image
+vrtest_rc1_veldin | 16:9 | 120 | no stats | GPU - | scale 1.924
+vrtest_rc1_veldin | shaped | 120 | 93.5 69.1 0.13 | GPU 10.84 | scale 1.924
+vrtest_rc2_aranos | 16:9 | 120 | 120.0 105.1 0.00 | GPU 8.33 | scale 1.924
+vrtest_rc2_aranos | shaped | 120 | 120.0 103.9 0.00 | GPU 8.33 | scale 1.924
+vrtest_rc3_veldin_battle | 16:9 | 120 | 116.8 86.7 0.43 | GPU 8.58 | scale 1.924
+vrtest_rc3_veldin_battle | shaped | 120 | 116.7 82.7 0.64 | GPU 8.57 | scale 1.924
+vrtest_anarchy_practice | 16:9 | 120 | 114.8 70.1 1.28 | GPU 8.71 | scale 1.924
+vrtest_anarchy_practice | shaped | 120 | 120.0 103.6 0.00 | GPU 8.33 | scale 1.924
+vrtest_dante_acre_v3 | 16:9 | 120 | 120.0 101.7 0.00 | GPU 8.33 | scale 1.924
+vrtest_dante_acre_v3 | shaped | 120 | 120.0 98.4 0.00 | GPU 8.33 | scale 1.924
+vrtest_darkness_opening | 16:9 | 120 | 32.5 31.1 0.00 | GPU 30.79 | scale 1.924
+vrtest_darkness_opening | shaped | 120 | 48.6 45.7 0.00 | GPU 20.59 | scale 1.924

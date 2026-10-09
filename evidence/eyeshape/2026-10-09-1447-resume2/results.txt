@@ -1,0 +1,36 @@
+# build de49c4744 VR eye shape: set the per-axis scale before the ga; simulator "headset_profile": "meganex"
+# state | mode | rate | avg FPS 1%-low late% | GPU use and power over the measured windows | profiler GPU ms/frame | eye image
+vrtest_rc2_aranos_hall | 16:9 | 120 | 120.0 96.2 0.10 | GPU 35% 207 W | profiler 8.33 ms | scale 1.924
+vrtest_rc2_aranos_hall | shaped | 120 | 120.0 100.6 0.10 | GPU 28% 172 W | profiler 8.33 ms | scale 1.924
+vrtest_kh2_twilight | 16:9 | 120 | 117.1 60.4 2.56 | GPU 33% 191 W | profiler 8.34 ms | scale 1.924
+vrtest_kh2_twilight | shaped | 120 | 117.4 61.3 2.45 | GPU 29% 168 W | profiler 8.33 ms | scale 1.924
+vrtest_kh1_dive | 16:9 | 120 | 120.0 105.2 0.00 | GPU 23% 154 W | profiler 8.33 ms | scale 1.924
+vrtest_kh1_dive | shaped | 120 | 120.0 104.7 0.00 | GPU 20% 141 W | profiler 8.32 ms | scale 1.924
+vrtest_mspr_race | 16:9 | 120 | 97.1 74.2 0.46 | GPU 87% 300 W | profiler 10.93 ms | scale 1.924
+vrtest_mspr_race | shaped | 120 | 105.0 74.2 0.36 | GPU 61% 231 W | profiler 10.74 ms | scale 1.924
+vrtest_ssd_lave | 16:9 | 120 | 120.0 103.9 0.00 | GPU 35% 211 W | profiler 8.33 ms | scale 1.924
+vrtest_ssd_lave | shaped | 120 | 120.0 103.8 0.10 | GPU 26% 170 W | profiler 8.33 ms | scale 1.924
+vrtest_sonic_race | 16:9 | 120 | 118.4 94.1 0.21 | GPU 71% 305 W | profiler 8.35 ms | scale 1.924
+vrtest_sonic_race | shaped | 120 | 119.6 93.1 0.00 | GPU 52% 234 W | profiler 8.34 ms | scale 1.924
+vrtest_dwg_odessa | 16:9 | 120 | 120.0 97.3 0.00 | GPU 40% 187 W | profiler 8.33 ms | scale 1.924
+vrtest_dwg_odessa | shaped | 120 | 120.0 97.6 0.00 | GPU 37% 171 W | profiler 8.32 ms | scale 1.924
+vrtest_xmen_jungle | 16:9 | 72 | 59.3 47.5 0.00 | GPU 64% 209 W | profiler 16.87 ms | scale 1.931
+vrtest_xmen_jungle | shaped | 72 | 63.3 50.5 0.00 | GPU 60% 187 W | profiler 15.74 ms | scale 1.931
+vrtest_kz2_carrier | 16:9 | 120 | 57.5 50.0 0.00 | GPU 86% 340 W | profiler 17.52 ms | scale 1.924
+vrtest_kz2_carrier | shaped | 120 | 75.1 61.7 0.00 | GPU 73% 279 W | profiler 13.30 ms | scale 1.924
+vrtest_segarally_race | 16:9 | 120 | 115.8 87.0 0.22 | GPU 76% 380 W | profiler 8.42 ms | scale 1.924
+vrtest_segarally_race | shaped | 120 | 107.2 74.7 0.00 | GPU 56% 276 W | profiler 8.41 ms | scale 1.924
+vrtest_dao_castle | 16:9 | 120 | 119.9 87.5 0.10 | GPU 53% 277 W | profiler 8.32 ms | scale 1.924
+vrtest_dao_castle | shaped | 120 | 120.0 92.5 0.00 | GPU 39% 214 W | profiler 8.33 ms | scale 1.924
+vrtest_da2_fight | 16:9 | 120 | 59.5 40.0 2.10 | GPU 30% 174 W | profiler 16.80 ms | scale 1.924
+vrtest_da2_fight | shaped | 120 | 59.9 40.0 2.09 | GPU 27% 154 W | profiler 16.66 ms | scale 1.924
+vrtest_flower_l1 | 16:9 | 120 | 114.8 85.8 0.75 | GPU 95% 312 W | profiler 8.78 ms | scale 1.924
+vrtest_flower_l1 | shaped | 120 | 115.1 91.8 0.00 | GPU 59% 236 W | profiler 8.67 ms | scale 1.924
+vrtest_journey_dune | 16:9 | 120 | 82.2 67.1 0.15 | GPU 49% 214 W | profiler 12.16 ms | scale 1.924
+vrtest_journey_dune | shaped | 120 | 82.9 69.2 0.15 | GPU 38% 177 W | profiler 12.14 ms | scale 1.924
+vrtest_dao_forest | 16:9 | 120 | 119.9 98.5 0.10 | GPU 58% 330 W | profiler 8.33 ms | scale 1.924
+vrtest_dao_forest | shaped | 120 | 120.0 97.8 0.00 | GPU 40% 243 W | profiler 8.33 ms | scale 1.924
+vrtest_flow_title | 16:9 | 120 | 120.0 106.3 0.00 | GPU 25% 167 W | profiler 8.33 ms | scale 1.924
+vrtest_flow_title | shaped | 120 | 120.0 105.6 0.00 | GPU 21% 146 W | profiler 8.33 ms | scale 1.924
+vrtest_dao_wolves | 16:9 | 120 | 119.4 93.6 0.00 | GPU 73% 403 W | profiler 8.33 ms | scale 1.924
+vrtest_dao_wolves | shaped | 120 | 119.9 91.5 0.00 | GPU 48% 278 W | profiler 8.33 ms | scale 1.924
