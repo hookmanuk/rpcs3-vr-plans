@@ -691,6 +691,8 @@ Notes: `profiles/BLUS30839-notes.md`. Profile and patch file in `vr-non-working/
   (`ad9998b4d5599447`) has its tap offsets (fc5, fc7, fc10, fc12) sized in guest pixels, so at high resolution scale it
   blurs over several real pixels. `fragment_constant_overrides` setting them to 0 (FXAA off) is in the
   `vr-non-working` profile and the bin copy, **not yet checked visually or committed**.
+- **Open (Matt, headset, 2026-10-09): turning the head leaves ghosting everywhere**, which Matt thinks is linked to the
+  sunlight. State `BLUS30839_1_6` (17:49), hard-linked as `vrtest_sonic_matt_ghosting`. Not investigated yet.
 - **Open:** headset run.
 
 ## Dynasty Warriors: GUNDAM (BLUS30058, disc 01.00)

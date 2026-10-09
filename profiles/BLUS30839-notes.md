@@ -532,3 +532,6 @@ shake (GenShakeDef, drift levels 1-3) and LandShake, if they turn out to be sepa
 How found: memory dumps across a boost (`RPCS3_VR_MEMDUMP`), PPU write/read watches and trace breakpoints (interpreter
 runs; the key script runs in real time, so the game must be driven after the watch is installed), the render
 command's setter descriptor (`0xbfd7a0`) back to the poster `0xaa8e8` and the camera holder.
+
+**Ghosting on head turns** (Matt, headset, 2026-10-09; state `BLUS30839_1_6`, hard link `vrtest_sonic_matt_ghosting`):
+turning the head leaves ghosting everywhere; Matt thinks it is linked to the sunlight. Not investigated yet.
