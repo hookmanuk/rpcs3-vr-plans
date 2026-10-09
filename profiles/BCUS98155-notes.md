@@ -150,3 +150,12 @@ State `BCUS98155_1_2` (18:05), hard link `vrtest_mspr_matt_bugs`. Not investigat
 3. While unpaused, turning the head moves a shadow inside that grey box.
 4. Tree shadows very aliased. Check the shadow map size against Resolution Scale (and any `min_scalable_dimension`) and
    its filtering; Matt does not know if anything can be done.
+
+**Fixed 1-3 (fork 800c13c3a, simulator).** Stereo inspector capture of the paused frame (`insp\ARM`): the menu is
+`5bf2925a3daa1a90` (sprites, HUD block c[256], boxed) and `f7810dbda0d9eba2` (54-vertex untextured bars, vertex program
+passes clip xy through, z/w from c[0]); listed in `hud_programs` the bars join the box (matches the flat layout:
+`evidence/motorstorm-2026-10-09/`). The generator (during the race) lists two depth-rebuilding programs; hiding
+`05da43f83668a0ad` removes both the grey box and the bike's shadow, so it is the vehicle shadow volume pass;
+`depth_remap_programs` puts the shadow where flat has it, no box, at yaw 0/+-20/pitch 10. `58d6d826ffdf3cd6` (5 draws)
+not involved. Gameplay HUD unchanged. Tree shadows: the 1024x2048 atlas `cb030000` is scaled with the view; aliasing is
+the game's shadow resolution (no change).

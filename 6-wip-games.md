@@ -579,14 +579,16 @@ Notes: `profiles/BCUS98155-notes.md`. Evidence: `evidence/motorstorm/`. Moved to
   late; the start window with the pack in view 69.6 FPS, 0.36%). Two-draw on the same build: 69.1 FPS, start
   window 62.9 FPS with 7.9% late. 90 Hz: 87.1 FPS, 0.14% late, but the start window 80.9 FPS and 1.08% late.
   New regression state `vrtest_mspr_race` (countdown "1"; route in `7-vr-regression.md`).
-- **Open (Matt, headset, 2026-10-09; state `BCUS98155_1_2`, hard link `vrtest_mspr_matt_bugs`):**
-  1. Paused: turning the head moves several black menu bars (the pause menu is not whole on the fixed screen).
-  2. Unpaused: a light grey box below the car.
-  3. Unpaused: turning the head moves a shadow inside that grey box (likely the car shadow or a screen-space pass
-     drawn in a box that does not follow the eye).
-  4. Tree shadows very aliased. Possibly the shadow map is at native size or filtered per guest pixel; check whether
-     it scales with Resolution Scale. Matt does not know if it can be helped.
-  Not investigated yet. See notes.
+- **Matt's four bugs of 2026-10-09 (state `BCUS98155_1_2` = `vrtest_mspr_matt_bugs`): 1-3 fixed (fork 800c13c3a),
+  simulator-checked at yaw 0, +-20, pitch 10 on fresh loads; headset recheck.**
+  1. Pause menu black bars moving with the head: the bars (`f7810dbda0d9eba2`) pass clip-space positions through with
+     no matrix and were sheared as scene geometry; `screen_space.hud_programs` puts them in the HUD box with the text.
+  2./3. Grey box below the car, with a shadow sliding in it on head turns: the vehicle shadow pass `05da43f83668a0ad`
+     rebuilds positions from depth with the game's camera; `depth_remap_programs` fixes it (shadow under the bike in
+     both eyes, where flat puts it).
+  4. Tree shadows aliased: not changed. The shadow atlas (1024x2048, two cascades) is already scaled by the Resolution
+     Scale like any target, so VR matches flat at the same scale; the stepped edges at a distance are the game's
+     shadow-map resolution. Only a game patch (bigger atlas or tighter cascades) would help.
 
 ## Blur (BLUS30295 v01.00)
 

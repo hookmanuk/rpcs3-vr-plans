@@ -535,3 +535,14 @@ command's setter descriptor (`0xbfd7a0`) back to the poster `0xaa8e8` and the ca
 
 **Ghosting on head turns** (Matt, headset, 2026-10-09; state `BLUS30839_1_6`, hard link `vrtest_sonic_matt_ghosting`):
 turning the head leaves ghosting everywhere; Matt thinks it is linked to the sunlight. Not investigated yet.
+
+**Ghosting, first look (2026-10-09 evening, simulator, not fixed).** Matt's state loads paused; paused frames are held
+at their pose (the eye images do not change during a yaw sweep), so nothing to see there. Resumed, with the simulator's
+yaw sweep (`pose_sweep_command.json`, 30 degrees at 0.4 Hz) and yaw jumps, full-resolution eye captures show no trails
+or doubled bright areas. What does show, in both deterministic runs at yaw 25 (fresh load, resume, shot 2 s later):
+**dark shadow fragments on the road in the turned left eye only** (a sliver left of centre, a long wedge at the bottom
+left), where the head looks past the game's own view (`evidence/sonic-ghosting/`). Candidate: the sun's shadow lookup
+outside the area the game fitted its shadow maps to. **Correction:** the `hide=` tests of `a876f56875283173` and `1c802bb870dbbbd8`/`f79e3adaa119eba2` were invalid (the
+probe file is comma-separated; I separated with a space, so nothing was hidden). Redo them. Needs Matt: is the "ghosting" these shadow pieces, or trails behind bright areas? Next: same-pose A/B of the
+shadow passes (`hide=` the cascade programs `ed46d28a122d7235`, `cec5b3488b8595e6`, `fc827cca71af7819`) at yaw 25.
+Note: the generator trigger writes `bin/vr_profiles/<ID>.eboot.json` (moved out to `C:pcs3-scratch` after this run).
