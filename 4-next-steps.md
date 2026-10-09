@@ -873,8 +873,10 @@ Video > VR > Headset Eye Shape (default on), `RPCS3_VR_EYE_SHAPE=0/1`. Fork comm
   Captures at the same moment show no rendering differences (GoW HUD, WipEout, The Darkness checked A/B).
 - Seen once, not reproduced (4 retries): ICO bridge state, eye shape **off**, Vulkan device lost (GPU write fault at
   0x0) 10 s after load. Not from this branch as far as known; the watchdog now records such runs.
-- Open: screenshots/recordings keep the eye image's pixel shape (squashed); a "quality" mode that raises the weaker axis
-  instead (MeganeX panel-matched: ~275% x 525%) for Sonic's far-track lines; GUI checkbox.
+- The Resolution Scale now sets the vertical density (the horizontal follows the headset's shape), so more detail is
+  just a higher percentage: MeganeX panel-matched is 525% (275% x 525%, ~1.6x the pixels of 16:9 at 300%, half of 16:9
+  at 525%). No separate quality mode (Matt, 2026-10-09).
+- Open: screenshots/recordings keep the eye image's pixel shape (squashed); GUI checkbox.
 
 ## Generic work from the 2026-10-07/08 new games and fixes
 
