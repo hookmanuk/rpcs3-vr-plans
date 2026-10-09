@@ -494,3 +494,51 @@ surface `0xc1100000`, and probe `why=`:
 - Car shadows: shadow draws carry no world position (c[256..259] identity, the model in the light transform), so the
   tiers cannot reach them without inverting each cascade's light matrix; shadows are cheap depth draws (~1 FPS at most).
 
+
+## 2026-10-09 night: RSX-thread work on the paused busy scene (2_17), in progress
+
+Target: `savestates/BCUS98114/gt5_busy_race_2_17` (paused, pad connected; identical frames at 3 s and 12 s), simulator,
+Matt's config at 400% stereo, Vblank 90, Frame Rate Unlimited, multiview. Run helper: scratch `pab.sh` (gt5_race.sh with
+`KEYS='\n'`), average of the last 8 s. Baseline 51.5-52.4 FPS, RSX thread 19.0-19.3 ms/frame (GPU idle).
+
+RSX thread sample (`RPCS3_RSX_SAMPLE=2`, 6,653 samples): run_FIFO outside draws ~17% (fetch_u32 4.9 self, run_FIFO 4.5,
+read 2.1, decode 1.2), `VKGSRender::end` ~60%: emit_geometry 31 (vr_setup_draw 9.6, program::bind 8.4 = driver descriptor
+work, upload_vertex_data 5.1), load_texture_env 11.9 (fast_texture_search ~5, upload_image_from_cpu 2.6), load_program 7.9
+(pipeline lookup 6.5: FP storage hash 1.4 + FP compare 1.4 + VP hash), analyse_current_rsx_pipeline 3 (FP analysis 2.2,
+VP analysis 2.3 with heap allocations), submits 4.2, blits + inline transfers ~6, flip 2.8, do_local_task 3, VirtualProtect
+1.7, heap alloc/free ~3-4 (callers not yet attributed). Nothing dominates: ~7 us of RSX thread per draw at 2,650 draws.
+
+- Config check (Matt: configs are settled, code changes only from here): Max SPURS 5, SPU loop detection, Disable Vertex
+  Cache: no change on the paused scene. RSX FIFO Fetch Accuracy "Fast" 54.5 FPS / 18.2 ms against 51.5 / 19.3 (about
+  1 ms a frame of the atomic fetch) - recorded only.
+- Unpausing 2_17 (Start, hold R2) is not a measurement: the scene reaches the 90 cap within 3 s. Matt: keep it paused.
+- Code: the VR trace (`vr_tracing()`, 6 frames of every 150 built strings every draw) is now opt-in (`RPCS3_VR_TRACE=1`).
+  The fragment program ucode hash is computed in the analysis pass (`fragment_program_metadata::ucode_hash`,
+  `RSXFragmentProgram::ucode_hash`) so the pipeline lookup no longer re-hashes the ucode every draw (the compare stays).
+- Dev hook `RPCS3_VR_RSX_CORE=<cpu>` (rsx_vr_hooks.cpp): RSX thread alone on a core, other threads off the SMT pair. Not
+  measured: the paused scene has idle SPUs (5.7% total CPU), so there is no contention to remove there.
+- Pipeline lookup: a direct-mapped cache (512 slots by program ids) in front of the pipeline map, whose hash and compare
+  walked ~300 bytes of pipeline state per draw (`program_state_cache::get_graphics_pipeline`); fragment programs compare
+  by two 64-bit hashes computed in the analysis pass instead of a word-by-word scan (`RSXFragmentProgram::ucode_hash2`).
+  Three runs: 56.1 / 17.70, 55.1 / 18.01, 53.9 / 18.44 (run-to-run spread ~0.4 ms) against 53.4 / 18.58.
+- Inspector capture of the paused frame (2,654 draws): six 256x256 cube faces 534 draws / 139k vertices (environment
+  programs only, no car programs), six 256x511 copies of 8 draws each, a 256x128 pass of 129 draws (the mirror), shadow
+  cascades 1024x2048 139 / 1365 174 / 682 24 draws (342k vertices), the main 1280x720 pass 1,462 draws / 940k vertices
+  (334 body-program draws in 9 transform groups = 9 cars), 2048x1080 display-buffer HUD ~80 draws.
+- **New profile key `shared_frame_targets`** (`[{ "width": 256, "height": 256, "frames": 3 }]`): the cube faces take
+  turns, two refreshed a frame, the others keep their content (draws and clears left out; one-line hook in
+  `clear_surface`). 59.6 FPS / 16.65 ms. Simulator shots at 12 s match the run without it. Headset check: car paint
+  reflections lag up to 2 frames.
+- LOD (game patch) leads, parked: the executable's reflection metadata names `GTRender::EnvironmentSetting::LOD` members
+  `base`, `discreteBase`, `meshBase`, `meshCurveBase`, `meshOffsetBase`, `meshGap`, `forceRoughestLOD` (member descriptor
+  tables at 0x1849xxx-0x185cxxx, name strings at 0x155dxxx/0x1586xxx/0x1589xxx/0x1590xxx; `tools/re/strrefs.py`),
+  `BasicParameterSet::lod`/`lodEnv`, `ReflectSetting::lodScale` (default 0.05), `PDIGraphics::ModelSetTraverseCallback::LODCtx`
+  (PPU-side model traversal with an LOD context). Script natives (binding table at 0x17a7xxx: {0, 0x154d738, 0x154d738,
+  name, function}): `setStaticLOD` (0x225db0 -> setter 0x1f0660: model = *(component+0x10); level at model+0x80, flag bit
+  31 of model+0x84 = static LOD on), `changeLodCar` (0x2159e0 -> 0x1ffc1c), `getCarLODSize` (file sizes, not rendering).
+  Not found yet: the code that reads model+0x84 / the distance thresholds (a scan for sign tests after `lwz 0x84(r)` found
+  nothing; the chooser may use a pointer to model+0x70 and offsets 0x10/0x14, or run on the SPUs).
+- FIFO: `FIFO_control::fetch_u32`'s cached-word path inline (RSXFIFO.h; the out-of-line call per FIFO word was ~2% of
+  the thread in Atomic fetch mode), plus VR trims (no per-draw copy of the game's constants, plain display-buffer
+  addresses) and `camera_block_cache: true` in the profile: 62.1 / 15.99 and 61.1 / 16.22. Running total 19.2 -> 16.1 ms,
+  52 -> 62 FPS. Fork commit "RSX thread: cheaper per-draw lookups, shared_frame_targets".
