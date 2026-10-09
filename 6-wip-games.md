@@ -104,6 +104,8 @@ CPU cores continuously since. Frame rates measured after 12:49 today may be low 
 
 **Matt, headset, 2026-10-08: R&C 2 new game: (1) the opening video is stretched vertically; (2) after Start skips it, the in-engine spaceship cutscene's audio and video are out of sync (likely the 90 Hz rate: cutscene on frame count). Shots in `evidence/ratchet/rc2-newgame-2026-10-08/`; see notes. R&C 3 likewise: the opening in-engine cutscene of a new game runs about 1.5x fast (same suspected cause).** **2026-10-08: cutscene speed fixed in R&C 2 and 3 (fork 6017df830, `native_rate_when`: 60 Hz during cutscenes); headset recheck. R&C 2 new-game movie stretch fixed too (fork 03b8d29ec: the movie goes on the fixed screen). Headset recheck of both.**
 
+**Open (Matt, headset, 2026-10-09): R&C 2 cutscene detection (`native_rate_when`, word `0x146c804`) is unreliable.** The first New Game after boot plays the in-engine opening cutscene at 60 (correct). After playing at 90, quitting to the main menu and starting another New Game, the same cutscene plays at 90 (too fast). Later in-engine cutscenes in the game have the same problem. The word is not a dependable cutscene flag: find a better way to identify in-engine cutscenes and drop them to 60. R&C 3 uses the same kind of word (`0xf17060`), so check it the same way. See notes.
+
 **Matt, headset, 2026-10-08: R&C 1 is working.** Ready to move from `vr-non-working/` to the shipped profiles in the next
 release (with R&C 2 and 3 once Matt has played them in the headset).
 

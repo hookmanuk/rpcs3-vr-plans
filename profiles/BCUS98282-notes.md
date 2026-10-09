@@ -229,3 +229,12 @@ have the same fixes but still need his headset run before they count as working.
   slots were empty test saves). VR 60 vs VR 90 at 3 s and 5 s show the same frames (`rc1_mid.png`): its frame-time
   values cover the cutscenes. (An 8 s shot differed: a scene change whose timing varies; not speed.) Its state word
   would be `0x782b90` (1 in the opening ~90 s, 2 in play) if ever needed; not added.
+
+## 2026-10-09: R&C 2 cutscene detection unreliable (Matt, headset)
+
+- The first New Game after boot: the in-engine opening cutscene plays at 60 (correct). Play at 90, quit to the main
+  menu, start another New Game: the same cutscene plays at 90, too fast. Later in-engine cutscenes have the same
+  problem. So `0x146c804` (1 in a cutscene, 2 in play) only matched the first opening after boot; it is not a
+  dependable cutscene flag. Next: find a state that marks every in-engine cutscene (cutscene player/camera mode,
+  letterbox or skip-prompt state, the scene timeline) and test it on a second New Game and on later cutscenes, not
+  only after a fresh boot. Check R&C 3 (`0xf17060`) the same way.
