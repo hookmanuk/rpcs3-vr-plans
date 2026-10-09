@@ -1,5 +1,7 @@
 # flOw (NPUA80001, APP_VER 02.10, from Journey Collector's Edition BCUS98377)
 
+**Parked (Matt, 2026-10-09): it needs a tilting joypad** (steering is SIXAXIS motion only), like Flower.
+
 Added 2026-10-08 (the collection disc's games: every game gets a profile). Installed from the disc's
 `PS3_EXTRA/D000/DATA000.PKG`. Profile `bin/vr_profiles/NPUA80001.json`, patch `bin/patches/NPUA80001_patch.yml` (copies in
 `vr-non-working/`). Executable `PPU-c98a57283c22791786a49ffe8a58944b15b91c5e`; decrypted `tools/re/elf/NPUA80001.elf`.
