@@ -542,3 +542,11 @@ VP analysis 2.3 with heap allocations), submits 4.2, blits + inline transfers ~6
   the thread in Atomic fetch mode), plus VR trims (no per-draw copy of the game's constants, plain display-buffer
   addresses) and `camera_block_cache: true` in the profile: 62.1 / 15.99 and 61.1 / 16.22. Running total 19.2 -> 16.1 ms,
   52 -> 62 FPS. Fork commit "RSX thread: cheaper per-draw lookups, shared_frame_targets".
+- **Texture cache: hashed edge pages** (upstream `texture_cache*.{h,cpp}`, fork commit f6ae732dc). The 4 KB pages at the
+  ends of GT5's car textures are written by the game's own per-frame data (the writer is the RSX inline transfer, the
+  fault is handled on the RSX thread); the texture cache unprotected and dropped ~60 sections a frame, then uploaded them
+  again unchanged. A write into a locked section's slack at one end of its page range now gives that page back to the
+  writer and the section's bytes in it are hashed (checked once a frame in `sync()`); the other pages stay locked. Only
+  shader-read, non-flushable sections whose other sections do not lock the page qualify; dev `RPCS3_TEX_EDGE=0`.
+  67.1 / 14.79 and 67.8 / 14.64 (from 16.1). The Indy race start (`gt5_race.sh`) still 90 locked, RSX 5.4-8 ms, no new
+  log errors, picture clean. Running total 19.2 -> 14.7 ms, 52 -> 67.5 FPS.
