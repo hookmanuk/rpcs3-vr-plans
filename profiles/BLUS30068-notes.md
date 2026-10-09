@@ -226,3 +226,36 @@ Racing around a track: very high CPU usage and stutter.
   the drive; render thread), plus a 33 ms hitch: on a 90 Hz headset that is the stutter. At 72 the same drive holds
   71.5-72.0 throughout.
 - **Fix (fork 501898a82):** the profile's `default_fps` is now 72 (90 still selectable in the VR menu, `max_fps 0`).
+
+## 2026-10-09: holds 90 Hz (fork f0087d552)
+
+Matt: fix it properly, optimise for 90 (72 is not the answer). Measured with `tools/re/sr_drive.sh` (fresh load of
+`vrtest_segarally_race`, Vblank 90, R2 held 60 s, per-second frame stats; `sr_score.sh` counts the seconds under 88 FPS
+over seconds 10-52). Run-to-run spread is large (the same setup gave 1 and 9 s), so each setting was run 2-3 times.
+
+What limits it, in the dense sections (2-4k draws a frame):
+- **Draws:** the Wider view patch widens the game's own frustum, so draws grow with its Scale: mean 1790 at 1.0, 2054
+  at 1.5, 2370 at 2.0 (max ~4000). The RSX thread costs ~3 us a draw; the VR eye transform ~0.55 us of it.
+- **GPU:** 82-100% busy on the RTX 5090 at 300%. Per dense frame: scene 6.0 ms, the 912x912 shadow map 1.6 ms, its
+  one-draw 912x912 blur 1.6 ms, the 512x512 reflection map 1.4 ms (all scaled 3x like the view).
+- No CPU thread is saturated (SPU physics/tessellation 20-30% of a core, RSX 15-20%, main 3-5%); the frame is a chain.
+  Not helping: SPU Block Size Mega, Accurate ZCULL stats off. Wider view 1.5 or 1.75 leaves holes in the ground at the
+  lower corners with the head yawed 20 degrees (`evidence/segarally/wider_view_1.5_vs_2.0_poses.png`).
+
+Changes:
+- **`culling_scale_f32`** (new key): the Wider view Scale word `0x4d7180` is written each frame from the head pose: the
+  smallest scale whose frustum holds both eyes' frustums, + 2 degrees (rises at once, falls 0.01 a frame). ~1.5 looking
+  ahead, 2.0-2.4 at 20 degrees of yaw, 2.5 (max) at 35. Head poses on the simulator (0, yaw -20/+20, pitch 10, roll 15)
+  are filled (`culling_scale_head_poses.png`); at yaw -35 the cap leaves a sliver at the outer edge (fixed 2.0 did too).
+- **`camera_block_cache: true`** (new key): 95% of the left-eye camera draws repeat the previous camera block; their eye
+  transform is copied. Pictures with it on and off differ no more than two runs with it off (2.1-2.4% vs 3.1% of pixels,
+  animation). Small gain alone (eye constants 0.57 -> 0.53 us a draw).
+- **`min_scalable_dimension: 912`**: the shadow map, its blur and the reflection map stay native: ~3 ms of GPU a frame.
+  The car's shadow edge is a little softer (`min_scalable_912_shadow.png`), otherwise the same.
+- Game config: Multithreaded RSX on (1-3 s under 88 vs 3-5 without).
+- `default_fps` back to 0 (90 Hz).
+
+Result (final profile, 3 runs each): Multithreaded RSX on: 89.5-89.7 FPS mean, 1-3 s under 88, min 84.4-86.9, late
+frames 0.05-0.26%; off: 89.6-89.7, 3-5 s, min 86.2-86.6, late 0-0.08%. Before (fixed 2.0, nothing else): 88.1-88.5,
+11-15 s under 88, min 70-81. Headset check needed: 90 Hz feel in races, the scenery at the view edges when glancing
+around (pop-in as the scale catches up), shadows.
