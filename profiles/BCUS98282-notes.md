@@ -238,3 +238,26 @@ have the same fixes but still need his headset run before they count as working.
   dependable cutscene flag. Next: find a state that marks every in-engine cutscene (cutscene player/camera mode,
   letterbox or skip-prompt state, the scene timeline) and test it on a second New Game and on later cutscenes, not
   only after a fresh boot. Check R&C 3 (`0xf17060`) the same way.
+
+**Fixed for R&C 2 (fork 844d4933c).** Repro: Aranos state, Quit Game, New Game (slot 3), skip the movie: the ship
+flight ran at 90 with `0x146c804` = 3. Cause: `0x146c804` is the index of a five-buffer string ring at `0x146b404`
+(writers `0x96f6c`/`0x97890`: `(i + 1) mod 5`, buffers of 0x400), so it was 1 in the first opening only by chance.
+- The cutscenes are "scenes" (`rc2/ps3data/level%d/scene[%d]/chunk%d.ps3`, `speech_%c.xvag`; the ship flights are
+  `space_scene[%d]`). The chunk loader (`0xb60290`) takes the scene object `0x1477210` (scene number at +0x30).
+- The cutscene object's update (`0x1093e30`, the "cutsceneCameraInit" log) sets `0x1477a24` = 1 as it enters state 2
+  (`0x109421c`, `0x1094464`) and 0 as it enters state 3 (`0x10945f4`): the cutscene flag. `0x1329e20` is 0 outside a
+  level (space scenes, title, menus) and 1 in every level sample.
+- Profile: `native_rate_when` [`0x1477a24` = 1, `0x1329e20` = 0] at 60. Checks (simulator, VR 90): `rc2_ship_cutscene` at
+  4/7/10 s matches the 60 Hz run; first New Game: 60 until the level loads, then 90; Aranos gameplay with walking,
+  jumping, shooting and pause: 90 throughout (`0x1477a24` 0); Quit Game + second New Game: 60 through the movie and the
+  flight (`0x1477a24` 1 during it), 90 in the hall.
+- Ruled out on the way: the player-state words `0x1486e4c`/`0x1486e50` and the struct at `0x13194d0` (zero in some
+  gameplay too); the timing block's 1.0 words `0x1329034/38/3c` (set to 60/fps they do not slow the cutscene).
+- Matt's `BCUS98282_1_7` is gameplay: Ratchet dies in the corridor and respawns in the hall (he walks when pushed).
+- Memory ELF for analysis: `tools/re/elf/BCUS98282-rc2-mem.elf` (built from a dump: one segment 0x10000-0x2240000).
+- **R&C 3 still open:** `0xf17060` is the same ring (writers `0x1f2788`/`0x1f31a4`). R&C 3's scene loader `0x1e5f94` uses
+  scene object `0xd79490`; `+0x814` is not the flag, and the function scan finds no R&C 2-shaped setter. The only
+  cutscene=1/play=0 word in the dumps (`0x1b00160`) is heap that holds other data in the battle save. Next: the
+  cutscene object in R&C 3 (camera init / state 2 store), or a PPU write watch on the scene object during a cutscene.
+- Lost (my mistake): Quit Game from the Aranos test state saved that test game into R&C 2 slot 4 at 18:37 (before the
+  backup), over whatever was there. Later runs auto-saved into slots 3/4 again; those were restored from the backup.
