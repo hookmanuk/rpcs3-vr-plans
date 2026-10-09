@@ -259,3 +259,11 @@ Result (final profile, 3 runs each): Multithreaded RSX on: 89.5-89.7 FPS mean, 1
 frames 0.05-0.26%; off: 89.6-89.7, 3-5 s, min 86.2-86.6, late 0-0.08%. Before (fixed 2.0, nothing else): 88.1-88.5,
 11-15 s under 88, min 70-81. Headset check needed: 90 Hz feel in races, the scenery at the view edges when glancing
 around (pop-in as the scale catches up), shadows.
+
+## 2026-10-09: hangs before a race (Matt)
+
+- Clicking through the menus to start a race hangs on a black screen before the race loads. The regression states
+  load mid-race, so they skip this path: reproduce from a fresh boot through the menus (`tools/re/sr_boot.sh`).
+- Suspects, all new since the last working boot: the profile keys from fork f0087d552 (`culling_scale_f32` writes
+  `0x4d7180` every frame, also in menus and loading; `camera_block_cache`; `min_scalable_dimension 912`),
+  Multithreaded RSX on in the game config, and the `vr-eye-shape` branch build in `bin/`. Try each off in turn.
