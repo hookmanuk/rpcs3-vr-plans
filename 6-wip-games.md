@@ -47,6 +47,19 @@ headset: R&C shadows, SEGA Rally title and dust, KH pause (uncommitted pose-hold
 without `frames_without_3d_as_screen`). Needs you: a hung `rpcs3.exe` (PID 54120) and `dwm.exe` on 4 cores, see below
 (end that dwm.exe or reboot; `bin/rpcs3.zombie.exe`, `bin/RPCS3.buf.zombie` and `log/RPCS3.zombie.log` can go after).
 
+**Matt, 2026-10-09 evening (simulator-checked; headset recheck):**
+- **SEGA Rally:** the hang before a race is fixed (fork f2c09242b, a write into the read-only patch cave).
+- **R&C 2:** cutscene detection now uses the game's cutscene flag (fork 844d4933c); the second New Game stays at 60
+  through the ship flight. **R&C 3 has the same wrong word and is still open.**
+- **MotorStorm:** pause-menu bars and the grey box / sliding shadow under the car fixed (fork 800c13c3a). Tree-shadow
+  aliasing is the game's shadow-map resolution (no change).
+- **Sonic ghosting:** not reproduced clearly. A turned eye shows stray shadow pieces on the road; is that what you see,
+  or trails behind bright areas?
+- **Sorry:** my R&C 2 test (Quit Game from a test savestate) saved over **in-game slot 4** at 18:37 before I had a
+  backup; if slot 4 was yours, that progress is gone. **F: was full** (my test screenshots and old dumps): moved to
+  `C:pcs3-scratch` (nothing deleted; delete it or move it back as you like). Sonic's config had been left at 300% /
+  Null audio by an earlier test run at 17:50: restored to 450% / Cubeb.
+
 **Matt, 2026-10-08 afternoon (your headset notes; simulator-checked, needs your headset):**
 - **Dragon Age: Origins:** sky and window light shafts now stay in the world, and the black box when looking up after a
   load is gone (new profile key `either_layout_blocks`, fork 2e6f8d7c5). The sun rays are hidden in VR: made
