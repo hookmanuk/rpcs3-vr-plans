@@ -1,5 +1,7 @@
 # Flower (NPUA80083, PSN 01.00)
 
+**Parked (Matt, 2026-10-09): it needs a tilting joypad** (steering is SIXAXIS motion only).
+
 Added 2026-10-07 (Matt: new game, at 90 FPS). Installed PSN copy (`dev_hdd0/game/NPUA80083`, licence
 `UP9000-NPUA80083_00-FLOWERPS3PRIVATE.rap`). Profile `bin/vr_profiles/NPUA80083.json` (generated in level 1,
 hand-fixed), patch file `bin/patches/NPUA80083_patch.yml`. No community patches exist for this game.
