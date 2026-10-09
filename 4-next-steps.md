@@ -850,7 +850,7 @@ few at full rate in the next release smoke test. vr8 workaround: VR Frame Rate s
   MotorStorm, Gundam, SEGA Rally, Dragon Age: Origins make a new frame on every flip.
 - R&C's character shadow: profile key `depth_remap_uv` (fork 5466b0d33), see `profiles/README.md`.
 
-## Headset-shaped eyes (branch `vr-eye-shape`, 2026-10-09, not merged)
+## Headset-shaped eyes (merged into `openxr` 2026-10-09, merge 7d77cac44)
 
 Each eye showed the game's 16:9 frame stretched over the headset's view, which is relatively taller (MeganeX
 superlight 8K: panel 3552x3840, about 0.925:1), so an eye had ~1.9x the pixels per degree across that it had up and
@@ -876,7 +876,10 @@ Video > VR > Headset Eye Shape (default on), `RPCS3_VR_EYE_SHAPE=0/1`. Fork comm
 - The Resolution Scale now sets the vertical density (the horizontal follows the headset's shape), so more detail is
   just a higher percentage: MeganeX panel-matched is 525% (275% x 525%, ~1.6x the pixels of 16:9 at 300%, half of 16:9
   at 525%). No separate quality mode (Matt, 2026-10-09).
-- Open: screenshots/recordings keep the eye image's pixel shape (squashed); GUI checkbox.
+- Merged into `openxr` (Matt: test all the latest code at once), with fork 61db06899: the desktop mirror gives each
+  eye the shape it is shown with (headset eye view, or the picture on the fixed screen), and paused frames keep the
+  pose they were drawn with (Kingdom Hearts' pause; uncommitted since 2026-10-06, in Matt's builds since then).
+- Open: screenshots/recordings (RPCS3_VR_SHOT, F12) keep the eye image's pixel shape (squashed); GUI checkbox.
 
 ## Generic work from the 2026-10-07/08 new games and fixes
 
