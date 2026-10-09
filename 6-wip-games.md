@@ -760,11 +760,11 @@ view 2.0 (now the default; 2.5 drops to 68 FPS).
 - **Performance, 2026-10-06 (fork 24f0bf997): 90 Hz.** The RSX thread waited for occlusion query results (22% of
   its time); new profile key `zcull_relaxed_sync`: Vblank 90 at 300% 79.0 -> 88.8-90.0 FPS, late 0-0.3% (two runs),
   Vblank 180 82 -> 105. Race shots relaxed vs strict alike.
-- **Open, regression (Matt, 2026-10-09): SEGA Rally no longer works.** Clicking through the menus to start a race
-  hangs on a black screen before the race loads. Changed since it last worked: fork f0087d552 (10-09 01:25:
-  `culling_scale_f32` writes the Wider view word `0x4d7180` every frame, `camera_block_cache`,
-  `min_scalable_dimension 912`), Multithreaded RSX on in the game config, and the `vr-eye-shape` branch build in `bin/`
-  (per-axis resolution scale). Bisect those first. See notes.
+- **Fixed 2026-10-09 (fork f2c09242b): the hang before a race** (Matt: black screen after the menus). The emulator froze
+  on the title screen, ~40 s after boot: `culling_scale_f32` wrote the Wider view Scale word `0x4d7180`, which sits in
+  the patch cave in the code segment's read-only tail ("Access violation writing location 0x4d7180"). It now writes
+  past the page protection, as a patch does. Fresh boot through the menus on the simulator: race loads in stereo.
+  The savestate runs had not shown it. Headset recheck.
 - **Open (Matt, headset, 2026-10-08): bird shadows still wrong.** First race, sitting on the start line, turning the
   head: the birds' large dark shadows on the ground slide with the head instead of staying put
   (`evidence/segarally/matt-bird-shadows-2026-10-08.png`). Not fixed by the 10-06 depth change. See notes. Was (Matt, 2026-10-05): 72 Hz has no margin; aim for 90.

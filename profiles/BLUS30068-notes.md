@@ -267,3 +267,11 @@ around (pop-in as the scale catches up), shadows.
 - Suspects, all new since the last working boot: the profile keys from fork f0087d552 (`culling_scale_f32` writes
   `0x4d7180` every frame, also in menus and loading; `camera_block_cache`; `min_scalable_dimension 912`),
   Multithreaded RSX on in the game config, and the `vr-eye-shape` branch build in `bin/`. Try each off in turn.
+
+**Fixed (fork f2c09242b, on `openxr` and `vr-eye-shape`).** Reproduced from a fresh boot with VR on (`-Probe render=1`;
+without it the run is flat and does not hang): the log ends with `VM: Access violation writing location 0x4d7180
+(read-only memory)` from the RSX thread at 0:40 (title screen), then "Emulation has been frozen". `update_culling_scale`
+wrote the Scale word with a plain pointer; the word is in the patch's code cave (the code segment's last page), read-only
+on a fresh boot. It now writes through `vm::get_super_ptr`. Same run after the fix: no fault, menus, the pre-race
+flyover, then the race in stereo with the HUD. Lesson: a profile key that writes guest memory needs a fresh-boot run,
+not only the regression savestates.
