@@ -572,3 +572,10 @@ VP analysis 2.3 with heap allocations), submits 4.2, blits + inline transfers ~6
   `RPCS3_VR_VP_CACHE=0` 1.11 / 0.97 / 0.69%: noise around the threshold, not one change. ICO "none" only because the
   run's RATES override skipped its 30 Hz tag. The temporary keyboard pad `input_configs/BCUS98114` a run left behind was
   moved to the session scratch folder.
+- **02:00-03:30 (Matt: decide the visual calls myself).** Tried and removed: `shared_frame_blits` (the exposure chain
+  0xc57f8000.. and reflection mip chain 0xc9bca700.. on alternate frames): slower, 15.10/14.68 vs 14.34/14.27 (the
+  readbacks those chains feed probably wait). **Kept:** distance-based car tiers (`min_distance`: full under 20 m, 85%
+  to 40 m, 70% beyond; 13.92/13.58 vs rank tiers 14.26/14.25; RPCS3 SHOT crops of the 21-58 m cars identical in both)
+  and the mirror pass (256x128) in `shared_frame_targets` every other frame (13.84/14.04 vs 14.24/14.26; the mirror
+  updates at half rate, delete the rule to undo). Shipped state: 73.8 / 73.7 FPS, RSX 13.45 / 13.52 ms on 2_17; Indy
+  start 90 locked, no FIFO errors. Fork commit d85e15e12.
