@@ -27,6 +27,7 @@ here (its notes file keeps the history).
 | Game | ID | Approved | Files | Notes for vr-games.md |
 |---|---|---|---|---|
 | Dragon Age: Origins | BLUS30415 | Matt, 2026-10-08 | `vr_profiles/BLUS30415.json`, `patches/BLUS30415_patch.yml` (*Wider view (VR culling)* 1.2, on by default) | 120 Hz (castle, forest, combat); no frame-rate patch needed. Needs fork 2e6f8d7c5 (`either_layout_blocks`) and 4b97dc471. Sun rays hidden in VR |
+| Ratchet & Clank Collection (R&C 1, 2, 3) | BCUS98282 | Matt: R&C 1 2026-10-08, R&C 2 and 3 2026-10-10 | `vr_profiles/BCUS98282.json` + `BCUS98282.rc1.ppu.json`, `.rc2.ppu.json`, `.rc3.ppu.json` (per executable), `patches/BCUS98282_patch.yml` | R&C 1 and 3 90 Hz, R&C 2 120 Hz (desktop stereo, 300%); cutscenes drop to 60 (scene flags, forks 844d4933c, bc568bef8); character shadow via `depth_remap_uv`. Disc 01.00 |
 
 **Shipped in vr7 (2026-10-02): Tales of Xillia and Super Stardust HD** (sections removed; history in their notes files).
 **Shipped in vr8 (2026-10-03): God of War and God of War II (God of War Collection), Dante's Inferno, Asura's Wrath**
@@ -114,7 +115,7 @@ CPU cores continuously since. Frame rates measured after 12:49 today may be low 
 `dwm.exe` (Windows restarts it) or a reboot clears it; I was not allowed to do that unattended. The A/B comparisons
 (same conditions both sides) still hold.
 
-## Priority: Ratchet & Clank 1 (almost ready, Matt 2026-10-06), then the same fixes in R&C 2 and 3
+## Ratchet & Clank Collection: approved for the next release (R&C 1 Matt 2026-10-08, R&C 2 and 3 2026-10-10)
 
 **Matt, headset, 2026-10-08: R&C 2 new game: (1) the opening video is stretched vertically; (2) after Start skips it, the in-engine spaceship cutscene's audio and video are out of sync (likely the 90 Hz rate: cutscene on frame count). Shots in `evidence/ratchet/rc2-newgame-2026-10-08/`; see notes. R&C 3 likewise: the opening in-engine cutscene of a new game runs about 1.5x fast (same suspected cause).** **2026-10-08: cutscene speed fixed in R&C 2 and 3 (fork 6017df830, `native_rate_when`: 60 Hz during cutscenes); headset recheck. R&C 2 new-game movie stretch fixed too (fork 03b8d29ec: the movie goes on the fixed screen). Headset recheck of both.**
 
