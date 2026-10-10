@@ -275,3 +275,28 @@ wrote the Scale word with a plain pointer; the word is in the patch's code cave 
 on a fresh boot. It now writes through `vm::get_super_ptr`. Same run after the fix: no fault, menus, the pre-race
 flyover, then the race in stereo with the HUD. Lesson: a profile key that writes guest memory needs a fresh-boot run,
 not only the regression savestates.
+
+## 2026-10-11 night: Quick Race Canyon (Matt: ~50 FPS, water drawn as horizontal lines)
+
+States (made with the backup/restore routine; Matt's `_1_0` was restored after each save): `sr_canyon_grid` (Quick Race >
+Canyon > Canyon 1, Premier, Subaru, on the grid after skipping the fly-over), `sr_canyon_water` (~30 s in, the stream
+ahead on the right). Route from the title: Return, Right (Quick Race), X, Right x2 (Canyon), X, X (Canyon 1), X
+(Premier), X (Subaru), X (Off-Road), X (livery: race), X skips the fly-over.
+
+- **Frame rate:** the grid and the first ~10 s of the race are the heavy part: 5,500-6,000 draws a frame (3,600 scene,
+  ~1,370 into the 512x512 reflection map `c3678000`, 66 shadow), RSX thread 15-17 ms; the rest of the lap holds 85-90 at
+  Vblank 90. The Wider view adds ~700 of the draws (scale 1.88 looking ahead). `shared_frame_targets` 512x512 every other
+  frame: RSX -1.0 to -1.2 ms (A/B with `RPCS3_VR_SHARED_TARGETS=0`), no visible change (fork 8a01067b2). RSX FIFO Fetch
+  Fast: no gain. The cost is spread (sampler: `vr_setup_draw` ~46% inclusive, eye constants 2.6 ms of 16); no single
+  program to drop (342 program/texture combinations; the start has a dense animated crowd).
+- **Water lines fixed:** the streaks are VR-only (flat smooth at the same moment). They go away with
+  `min_scalable_dimension` 600 (was 912). The water (`69b9356369fca460`, after the 640x720 scene downsample
+  `f78638bb1ce5eba2` -> `0x50610000` in main memory) samples that 640x720 screen copy; kept native (720 <= 912) and
+  off-aspect, the VR path treats it as one shared image. At 600 the 640x720, 768x512 and 912x912 targets scale with the
+  view; the 512x512 reflection stays native. Cost: none measured (drive at 90: 86.5 / 85.4 / 85.8 vs 86.4 / 86.8 with 912).
+  Both eyes clean; car shadow fine in both eyes.
+- Dead ends (for the record): Headset Eye Shape off, `camera_block_cache` off, `offaspect_player_views`,
+  `game_camera_target_widths` [512], Wider view 1.0: streaks stay. `gamecam=<water>` removes them (but the water would not
+  follow the head). A real inconsistency found on the way: upstream scales `gl_FragCoord` by the window height <=
+  min_scalable_dimension while surfaces scale by their larger side (a profile value above 720 makes 1280x720 draws
+  unscaled for WPOS); changing it did not fix the water, so it was reverted.

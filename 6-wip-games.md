@@ -811,13 +811,14 @@ Notes: `profiles/BLUS30268-notes.md`. Profile and patch file in `vr-non-working/
 
 ## SEGA Rally Revo (BLUS30068, disc 01.00)
 
-- **Open (Matt, headset, 2026-10-10): 50 FPS in Quick Race, Canyon.** Main screen: Quick Race (right, once), the
-  first track (Canyon), start: the race runs at ~50 FPS. Needs optimising to hold 72.
-- **Open (Matt, headset, 2026-10-10): water drawn as horizontal lines until close** in the same race. Matt suspects
-  the same cause as Sonic's distant horizontal banding (`profiles/BLUS30839-notes.md`, "horizontal lines" and
-  "horizontal banding still there"). Lead: Sonic's lines appeared only with its Wider view widening the camera
-  (at 3.0 and 2.0, gone at 1.0), and SEGA Rally's Wider view widens it too (head-driven up to 2.5); the wider view
-  also cost SEGA Rally frame rate on 2026-10-04 (2.5: 68 FPS, 1.0: 71.9). Check both issues with the scale held at 1.0.
+- **Matt, headset, 2026-10-10: 50 FPS in Quick Race, Canyon; water drawn as horizontal lines. 2026-10-11 night
+  (simulator, Vblank 90, 300%): water fixed, frame rate improved.** States `sr_canyon_grid`, `sr_canyon_water` (route
+  in the notes). Water: VR-only streaks from the water sampling a 640x720 screen copy kept at native size
+  (`min_scalable_dimension` 912 -> 600; no measurable cost). Frame rate: only the grid and the first ~10 s are heavy
+  (5,500-6,000 draws, RSX 15-17 ms); the 512x512 reflection map (~1,370 draws) is now redrawn every other frame
+  (`shared_frame_targets`, -1.0 to -1.2 ms, forks 8a01067b2 + this). Drive at 90: start 74-80 FPS, then 85-90 for the
+  rest of the lap (mean 85-87). Not 90 at the start: the cost is spread over thousands of small draws (crowd, tents);
+  72 Hz holds there. Headset check: water, start frame rate.
 
 Notes: `profiles/BLUS30068-notes.md`. Patch `BLUS30068_patch.yml`: *Unlocked frame rate (follows Vblank Rate)* (the
 flip passes vsync interval 1 instead of 2) and *Wider view (VR culling)* (FOV x2.5 in the projection builder, cave in
