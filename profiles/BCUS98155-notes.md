@@ -228,3 +228,19 @@ platform" -> "Chase car camera platform" 0x38f53870 -> "Shake the camera" 0x38f5
   off. Verified: on -8 / 1.14M vertices, off 100 / 0.65M.
 - Test pitfalls: this state loads paused (X resumes); my wait for "VR frame stats" matched the previous run's log until
   RPCS3 rewrote it (sleep first); keyboard pad's PS key is "PS Button: Backspace"; RPCS3_VR_SHOT does not show overlays.
+
+## 2026-10-10: race start in the 40s (Matt: "all the cars on screen at the start")
+
+- Reproduced from 1_3: Start, Down x3 (Restart Race), X, Up (Yes), X; with the keyboard pad the state loads running (it
+  loads paused only without a pad). The grid with 15 cars ahead: RSX thread 14-16 ms a frame, the limit (72 Hz needs
+  13.9). A capture of that frame: 3,912 draws, 2,063 to the scene, 1,712 to the 1024x2048 shadow map.
+- vrtest_mspr_race (countdown "1", 11 AI) does not show it: vr1pct's windows start 10 s in, after the field spreads.
+- Patch *Model detail (VR options)* 1.2: per-group tables. 0x35db78 gets the group in r7 (0 object, 1 dynamic_objects,
+  2 world, 3 vehicle once per competitor, 4 player); lodBias = max(min(bias, cap[g]), floor[g]) (0x145fe10 / 0x145fe30);
+  the cull loads (0x35dd20 cullThreshold, 0x35dce0 shadowCullThreshold, chosen by r29) are scaled by 0x145fe60 /
+  0x145fe80 [g]; the group is kept at 0x145fe50 (r7 is reused before them).
+- VR settings (live, default on): Highest Detail Models (cap -8 for groups 0, 1, 2, 4), Simpler Other Vehicles (vehicle
+  floor 2, cull x3), Fewer Shadows (shadow cull x3, groups 0-3). Matt in the headset at the start: both off 40s,
+  vehicles on 50s, both on 70s, no visible difference.
+- My own A/B at the start was too noisy to use (the race and draw counts differ each run; the pause menu switches to its
+  own camera, ~400 draws); Matt's headset test decided the values.

@@ -613,6 +613,11 @@ Notes: `profiles/BCUS98155-notes.md`. Evidence: `evidence/motorstorm/`. Moved to
   Models* (home menu and settings dialog, Game section, on by default): patch *Highest detail models (VR option)* +
   profile `option_f32` hold the game's lodBias at -8. ~1.14M vertices instead of ~0.65M on a paused race frame; RSX thread
   and GPU load unchanged within run-to-run noise (paused-frame A/B per bias level), so no mid level was added.
+- **Race start in the 40s with the field ahead (Matt, headset, 2026-10-10): fixed, Matt-tested.** RSX-bound (14-16 ms a
+  frame at the grid; ~45% of draws are the shadow map). New VR settings (Game section, live, default on): *Simpler Other
+  Vehicles* (vehicle LOD floor 2, cullThreshold x3) and *Fewer Shadows* (shadowCullThreshold x3 for all groups but the
+  player). Matt: both off 40s, vehicles on 50s, both on 70s; no visible difference. Highest Detail Models no longer
+  covers other vehicles.
 
 - **Frame rate:** fork patch file with the community unlocked frame rate (60 FPS + Variable FPS). It gives
   90 FPS with clocks at 1.00x, and also turns dynamic resolution and motion blur off. Profile `max_fps 0`.
