@@ -786,6 +786,12 @@ Notes: `profiles/BLUS30268-notes.md`. Profile and patch file in `vr-non-working/
 
 ## SEGA Rally Revo (BLUS30068, disc 01.00)
 
+- **Open (Matt, headset, 2026-10-10): 50 FPS in Quick Race, Canyon.** Main screen: Quick Race (right, once), the
+  first track (Canyon), start: the race runs at ~50 FPS. Needs optimising to hold 72.
+- **Open (Matt, headset, 2026-10-10): water drawn as horizontal lines until close** in the same race. Matt suspects
+  the same cause as Sonic's distant horizontal banding (`profiles/BLUS30839-notes.md`, "horizontal lines" and
+  "horizontal banding still there").
+
 Notes: `profiles/BLUS30068-notes.md`. Patch `BLUS30068_patch.yml`: *Unlocked frame rate (follows Vblank Rate)* (the
 flip passes vsync interval 1 instead of 2) and *Wider view (VR culling)* (FOV x2.5 in the projection builder, cave in
 the code page tail). Generated profile (`c[8, 0, 4]`, `passthrough_hud`), `max_fps 0`. Race state `sr_race0`,
