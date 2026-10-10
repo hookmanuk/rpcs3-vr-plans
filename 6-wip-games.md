@@ -716,6 +716,10 @@ and no recorded measurements: start from the playbook if it is picked up again.
 
 Notes: `profiles/BLUS30839-notes.md`. Profile and patch file in `vr-non-working/` (copies untracked in `bin/`).
 
+- **Open (Matt, headset, 2026-10-10): green stripes across the whole view when the head turns.** Career, Sunshine
+  Coast: go right past Coastal Cruise to **Canyon Carnage**, hold R2 to the tunnel. Turning the head left or right
+  lays green stripes over the whole screen. Matt's shots: `evidence/sonic-green-stripes/` (straight, turned).
+
 - **Frame rate:** fork patch *Unlocked frame rate (follows Vblank Rate)*: the vblank handler's flip interval 2 -> 1.
   Game time is measured: real-time at 60/120/180 (same track positions at the same wall times). Flat 130-180 FPS.
 - **Profile:** generated in a race (`column_vectors c[138, 4, 0]`, HUD `c[138]`, `hud_box_after_shader`, metres),
