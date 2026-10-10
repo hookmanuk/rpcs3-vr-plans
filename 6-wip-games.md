@@ -510,6 +510,9 @@ Notes: `profiles/BCUS98116-notes.md`. Evidence: `evidence/killzone2/`. Fork d12f
 
 Notes: `profiles/BCUS98114-notes.md` (the most detailed). Evidence: `evidence/gt5/`. Parked at vr5.
 
+- **Open (Matt, headset, 2026-10-10): rain follows the head.** On the second track in Arcade mode the rain
+  downpour moves with the HMD when the head turns instead of staying fixed in the world. Not investigated yet.
+
 - **2026-10-09 night: RSX-thread work on Matt's paused busy scene (2_17, nine cars ahead; simulator, 400% stereo,
   multiview): 19.2 -> 13.5 ms a frame, 52 -> 74 FPS.** Code (generic, fork commits 5fa168307..7820e2159): fragment
   programs hashed in their analysis pass and compared by two hashes, a lookup cache in front of the pipeline map, the
