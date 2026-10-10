@@ -609,6 +609,10 @@ Notes: `profiles/BCUS98155-notes.md`. Evidence: `evidence/motorstorm/`. Moved to
   its offset flipped every frame. Patch *Disable camera shake (VR)* stores a zero range (0x37384c/0x373850), so the
   offset stays 0: boosting, the view no longer alternates (yaw 0.1-0.26 deg frame to frame before, ~0.01 after, as unboosted).
   A first patch zeroed the other shake node ("Shake the camera", a slow speed wobble); Matt: still shook; reverted.
+- **LOD changes on trees as you approach (Matt, 2026-10-10): option added, headset check.** New VR setting *Highest Detail
+  Models* (home menu and settings dialog, Game section, on by default): patch *Highest detail models (VR option)* +
+  profile `option_f32` hold the game's lodBias at -8. ~1.14M vertices instead of ~0.65M on a paused race frame; RSX thread
+  and GPU load unchanged within run-to-run noise (paused-frame A/B per bias level), so no mid level was added.
 
 - **Frame rate:** fork patch file with the community unlocked frame rate (60 FPS + Variable FPS). It gives
   90 FPS with clocks at 1.00x, and also turns dynamic resolution and motion blur off. Profile `max_fps 0`.

@@ -209,3 +209,22 @@ platform" -> "Chase car camera platform" 0x38f53870 -> "Shake the camera" 0x38f5
 - 0x385a4410 is not world space (it sits near (-38, -38, 322) while the camera is at (-319, 6, -69)), and its
   alternation was the real shake, not a sampling race as written above: compare against a no-boost control run before
   dismissing a pattern.
+
+## 2026-10-10: level of detail (Matt: lots of LOD changes on trees as you approach)
+
+- The game's quality settings come from `scripts/viewportquality.xml` (ViewQualityManagerImpl, vtable 0x103d1c8, object
+  0x306bf850 in state 1_3). GroupSettings: a 0x68-byte record per viewport count (1, 2, 4), each with five 0x14-byte
+  entries (object, dynamic_objects, world, vehicle, player): lodBias f32, minimumLod s32, lodOverride s32, cullThreshold
+  f32, shadowCullThreshold f32. One viewport (0x30cbc840): lodBias 1 / 1 / 2 / 0 / -2.5, minimumLod and lodOverride -1,
+  cull 0.012 / 0.006 / 0.007 / 0.015 / 0.007.
+- 0x35db78 (called per group each frame from 0x3609bc...) hands them to the renderer: 2^lodBias as the LOD distance scale
+  (0x457158), minimumLod (0x4574c0), lodOverride (0x457308), cull thresholds. lodOverride 0 changed nothing; lodBias does.
+- Vertices on a paused race frame (fresh load, poke, resume 0.3 s, pause; a paused frame does not re-pick LODs):
+  game 663k, bias 0 809k, -1 957k, -2 1,058k, -4 1,109k (saturated). RSX thread 9.8-11.9 ms with no trend (two game-value
+  runs 11.9 / 11.2), GPU 41-42% for all: the extra vertices cost nothing measurable, so one on/off option.
+- cullThreshold 0 (tried by mistake) raised draws 2,664 -> 3,252: small objects are culled by screen size; not changed.
+- Patch *Highest detail models (VR option)*: calloc cave at 0x35dbd0 (lfs f11,0(r30)): lodBias = min(lodBias, word
+  0x145fe04); word 100 by default. Profile `option_f32` writes -8 with VR setting Highest Detail Models (default on), 100
+  off. Verified: on -8 / 1.14M vertices, off 100 / 0.65M.
+- Test pitfalls: this state loads paused (X resumes); my wait for "VR frame stats" matched the previous run's log until
+  RPCS3 rewrote it (sleep first); keyboard pad's PS key is "PS Button: Backspace"; RPCS3_VR_SHOT does not show overlays.
