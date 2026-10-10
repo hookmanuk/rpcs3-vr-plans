@@ -172,3 +172,25 @@ the game's shadow resolution (no change).
 - Patch *Wider view (VR culling)*: cave at 0x1028ad0 multiplies the aspect by the word 0x145fe00; profile rule
   `{ "address": "0x145fe00", "fov_deg": 56.31, "aspect": 1.7778, "margin_deg": 3, "min": 1.0, "max": 8.0, "mode":
   "tangent_x", "step": 0.25 }`. Simulator: straight 1.75, turned 40 deg to the max; turned right fully drawn.
+
+## 2026-10-10: screen shake on boost (Matt, headset)
+
+Matt: pressing X (boost) shakes the screen left and right quickly; remove it in VR.
+
+- Chain, from the camera block upward (PPU write watches, interpreter): camera matrix 0x385a4410 <- copy 0x4f5540 from the
+  camera update 0x33ae38 (getter vtable+0x18 returns 0x3908b790) <- 0x36b5e8 copies the "Vehicle camera" node
+  (0x39972980, world at +0x30) <- scene graph from the "camera" node 0x38f53a70, whose parent 0x38f53940 is named
+  "Shake the camera" (name at +0x100).
+- Shake node: range (x, y, z) at +0x80, per-frame velocity-change limit at +0xa0, +0xb0 a third vector, offset at +0xd0,
+  velocity at +0xe0. Its update (scene-graph vtable call, code around 0x42e65c-0x42f6a8) steps toward
+  offset + range * K * rand(-1..1), limits the velocity change by +0xa0 and clamps the offset to +-range.
+- The camera controller 0x37fb68 (called from 0x380cb8) writes the parameters every frame, rising with speed: range 2/2/1
+  at rest to ~3.3/8.2/1.9 at boost speed; +0xa0 0.005 -> 0.047. Unpatched, the offset swung ~+-0.3 sideways and ~+-0.6 up
+  at ~2 Hz while boosting.
+- Patch *Disable camera shake (VR)*: calloc cave at 0x37fe14 stores 0 to range x/y/z, the two other range stores
+  (0x37fe18, 0x37fe1c) nopped. Offset then exactly 0 from the first frame. First try zeroed +0xa0 instead: the velocity
+  froze and the camera drifted away (several units); reverted.
+- Pitfall: peeking the camera matrix at flip time showed a long/short alternation of the per-frame step. It is present
+  with the shake removed too: a sampling race (the PPU has or has not yet updated the camera at the RSX flip), not the
+  shake. Captures (`insp\ARM`) match the peek of the same frame number exactly.
+- The desktop grab of the RPCS3 window during a headset session shows a stale frame; use `RPCS3_VR_SHOT`.
