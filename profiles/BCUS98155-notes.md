@@ -159,3 +159,16 @@ passes clip xy through, z/w from c[0]); listed in `hud_programs` the bars join t
 `depth_remap_programs` puts the shadow where flat has it, no box, at yaw 0/+-20/pitch 10. `58d6d826ffdf3cd6` (5 draws)
 not involved. Gameplay HUD unchanged. Tree shadows: the 1024x2048 atlas `cb030000` is scaled with the view; aliasing is
 the game's shadow resolution (no change).
+
+## 2026-10-10: sky smear on head turns, Wider view (Matt, new state BCUS98155_1_3)
+
+- Matt: looking left or right, the sky smears as the head moves. The game does not clear colour; outside its own view
+  nothing was drawn and older frames stayed. `clear_view_targets` (fork c9aeb8786) clears the view target at its first
+  bind each frame; that left a black area: terrain culled by the game.
+- Camera: the update at 0x33b0dc builds the projection with a call at 0x33b114 (fovY 0.983 rad = 56.3 deg, aspect
+  16:9 computed at 0x33b108 `fmuls f2,f1,f4`, near 0.1, far 11000); P00 1.051, P11 1.869. The camera block at
+  0x385a44d0 is copied (0x4f4238) into several passes. Found by memory search for the projection, a PPU write watch
+  (interpreter) and traces.
+- Patch *Wider view (VR culling)*: cave at 0x1028ad0 multiplies the aspect by the word 0x145fe00; profile rule
+  `{ "address": "0x145fe00", "fov_deg": 56.31, "aspect": 1.7778, "margin_deg": 3, "min": 1.0, "max": 8.0, "mode":
+  "tangent_x", "step": 0.25 }`. Simulator: straight 1.75, turned 40 deg to the max; turned right fully drawn.

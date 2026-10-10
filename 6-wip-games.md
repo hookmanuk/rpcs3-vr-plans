@@ -598,6 +598,12 @@ Notes: `profiles/BCUS98114-notes.md` (the most detailed). Evidence: `evidence/gt
 
 Notes: `profiles/BCUS98155-notes.md`. Evidence: `evidence/motorstorm/`. Moved to `vr-non-working/` at vr6.
 
+- **Sky smearing on head turns (Matt, headset, 2026-10-10): fixed on the simulator, headset recheck.** The game never
+  clears colour; turned, terrain outside its ~87-degree view was culled and the area kept older frames. Profile key
+  `clear_view_targets` (fork c9aeb8786) clears it each frame; patch *Wider view (VR culling)* (head-driven
+  `culling_scale_f32` tangent_x, word 0x145fe00) draws it. State `BCUS98155_1_3`; shots `evidence/motorstorm/2026-10-10-*`.
+  Frame-rate cost not measured yet (MotorStorm needs multiview for 72).
+
 - **Frame rate:** fork patch file with the community unlocked frame rate (60 FPS + Variable FPS). It gives
   90 FPS with clocks at 1.00x, and also turns dynamic resolution and motion blur off. Profile `max_fps 0`.
   Needs Write Color Buffers.
