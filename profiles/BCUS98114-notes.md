@@ -606,3 +606,26 @@ VP analysis 2.3 with heap allocations), submits 4.2, blits + inline transfers ~6
   Quick regression (16 states) and push descriptors pushed: `evidence/vrtest/2026-10-10-pushdesc-check/`.
 - Distant cars changed at Matt's request (checked in game): the nearest car always complete (`full_nearest` 1), other
   cars full under 30 m, 85% from 30 m, 70% from 45 m (was 20 / 40 m).
+- **Pre-race views (2026-10-10, Matt):** they sometimes ran in low-res 3D and sometimes in 2D. Cause: with Lower
+  Resolution (then the default) the profile's `screen_frame_draws` (the depth-of-field pass the main menu uses) sent some
+  frames to the fixed screen, and the automatic frames-without-camera rule could do the same when a run counted no
+  camera draws (1 of 4 test runs stayed 2D). Now a cinematic frame follows Cinematic Scenes alone; Lower Resolution is
+  removed (Matt), Fixed Screen is the default (also set in Matt's GT5 config), Full Quality stays.
+
+## 2026-10-10: Wider view, mirror, shadows; boot hang diagnostics
+
+- **Cars beside the player culled (fixed):** patch *VR: Wider view (head-driven culling)* 1.3 widens the camera
+  horizontally by a scale word (0x1a48200) in the projection decorator 0x91e178 (cave 1: projection x / scale); the
+  fork's `culling_scale_f32` (mode `tangent_x`, step 0.25) sets it from the head pose, min 1.0 on the fixed screen.
+  Compensated: the rear-view mirror's glScalef (cave 2) and its viewport sizing, which reads P00 back (cave 4), and the
+  x sub-pixel offset (cave 3). Widening y too lost the GPU device on every run; x only is stable. Optional patch
+  *VR: No camera jitter* (off; the offset is a half-pixel shift, Matt saw no change). Stepped scale stops the shadow
+  cascades (fitted to the camera frustum) refitting every frame.
+- camera_block_cache is off in the profile: with the projection changing, its cached projection scale left the chase
+  camera zoomed out (to fix before turning it back on).
+- AA: the 1280x720 scene is 4x rotated-grid MSAA (aa_mode 5), resolved in the single composite draw into the display
+  buffer; MSAA Auto works at 500% (edges graded vs stair steps with MSAA off).
+- **Boot hang** (first frame after "Accessing game data", ~20-40%): not the frame rate (hangs at 60), not last night's
+  perf work, not the headset overlay, not the shader/hdd1 caches; never without an OpenXR session (0/8 desktop).
+  `RPCS3_VR_GPU_CHECKPOINTS=1`: a GPU **write to an unmapped address** after the fork's flip work (last marker reached:
+  flip end) and before the next frame's first draw. Finer markers and the address binding reports hide it (28 clean).
