@@ -600,3 +600,7 @@ VP analysis 2.3 with heap allocations), submits 4.2, blits + inline transfers ~6
 - Motion testing: unpausing 2_17 with R2 held drives the car into the wall (no cars in view by second 3); the Indy start
   (`gt5_race.sh`, Vblank 180) stays on the straight but the pack is far ahead (RSX 5-7 ms). A busy scene in motion
   needs a driven replay or a key script that steers.
+- **Home-menu options** (fork 0311543de): the three visible trade-offs (cube faces in turns, half-rate mirror,
+  distant-car tiers) follow new VR settings Reduced-Rate Reflections, Reduced-Rate Mirror, Simpler Distant Cars, on by
+  default and live; the profile tags the rules with `"option"`. Busy scene: all on 13.2-14.1 ms, all off 16.7 ms.
+  Quick regression (16 states) and push descriptors pushed: `evidence/vrtest/2026-10-10-pushdesc-check/`.
