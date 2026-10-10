@@ -579,3 +579,24 @@ VP analysis 2.3 with heap allocations), submits 4.2, blits + inline transfers ~6
   and the mirror pass (256x128) in `shared_frame_targets` every other frame (13.84/14.04 vs 14.24/14.26; the mirror
   updates at half rate, delete the rule to undo). Shipped state: 73.8 / 73.7 FPS, RSX 13.45 / 13.52 ms on 2_17; Indy
   start 90 locked, no FIFO errors. Fork commit d85e15e12.
+
+## 2026-10-10 morning: push descriptors, texture lookups (in motion as well as paused)
+
+- **Push descriptors** (fork a631a734e, local until the regression): the fragment set of game pipelines written with
+  vkCmdPushDescriptorSetKHR, skipped when unchanged and the pipeline is still bound; fallback on GPUs without
+  VK_KHR_push_descriptor or sets over maxPushDescriptors; `RPCS3_VK_PUSH_DESCRIPTORS=0`. Cycle timers (ms per second of
+  play, ~75 FPS): descriptor work 76.7 -> 66.6 (commit 33.8 -> 15.1, set bind 15.9 -> 11.3, submit flush 27.0 -> 10.1,
+  new push build 4.1 + driver push call 26). Why the profile overstated it: it counted both sets plus the pipeline bind
+  (~1.6 ms a frame); push replaces only the fragment set's share (~0.55 ms) and NVIDIA's push call costs ~0.35 ms of
+  that. Net ~0.15 ms a frame. Pipeline binds alone: 37 ms per second (GT5 switches programs ~160k times a second).
+  Each game rebuilds its pipeline cache once on the first boot after this change (new layout): WipEout's first boot
+  measured 32 FPS for that reason.
+- **Texture lookups** (counters per second, paused 2_17): 500k units checked, 77% skipped already, 114k real rebinds
+  (the game binds a different texture; ~0.7 us per cache search, 77 ms), 380 from the global dirty flag, 0 expired.
+  The cache's update tag changes ~1,100 times a second. Would-be memo hits: 39% (tag-cleared), 50% (per frame).
+- Tried and removed (no gain): fragment-program analysis cache (byte compare against a stored copy; pairs 14.01/13.87,
+  13.63/13.42, 13.54/13.69), lean texture lookup memo (256-entry direct-mapped, per tag + frame): paused 13.13/13.40,
+  13.21/12.90, 12.96/12.95; in motion (Indy start, R2, Vblank 180, s 2-12) 5.49/5.55, 5.51/5.42, 5.44/5.57.
+- Motion testing: unpausing 2_17 with R2 held drives the car into the wall (no cars in view by second 3); the Indy start
+  (`gt5_race.sh`, Vblank 180) stays on the straight but the pack is far ahead (RSX 5-7 ms). A busy scene in motion
+  needs a driven replay or a key script that steers.
