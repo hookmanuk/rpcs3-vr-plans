@@ -194,3 +194,18 @@ Matt: pressing X (boost) shakes the screen left and right quickly; remove it in 
   with the shake removed too: a sampling race (the PPU has or has not yet updated the camera at the RSX flip), not the
   shake. Captures (`insp\ARM`) match the peek of the same frame number exactly.
 - The desktop grab of the RPCS3 window during a headset session shows a stale frame; use `RPCS3_VR_SHOT`.
+
+**Correction (same day): the first patch was the wrong node; Matt: "the camera still shakes when I hold R2 and X".**
+The rig has two shake nodes. Hierarchy (node +0x8 = parent; world matrix at +0x30): "Game Car Offset" 0x38f52610 ->
+"Game car chase position" -> terrain following -> Gravity Platform -> stabilised -> height offset 0x38f53120 -> ... ->
+"Collision Platform" 0x38f53270 -> "Game car chase smoothed" -> "looking at subject" -> "Smoothed chase car camera
+platform" -> "Chase car camera platform" 0x38f53870 -> "Shake the camera" 0x38f53940 -> "camera" 0x38f53a70; then the
+"Vehicle camera" 0x39972980 under "Vehicle shake platform" 0x39972850 (posed from "camera" at 0x3799ec).
+- The boost shake is "Vehicle shake platform": range (+0x80) set by 0x373680 at 0x37384c (y) / 0x373850 (x): y 0.003 at
+  rest, ~1.0 after 2 s of boost; +0x90 (3, 0.5, 0.2) and +0xa0 (10, 2, 0.1) make it flip every frame. Patch now stores 0
+  there (r9 is 0); the "Shake the camera" change (calloc at 0x37fe14) is reverted.
+- Measured on the world-space nodes (peek +0x50 forward row, +0x60 position): yaw alternation |y[i] - (y[i-1]+y[i+1])/2|
+  of "Vehicle camera" 0.06-0.26 deg while boosting, ~0.01 unboosted and with the patch; "camera" stays ~0.01 throughout.
+- 0x385a4410 is not world space (it sits near (-38, -38, 322) while the camera is at (-319, 6, -69)), and its
+  alternation was the real shake, not a sampling race as written above: compare against a no-boost control run before
+  dismissing a pattern.

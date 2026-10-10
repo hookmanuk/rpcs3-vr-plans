@@ -604,10 +604,11 @@ Notes: `profiles/BCUS98155-notes.md`. Evidence: `evidence/motorstorm/`. Moved to
   `culling_scale_f32` tangent_x, word 0x145fe00) draws it. State `BCUS98155_1_3`; shots `evidence/motorstorm/2026-10-10-*`.
   Frame-rate cost not measured yet (MotorStorm needs multiview for 72).
 
-- **Screen shakes left-right on boost (Matt, headset, 2026-10-10): fixed, headset recheck.** The chase camera hangs under a
-  "Shake the camera" scene node whose range grows with speed and most with boost (offset swung about +-0.3 sideways and
-  +-0.6 up at ~2 Hz). Patch *Disable camera shake (VR)* has the camera controller write a zero range (cave at 0x37fe14),
-  so the offset stays at 0. Camera otherwise unchanged (`evidence/motorstorm/boost_shake_fixed.png`).
+- **Screen shakes left-right on boost (Matt, headset, 2026-10-10): fixed on the simulator, headset recheck.** The chase
+  view hangs under a "Vehicle shake platform" node whose range the game raises while boosting (y 0.003 at rest to ~1.0);
+  its offset flipped every frame. Patch *Disable camera shake (VR)* stores a zero range (0x37384c/0x373850), so the
+  offset stays 0: boosting, the view no longer alternates (yaw 0.1-0.26 deg frame to frame before, ~0.01 after, as unboosted).
+  A first patch zeroed the other shake node ("Shake the camera", a slow speed wobble); Matt: still shook; reverted.
 
 - **Frame rate:** fork patch file with the community unlocked frame rate (60 FPS + Variable FPS). It gives
   90 FPS with clocks at 1.00x, and also turns dynamic resolution and motion blur off. Profile `max_fps 0`.
