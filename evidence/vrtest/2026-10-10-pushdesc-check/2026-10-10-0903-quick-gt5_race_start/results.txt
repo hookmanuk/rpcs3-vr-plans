@@ -1,0 +1,9 @@
+# path: OpenXR Simulator, RPCS3_VR_MULTIVIEW=default, build a631a734e VK: push descriptors for the fragment set (VK_KHR_
+# BCUS98114 vrtest_gt5_race_start: Gran Turismo 5: race start
+BCUS98114 vrtest_gt5_race_start vblank 90 scale 300%:
+   721 frames over 8.0 s: avg 90.0 FPS, 1% low 86.3, 0.1% low 82.9 (worst frame 12.1 ms), median 11.01 ms, late 0.00%, RSX thread 9.02 ms/frame, new frames 90.0/s
+   720 frames over 8.0 s: avg 90.0 FPS, 1% low 86.3, 0.1% low 83.2 (worst frame 12.0 ms), median 11.01 ms, late 0.00%, RSX thread 9.09 ms/frame, new frames 90.0/s
+   => median of 2 windows: avg 90.0 FPS, 1% low 86.3, late frames 0.00%, RSX thread 9.02 ms/frame
+   eyes: residual at 0 59.32, best shift -232 (10.28) 
+SUSTAINABLE BCUS98114 vrtest_gt5_race_start: 90 Hz
+DONE /f/rpsc3/source/plans/evidence/vrtest/2026-10-10-0903-quick-gt5_race_start

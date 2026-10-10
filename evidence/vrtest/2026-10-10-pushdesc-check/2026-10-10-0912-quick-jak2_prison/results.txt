@@ -1,0 +1,10 @@
+# path: OpenXR Simulator, RPCS3_VR_MULTIVIEW=default, build a631a734e VK: push descriptors for the fragment set (VK_KHR_
+# BCUS98281 vrtest_jak2_prison: Jak II: prison / escape area
+BCUS98281 vrtest_jak2_prison vblank 72 scale 300%:
+   576 frames over 8.0 s: avg 72.0 FPS, 1% low 57.9, 0.1% low 49.3 (worst frame 20.3 ms), median 13.93 ms, late 0.00%, RSX thread 9.20 ms/frame, new frames 71.0/s
+   577 frames over 8.0 s: avg 72.0 FPS, 1% low 57.3, 0.1% low 52.5 (worst frame 19.1 ms), median 13.83 ms, late 0.00%, RSX thread 9.34 ms/frame, new frames 71.5/s
+   576 frames over 8.0 s: avg 72.0 FPS, 1% low 57.1, 0.1% low 55.4 (worst frame 18.0 ms), median 13.88 ms, late 0.00%, RSX thread 9.21 ms/frame, new frames 71.2/s
+   => median of 3 windows: avg 72.0 FPS, 1% low 57.3, late frames 0.00%, RSX thread 9.21 ms/frame
+   eyes: residual at 0 14.79, best shift -282 (11.68) 
+SUSTAINABLE BCUS98281 vrtest_jak2_prison: 72 Hz
+DONE /f/rpsc3/source/plans/evidence/vrtest/2026-10-10-0912-quick-jak2_prison

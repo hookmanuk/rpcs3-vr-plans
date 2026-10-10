@@ -1,0 +1,9 @@
+# path: OpenXR Simulator, RPCS3_VR_MULTIVIEW=default, build a631a734e VK: push descriptors for the fragment set (VK_KHR_
+# BLUS30443 vrtest_demons_1: Demon's Souls (released): tutorial corridor
+BLUS30443 vrtest_demons_1 vblank 90 scale 300%:
+   721 frames over 8.0 s: avg 90.0 FPS, 1% low 81.8, 0.1% low 77.9 (worst frame 12.8 ms), median 11.09 ms, late 0.00%, RSX thread 1.50 ms/frame, new frames 90.0/s
+   720 frames over 8.0 s: avg 90.0 FPS, 1% low 81.3, 0.1% low 75.3 (worst frame 13.3 ms), median 11.05 ms, late 0.00%, RSX thread 1.53 ms/frame, new frames 90.0/s
+   => median of 2 windows: avg 90.0 FPS, 1% low 81.3, late frames 0.00%, RSX thread 1.50 ms/frame
+   eyes: residual at 0 31.39, best shift -238 (6.97) 
+SUSTAINABLE BLUS30443 vrtest_demons_1: 90 Hz
+DONE /f/rpsc3/source/plans/evidence/vrtest/2026-10-10-0857-quick-demons_1

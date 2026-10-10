@@ -1,0 +1,2 @@
+# path: OpenXR Simulator, RPCS3_VR_MULTIVIEW=default, build a631a734e VK: push descriptors for the fragment set (VK_KHR_
+# BCUS98282 vrtest_rc1_veldin: Ratchet & Clank 1: Veldin, start (HelpDesk tip on screen)

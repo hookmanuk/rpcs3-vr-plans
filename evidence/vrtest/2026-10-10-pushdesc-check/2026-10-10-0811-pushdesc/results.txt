@@ -1,0 +1,22 @@
+# path: OpenXR Simulator, RPCS3_VR_MULTIVIEW=default, build d85e15e12 car_draw_limit: distance-based tiers (min_distance
+# BCUS98282 vrtest_rc1_veldin: Ratchet & Clank 1: Veldin, start (HelpDesk tip on screen)
+BCUS98282 vrtest_rc1_veldin vblank 72 scale 300%:
+   576 frames over 8.0 s: avg 71.9 FPS, 1% low 55.9, 0.1% low 52.0 (worst frame 19.2 ms), median 13.91 ms, late 0.00%, RSX thread 10.09 ms/frame, new frames 71.9/s
+   576 frames over 8.0 s: avg 71.9 FPS, 1% low 55.2, 0.1% low 49.7 (worst frame 20.1 ms), median 13.93 ms, late 0.00%, RSX thread 9.85 ms/frame, new frames 71.9/s
+   576 frames over 8.0 s: avg 72.0 FPS, 1% low 55.9, 0.1% low 53.6 (worst frame 18.7 ms), median 13.90 ms, late 0.00%, RSX thread 9.55 ms/frame, new frames 72.0/s
+   => median of 3 windows: avg 71.9 FPS, 1% low 55.9, late frames 0.00%, RSX thread 9.85 ms/frame
+   eyes: residual at 0 23.03, best shift -232 (2.91) 
+BCUS98282 vrtest_rc1_veldin vblank 90 scale 300%:
+   710 frames over 8.0 s: avg 88.7 FPS, 1% low 65.9, 0.1% low 59.3 (worst frame 16.9 ms), median 11.16 ms, late 0.14%, RSX thread 9.97 ms/frame, new frames 88.7/s
+   714 frames over 8.0 s: avg 89.2 FPS, 1% low 68.6, 0.1% low 64.6 (worst frame 15.5 ms), median 11.19 ms, late 0.00%, RSX thread 9.71 ms/frame, new frames 89.2/s
+   713 frames over 8.0 s: avg 89.0 FPS, 1% low 66.4, 0.1% low 60.4 (worst frame 16.6 ms), median 11.14 ms, late 0.00%, RSX thread 9.58 ms/frame, new frames 89.0/s
+   => median of 3 windows: avg 89.0 FPS, 1% low 66.4, late frames 0.00%, RSX thread 9.71 ms/frame
+   eyes: residual at 0 23.11, best shift -232 (2.88) 
+SUSTAINABLE BCUS98282 vrtest_rc1_veldin: 72 Hz
+# BCES00664 vrtest_wipeout_race: WipEout HD (released): in a race, ship at speed
+BCES00664 vrtest_wipeout_race vblank 72 scale 300%:
+   259 frames over 8.1 s: avg 32.2 FPS, 1% low 14.9, 0.1% low 7.5 (worst frame 133.9 ms), median 27.28 ms, late 25.10%, RSX thread 2.84 ms/frame, new frames 32.2/s
+   => median of 1 windows: avg 32.2 FPS, 1% low 14.9, late frames 25.10%, RSX thread 2.84 ms/frame
+   eyes: residual at 0 34.85, best shift -238 (13.00) 
+SUSTAINABLE BCES00664 vrtest_wipeout_race: none Hz
+# BLUS30443 vrtest_demons_1: Demon's Souls (released): tutorial corridor

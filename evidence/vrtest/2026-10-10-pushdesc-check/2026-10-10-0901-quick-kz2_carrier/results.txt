@@ -1,0 +1,9 @@
+# path: OpenXR Simulator, RPCS3_VR_MULTIVIEW=default, build a631a734e VK: push descriptors for the fragment set (VK_KHR_
+# BCUS98116 vrtest_kz2_carrier: Killzone 2: Campaign > Continue, the carrier walk (Write/Read Color Buffers in the game config)
+BCUS98116 vrtest_kz2_carrier vblank 144 scale 300%:
+   577 frames over 8.0 s: avg 72.0 FPS, 1% low 61.5, 0.1% low 59.4 (worst frame 16.8 ms), median 13.86 ms, late 0.00%, RSX thread 13.75 ms/frame, new frames 72.0/s
+   577 frames over 8.0 s: avg 72.0 FPS, 1% low 60.2, 0.1% low 54.7 (worst frame 18.3 ms), median 13.88 ms, late 0.00%, RSX thread 13.78 ms/frame, new frames 43.1/s
+   => median of 2 windows: avg 72.0 FPS, 1% low 60.2, late frames 0.00%, RSX thread 13.75 ms/frame
+   eyes: residual at 0 28.79, best shift 0 (28.79) 
+SUSTAINABLE BCUS98116 vrtest_kz2_carrier: 72 Hz
+DONE /f/rpsc3/source/plans/evidence/vrtest/2026-10-10-0901-quick-kz2_carrier

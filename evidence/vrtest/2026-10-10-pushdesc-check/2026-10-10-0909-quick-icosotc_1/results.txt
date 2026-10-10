@@ -1,0 +1,10 @@
+# path: OpenXR Simulator, RPCS3_VR_MULTIVIEW=default, build a631a734e VK: push descriptors for the fragment set (VK_KHR_
+# BCUS98259 vrtest_icosotc_1: ICO & SotC Collection (released): SotC, a valley
+BCUS98259 vrtest_icosotc_1 vblank 90 scale 300%:
+   720 frames over 8.0 s: avg 90.0 FPS, 1% low 81.7, 0.1% low 79.6 (worst frame 12.6 ms), median 11.01 ms, late 0.00%, RSX thread 7.89 ms/frame, new frames 23.2/s
+   721 frames over 8.0 s: avg 90.0 FPS, 1% low 82.6, 0.1% low 78.8 (worst frame 12.7 ms), median 11.01 ms, late 0.00%, RSX thread 8.00 ms/frame, new frames 33.8/s
+   719 frames over 8.0 s: avg 89.9 FPS, 1% low 83.2, 0.1% low 46.3 (worst frame 21.6 ms), median 11.01 ms, late 0.14%, RSX thread 8.34 ms/frame, new frames 22.2/s
+   => median of 3 windows: avg 90.0 FPS, 1% low 82.6, late frames 0.00%, RSX thread 8.00 ms/frame
+   eyes: residual at 0 15.34, best shift -222 (8.60) 
+SUSTAINABLE BCUS98259 vrtest_icosotc_1: 90 Hz
+DONE /f/rpsc3/source/plans/evidence/vrtest/2026-10-10-0909-quick-icosotc_1

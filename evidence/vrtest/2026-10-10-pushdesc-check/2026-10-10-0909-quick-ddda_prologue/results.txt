@@ -1,0 +1,8 @@
+# path: OpenXR Simulator, RPCS3_VR_MULTIVIEW=default, build a631a734e VK: push descriptors for the fragment set (VK_KHR_
+# BLUS31155 vrtest_ddda_prologue: Dragon's Dogma DA: prologue start
+BLUS31155 vrtest_ddda_prologue vblank 90 scale 300%:
+   721 frames over 8.0 s: avg 90.0 FPS, 1% low 77.6, 0.1% low 63.6 (worst frame 15.7 ms), median 11.09 ms, late 0.00%, RSX thread 5.20 ms/frame, new frames 89.3/s
+   => median of 1 windows: avg 90.0 FPS, 1% low 77.6, late frames 0.00%, RSX thread 5.20 ms/frame
+   eyes: residual at 0 5.91, best shift -234 (3.39) 
+SUSTAINABLE BLUS31155 vrtest_ddda_prologue: 90 Hz
+DONE /f/rpsc3/source/plans/evidence/vrtest/2026-10-10-0909-quick-ddda_prologue

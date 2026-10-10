@@ -1,0 +1,10 @@
+# path: OpenXR Simulator, RPCS3_VR_MULTIVIEW=default, build 7820e2159 camera_block_cache: fast path from the previous dr
+# BCES00664 vrtest_wipeout_race: WipEout HD (released): in a race, ship at speed
+BCES00664 vrtest_wipeout_race vblank 90 scale 300%:
+   261 frames over 8.0 s: avg 32.6 FPS, 1% low 10.0, 0.1% low 9.6 (worst frame 104.4 ms), median 11.02 ms, late 24.90%, RSX thread 4.17 ms/frame, new frames 32.6/s
+   258 frames over 8.0 s: avg 32.1 FPS, 1% low 9.6, 0.1% low 9.4 (worst frame 106.5 ms), median 11.02 ms, late 25.19%, RSX thread 4.20 ms/frame, new frames 32.1/s
+   260 frames over 8.0 s: avg 32.3 FPS, 1% low 10.0, 0.1% low 9.9 (worst frame 101.0 ms), median 11.01 ms, late 25.00%, RSX thread 4.32 ms/frame, new frames 32.3/s
+   => median of 3 windows: avg 32.3 FPS, 1% low 10.0, late frames 25.00%, RSX thread 4.20 ms/frame
+   eyes: residual at 0 34.01, best shift -238 (13.01) 
+SUSTAINABLE BCES00664 vrtest_wipeout_race: none Hz
+DONE /f/rpsc3/source/plans/evidence/vrtest/2026-10-10-0922-bisect-7820-wipeout

@@ -1,0 +1,9 @@
+# path: OpenXR Simulator, RPCS3_VR_MULTIVIEW=default, build a631a734e VK: push descriptors for the fragment set (VK_KHR_
+# BLUS30367 vrtest_bayonetta_play: Bayonetta: graveyard fight, Prologue (continued from the chapter menu)
+BLUS30367 vrtest_bayonetta_play vblank 90 scale 300%:
+   720 frames over 8.0 s: avg 90.0 FPS, 1% low 83.3, 0.1% low 82.2 (worst frame 12.2 ms), median 11.02 ms, late 0.00%, RSX thread 10.41 ms/frame, new frames 90.0/s
+   721 frames over 8.0 s: avg 90.0 FPS, 1% low 83.1, 0.1% low 79.4 (worst frame 12.6 ms), median 11.02 ms, late 0.00%, RSX thread 10.32 ms/frame, new frames 90.0/s
+   => median of 2 windows: avg 90.0 FPS, 1% low 83.1, late frames 0.00%, RSX thread 10.32 ms/frame
+   eyes: residual at 0 16.10, best shift -236 (6.10) 
+SUSTAINABLE BLUS30367 vrtest_bayonetta_play: 90 Hz
+DONE /f/rpsc3/source/plans/evidence/vrtest/2026-10-10-0902-quick-bayonetta_play

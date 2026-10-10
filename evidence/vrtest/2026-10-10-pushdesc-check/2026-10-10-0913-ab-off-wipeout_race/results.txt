@@ -1,0 +1,8 @@
+# path: OpenXR Simulator, RPCS3_VR_MULTIVIEW=default, build a631a734e VK: push descriptors for the fragment set (VK_KHR_
+# BCES00664 vrtest_wipeout_race: WipEout HD (released): in a race, ship at speed
+BCES00664 vrtest_wipeout_race vblank 90 scale 300%:
+   259 frames over 8.1 s: avg 32.2 FPS, 1% low 10.0, 0.1% low 9.4 (worst frame 106.4 ms), median 11.03 ms, late 25.10%, RSX thread 3.78 ms/frame, new frames 32.2/s
+   => median of 1 windows: avg 32.2 FPS, 1% low 10.0, late frames 25.10%, RSX thread 3.78 ms/frame
+   eyes: residual at 0 36.07, best shift -236 (13.20) 
+SUSTAINABLE BCES00664 vrtest_wipeout_race: none Hz
+DONE /f/rpsc3/source/plans/evidence/vrtest/2026-10-10-0913-ab-off-wipeout_race

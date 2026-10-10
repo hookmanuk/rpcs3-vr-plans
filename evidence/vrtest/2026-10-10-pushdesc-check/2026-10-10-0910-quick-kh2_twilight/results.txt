@@ -1,0 +1,10 @@
+# path: OpenXR Simulator, RPCS3_VR_MULTIVIEW=default, build a631a734e VK: push descriptors for the fragment set (VK_KHR_
+# BLUS31460 vrtest_kh2_twilight: Kingdom Hearts II Final Mix (KH 2.5): Twilight Town, first control (unlocked frame rate patch)
+BLUS31460 vrtest_kh2_twilight vblank 72 scale 300%:
+   574 frames over 8.0 s: avg 71.7 FPS, 1% low 47.0, 0.1% low 38.3 (worst frame 26.1 ms), median 13.99 ms, late 1.22%, RSX thread 8.50 ms/frame, new frames 14.4/s
+   569 frames over 8.0 s: avg 71.0 FPS, 1% low 40.2, 0.1% low 24.3 (worst frame 41.1 ms), median 13.96 ms, late 1.41%, RSX thread 7.23 ms/frame, new frames 0.0/s
+   574 frames over 8.0 s: avg 71.7 FPS, 1% low 50.7, 0.1% low 39.5 (worst frame 25.3 ms), median 13.98 ms, late 0.70%, RSX thread 7.37 ms/frame, new frames 0.0/s
+   => median of 3 windows: avg 71.7 FPS, 1% low 47.0, late frames 1.22%, RSX thread 7.37 ms/frame
+   eyes: residual at 0 15.30, best shift -222 (3.27) 
+SUSTAINABLE BLUS31460 vrtest_kh2_twilight: none Hz
+DONE /f/rpsc3/source/plans/evidence/vrtest/2026-10-10-0910-quick-kh2_twilight

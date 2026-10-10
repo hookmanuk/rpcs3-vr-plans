@@ -1,0 +1,10 @@
+# path: OpenXR Simulator, RPCS3_VR_MULTIVIEW=default, build a631a734e VK: push descriptors for the fragment set (VK_KHR_
+# BCES00800 vrtest_gowc_boat: God of War Collection (released): GoW 1, the boat, first fight
+BCES00800 vrtest_gowc_boat vblank 90 scale 300%:
+   721 frames over 8.0 s: avg 90.0 FPS, 1% low 76.8, 0.1% low 74.1 (worst frame 13.5 ms), median 11.05 ms, late 0.00%, RSX thread 2.13 ms/frame, new frames 0.1/s
+   721 frames over 8.0 s: avg 90.0 FPS, 1% low 83.5, 0.1% low 77.1 (worst frame 13.0 ms), median 11.03 ms, late 0.00%, RSX thread 0.43 ms/frame, new frames 0.0/s
+   721 frames over 8.0 s: avg 90.0 FPS, 1% low 83.7, 0.1% low 79.9 (worst frame 12.5 ms), median 11.02 ms, late 0.00%, RSX thread 0.43 ms/frame, new frames 0.0/s
+   => median of 3 windows: avg 90.0 FPS, 1% low 83.5, late frames 0.00%, RSX thread 0.43 ms/frame
+   eyes: residual at 0 1.45, best shift -244 (0.18) 
+SUSTAINABLE BCES00800 vrtest_gowc_boat: 90 Hz
+DONE /f/rpsc3/source/plans/evidence/vrtest/2026-10-10-0900-quick-gowc_boat

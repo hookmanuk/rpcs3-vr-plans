@@ -1,0 +1,10 @@
+# path: OpenXR Simulator, RPCS3_VR_MULTIVIEW=default, build a631a734e VK: push descriptors for the fragment set (VK_KHR_
+# BCUS98282 vrtest_rc1_veldin: Ratchet & Clank 1: Veldin, start (HelpDesk tip on screen)
+BCUS98282 vrtest_rc1_veldin vblank 90 scale 300%:
+   711 frames over 8.0 s: avg 88.8 FPS, 1% low 66.3, 0.1% low 60.9 (worst frame 16.4 ms), median 11.20 ms, late 0.00%, RSX thread 10.10 ms/frame, new frames 88.8/s
+   715 frames over 8.0 s: avg 89.3 FPS, 1% low 67.3, 0.1% low 62.1 (worst frame 16.1 ms), median 11.16 ms, late 0.00%, RSX thread 9.73 ms/frame, new frames 89.3/s
+   716 frames over 8.0 s: avg 89.4 FPS, 1% low 68.3, 0.1% low 65.2 (worst frame 15.3 ms), median 11.16 ms, late 0.00%, RSX thread 9.53 ms/frame, new frames 89.4/s
+   => median of 3 windows: avg 89.3 FPS, 1% low 67.3, late frames 0.00%, RSX thread 9.73 ms/frame
+   eyes: residual at 0 23.01, best shift -232 (2.88) 
+SUSTAINABLE BCUS98282 vrtest_rc1_veldin: 90 Hz
+DONE /f/rpsc3/source/plans/evidence/vrtest/2026-10-10-0856-quick-rc1_veldin

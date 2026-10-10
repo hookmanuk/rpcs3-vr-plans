@@ -1,0 +1,10 @@
+# path: OpenXR Simulator, RPCS3_VR_MULTIVIEW=default, build a631a734e VK: push descriptors for the fragment set (VK_KHR_
+# NPUA80083 vrtest_flower_l1: Flower: level 1 field (holds X: flies; Unlocked frame rate)
+NPUA80083 vrtest_flower_l1 vblank 90 scale 300%:
+   721 frames over 8.0 s: avg 90.0 FPS, 1% low 83.4, 0.1% low 80.2 (worst frame 12.5 ms), median 11.01 ms, late 0.00%, RSX thread 10.26 ms/frame, new frames 90.0/s
+   721 frames over 8.0 s: avg 90.0 FPS, 1% low 84.3, 0.1% low 82.7 (worst frame 12.1 ms), median 11.01 ms, late 0.00%, RSX thread 10.17 ms/frame, new frames 90.0/s
+   721 frames over 8.0 s: avg 90.0 FPS, 1% low 84.5, 0.1% low 81.5 (worst frame 12.3 ms), median 11.01 ms, late 0.00%, RSX thread 9.49 ms/frame, new frames 90.0/s
+   => median of 3 windows: avg 90.0 FPS, 1% low 84.3, late frames 0.00%, RSX thread 10.17 ms/frame
+   eyes: residual at 0 37.21, best shift -248 (7.65) 
+SUSTAINABLE NPUA80083 vrtest_flower_l1: 90 Hz
+DONE /f/rpsc3/source/plans/evidence/vrtest/2026-10-10-0908-quick-flower_l1
