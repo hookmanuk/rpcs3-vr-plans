@@ -1,0 +1,527 @@
+# path: OpenXR Simulator, RPCS3_VR_MULTIVIEW=default, build 7820e2159 camera_block_cache: fast path from the previous dr
+# BCUS98282 vrtest_rc1_veldin: Ratchet & Clank 1: Veldin, start (HelpDesk tip on screen)
+BCUS98282 vrtest_rc1_veldin vblank 72 scale 300%:
+   575 frames over 8.0 s: avg 71.8 FPS, 1% low 54.8, 0.1% low 52.8 (worst frame 19.0 ms), median 13.91 ms, late 0.00%, RSX thread 10.36 ms/frame, new frames 71.8/s
+   576 frames over 8.0 s: avg 72.0 FPS, 1% low 57.4, 0.1% low 53.2 (worst frame 18.8 ms), median 13.90 ms, late 0.00%, RSX thread 9.67 ms/frame, new frames 72.0/s
+   577 frames over 8.0 s: avg 72.0 FPS, 1% low 57.3, 0.1% low 56.6 (worst frame 17.7 ms), median 13.90 ms, late 0.00%, RSX thread 9.58 ms/frame, new frames 72.0/s
+   => median of 3 windows: avg 72.0 FPS, 1% low 57.3, late frames 0.00%, RSX thread 9.67 ms/frame
+   eyes: residual at 0 22.96, best shift -232 (2.89) 
+BCUS98282 vrtest_rc1_veldin vblank 90 scale 300%:
+   
+   => no frame stats (did not run)
+   (no frame stats: retrying once)
+BCUS98282 vrtest_rc1_veldin vblank 90 scale 300%:
+   705 frames over 8.0 s: avg 88.1 FPS, 1% low 64.2, 0.1% low 59.7 (worst frame 16.8 ms), median 11.30 ms, late 0.00%, RSX thread 10.09 ms/frame, new frames 88.1/s
+   713 frames over 8.0 s: avg 89.1 FPS, 1% low 66.6, 0.1% low 57.9 (worst frame 17.3 ms), median 11.16 ms, late 0.14%, RSX thread 9.70 ms/frame, new frames 89.1/s
+   715 frames over 8.0 s: avg 89.3 FPS, 1% low 67.3, 0.1% low 63.6 (worst frame 15.7 ms), median 11.17 ms, late 0.00%, RSX thread 9.38 ms/frame, new frames 89.3/s
+   => median of 3 windows: avg 89.1 FPS, 1% low 66.6, late frames 0.00%, RSX thread 9.70 ms/frame
+   eyes: residual at 0 23.01, best shift -232 (2.88) 
+SUSTAINABLE BCUS98282 vrtest_rc1_veldin: 90 Hz
+# BCUS98282 vrtest_rc2_aranos: Ratchet & Clank 2: Aranos interior (light scene)
+BCUS98282 vrtest_rc2_aranos vblank 72 scale 300%:
+   577 frames over 8.0 s: avg 72.0 FPS, 1% low 65.9, 0.1% low 64.6 (worst frame 15.5 ms), median 13.92 ms, late 0.00%, RSX thread 1.82 ms/frame, new frames 72.0/s
+   577 frames over 8.0 s: avg 72.0 FPS, 1% low 66.3, 0.1% low 65.3 (worst frame 15.3 ms), median 13.94 ms, late 0.00%, RSX thread 1.76 ms/frame, new frames 72.0/s
+   576 frames over 8.0 s: avg 72.0 FPS, 1% low 66.1, 0.1% low 52.2 (worst frame 19.2 ms), median 13.93 ms, late 0.00%, RSX thread 1.77 ms/frame, new frames 72.0/s
+   => median of 3 windows: avg 72.0 FPS, 1% low 66.1, late frames 0.00%, RSX thread 1.77 ms/frame
+   eyes: residual at 0 35.07, best shift -234 (3.57) 
+BCUS98282 vrtest_rc2_aranos vblank 90 scale 300%:
+   721 frames over 8.0 s: avg 90.0 FPS, 1% low 80.7, 0.1% low 75.1 (worst frame 13.3 ms), median 11.07 ms, late 0.00%, RSX thread 1.77 ms/frame, new frames 90.0/s
+   720 frames over 8.0 s: avg 90.0 FPS, 1% low 80.3, 0.1% low 76.9 (worst frame 13.0 ms), median 11.05 ms, late 0.00%, RSX thread 1.76 ms/frame, new frames 90.0/s
+   720 frames over 8.0 s: avg 90.0 FPS, 1% low 80.4, 0.1% low 75.8 (worst frame 13.2 ms), median 11.06 ms, late 0.00%, RSX thread 1.75 ms/frame, new frames 90.0/s
+   => median of 3 windows: avg 90.0 FPS, 1% low 80.4, late frames 0.00%, RSX thread 1.76 ms/frame
+   eyes: residual at 0 39.18, best shift -234 (3.52) 
+SUSTAINABLE BCUS98282 vrtest_rc2_aranos: 90 Hz
+# BCUS98282 vrtest_rc3_veldin_battle: Ratchet & Clank 3: Veldin battle
+BCUS98282 vrtest_rc3_veldin_battle vblank 72 scale 300%:
+   577 frames over 8.0 s: avg 72.0 FPS, 1% low 57.9, 0.1% low 54.9 (worst frame 18.2 ms), median 13.89 ms, late 0.00%, RSX thread 8.13 ms/frame, new frames 72.0/s
+   577 frames over 8.0 s: avg 72.0 FPS, 1% low 57.5, 0.1% low 53.9 (worst frame 18.5 ms), median 13.89 ms, late 0.00%, RSX thread 7.83 ms/frame, new frames 72.0/s
+   577 frames over 8.0 s: avg 72.0 FPS, 1% low 59.0, 0.1% low 55.3 (worst frame 18.1 ms), median 13.89 ms, late 0.00%, RSX thread 7.45 ms/frame, new frames 72.0/s
+   => median of 3 windows: avg 72.0 FPS, 1% low 57.9, late frames 0.00%, RSX thread 7.83 ms/frame
+   eyes: residual at 0 26.86, best shift -232 (4.21) 
+BCUS98282 vrtest_rc3_veldin_battle vblank 90 scale 300%:
+   720 frames over 8.0 s: avg 90.0 FPS, 1% low 71.6, 0.1% low 67.9 (worst frame 14.7 ms), median 11.09 ms, late 0.00%, RSX thread 7.57 ms/frame, new frames 90.0/s
+   720 frames over 8.0 s: avg 90.0 FPS, 1% low 70.1, 0.1% low 66.6 (worst frame 15.0 ms), median 11.12 ms, late 0.00%, RSX thread 7.53 ms/frame, new frames 90.0/s
+   721 frames over 8.0 s: avg 90.0 FPS, 1% low 72.2, 0.1% low 69.1 (worst frame 14.5 ms), median 11.12 ms, late 0.00%, RSX thread 7.46 ms/frame, new frames 90.0/s
+   => median of 3 windows: avg 90.0 FPS, 1% low 71.6, late frames 0.00%, RSX thread 7.53 ms/frame
+   eyes: residual at 0 25.95, best shift -232 (3.97) 
+SUSTAINABLE BCUS98282 vrtest_rc3_veldin_battle: 90 Hz
+# BLUS30632 vrtest_anarchy_practice: Anarchy Reigns: Training > Practice
+BLUS30632 vrtest_anarchy_practice vblank 144 scale 300%:
+   576 frames over 8.0 s: avg 72.0 FPS, 1% low 65.8, 0.1% low 63.9 (worst frame 15.7 ms), median 14.00 ms, late 0.00%, RSX thread 13.78 ms/frame, new frames 58.0/s
+   577 frames over 8.0 s: avg 72.0 FPS, 1% low 66.2, 0.1% low 65.3 (worst frame 15.3 ms), median 14.00 ms, late 0.00%, RSX thread 13.77 ms/frame, new frames 58.0/s
+   => median of 2 windows: avg 72.0 FPS, 1% low 65.8, late frames 0.00%, RSX thread 13.77 ms/frame
+   eyes: residual at 0 22.05, best shift -238 (10.34) 
+BLUS30632 vrtest_anarchy_practice vblank 180 scale 300%:
+   721 frames over 8.0 s: avg 90.0 FPS, 1% low 79.3, 0.1% low 74.8 (worst frame 13.4 ms), median 11.01 ms, late 0.00%, RSX thread 11.02 ms/frame, new frames 90.0/s
+   721 frames over 8.0 s: avg 90.0 FPS, 1% low 79.8, 0.1% low 76.4 (worst frame 13.1 ms), median 11.01 ms, late 0.00%, RSX thread 10.99 ms/frame, new frames 90.0/s
+   => median of 2 windows: avg 90.0 FPS, 1% low 79.3, late frames 0.00%, RSX thread 10.99 ms/frame
+   eyes: residual at 0 21.11, best shift -238 (10.01) 
+SUSTAINABLE BLUS30632 vrtest_anarchy_practice: 90 Hz
+# BLUS30405 vrtest_dante_acre_v3: Dante's Inferno: Acre, first fight (Wider view 3.0 at 2.75 + camera shake off, 2026-10-02)
+BLUS30405 vrtest_dante_acre_v3 vblank 72 scale 300%:
+   577 frames over 8.0 s: avg 72.0 FPS, 1% low 65.6, 0.1% low 61.0 (worst frame 16.4 ms), median 13.91 ms, late 0.00%, RSX thread 3.92 ms/frame, new frames 0.0/s
+   577 frames over 8.0 s: avg 72.0 FPS, 1% low 66.1, 0.1% low 62.5 (worst frame 16.0 ms), median 13.89 ms, late 0.00%, RSX thread 3.85 ms/frame, new frames 0.0/s
+   577 frames over 8.0 s: avg 72.0 FPS, 1% low 65.4, 0.1% low 53.5 (worst frame 18.7 ms), median 13.91 ms, late 0.00%, RSX thread 3.86 ms/frame, new frames 0.0/s
+   => median of 3 windows: avg 72.0 FPS, 1% low 65.6, late frames 0.00%, RSX thread 3.86 ms/frame
+   eyes: residual at 0 20.47, best shift -232 (6.45) 
+BLUS30405 vrtest_dante_acre_v3 vblank 90 scale 300%:
+   721 frames over 8.0 s: avg 90.0 FPS, 1% low 79.7, 0.1% low 65.6 (worst frame 15.2 ms), median 11.07 ms, late 0.00%, RSX thread 4.05 ms/frame, new frames 0.0/s
+   720 frames over 8.0 s: avg 90.0 FPS, 1% low 79.9, 0.1% low 77.4 (worst frame 12.9 ms), median 11.08 ms, late 0.00%, RSX thread 3.91 ms/frame, new frames 0.0/s
+   721 frames over 8.0 s: avg 90.0 FPS, 1% low 79.9, 0.1% low 60.7 (worst frame 16.5 ms), median 11.09 ms, late 0.00%, RSX thread 3.81 ms/frame, new frames 0.0/s
+   => median of 3 windows: avg 90.0 FPS, 1% low 79.9, late frames 0.00%, RSX thread 3.91 ms/frame
+   eyes: residual at 0 18.33, best shift -232 (6.78) 
+SUSTAINABLE BLUS30405 vrtest_dante_acre_v3: 90 Hz
+# BLUS30035 vrtest_darkness_opening: The Darkness: opening car scene ("View tutorial help")
+BLUS30035 vrtest_darkness_opening vblank 72 scale 300%:
+   575 frames over 8.0 s: avg 71.8 FPS, 1% low 61.3, 0.1% low 58.3 (worst frame 17.2 ms), median 13.59 ms, late 0.00%, RSX thread 13.17 ms/frame, new frames 21.5/s
+   574 frames over 8.0 s: avg 71.7 FPS, 1% low 61.3, 0.1% low 57.7 (worst frame 17.3 ms), median 13.58 ms, late 0.00%, RSX thread 13.20 ms/frame, new frames 21.4/s
+   573 frames over 8.0 s: avg 71.6 FPS, 1% low 59.7, 0.1% low 52.8 (worst frame 18.9 ms), median 13.58 ms, late 0.00%, RSX thread 13.26 ms/frame, new frames 21.5/s
+   => median of 3 windows: avg 71.7 FPS, 1% low 61.3, late frames 0.00%, RSX thread 13.20 ms/frame
+   eyes: residual at 0 57.60, best shift -232 (4.09) 
+BLUS30035 vrtest_darkness_opening vblank 90 scale 300%:
+   608 frames over 8.0 s: avg 76.0 FPS, 1% low 68.4, 0.1% low 64.8 (worst frame 15.4 ms), median 13.08 ms, late 0.00%, RSX thread 13.06 ms/frame, new frames 23.9/s
+   608 frames over 8.0 s: avg 75.9 FPS, 1% low 69.3, 0.1% low 64.2 (worst frame 15.6 ms), median 13.10 ms, late 0.00%, RSX thread 13.08 ms/frame, new frames 24.1/s
+   607 frames over 8.0 s: avg 75.8 FPS, 1% low 65.8, 0.1% low 58.5 (worst frame 17.1 ms), median 13.08 ms, late 0.00%, RSX thread 13.09 ms/frame, new frames 27.3/s
+   => median of 3 windows: avg 75.9 FPS, 1% low 68.4, late frames 0.00%, RSX thread 13.08 ms/frame
+   eyes: residual at 0 57.70, best shift -232 (4.12) 
+SUSTAINABLE BLUS30035 vrtest_darkness_opening: 72 Hz
+# BCUS98227 vrtest_puppeteer_cage: Puppeteer: first control, Kutaro in the cage
+BCUS98227 vrtest_puppeteer_cage vblank 144 scale 300%:
+   577 frames over 8.0 s: avg 72.0 FPS, 1% low 68.9, 0.1% low 67.0 (worst frame 14.9 ms), median 14.00 ms, late 0.00%, RSX thread 12.76 ms/frame, new frames 0.0/s
+   577 frames over 8.0 s: avg 72.0 FPS, 1% low 68.8, 0.1% low 67.0 (worst frame 14.9 ms), median 14.00 ms, late 0.00%, RSX thread 12.81 ms/frame, new frames 0.0/s
+   576 frames over 8.0 s: avg 71.9 FPS, 1% low 68.8, 0.1% low 50.5 (worst frame 19.8 ms), median 14.00 ms, late 0.00%, RSX thread 12.81 ms/frame, new frames 0.0/s
+   => median of 3 windows: avg 72.0 FPS, 1% low 68.8, late frames 0.00%, RSX thread 12.81 ms/frame
+   eyes: residual at 0 2.62, best shift -244 (0.69) 
+BCUS98227 vrtest_puppeteer_cage vblank 180 scale 300%:
+   720 frames over 8.0 s: avg 89.9 FPS, 1% low 82.9, 0.1% low 53.4 (worst frame 18.7 ms), median 11.01 ms, late 0.28%, RSX thread 10.02 ms/frame, new frames 0.0/s
+   720 frames over 8.0 s: avg 90.0 FPS, 1% low 83.7, 0.1% low 73.1 (worst frame 13.7 ms), median 11.01 ms, late 0.00%, RSX thread 10.04 ms/frame, new frames 0.0/s
+   720 frames over 8.0 s: avg 89.9 FPS, 1% low 81.2, 0.1% low 68.2 (worst frame 14.7 ms), median 11.01 ms, late 0.00%, RSX thread 10.03 ms/frame, new frames 0.0/s
+   => median of 3 windows: avg 89.9 FPS, 1% low 82.9, late frames 0.00%, RSX thread 10.03 ms/frame
+   eyes: residual at 0 2.60, best shift -244 (0.67) 
+SUSTAINABLE BCUS98227 vrtest_puppeteer_cage: 90 Hz
+# BLUS31006 vrtest_xillia_field: Tales of Xillia: first field (academy)
+BLUS31006 vrtest_xillia_field vblank 72 scale 300%:
+   576 frames over 8.0 s: avg 72.0 FPS, 1% low 68.9, 0.1% low 67.2 (worst frame 14.9 ms), median 14.00 ms, late 0.00%, RSX thread 11.28 ms/frame, new frames 59.1/s
+   577 frames over 8.0 s: avg 72.0 FPS, 1% low 68.9, 0.1% low 67.6 (worst frame 14.8 ms), median 14.00 ms, late 0.00%, RSX thread 11.81 ms/frame, new frames 72.0/s
+   576 frames over 8.0 s: avg 72.0 FPS, 1% low 68.9, 0.1% low 60.6 (worst frame 16.5 ms), median 14.00 ms, late 0.00%, RSX thread 11.44 ms/frame, new frames 71.7/s
+   => median of 3 windows: avg 72.0 FPS, 1% low 68.9, late frames 0.00%, RSX thread 11.44 ms/frame
+   eyes: residual at 0 30.49, best shift -240 (5.86) 
+BLUS31006 vrtest_xillia_field vblank 90 scale 300%:
+   721 frames over 8.0 s: avg 90.0 FPS, 1% low 84.4, 0.1% low 83.4 (worst frame 12.0 ms), median 11.01 ms, late 0.00%, RSX thread 9.99 ms/frame, new frames 72.9/s
+   720 frames over 8.0 s: avg 90.0 FPS, 1% low 84.8, 0.1% low 84.3 (worst frame 11.9 ms), median 11.01 ms, late 0.00%, RSX thread 10.24 ms/frame, new frames 64.9/s
+   721 frames over 8.0 s: avg 90.0 FPS, 1% low 84.3, 0.1% low 81.5 (worst frame 12.3 ms), median 11.00 ms, late 0.00%, RSX thread 10.43 ms/frame, new frames 54.2/s
+   => median of 3 windows: avg 90.0 FPS, 1% low 84.4, late frames 0.00%, RSX thread 10.24 ms/frame
+   eyes: residual at 0 21.69, best shift -232 (3.09) 
+SUSTAINABLE BLUS31006 vrtest_xillia_field: 90 Hz
+# BLUS31155 vrtest_ddda_prologue: Dragon's Dogma DA: prologue start
+BLUS31155 vrtest_ddda_prologue vblank 72 scale 300%:
+   577 frames over 8.0 s: avg 72.0 FPS, 1% low 64.3, 0.1% low 57.4 (worst frame 17.4 ms), median 13.89 ms, late 0.00%, RSX thread 5.48 ms/frame, new frames 72.0/s
+   577 frames over 8.0 s: avg 72.0 FPS, 1% low 64.0, 0.1% low 63.1 (worst frame 15.9 ms), median 13.91 ms, late 0.00%, RSX thread 5.31 ms/frame, new frames 72.0/s
+   => median of 2 windows: avg 72.0 FPS, 1% low 64.0, late frames 0.00%, RSX thread 5.31 ms/frame
+   eyes: residual at 0 5.69, best shift -232 (3.24) 
+BLUS31155 vrtest_ddda_prologue vblank 90 scale 300%:
+   720 frames over 8.0 s: avg 90.0 FPS, 1% low 77.4, 0.1% low 68.7 (worst frame 14.5 ms), median 11.08 ms, late 0.00%, RSX thread 5.27 ms/frame, new frames 89.2/s
+   721 frames over 8.0 s: avg 90.0 FPS, 1% low 78.9, 0.1% low 72.7 (worst frame 13.8 ms), median 11.07 ms, late 0.00%, RSX thread 5.15 ms/frame, new frames 89.5/s
+   => median of 2 windows: avg 90.0 FPS, 1% low 77.4, late frames 0.00%, RSX thread 5.15 ms/frame
+   eyes: residual at 0 6.09, best shift -234 (3.47) 
+SUSTAINABLE BLUS31155 vrtest_ddda_prologue: 90 Hz
+# BCUS98281 vrtest_jak1_hut: Jak 1: Samos' hut / Sandover
+BCUS98281 vrtest_jak1_hut vblank 72 scale 300%:
+   480 frames over 8.0 s: avg 60.0 FPS, 1% low 53.2, 0.1% low 53.0 (worst frame 18.9 ms), median 16.60 ms, late 0.00%, RSX thread 5.45 ms/frame, new frames 0.2/s
+   480 frames over 8.0 s: avg 60.0 FPS, 1% low 52.2, 0.1% low 35.4 (worst frame 28.2 ms), median 16.65 ms, late 0.21%, RSX thread 6.87 ms/frame, new frames 0.1/s
+   => median of 2 windows: avg 60.0 FPS, 1% low 52.2, late frames 0.00%, RSX thread 5.45 ms/frame
+   eyes: residual at 0 34.68, best shift -252 (8.18) 
+SUSTAINABLE BCUS98281 vrtest_jak1_hut: none Hz
+# BCUS98281 vrtest_jak2_prison: Jak II: prison / escape area
+BCUS98281 vrtest_jak2_prison vblank 72 scale 300%:
+   576 frames over 8.0 s: avg 71.9 FPS, 1% low 52.4, 0.1% low 40.2 (worst frame 24.9 ms), median 13.92 ms, late 0.17%, RSX thread 10.00 ms/frame, new frames 71.5/s
+   576 frames over 8.0 s: avg 71.9 FPS, 1% low 53.6, 0.1% low 49.2 (worst frame 20.3 ms), median 13.87 ms, late 0.00%, RSX thread 10.10 ms/frame, new frames 71.9/s
+   575 frames over 8.0 s: avg 71.8 FPS, 1% low 51.0, 0.1% low 39.3 (worst frame 25.4 ms), median 13.96 ms, late 0.17%, RSX thread 9.73 ms/frame, new frames 71.8/s
+   => median of 3 windows: avg 71.9 FPS, 1% low 52.4, late frames 0.17%, RSX thread 10.00 ms/frame
+   eyes: residual at 0 12.26, best shift -270 (8.98) 
+BCUS98281 vrtest_jak2_prison vblank 90 scale 300%:
+   705 frames over 8.0 s: avg 88.0 FPS, 1% low 65.2, 0.1% low 60.6 (worst frame 16.5 ms), median 11.21 ms, late 0.00%, RSX thread 10.40 ms/frame, new frames 88.0/s
+   710 frames over 8.0 s: avg 88.7 FPS, 1% low 71.1, 0.1% low 59.5 (worst frame 16.8 ms), median 11.19 ms, late 0.14%, RSX thread 10.19 ms/frame, new frames 88.7/s
+   => median of 2 windows: avg 88.0 FPS, 1% low 65.2, late frames 0.00%, RSX thread 10.19 ms/frame
+   eyes: residual at 0 12.42, best shift -272 (8.93) 
+SUSTAINABLE BCUS98281 vrtest_jak2_prison: 72 Hz
+# BCUS98281 vrtest_jak3_spargus: Jak 3: Spargus palace, first control
+BCUS98281 vrtest_jak3_spargus vblank 72 scale 300%:
+   491 frames over 8.0 s: avg 61.3 FPS, 1% low 49.1, 0.1% low 46.9 (worst frame 21.3 ms), median 16.04 ms, late 0.00%, RSX thread 16.18 ms/frame, new frames 0.0/s
+   486 frames over 8.0 s: avg 60.7 FPS, 1% low 50.7, 0.1% low 49.6 (worst frame 20.1 ms), median 16.22 ms, late 0.00%, RSX thread 16.33 ms/frame, new frames 0.0/s
+   472 frames over 8.0 s: avg 59.0 FPS, 1% low 47.9, 0.1% low 40.9 (worst frame 24.5 ms), median 16.68 ms, late 0.00%, RSX thread 16.79 ms/frame, new frames 0.0/s
+   => median of 3 windows: avg 60.7 FPS, 1% low 49.1, late frames 0.00%, RSX thread 16.33 ms/frame
+   eyes: residual at 0 22.62, best shift -250 (2.33) 
+SUSTAINABLE BCUS98281 vrtest_jak3_spargus: none Hz
+# BLUS30306 vrtest_dw6e_battle: Dynasty Warriors 6 Empires: first mercenary battle
+BLUS30306 vrtest_dw6e_battle vblank 72 scale 300%:
+   480 frames over 8.0 s: avg 60.0 FPS, 1% low 56.9, 0.1% low 48.2 (worst frame 20.7 ms), median 16.52 ms, late 0.00%, RSX thread 3.07 ms/frame, new frames 60.0/s
+   480 frames over 8.0 s: avg 60.0 FPS, 1% low 57.0, 0.1% low 56.0 (worst frame 17.9 ms), median 16.53 ms, late 0.00%, RSX thread 3.46 ms/frame, new frames 60.0/s
+   481 frames over 8.0 s: avg 60.0 FPS, 1% low 57.3, 0.1% low 55.9 (worst frame 17.9 ms), median 16.58 ms, late 0.00%, RSX thread 3.78 ms/frame, new frames 60.0/s
+   => median of 3 windows: avg 60.0 FPS, 1% low 57.0, late frames 0.00%, RSX thread 3.46 ms/frame
+   eyes: residual at 0 12.45, best shift -260 (4.38) 
+SUSTAINABLE BLUS30306 vrtest_dw6e_battle: none Hz
+# BCES00664 vrtest_wipeout_race: WipEout HD (released): in a race, ship at speed
+BCES00664 vrtest_wipeout_race vblank 72 scale 300%:
+   577 frames over 8.0 s: avg 72.0 FPS, 1% low 68.5, 0.1% low 67.1 (worst frame 14.9 ms), median 13.99 ms, late 0.00%, RSX thread 10.14 ms/frame, new frames 72.0/s
+   577 frames over 8.0 s: avg 72.0 FPS, 1% low 68.8, 0.1% low 68.0 (worst frame 14.7 ms), median 13.99 ms, late 0.00%, RSX thread 10.67 ms/frame, new frames 72.0/s
+   576 frames over 8.0 s: avg 72.0 FPS, 1% low 68.7, 0.1% low 68.4 (worst frame 14.6 ms), median 13.99 ms, late 0.00%, RSX thread 11.16 ms/frame, new frames 72.0/s
+   => median of 3 windows: avg 72.0 FPS, 1% low 68.7, late frames 0.00%, RSX thread 10.67 ms/frame
+   eyes: residual at 0 35.10, best shift -238 (13.15) 
+BCES00664 vrtest_wipeout_race vblank 90 scale 300%:
+   720 frames over 8.0 s: avg 90.0 FPS, 1% low 82.1, 0.1% low 80.1 (worst frame 12.5 ms), median 11.06 ms, late 0.00%, RSX thread 1.49 ms/frame, new frames 90.0/s
+   721 frames over 8.0 s: avg 90.0 FPS, 1% low 81.3, 0.1% low 79.1 (worst frame 12.6 ms), median 11.04 ms, late 0.00%, RSX thread 1.44 ms/frame, new frames 90.0/s
+   721 frames over 8.0 s: avg 90.0 FPS, 1% low 81.2, 0.1% low 79.9 (worst frame 12.5 ms), median 11.05 ms, late 0.00%, RSX thread 1.43 ms/frame, new frames 90.0/s
+   => median of 3 windows: avg 90.0 FPS, 1% low 81.3, late frames 0.00%, RSX thread 1.44 ms/frame
+   eyes: residual at 0 35.41, best shift -238 (13.18) 
+SUSTAINABLE BCES00664 vrtest_wipeout_race: 90 Hz
+# BCES00800 vrtest_gowc_boat: God of War Collection (released): GoW 1, the boat, first fight
+BCES00800 vrtest_gowc_boat vblank 72 scale 300%:
+   577 frames over 8.0 s: avg 72.0 FPS, 1% low 64.4, 0.1% low 60.7 (worst frame 16.5 ms), median 13.91 ms, late 0.00%, RSX thread 2.71 ms/frame, new frames 3.4/s
+   577 frames over 8.0 s: avg 72.0 FPS, 1% low 68.1, 0.1% low 65.5 (worst frame 15.3 ms), median 13.96 ms, late 0.00%, RSX thread 0.42 ms/frame, new frames 0.0/s
+   577 frames over 8.0 s: avg 72.0 FPS, 1% low 67.8, 0.1% low 65.8 (worst frame 15.2 ms), median 13.96 ms, late 0.00%, RSX thread 0.41 ms/frame, new frames 0.0/s
+   => median of 3 windows: avg 72.0 FPS, 1% low 67.8, late frames 0.00%, RSX thread 0.42 ms/frame
+   eyes: residual at 0 1.45, best shift -244 (0.18) 
+BCES00800 vrtest_gowc_boat vblank 90 scale 300%:
+   721 frames over 8.0 s: avg 90.0 FPS, 1% low 84.4, 0.1% low 82.3 (worst frame 12.2 ms), median 11.03 ms, late 0.00%, RSX thread 0.40 ms/frame, new frames 0.0/s
+   721 frames over 8.0 s: avg 90.0 FPS, 1% low 84.0, 0.1% low 81.1 (worst frame 12.3 ms), median 11.03 ms, late 0.00%, RSX thread 0.41 ms/frame, new frames 0.0/s
+   => median of 2 windows: avg 90.0 FPS, 1% low 84.0, late frames 0.00%, RSX thread 0.40 ms/frame
+   eyes: residual at 0 1.45, best shift -244 (0.18) 
+SUSTAINABLE BCES00800 vrtest_gowc_boat: 90 Hz
+# BCES00800 vrtest_gow2_rhodes: God of War II: Rhodes, first fight (2026-10-02)
+BCES00800 vrtest_gow2_rhodes vblank 72 scale 300%:
+   577 frames over 8.0 s: avg 72.0 FPS, 1% low 68.3, 0.1% low 65.8 (worst frame 15.2 ms), median 13.97 ms, late 0.00%, RSX thread 0.58 ms/frame, new frames 0.0/s
+   577 frames over 8.0 s: avg 72.0 FPS, 1% low 67.7, 0.1% low 67.0 (worst frame 14.9 ms), median 13.98 ms, late 0.00%, RSX thread 0.57 ms/frame, new frames 0.0/s
+   => median of 2 windows: avg 72.0 FPS, 1% low 67.7, late frames 0.00%, RSX thread 0.57 ms/frame
+   eyes: residual at 0 1.51, best shift -244 (0.18) 
+BCES00800 vrtest_gow2_rhodes vblank 90 scale 300%:
+   721 frames over 8.0 s: avg 90.0 FPS, 1% low 82.7, 0.1% low 78.6 (worst frame 12.7 ms), median 11.03 ms, late 0.00%, RSX thread 0.55 ms/frame, new frames 0.0/s
+   721 frames over 8.0 s: avg 90.0 FPS, 1% low 82.7, 0.1% low 79.0 (worst frame 12.7 ms), median 11.02 ms, late 0.00%, RSX thread 0.56 ms/frame, new frames 0.0/s
+   => median of 2 windows: avg 90.0 FPS, 1% low 82.7, late frames 0.00%, RSX thread 0.55 ms/frame
+   eyes: residual at 0 1.51, best shift -244 (0.18) 
+SUSTAINABLE BCES00800 vrtest_gow2_rhodes: 90 Hz
+# BCUS98259 vrtest_icosotc_1: ICO & SotC Collection (released): SotC, a valley
+BCUS98259 vrtest_icosotc_1 vblank 72 scale 300%:
+   
+   => no frame stats (did not run)
+   (no frame stats: retrying once)
+BCUS98259 vrtest_icosotc_1 vblank 72 scale 300%:
+   576 frames over 8.0 s: avg 72.0 FPS, 1% low 68.9, 0.1% low 68.9 (worst frame 14.5 ms), median 14.00 ms, late 0.00%, RSX thread 13.70 ms/frame, new frames 0.0/s
+   576 frames over 8.0 s: avg 72.0 FPS, 1% low 68.9, 0.1% low 67.8 (worst frame 14.7 ms), median 14.00 ms, late 0.00%, RSX thread 13.68 ms/frame, new frames 0.0/s
+   577 frames over 8.0 s: avg 72.0 FPS, 1% low 68.9, 0.1% low 67.9 (worst frame 14.7 ms), median 14.00 ms, late 0.00%, RSX thread 13.70 ms/frame, new frames 0.2/s
+   => median of 3 windows: avg 72.0 FPS, 1% low 68.9, late frames 0.00%, RSX thread 13.70 ms/frame
+   eyes: residual at 0 16.76, best shift -224 (11.02) 
+BCUS98259 vrtest_icosotc_1 vblank 90 scale 300%:
+   721 frames over 8.0 s: avg 90.0 FPS, 1% low 86.4, 0.1% low 83.3 (worst frame 12.0 ms), median 11.01 ms, late 0.00%, RSX thread 10.95 ms/frame, new frames 0.0/s
+   720 frames over 8.0 s: avg 90.0 FPS, 1% low 85.5, 0.1% low 83.2 (worst frame 12.0 ms), median 11.01 ms, late 0.00%, RSX thread 10.94 ms/frame, new frames 0.0/s
+   720 frames over 8.0 s: avg 90.0 FPS, 1% low 83.3, 0.1% low 78.7 (worst frame 12.7 ms), median 11.01 ms, late 0.00%, RSX thread 10.71 ms/frame, new frames 0.7/s
+   => median of 3 windows: avg 90.0 FPS, 1% low 85.5, late frames 0.00%, RSX thread 10.94 ms/frame
+   eyes: residual at 0 11.52, best shift -228 (8.62) 
+SUSTAINABLE BCUS98259 vrtest_icosotc_1: 90 Hz
+# BLUS30443 vrtest_demons_1: Demon's Souls (released): tutorial corridor
+BLUS30443 vrtest_demons_1 vblank 72 scale 300%:
+   577 frames over 8.0 s: avg 72.0 FPS, 1% low 66.2, 0.1% low 64.8 (worst frame 15.4 ms), median 13.91 ms, late 0.00%, RSX thread 1.56 ms/frame, new frames 72.0/s
+   577 frames over 8.0 s: avg 72.0 FPS, 1% low 66.6, 0.1% low 64.6 (worst frame 15.5 ms), median 13.91 ms, late 0.00%, RSX thread 1.60 ms/frame, new frames 72.0/s
+   => median of 2 windows: avg 72.0 FPS, 1% low 66.2, late frames 0.00%, RSX thread 1.56 ms/frame
+   eyes: residual at 0 34.54, best shift -238 (7.62) 
+BLUS30443 vrtest_demons_1 vblank 90 scale 300%:
+   720 frames over 8.0 s: avg 90.0 FPS, 1% low 81.1, 0.1% low 78.0 (worst frame 12.8 ms), median 11.10 ms, late 0.00%, RSX thread 1.57 ms/frame, new frames 90.0/s
+   720 frames over 8.0 s: avg 90.0 FPS, 1% low 81.7, 0.1% low 79.5 (worst frame 12.6 ms), median 11.08 ms, late 0.00%, RSX thread 1.52 ms/frame, new frames 90.0/s
+   721 frames over 8.0 s: avg 90.0 FPS, 1% low 81.2, 0.1% low 60.4 (worst frame 16.6 ms), median 11.06 ms, late 0.00%, RSX thread 1.60 ms/frame, new frames 90.0/s
+   => median of 3 windows: avg 90.0 FPS, 1% low 81.2, late frames 0.00%, RSX thread 1.57 ms/frame
+   eyes: residual at 0 35.72, best shift -238 (7.90) 
+SUSTAINABLE BLUS30443 vrtest_demons_1: 90 Hz
+# BLUS30367 vrtest_bayonetta_play: Bayonetta: graveyard fight, Prologue (continued from the chapter menu)
+BLUS30367 vrtest_bayonetta_play vblank 72 scale 300%:
+   576 frames over 8.0 s: avg 72.0 FPS, 1% low 68.6, 0.1% low 66.6 (worst frame 15.0 ms), median 13.99 ms, late 0.00%, RSX thread 13.35 ms/frame, new frames 72.0/s
+   576 frames over 8.0 s: avg 72.0 FPS, 1% low 67.9, 0.1% low 60.1 (worst frame 16.6 ms), median 13.99 ms, late 0.00%, RSX thread 13.04 ms/frame, new frames 72.0/s
+   574 frames over 8.0 s: avg 71.6 FPS, 1% low 67.2, 0.1% low 23.5 (worst frame 42.5 ms), median 13.99 ms, late 0.35%, RSX thread 13.19 ms/frame, new frames 70.4/s
+   => median of 3 windows: avg 72.0 FPS, 1% low 67.9, late frames 0.00%, RSX thread 13.19 ms/frame
+   eyes: residual at 0 14.19, best shift -238 (6.85) 
+BLUS30367 vrtest_bayonetta_play vblank 90 scale 300%:
+   721 frames over 8.0 s: avg 90.0 FPS, 1% low 83.2, 0.1% low 80.1 (worst frame 12.5 ms), median 11.02 ms, late 0.00%, RSX thread 10.03 ms/frame, new frames 90.0/s
+   720 frames over 8.0 s: avg 90.0 FPS, 1% low 83.3, 0.1% low 82.1 (worst frame 12.2 ms), median 11.01 ms, late 0.00%, RSX thread 10.19 ms/frame, new frames 90.0/s
+   719 frames over 8.0 s: avg 89.8 FPS, 1% low 82.3, 0.1% low 45.7 (worst frame 21.9 ms), median 11.02 ms, late 0.28%, RSX thread 10.48 ms/frame, new frames 83.0/s
+   => median of 3 windows: avg 90.0 FPS, 1% low 83.2, late frames 0.00%, RSX thread 10.19 ms/frame
+   eyes: residual at 0 10.63, best shift -232 (5.58) 
+SUSTAINABLE BLUS30367 vrtest_bayonetta_play: 90 Hz
+# BCUS98114 vrtest_gt5_race_start: Gran Turismo 5: race start
+BCUS98114 vrtest_gt5_race_start vblank 72 scale 300%:
+   577 frames over 8.0 s: avg 72.0 FPS, 1% low 67.7, 0.1% low 62.9 (worst frame 15.9 ms), median 14.00 ms, late 0.00%, RSX thread 6.31 ms/frame, new frames 72.0/s
+   576 frames over 8.0 s: avg 72.0 FPS, 1% low 68.9, 0.1% low 66.6 (worst frame 15.0 ms), median 14.00 ms, late 0.00%, RSX thread 6.78 ms/frame, new frames 72.0/s
+   577 frames over 8.0 s: avg 72.0 FPS, 1% low 68.9, 0.1% low 67.7 (worst frame 14.8 ms), median 14.00 ms, late 0.00%, RSX thread 7.32 ms/frame, new frames 72.0/s
+   => median of 3 windows: avg 72.0 FPS, 1% low 68.9, late frames 0.00%, RSX thread 6.78 ms/frame
+   eyes: residual at 0 56.91, best shift -232 (10.00) 
+BCUS98114 vrtest_gt5_race_start vblank 90 scale 300%:
+   720 frames over 8.0 s: avg 90.0 FPS, 1% low 86.4, 0.1% low 82.8 (worst frame 12.1 ms), median 11.01 ms, late 0.00%, RSX thread 6.11 ms/frame, new frames 90.0/s
+   721 frames over 8.0 s: avg 90.0 FPS, 1% low 86.4, 0.1% low 83.2 (worst frame 12.0 ms), median 11.01 ms, late 0.00%, RSX thread 6.19 ms/frame, new frames 90.0/s
+   => median of 2 windows: avg 90.0 FPS, 1% low 86.4, late frames 0.00%, RSX thread 6.11 ms/frame
+   eyes: residual at 0 59.83, best shift -232 (10.60) 
+SUSTAINABLE BCUS98114 vrtest_gt5_race_start: 90 Hz
+# BLUS30182 vrtest_pure_race: Pure (released): Alto Vista race, from the start line (holds R2)
+BLUS30182 vrtest_pure_race vblank 72 scale 300%:
+   577 frames over 8.0 s: avg 72.0 FPS, 1% low 68.9, 0.1% low 67.6 (worst frame 14.8 ms), median 14.00 ms, late 0.00%, RSX thread 13.84 ms/frame, new frames 72.0/s
+   576 frames over 8.0 s: avg 72.0 FPS, 1% low 68.9, 0.1% low 67.7 (worst frame 14.8 ms), median 14.00 ms, late 0.00%, RSX thread 13.81 ms/frame, new frames 72.0/s
+   575 frames over 8.0 s: avg 71.9 FPS, 1% low 69.6, 0.1% low 31.6 (worst frame 31.6 ms), median 14.00 ms, late 0.17%, RSX thread 13.85 ms/frame, new frames 71.9/s
+   => median of 3 windows: avg 72.0 FPS, 1% low 68.9, late frames 0.00%, RSX thread 13.84 ms/frame
+   eyes: residual at 0 36.30, best shift -232 (16.32) 
+BLUS30182 vrtest_pure_race vblank 90 scale 300%:
+   721 frames over 8.0 s: avg 90.0 FPS, 1% low 86.5, 0.1% low 74.1 (worst frame 13.5 ms), median 11.01 ms, late 0.00%, RSX thread 11.04 ms/frame, new frames 90.0/s
+   721 frames over 8.0 s: avg 90.0 FPS, 1% low 84.3, 0.1% low 83.2 (worst frame 12.0 ms), median 11.01 ms, late 0.00%, RSX thread 11.03 ms/frame, new frames 90.0/s
+   721 frames over 8.0 s: avg 90.0 FPS, 1% low 86.3, 0.1% low 83.2 (worst frame 12.0 ms), median 11.01 ms, late 0.00%, RSX thread 11.01 ms/frame, new frames 90.0/s
+   => median of 3 windows: avg 90.0 FPS, 1% low 86.3, late frames 0.00%, RSX thread 11.03 ms/frame
+   eyes: residual at 0 45.85, best shift -232 (17.05) 
+SUSTAINABLE BLUS30182 vrtest_pure_race: 90 Hz
+# BCAS20001 vrtest_rr7_boot: Ridge Racer 7 (released): no savestate; disc boot + key script; Rave City Riverfront countdown and tunnel run
+BCAS20001 vrtest_rr7_boot vblank 72 scale 300%:
+   575 frames over 8.0 s: avg 71.8 FPS, 1% low 66.9, 0.1% low 37.5 (worst frame 26.6 ms), median 13.92 ms, late 0.35%, RSX thread 11.92 ms/frame, new frames 59.8/s
+   575 frames over 8.0 s: avg 71.8 FPS, 1% low 67.7, 0.1% low 36.4 (worst frame 27.5 ms), median 13.95 ms, late 0.35%, RSX thread 13.00 ms/frame, new frames 67.0/s
+   => median of 2 windows: avg 71.8 FPS, 1% low 66.9, late frames 0.35%, RSX thread 11.92 ms/frame
+   eyes: residual at 0 23.22, best shift -236 (6.64) 
+BCAS20001 vrtest_rr7_boot vblank 90 scale 300%:
+   718 frames over 8.0 s: avg 89.6 FPS, 1% low 81.5, 0.1% low 42.1 (worst frame 23.7 ms), median 11.07 ms, late 0.42%, RSX thread 9.51 ms/frame, new frames 75.7/s
+   720 frames over 8.0 s: avg 89.9 FPS, 1% low 82.2, 0.1% low 43.9 (worst frame 22.8 ms), median 11.04 ms, late 0.14%, RSX thread 9.44 ms/frame, new frames 85.4/s
+   => median of 2 windows: avg 89.6 FPS, 1% low 81.5, late frames 0.14%, RSX thread 9.44 ms/frame
+   eyes: residual at 0 29.07, best shift -234 (6.29) 
+SUSTAINABLE BCAS20001 vrtest_rr7_boot: 90 Hz
+# BCES01743 vrtest_kz_trench: Killzone HD (released): Helghast Assault, opening trench (made with the 120 FPS patch)
+BCES01743 vrtest_kz_trench vblank 72 scale 300%:
+   720 frames over 8.0 s: avg 90.0 FPS, 1% low 58.1, 0.1% low 53.0 (worst frame 18.9 ms), median 11.04 ms, late 1.67%, RSX thread 4.51 ms/frame, new frames 90.0/s
+   720 frames over 8.0 s: avg 90.0 FPS, 1% low 59.8, 0.1% low 51.4 (worst frame 19.5 ms), median 11.04 ms, late 1.53%, RSX thread 4.32 ms/frame, new frames 90.0/s
+   => median of 2 windows: avg 90.0 FPS, 1% low 58.1, late frames 1.53%, RSX thread 4.32 ms/frame
+   eyes: residual at 0 11.89, best shift -258 (3.52) 
+SUSTAINABLE BCES01743 vrtest_kz_trench: none Hz
+# BLUS30721 vrtest_asura_space: Asura's Wrath: Episode 1, space battle (rail shooter)
+BLUS30721 vrtest_asura_space vblank 144 scale 300%:
+   576 frames over 8.0 s: avg 71.9 FPS, 1% low 68.8, 0.1% low 43.1 (worst frame 23.2 ms), median 13.99 ms, late 0.17%, RSX thread 13.79 ms/frame, new frames 71.9/s
+   577 frames over 8.0 s: avg 72.0 FPS, 1% low 68.8, 0.1% low 51.1 (worst frame 19.6 ms), median 13.99 ms, late 0.00%, RSX thread 13.78 ms/frame, new frames 72.0/s
+   => median of 2 windows: avg 71.9 FPS, 1% low 68.8, late frames 0.00%, RSX thread 13.78 ms/frame
+   eyes: residual at 0 28.52, best shift -230 (3.73) 
+BLUS30721 vrtest_asura_space vblank 180 scale 300%:
+   720 frames over 8.0 s: avg 89.9 FPS, 1% low 86.1, 0.1% low 49.8 (worst frame 20.1 ms), median 11.02 ms, late 0.14%, RSX thread 11.04 ms/frame, new frames 89.9/s
+   721 frames over 8.0 s: avg 90.0 FPS, 1% low 86.3, 0.1% low 83.1 (worst frame 12.0 ms), median 11.02 ms, late 0.00%, RSX thread 11.02 ms/frame, new frames 89.5/s
+   => median of 2 windows: avg 89.9 FPS, 1% low 86.1, late frames 0.00%, RSX thread 11.02 ms/frame
+   eyes: residual at 0 15.44, best shift -232 (4.08) 
+SUSTAINABLE BLUS30721 vrtest_asura_space: 90 Hz
+# BCUS98259 vrtest_ico_bridge: ICO (released): Old Bridge, from a save (Continue, file 1); frame-locked at 30 in VR, rates=30
+BCUS98259 vrtest_ico_bridge vblank 144 scale 300%:
+   240 frames over 8.0 s: avg 30.0 FPS, 1% low 29.6, 0.1% low 28.9 (worst frame 34.6 ms), median 33.41 ms, late 0.00%, RSX thread 33.08 ms/frame, new frames 24.7/s
+   240 frames over 8.0 s: avg 30.0 FPS, 1% low 29.4, 0.1% low 29.3 (worst frame 34.2 ms), median 33.42 ms, late 0.00%, RSX thread 33.10 ms/frame, new frames 26.2/s
+   240 frames over 8.0 s: avg 30.0 FPS, 1% low 29.4, 0.1% low 29.4 (worst frame 34.0 ms), median 33.34 ms, late 0.00%, RSX thread 33.12 ms/frame, new frames 27.4/s
+   => median of 3 windows: avg 30.0 FPS, 1% low 29.4, late frames 0.00%, RSX thread 33.10 ms/frame
+   eyes: residual at 0 37.09, best shift -250 (1.39) 
+SUSTAINABLE BCUS98259 vrtest_ico_bridge: none Hz
+# BCUS98282 vrtest_rc2_aranos_hall: Ratchet & Clank 2: Aranos, the machinery hall further in (made by Matt)
+BCUS98282 vrtest_rc2_aranos_hall vblank 72 scale 300%:
+   577 frames over 8.0 s: avg 72.0 FPS, 1% low 64.0, 0.1% low 62.7 (worst frame 15.9 ms), median 13.89 ms, late 0.00%, RSX thread 4.53 ms/frame, new frames 72.0/s
+   567 frames over 8.0 s: avg 70.6 FPS, 1% low 61.3, 0.1% low 6.1 (worst frame 164.6 ms), median 13.89 ms, late 0.18%, RSX thread 5.02 ms/frame, new frames 68.7/s
+   577 frames over 8.0 s: avg 72.1 FPS, 1% low 65.2, 0.1% low 50.2 (worst frame 19.9 ms), median 13.96 ms, late 0.00%, RSX thread 1.88 ms/frame, new frames 72.1/s
+   => median of 3 windows: avg 72.0 FPS, 1% low 64.0, late frames 0.00%, RSX thread 4.53 ms/frame
+   eyes: residual at 0 37.72, best shift -234 (4.42) 
+BCUS98282 vrtest_rc2_aranos_hall vblank 90 scale 300%:
+   721 frames over 8.0 s: avg 90.0 FPS, 1% low 75.9, 0.1% low 72.4 (worst frame 13.8 ms), median 11.08 ms, late 0.00%, RSX thread 4.52 ms/frame, new frames 90.0/s
+   708 frames over 8.0 s: avg 88.4 FPS, 1% low 76.2, 0.1% low 6.1 (worst frame 163.8 ms), median 11.06 ms, late 0.14%, RSX thread 4.68 ms/frame, new frames 86.4/s
+   721 frames over 8.0 s: avg 90.0 FPS, 1% low 80.0, 0.1% low 59.3 (worst frame 16.9 ms), median 11.03 ms, late 0.14%, RSX thread 1.83 ms/frame, new frames 90.0/s
+   => median of 3 windows: avg 90.0 FPS, 1% low 76.2, late frames 0.14%, RSX thread 4.52 ms/frame
+   eyes: residual at 0 38.43, best shift -234 (5.19) 
+SUSTAINABLE BCUS98282 vrtest_rc2_aranos_hall: 90 Hz
+# BLUS31460 vrtest_kh2_twilight: Kingdom Hearts II Final Mix (KH 2.5): Twilight Town, first control (unlocked frame rate patch)
+BLUS31460 vrtest_kh2_twilight vblank 72 scale 300%:
+   575 frames over 8.0 s: avg 71.9 FPS, 1% low 65.0, 0.1% low 43.8 (worst frame 22.8 ms), median 13.98 ms, late 0.17%, RSX thread 8.97 ms/frame, new frames 71.9/s
+   575 frames over 8.0 s: avg 71.9 FPS, 1% low 67.0, 0.1% low 43.9 (worst frame 22.8 ms), median 13.97 ms, late 0.17%, RSX thread 8.74 ms/frame, new frames 71.9/s
+   575 frames over 8.0 s: avg 71.8 FPS, 1% low 65.6, 0.1% low 37.1 (worst frame 27.0 ms), median 13.99 ms, late 0.35%, RSX thread 6.87 ms/frame, new frames 71.8/s
+   => median of 3 windows: avg 71.9 FPS, 1% low 65.6, late frames 0.17%, RSX thread 8.74 ms/frame
+   eyes: residual at 0 23.70, best shift -222 (5.52) 
+BLUS31460 vrtest_kh2_twilight vblank 90 scale 300%:
+   712 frames over 8.0 s: avg 88.9 FPS, 1% low 66.2, 0.1% low 54.0 (worst frame 18.5 ms), median 11.06 ms, late 0.42%, RSX thread 7.81 ms/frame, new frames 88.9/s
+   709 frames over 8.0 s: avg 88.5 FPS, 1% low 64.1, 0.1% low 48.5 (worst frame 20.6 ms), median 11.06 ms, late 0.56%, RSX thread 7.18 ms/frame, new frames 88.5/s
+   => median of 2 windows: avg 88.5 FPS, 1% low 64.1, late frames 0.42%, RSX thread 7.18 ms/frame
+   eyes: residual at 0 22.64, best shift -220 (4.87) 
+SUSTAINABLE BLUS31460 vrtest_kh2_twilight: 72 Hz
+# BLUS31212 vrtest_kh1_dive: Kingdom Hearts Final Mix (KH 1.5): Dive to the Heart, first control (unlocked frame rate patch)
+BLUS31212 vrtest_kh1_dive vblank 72 scale 300%:
+   577 frames over 8.0 s: avg 72.0 FPS, 1% low 67.4, 0.1% low 65.4 (worst frame 15.3 ms), median 13.92 ms, late 0.00%, RSX thread 1.97 ms/frame, new frames 72.0/s
+   577 frames over 8.0 s: avg 72.0 FPS, 1% low 67.4, 0.1% low 66.0 (worst frame 15.1 ms), median 13.95 ms, late 0.00%, RSX thread 2.40 ms/frame, new frames 65.0/s
+   => median of 2 windows: avg 72.0 FPS, 1% low 67.4, late frames 0.00%, RSX thread 1.97 ms/frame
+   eyes: residual at 0 39.30, best shift -226 (9.84) 
+BLUS31212 vrtest_kh1_dive vblank 90 scale 300%:
+   721 frames over 8.0 s: avg 90.0 FPS, 1% low 81.7, 0.1% low 76.5 (worst frame 13.1 ms), median 11.05 ms, late 0.00%, RSX thread 1.22 ms/frame, new frames 90.0/s
+   721 frames over 8.0 s: avg 90.0 FPS, 1% low 81.7, 0.1% low 80.5 (worst frame 12.4 ms), median 11.04 ms, late 0.00%, RSX thread 1.08 ms/frame, new frames 81.9/s
+   => median of 2 windows: avg 90.0 FPS, 1% low 81.7, late frames 0.00%, RSX thread 1.08 ms/frame
+   eyes: residual at 0 40.18, best shift -226 (8.72) 
+SUSTAINABLE BLUS31212 vrtest_kh1_dive: 90 Hz
+# BCUS98155 vrtest_mspr_race: MotorStorm: Pacific Rift: Free-Play, Kanaloa Bay, 11 AI, rally car, countdown "1" (holds R2)
+BCUS98155 vrtest_mspr_race vblank 72 scale 300%:
+   573 frames over 8.0 s: avg 71.6 FPS, 1% low 55.4, 0.1% low 46.3 (worst frame 21.6 ms), median 14.00 ms, late 0.17%, RSX thread 11.95 ms/frame, new frames 71.6/s
+   577 frames over 8.0 s: avg 72.0 FPS, 1% low 66.2, 0.1% low 65.1 (worst frame 15.4 ms), median 14.00 ms, late 0.00%, RSX thread 12.45 ms/frame, new frames 72.0/s
+   => median of 2 windows: avg 71.6 FPS, 1% low 55.4, late frames 0.00%, RSX thread 11.95 ms/frame
+   eyes: residual at 0 36.49, best shift -238 (19.27) 
+BCUS98155 vrtest_mspr_race vblank 90 scale 300%:
+   714 frames over 8.0 s: avg 89.1 FPS, 1% low 66.8, 0.1% low 61.5 (worst frame 16.3 ms), median 11.04 ms, late 0.00%, RSX thread 8.60 ms/frame, new frames 89.1/s
+   720 frames over 8.0 s: avg 90.0 FPS, 1% low 73.3, 0.1% low 58.6 (worst frame 17.1 ms), median 11.01 ms, late 0.14%, RSX thread 8.51 ms/frame, new frames 90.0/s
+   719 frames over 8.0 s: avg 89.9 FPS, 1% low 76.2, 0.1% low 47.5 (worst frame 21.0 ms), median 11.01 ms, late 0.14%, RSX thread 9.58 ms/frame, new frames 89.9/s
+   => median of 3 windows: avg 89.9 FPS, 1% low 73.3, late frames 0.14%, RSX thread 8.60 ms/frame
+   eyes: residual at 0 33.23, best shift -238 (22.70) 
+SUSTAINABLE BCUS98155 vrtest_mspr_race: 90 Hz
+# NPUA80068 vrtest_ssd_lave: Super Stardust HD: Lave, Arcade (Easy), level start; fires in circles (vrtest_boot/vrtest_ssd_lave.walk)
+NPUA80068 vrtest_ssd_lave vblank 72 scale 300%:
+   576 frames over 8.0 s: avg 72.0 FPS, 1% low 65.9, 0.1% low 62.5 (worst frame 16.0 ms), median 13.92 ms, late 0.00%, RSX thread 1.21 ms/frame, new frames 67.6/s
+   577 frames over 8.0 s: avg 72.0 FPS, 1% low 65.7, 0.1% low 62.6 (worst frame 16.0 ms), median 13.90 ms, late 0.00%, RSX thread 1.26 ms/frame, new frames 72.0/s
+   577 frames over 8.0 s: avg 72.0 FPS, 1% low 65.0, 0.1% low 49.8 (worst frame 20.1 ms), median 13.91 ms, late 0.00%, RSX thread 1.36 ms/frame, new frames 51.7/s
+   => median of 3 windows: avg 72.0 FPS, 1% low 65.7, late frames 0.00%, RSX thread 1.26 ms/frame
+   eyes: residual at 0 6.19, best shift -232 (1.60) 
+NPUA80068 vrtest_ssd_lave vblank 90 scale 300%:
+   721 frames over 8.0 s: avg 90.0 FPS, 1% low 79.6, 0.1% low 78.3 (worst frame 12.8 ms), median 11.11 ms, late 0.00%, RSX thread 1.23 ms/frame, new frames 90.0/s
+   721 frames over 8.0 s: avg 90.0 FPS, 1% low 78.6, 0.1% low 76.9 (worst frame 13.0 ms), median 11.07 ms, late 0.00%, RSX thread 1.21 ms/frame, new frames 90.0/s
+   720 frames over 8.0 s: avg 90.0 FPS, 1% low 78.9, 0.1% low 59.8 (worst frame 16.7 ms), median 11.10 ms, late 0.14%, RSX thread 1.29 ms/frame, new frames 90.0/s
+   => median of 3 windows: avg 90.0 FPS, 1% low 78.9, late frames 0.00%, RSX thread 1.23 ms/frame
+   eyes: residual at 0 34.47, best shift -232 (5.25) 
+SUSTAINABLE NPUA80068 vrtest_ssd_lave: 90 Hz
+# BLUS30839 vrtest_sonic_race: Sonic & All-Stars Racing Transformed: Ocean View, mid-lap 1 (holds R2; Unlocked frame rate + Wider view 3.0)
+BLUS30839 vrtest_sonic_race vblank 72 scale 300%:
+   577 frames over 8.0 s: avg 72.0 FPS, 1% low 68.6, 0.1% low 65.2 (worst frame 15.3 ms), median 14.00 ms, late 0.00%, RSX thread 7.19 ms/frame, new frames 72.0/s
+   576 frames over 8.0 s: avg 72.0 FPS, 1% low 68.9, 0.1% low 67.5 (worst frame 14.8 ms), median 14.00 ms, late 0.00%, RSX thread 7.71 ms/frame, new frames 72.0/s
+   576 frames over 8.0 s: avg 72.0 FPS, 1% low 68.9, 0.1% low 52.0 (worst frame 19.2 ms), median 14.00 ms, late 0.00%, RSX thread 8.18 ms/frame, new frames 72.0/s
+   => median of 3 windows: avg 72.0 FPS, 1% low 68.9, late frames 0.00%, RSX thread 7.71 ms/frame
+   eyes: residual at 0 42.34, best shift -236 (8.87) 
+BLUS30839 vrtest_sonic_race vblank 90 scale 300%:
+   721 frames over 8.0 s: avg 90.0 FPS, 1% low 86.6, 0.1% low 83.3 (worst frame 12.0 ms), median 11.01 ms, late 0.00%, RSX thread 8.85 ms/frame, new frames 90.0/s
+   721 frames over 8.0 s: avg 90.0 FPS, 1% low 86.7, 0.1% low 83.3 (worst frame 12.0 ms), median 11.01 ms, late 0.00%, RSX thread 8.93 ms/frame, new frames 90.0/s
+   720 frames over 8.0 s: avg 90.0 FPS, 1% low 83.5, 0.1% low 65.4 (worst frame 15.3 ms), median 11.01 ms, late 0.00%, RSX thread 8.68 ms/frame, new frames 90.0/s
+   => median of 3 windows: avg 90.0 FPS, 1% low 86.6, late frames 0.00%, RSX thread 8.85 ms/frame
+   eyes: residual at 0 43.92, best shift -236 (8.40) 
+SUSTAINABLE BLUS30839 vrtest_sonic_race: 90 Hz
+# BLUS30058 vrtest_dwg_odessa: Dynasty Warriors: GUNDAM: Official Mode, Mission 01 (Odessa), battle start (Frame rate follows VR + Wider view 3.0)
+BLUS30058 vrtest_dwg_odessa vblank 72 scale 300%:
+   577 frames over 8.0 s: avg 72.0 FPS, 1% low 64.9, 0.1% low 62.5 (worst frame 16.0 ms), median 13.88 ms, late 0.00%, RSX thread 3.55 ms/frame, new frames 72.0/s
+   577 frames over 8.0 s: avg 72.0 FPS, 1% low 66.3, 0.1% low 62.6 (worst frame 16.0 ms), median 13.89 ms, late 0.00%, RSX thread 3.67 ms/frame, new frames 72.0/s
+   577 frames over 8.0 s: avg 72.0 FPS, 1% low 66.8, 0.1% low 64.7 (worst frame 15.5 ms), median 13.90 ms, late 0.00%, RSX thread 3.67 ms/frame, new frames 72.0/s
+   => median of 3 windows: avg 72.0 FPS, 1% low 66.3, late frames 0.00%, RSX thread 3.67 ms/frame
+   eyes: residual at 0 21.16, best shift -244 (9.64) 
+BLUS30058 vrtest_dwg_odessa vblank 90 scale 300%:
+   720 frames over 8.0 s: avg 90.0 FPS, 1% low 80.2, 0.1% low 74.4 (worst frame 13.4 ms), median 11.08 ms, late 0.00%, RSX thread 3.51 ms/frame, new frames 90.0/s
+   720 frames over 8.0 s: avg 90.0 FPS, 1% low 80.9, 0.1% low 76.9 (worst frame 13.0 ms), median 11.10 ms, late 0.00%, RSX thread 3.57 ms/frame, new frames 90.0/s
+   => median of 2 windows: avg 90.0 FPS, 1% low 80.2, late frames 0.00%, RSX thread 3.51 ms/frame
+   eyes: residual at 0 19.59, best shift -244 (6.60) 
+SUSTAINABLE BLUS30058 vrtest_dwg_odessa: 90 Hz
+# BLUS30268 vrtest_xmen_jungle: X-Men Origins: Wolverine: jungle, first control after the intro (Unlocked frame rate (VR); 72 Hz = Vblank 144) rates=72
+BLUS30268 vrtest_xmen_jungle vblank 144 scale 300%:
+   544 frames over 8.0 s: avg 68.0 FPS, 1% low 57.4, 0.1% low 53.4 (worst frame 18.7 ms), median 14.61 ms, late 0.00%, RSX thread 14.58 ms/frame, new frames 63.8/s
+   530 frames over 8.0 s: avg 66.2 FPS, 1% low 55.9, 0.1% low 52.9 (worst frame 18.9 ms), median 14.99 ms, late 0.00%, RSX thread 14.98 ms/frame, new frames 62.0/s
+   => median of 2 windows: avg 66.2 FPS, 1% low 55.9, late frames 0.00%, RSX thread 14.58 ms/frame
+   eyes: residual at 0 58.98, best shift -260 (21.96) 
+SUSTAINABLE BLUS30268 vrtest_xmen_jungle: none Hz
+# BCUS98116 vrtest_kz2_carrier: Killzone 2: Campaign > Continue, the carrier walk (Write/Read Color Buffers in the game config)
+BCUS98116 vrtest_kz2_carrier vblank 144 scale 300%:
+   577 frames over 8.0 s: avg 72.0 FPS, 1% low 63.7, 0.1% low 57.4 (worst frame 17.4 ms), median 13.94 ms, late 0.00%, RSX thread 13.74 ms/frame, new frames 72.0/s
+   577 frames over 8.0 s: avg 72.0 FPS, 1% low 62.5, 0.1% low 60.3 (worst frame 16.6 ms), median 13.91 ms, late 0.00%, RSX thread 13.72 ms/frame, new frames 72.0/s
+   => median of 2 windows: avg 72.0 FPS, 1% low 62.5, late frames 0.00%, RSX thread 13.72 ms/frame
+   eyes: residual at 0 36.55, best shift -240 (25.68) 
+BCUS98116 vrtest_kz2_carrier vblank 180 scale 300%:
+   677 frames over 8.0 s: avg 84.6 FPS, 1% low 72.9, 0.1% low 64.0 (worst frame 15.6 ms), median 11.78 ms, late 0.00%, RSX thread 11.69 ms/frame, new frames 84.6/s
+   677 frames over 8.0 s: avg 84.6 FPS, 1% low 72.5, 0.1% low 68.6 (worst frame 14.6 ms), median 11.77 ms, late 0.00%, RSX thread 11.71 ms/frame, new frames 84.6/s
+   675 frames over 8.0 s: avg 84.3 FPS, 1% low 72.2, 0.1% low 62.0 (worst frame 16.1 ms), median 11.82 ms, late 0.00%, RSX thread 11.74 ms/frame, new frames 74.4/s
+   => median of 3 windows: avg 84.6 FPS, 1% low 72.5, late frames 0.00%, RSX thread 11.71 ms/frame
+   eyes: residual at 0 38.09, best shift -238 (27.11) 
+SUSTAINABLE BCUS98116 vrtest_kz2_carrier: 72 Hz
+# BLUS30068 vrtest_segarally_race: SEGA Rally Revo: Safari, race start (holds R2; Unlocked frame rate + Wider view 2.0)
+BLUS30068 vrtest_segarally_race vblank 72 scale 300%:
+   577 frames over 8.0 s: avg 72.0 FPS, 1% low 68.9, 0.1% low 68.3 (worst frame 14.6 ms), median 13.99 ms, late 0.00%, RSX thread 13.73 ms/frame, new frames 71.4/s
+   576 frames over 8.0 s: avg 72.0 FPS, 1% low 68.9, 0.1% low 68.2 (worst frame 14.7 ms), median 14.00 ms, late 0.00%, RSX thread 13.71 ms/frame, new frames 72.0/s
+   576 frames over 8.0 s: avg 72.0 FPS, 1% low 57.3, 0.1% low 52.3 (worst frame 19.1 ms), median 13.98 ms, late 0.00%, RSX thread 9.81 ms/frame, new frames 72.0/s
+   => median of 3 windows: avg 72.0 FPS, 1% low 68.9, late frames 0.00%, RSX thread 13.71 ms/frame
+   eyes: residual at 0 22.30, best shift -242 (6.23) 
+BLUS30068 vrtest_segarally_race vblank 90 scale 300%:
+   721 frames over 8.0 s: avg 90.0 FPS, 1% low 83.4, 0.1% low 58.2 (worst frame 17.2 ms), median 11.01 ms, late 0.14%, RSX thread 8.18 ms/frame, new frames 90.0/s
+   718 frames over 8.0 s: avg 89.7 FPS, 1% low 68.4, 0.1% low 65.0 (worst frame 15.4 ms), median 11.02 ms, late 0.00%, RSX thread 7.37 ms/frame, new frames 89.7/s
+   => median of 2 windows: avg 89.7 FPS, 1% low 68.4, late frames 0.00%, RSX thread 7.37 ms/frame
+   eyes: residual at 0 21.76, best shift -242 (5.64) 
+SUSTAINABLE BLUS30068 vrtest_segarally_race: 90 Hz
+# BLUS30415 vrtest_dao_castle: Dragon Age: Origins: Castle Cousland hall after the opening (Wider view 2.0)
+BLUS30415 vrtest_dao_castle vblank 72 scale 300%:
+   577 frames over 8.0 s: avg 72.0 FPS, 1% low 58.7, 0.1% low 57.5 (worst frame 17.4 ms), median 13.83 ms, late 0.00%, RSX thread 2.76 ms/frame, new frames 71.1/s
+   577 frames over 8.0 s: avg 72.0 FPS, 1% low 59.8, 0.1% low 58.5 (worst frame 17.1 ms), median 13.84 ms, late 0.00%, RSX thread 2.72 ms/frame, new frames 70.8/s
+   => median of 2 windows: avg 72.0 FPS, 1% low 58.7, late frames 0.00%, RSX thread 2.72 ms/frame
+   eyes: residual at 0 37.90, best shift -234 (8.15) 
+BLUS30415 vrtest_dao_castle vblank 90 scale 300%:
+   721 frames over 8.0 s: avg 90.0 FPS, 1% low 72.4, 0.1% low 67.5 (worst frame 14.8 ms), median 10.99 ms, late 0.00%, RSX thread 2.71 ms/frame, new frames 88.9/s
+   720 frames over 8.0 s: avg 90.0 FPS, 1% low 71.9, 0.1% low 47.7 (worst frame 21.0 ms), median 11.04 ms, late 0.14%, RSX thread 2.73 ms/frame, new frames 88.8/s
+   => median of 2 windows: avg 90.0 FPS, 1% low 71.9, late frames 0.00%, RSX thread 2.71 ms/frame
+   eyes: residual at 0 37.80, best shift -234 (8.07) 
+SUSTAINABLE BLUS30415 vrtest_dao_castle: 90 Hz
+# BLUS30645 vrtest_da2_fight: Dragon Age II: prologue, first fight (no input)
+BLUS30645 vrtest_da2_fight vblank 72 scale 300%:
+   541 frames over 8.0 s: avg 67.5 FPS, 1% low 35.7, 0.1% low 35.1 (worst frame 28.5 ms), median 14.00 ms, late 6.65%, RSX thread 13.61 ms/frame, new frames 54.2/s
+   541 frames over 8.0 s: avg 67.5 FPS, 1% low 35.7, 0.1% low 23.8 (worst frame 42.0 ms), median 14.00 ms, late 6.47%, RSX thread 13.62 ms/frame, new frames 51.5/s
+   553 frames over 8.0 s: avg 69.0 FPS, 1% low 35.7, 0.1% low 35.5 (worst frame 28.1 ms), median 14.00 ms, late 4.34%, RSX thread 13.29 ms/frame, new frames 47.3/s
+   => median of 3 windows: avg 67.5 FPS, 1% low 35.7, late frames 6.47%, RSX thread 13.61 ms/frame
+   eyes: residual at 0 38.91, best shift -238 (16.47) 
+SUSTAINABLE BLUS30645 vrtest_da2_fight: none Hz
+# NPUA80083 vrtest_flower_l1: Flower: level 1 field (holds X: flies; Unlocked frame rate)
+NPUA80083 vrtest_flower_l1 vblank 72 scale 300%:
+   576 frames over 8.0 s: avg 72.0 FPS, 1% low 68.9, 0.1% low 67.4 (worst frame 14.8 ms), median 14.00 ms, late 0.00%, RSX thread 12.17 ms/frame, new frames 72.0/s
+   577 frames over 8.0 s: avg 72.0 FPS, 1% low 69.1, 0.1% low 67.3 (worst frame 14.9 ms), median 14.00 ms, late 0.00%, RSX thread 13.21 ms/frame, new frames 72.0/s
+   576 frames over 8.0 s: avg 72.0 FPS, 1% low 68.3, 0.1% low 66.0 (worst frame 15.1 ms), median 14.00 ms, late 0.00%, RSX thread 13.49 ms/frame, new frames 72.0/s
+   => median of 3 windows: avg 72.0 FPS, 1% low 68.9, late frames 0.00%, RSX thread 13.21 ms/frame
+   eyes: residual at 0 23.79, best shift -244 (4.97) 
+NPUA80083 vrtest_flower_l1 vblank 90 scale 300%:
+   721 frames over 8.0 s: avg 90.0 FPS, 1% low 83.9, 0.1% low 82.6 (worst frame 12.1 ms), median 11.01 ms, late 0.00%, RSX thread 10.60 ms/frame, new frames 90.0/s
+   720 frames over 8.0 s: avg 90.0 FPS, 1% low 84.1, 0.1% low 82.5 (worst frame 12.1 ms), median 11.01 ms, late 0.00%, RSX thread 10.44 ms/frame, new frames 90.0/s
+   721 frames over 8.0 s: avg 90.0 FPS, 1% low 84.7, 0.1% low 82.5 (worst frame 12.1 ms), median 11.01 ms, late 0.00%, RSX thread 10.47 ms/frame, new frames 90.0/s
+   => median of 3 windows: avg 90.0 FPS, 1% low 84.1, late frames 0.00%, RSX thread 10.47 ms/frame
+   eyes: residual at 0 36.91, best shift -248 (8.44) 
+SUSTAINABLE NPUA80083 vrtest_flower_l1: 90 Hz
+# NPUA70218 vrtest_journey_dune: Journey: first dune (holds forward; SPU MLAA patched in the state; SPU Block Size Mega in the game config)
+NPUA70218 vrtest_journey_dune vblank 72 scale 300%:
+   576 frames over 8.0 s: avg 71.9 FPS, 1% low 67.8, 0.1% low 29.4 (worst frame 34.0 ms), median 14.00 ms, late 0.17%, RSX thread 7.54 ms/frame, new frames 71.9/s
+   576 frames over 8.0 s: avg 72.0 FPS, 1% low 68.0, 0.1% low 64.2 (worst frame 15.6 ms), median 14.00 ms, late 0.00%, RSX thread 7.55 ms/frame, new frames 72.0/s
+   576 frames over 8.0 s: avg 71.9 FPS, 1% low 65.9, 0.1% low 38.2 (worst frame 26.2 ms), median 14.00 ms, late 0.35%, RSX thread 11.31 ms/frame, new frames 71.9/s
+   => median of 3 windows: avg 71.9 FPS, 1% low 67.8, late frames 0.17%, RSX thread 7.55 ms/frame
+   eyes: residual at 0 4.41, best shift -246 (3.93) 
+NPUA70218 vrtest_journey_dune vblank 90 scale 300%:
+   707 frames over 8.0 s: avg 88.4 FPS, 1% low 73.0, 0.1% low 69.0 (worst frame 14.5 ms), median 11.16 ms, late 0.00%, RSX thread 10.74 ms/frame, new frames 88.4/s
+   707 frames over 8.0 s: avg 88.4 FPS, 1% low 75.0, 0.1% low 71.0 (worst frame 14.1 ms), median 11.25 ms, late 0.00%, RSX thread 10.89 ms/frame, new frames 88.4/s
+   704 frames over 8.0 s: avg 87.9 FPS, 1% low 71.6, 0.1% low 67.0 (worst frame 14.9 ms), median 11.22 ms, late 0.00%, RSX thread 10.85 ms/frame, new frames 87.9/s
+   => median of 3 windows: avg 88.4 FPS, 1% low 73.0, late frames 0.00%, RSX thread 10.85 ms/frame
+   eyes: residual at 0 4.33, best shift -246 (3.95) 
+SUSTAINABLE NPUA70218 vrtest_journey_dune: 72 Hz
+# BLUS30415 vrtest_dao_forest: Dragon Age: Origins: Dalish forest path, gameplay with HUD (after the elves conversation)
+BLUS30415 vrtest_dao_forest vblank 72 scale 300%:
+   576 frames over 8.0 s: avg 72.0 FPS, 1% low 63.2, 0.1% low 60.5 (worst frame 16.5 ms), median 13.94 ms, late 0.00%, RSX thread 2.14 ms/frame, new frames 71.1/s
+   577 frames over 8.0 s: avg 72.0 FPS, 1% low 63.5, 0.1% low 62.1 (worst frame 16.1 ms), median 13.94 ms, late 0.00%, RSX thread 2.09 ms/frame, new frames 70.1/s
+   => median of 2 windows: avg 72.0 FPS, 1% low 63.2, late frames 0.00%, RSX thread 2.09 ms/frame
+   eyes: residual at 0 28.71, best shift -232 (10.32) 
+BLUS30415 vrtest_dao_forest vblank 90 scale 300%:
+   720 frames over 8.0 s: avg 90.0 FPS, 1% low 76.8, 0.1% low 72.2 (worst frame 13.9 ms), median 11.10 ms, late 0.00%, RSX thread 2.12 ms/frame, new frames 88.0/s
+   721 frames over 8.0 s: avg 90.0 FPS, 1% low 76.0, 0.1% low 72.8 (worst frame 13.7 ms), median 11.11 ms, late 0.00%, RSX thread 2.11 ms/frame, new frames 87.9/s
+   720 frames over 8.0 s: avg 90.0 FPS, 1% low 74.6, 0.1% low 61.1 (worst frame 16.4 ms), median 11.08 ms, late 0.00%, RSX thread 2.12 ms/frame, new frames 48.7/s
+   => median of 3 windows: avg 90.0 FPS, 1% low 76.0, late frames 0.00%, RSX thread 2.12 ms/frame
+   eyes: residual at 0 28.51, best shift -232 (9.61) 
+SUSTAINABLE BLUS30415 vrtest_dao_forest: 90 Hz
+# NPUA80001 vrtest_flow_title: flOw: title playfield (tilts and boosts; walk script)
+NPUA80001 vrtest_flow_title vblank 72 scale 300%:
+   577 frames over 8.0 s: avg 72.0 FPS, 1% low 68.3, 0.1% low 65.7 (worst frame 15.2 ms), median 13.92 ms, late 0.00%, RSX thread 0.54 ms/frame, new frames 72.0/s
+   577 frames over 8.0 s: avg 72.0 FPS, 1% low 68.3, 0.1% low 66.7 (worst frame 15.0 ms), median 13.93 ms, late 0.00%, RSX thread 0.52 ms/frame, new frames 72.0/s
+   577 frames over 8.0 s: avg 72.0 FPS, 1% low 67.7, 0.1% low 61.1 (worst frame 16.4 ms), median 13.93 ms, late 0.00%, RSX thread 0.52 ms/frame, new frames 72.0/s
+   => median of 3 windows: avg 72.0 FPS, 1% low 68.3, late frames 0.00%, RSX thread 0.52 ms/frame
+   eyes: residual at 0 12.79, best shift -230 (0.78) 
+NPUA80001 vrtest_flow_title vblank 90 scale 300%:
+   721 frames over 8.0 s: avg 90.0 FPS, 1% low 83.3, 0.1% low 79.3 (worst frame 12.6 ms), median 11.05 ms, late 0.00%, RSX thread 0.51 ms/frame, new frames 90.0/s
+   720 frames over 8.0 s: avg 90.0 FPS, 1% low 83.3, 0.1% low 81.4 (worst frame 12.3 ms), median 11.04 ms, late 0.00%, RSX thread 0.52 ms/frame, new frames 90.0/s
+   720 frames over 8.0 s: avg 90.0 FPS, 1% low 82.9, 0.1% low 78.6 (worst frame 12.7 ms), median 11.06 ms, late 0.00%, RSX thread 0.51 ms/frame, new frames 90.0/s
+   => median of 3 windows: avg 90.0 FPS, 1% low 83.3, late frames 0.00%, RSX thread 0.51 ms/frame
+   eyes: residual at 0 13.06, best shift -230 (9.33) 
+SUSTAINABLE NPUA80001 vrtest_flow_title: 90 Hz
+# BLUS30415 vrtest_dao_wolves: Dragon Age: Origins: first wolf fight in the forest (loads on the combat tutorial; no input)
+BLUS30415 vrtest_dao_wolves vblank 72 scale 300%:
+   577 frames over 8.0 s: avg 72.0 FPS, 1% low 60.2, 0.1% low 58.5 (worst frame 17.1 ms), median 13.85 ms, late 0.00%, RSX thread 3.18 ms/frame, new frames 0.0/s
+   577 frames over 8.0 s: avg 72.0 FPS, 1% low 61.2, 0.1% low 59.6 (worst frame 16.8 ms), median 13.85 ms, late 0.00%, RSX thread 3.16 ms/frame, new frames 0.0/s
+   => median of 2 windows: avg 72.0 FPS, 1% low 60.2, late frames 0.00%, RSX thread 3.16 ms/frame
+   eyes: residual at 0 53.18, best shift -232 (15.13) 
+BLUS30415 vrtest_dao_wolves vblank 90 scale 300%:
+   720 frames over 8.0 s: avg 90.0 FPS, 1% low 72.4, 0.1% low 69.5 (worst frame 14.4 ms), median 11.07 ms, late 0.00%, RSX thread 3.16 ms/frame, new frames 0.0/s
+   721 frames over 8.0 s: avg 90.0 FPS, 1% low 72.4, 0.1% low 67.7 (worst frame 14.8 ms), median 11.03 ms, late 0.00%, RSX thread 3.17 ms/frame, new frames 0.0/s
+   => median of 2 windows: avg 90.0 FPS, 1% low 72.4, late frames 0.00%, RSX thread 3.16 ms/frame
+   eyes: residual at 0 53.19, best shift -232 (15.13) 
+SUSTAINABLE BLUS30415 vrtest_dao_wolves: 90 Hz
+DONE /f/rpsc3/source/plans/evidence/vrtest/2026-10-09-2330-gt5night

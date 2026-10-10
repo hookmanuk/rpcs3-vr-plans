@@ -564,3 +564,11 @@ VP analysis 2.3 with heap allocations), submits 4.2, blits + inline transfers ~6
 - **Config, with Matt's go-ahead: `RSX FIFO Fetch Accuracy: Fast`** set in `config_BCUS98114.yml` (was Atomic).
   Alternating A/B: 13.92/13.98 vs 14.37/14.24 ms, no FIFO errors in 2 runs. `Disable FIFO Reordering: true`:
   14.11/14.53 vs 14.37-14.47, inconclusive, left as is. Now 13.9-14.0 ms, 71 FPS on 2_17.
+- **Regression 2026-10-09-2330-gt5night** (all 42 states, 72 and 90 Hz, `tools/re/regcompare.py` against
+  2026-10-04-1837): no state worse; Jak 2, Kingdom Hearts 2 and Killzone 2 carrier none -> 72, SEGA Rally none -> 90,
+  Jak 3 51 -> 61 FPS, X-Men 54 -> 66, DW6E RSX 11 -> 3.5 ms. SotC stalled once at boot (`vk::wait_for_event has timed
+  out` from 11 s, the known intermittent boot stall; passed on the retry); R&C 1 one boot without stats, passed on
+  retry. Killzone HD trench 1.5% late at 72 (earlier runs 0.3-0.8%): A/B default / `RPCS3_TEX_EDGE=0` /
+  `RPCS3_VR_VP_CACHE=0` 1.11 / 0.97 / 0.69%: noise around the threshold, not one change. ICO "none" only because the
+  run's RATES override skipped its 30 Hz tag. The temporary keyboard pad `input_configs/BCUS98114` a run left behind was
+  moved to the session scratch folder.
