@@ -604,3 +604,5 @@ VP analysis 2.3 with heap allocations), submits 4.2, blits + inline transfers ~6
   distant-car tiers) follow new VR settings Reduced-Rate Reflections, Reduced-Rate Mirror, Simpler Distant Cars, on by
   default and live; the profile tags the rules with `"option"`. Busy scene: all on 13.2-14.1 ms, all off 16.7 ms.
   Quick regression (16 states) and push descriptors pushed: `evidence/vrtest/2026-10-10-pushdesc-check/`.
+- Distant cars changed at Matt's request (checked in game): the nearest car always complete (`full_nearest` 1), other
+  cars full under 30 m, 85% from 30 m, 70% from 45 m (was 20 / 40 m).
