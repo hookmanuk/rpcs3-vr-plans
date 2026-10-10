@@ -790,7 +790,9 @@ Notes: `profiles/BLUS30268-notes.md`. Profile and patch file in `vr-non-working/
   first track (Canyon), start: the race runs at ~50 FPS. Needs optimising to hold 72.
 - **Open (Matt, headset, 2026-10-10): water drawn as horizontal lines until close** in the same race. Matt suspects
   the same cause as Sonic's distant horizontal banding (`profiles/BLUS30839-notes.md`, "horizontal lines" and
-  "horizontal banding still there").
+  "horizontal banding still there"). Lead: Sonic's lines appeared only with its Wider view widening the camera
+  (at 3.0 and 2.0, gone at 1.0), and SEGA Rally's Wider view widens it too (head-driven up to 2.5); the wider view
+  also cost SEGA Rally frame rate on 2026-10-04 (2.5: 68 FPS, 1.0: 71.9). Check both issues with the scale held at 1.0.
 
 Notes: `profiles/BLUS30068-notes.md`. Patch `BLUS30068_patch.yml`: *Unlocked frame rate (follows Vblank Rate)* (the
 flip passes vsync interval 1 instead of 2) and *Wider view (VR culling)* (FOV x2.5 in the projection builder, cave in
