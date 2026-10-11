@@ -25,6 +25,41 @@ place (`RPCS3_DLSS_STANDIN`): each presented eye is exactly its own rendered eye
 1.25 to 3, no validation errors from it). **Not yet tested: NGX evaluating per eye on an NVIDIA GPU, and the copy
 into a real OpenXR session's eye buffers** (the fake headset has no session; the published size is the outputs').
 
+## On openxr; HUD outside DLSS; live settings (2026-10-11 evening)
+
+Merged into `openxr` (`8cce37789`). Builds need `DLSS_SDK` set (see `1-structure.md`); without it the build
+has no NGX (debug views only).
+
+**Matt's headset report:** Sonic with DLSS Performance looked anti-aliased but "all wavy": the pause screen
+never steady, splash logos jittering, world edges jittering. In the simulator, with the head still, the output
+barely moved (M under 0.06 output px between frames); the dev library's accumulation mode resolved sharply and
+its jitter plot was valid (signs, size, 32 phases), and the motion vectors were 0 on still frames. What did not
+hold: (1) the HUD, menus and logos were drawn without jitter (only camera draws were jittered; the pause panel
+and text did not move at all with 8x jitter) and took the motion of the world behind them, which is wrong for
+a box 2 m away when the head moves (`RPCS3_DLSS=warp`: the world cancels under a head turn, the panel does not);
+(2) settle tests after 5 s of headset-like micro-motion (+-0.3 deg, +-3 mm) left 2-6x the error of a still head
+(world and panel), with DLSS off near 0.
+
+**Fix: the HUD never goes through DLSS (VR).** Before the frame's first HUD-box draw into a display buffer the
+eye images are copied (`dlss_context::hud_snapshot`); DLSS takes that copy, and the HUD is put back on its
+output: `final + (1 - a)(out - pre)`, `a` the HUD's coverage estimated from how much it changed the pixel
+(`RPCS3_DLSS_HUD_GAIN`, default 20). `RPCS3_DLSS_HUD_IN=1` puts the HUD back through DLSS. Matt (headset): "a
+lot better". Tried and reverted: jittering the HUD (the eye-block flag, then the HUD-box matrix; no gain), the
+jitter through the draw's viewport, a jitter lag, depth inverted, auto-exposure off.
+
+**Settings are live.** VR / `DLSS (test)` and `DLSS Model (test)` (presets Default, E, F, J, K, L, M) are
+dropdowns in the VR settings tab and the home menu's VR page; the context reads them at each flip (history
+restarts, features made again for a new model, Off frees them). With the SDK the context and NGX's Vulkan
+extensions exist from boot; Off does nothing per draw. `RPCS3_DLSS` / `RPCS3_DLSS_PRESET` still fix them.
+
+**Preset stillness** (Sonic pause, still head, 225% Performance, mean frame-to-frame change in grey levels):
+M (Performance default) 0.38, L 0.35, K 0.20, E 0.20, J 0.11; DLSS off 0.005.
+
+**Open:** the world under micro-motion. `RPCS3_DLSS=warp` (red: this frame's vectors on this pair; green: on the
+pair before; blue: the previous vectors on this pair) is built for the frame-timing test: under a constant yaw
+the vectors cancel ~80% of the motion, under micro-motion none of it, which fits vectors a frame off the images.
+Not run yet. Flat play: the HUD still goes through DLSS (no HUD-box classification without a VR profile).
+
 ## Working on an NVIDIA GPU (2026-10-11, Windows, RTX 5090)
 
 **Status: DLSS runs.** NGX (SDK and runtime 310.9.1) starts on the RTX 5090; DLAA, Quality and the other modes evaluate in
