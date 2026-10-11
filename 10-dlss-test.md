@@ -1,9 +1,14 @@
 # DLSS test: motion vectors and DLSS for PS3 games (Gran Turismo 5 first)
 
 An experiment, not a release feature. Branch `ccr-d7a07b1e-7eh4fp` of hookmanuk/rpcs3, on top of `openxr`
-(`0b51d79`). Written 2026-10-10. **Not yet run on hardware**: the code compiles (with and without the DLSS SDK) and
-its shaders validate with glslang, but nothing has been tested in a game. Flat (2D) only: with VR stereo rendering
-the motion path stays off.
+(`0b51d79`). Written 2026-10-10, self-tested 2026-10-11. Flat (2D) only: with VR stereo rendering the motion path
+stays off.
+
+**Status.** The motion vectors, depth, jitter and MSAA paths are verified numerically by a headless self-test (below)
+on Linux with Mesa's software Vulkan driver: every probe within 0.75 px, no new Vulkan validation errors. The NGX
+calls compile and link against the SDK, and fail cleanly without an NVIDIA GPU. **Not yet tested: GT5 itself, and
+DLSS evaluating on an NVIDIA GPU** (no such GPU or the game in the cloud). The self-test found five bugs that
+would have shown up in GT5 as missing or wrong motion; they are fixed (see "Self-test").
 
 ## What it does
 
@@ -35,7 +40,8 @@ PS3 games have no motion vectors, so the renderer makes them from the matrices t
 
 Files: `rpcs3/Emu/RSX/VK/VKDLSS.h` (overview and all settings), `VKDLSS.cpp`, `VKGSRenderDLSS.cpp`; one-line hooks
 in `VKGSRender.cpp`, `VKDraw.cpp`, `VKPresent.cpp`, `VKRenderPass.cpp`, `VKVertexProgram.cpp`,
-`VKFragmentProgram.cpp`, `vkutils/instance.cpp`, `vkutils/device.cpp`, `Capture/rsx_vr_hooks.*`.
+`VKFragmentProgram.cpp`, `vkutils/instance.cpp`, `vkutils/device.cpp`, `Capture/rsx_vr_hooks.*`. Self-test:
+`rpcs3/dlss_selftest/` (Linux, CMake option `BUILD_DLSS_SELFTEST`).
 
 ## Building
 
@@ -59,15 +65,19 @@ Everything is set by environment variables, read once at start-up:
 
 | Variable | Values |
 |---|---|
-| `RPCS3_DLSS` | `motion` (show the motion vectors), `depth` (show the depth), `jitter` (jitter only), `dlaa`, `quality`, `balanced`, `performance`, `ultra` |
+| `RPCS3_DLSS` | `motion` (show the motion vectors), `depth` (show the depth), `motionraw` (motion as numbers, for the self-test), `jitter` (jitter only), `dlaa`, `quality`, `balanced`, `performance`, `ultra` |
 | `RPCS3_DLSS_CAMERA` | camera block when the title's profile is not loaded, e.g. `0` (GT5: `c[0]`, column vectors); `0,rows` for row vectors |
 | `RPCS3_DLSS_TARGET` | the scene target's address in hex, e.g. `c1980000` |
 | `RPCS3_DLSS_MV_SIGN`, `RPCS3_DLSS_JITTER_SIGN` | `++` (default), `-+`, `+-`, `--`: sign conventions passed to DLSS |
 | `RPCS3_DLSS_JITTER_SCALE` | jitter amplitude, default 1, `0` turns it off |
 | `RPCS3_DLSS_DEPTH_INVERTED` | set if the game's depth is reversed (1 near, 0 far) |
+| `RPCS3_DLSS_MOTION_16F` | RGBA16F motion image instead of RGBA32F (used anyway where the GPU cannot multisample RGBA32F) |
+| `RPCS3_DLSS_DEBUG` | per-draw log lines: draw keys and matrices, shader variant bits, skipped draws |
 
 Use VR off (or no headset) and the Vulkan renderer. The log channel is `DLSS`: it reports the scene target,
-the motion image, NGX start-up and, every 300 frames, the camera draws matched against the previous frame.
+the motion image (size, samples, RGBA32F or 16F), NGX start-up and, every 300 frames, the camera draws matched
+against the previous frame. If NGX cannot start (no NVIDIA GPU, missing `nvngx_dlss.dll`, old driver) it logs an
+error and the game carries on with the normal image.
 
 ## Test plan for GT5
 
@@ -78,7 +88,8 @@ GT5's profile is in `vr-non-working/` on the branch, so set the camera block exp
    - driving straight: the road and scenery fan out from the vanishing point in a smooth colour wheel;
    - a car alongside at the same speed is dark (it does not move on screen), the world behind it is coloured;
    - grey areas are uncovered (sky without depth test, HUD).
-   If everything is grey, check the log: no scene target, or "camera draws 0" means the camera block is wrong. If
+   If everything is grey, check the log: no scene target, or "camera draws 0" means the camera block is wrong.
+   "Motion image 1280x720, 2 samples, RGBA32F" should appear once the scene target is found. If
    cars show the world's colour instead of dark, their matrices are not per draw (or not matched): look at
    "matched/unmatched".
 2. **Jitter.** `RPCS3_DLSS=jitter`: the 3D scene should shimmer by under a pixel, the HUD stays still. Then
@@ -87,6 +98,59 @@ GT5's profile is in `vr-non-working/` on the branch, so set the camera block exp
    means the motion vectors' sign is wrong (`RPCS3_DLSS_MV_SIGN=--`); a soft, wobbling image means the jitter sign is
    wrong (`RPCS3_DLSS_JITTER_SIGN=--`).
 4. **Upscaling.** `RPCS3_DLSS=quality` with a large window and a lower Resolution Scale.
+
+## Self-test
+
+`rpcs3/dlss_selftest/` is a small program that runs the real emulator core (RSX, Vulkan renderer, the DLSS code)
+without a game: it writes a synthetic RSX capture (a floor, a static cube and a moving cube under a perspective
+camera whose matrix is in `c[0..3]` with DP4 rows, like GT5), replays it headless, rewrites the camera and cube
+matrices in the replayed FIFO every frame, and saves screenshots of the `motionraw` view. `dlss_selftest_check.py`
+compares the motion at chosen points with the motion computed from the matrices.
+
+Scenarios: `static`, `object` (only the cube moves: a car on a static camera), `camera` (the camera orbits),
+`both`. Each was run with a single-sample and a 4x MSAA scene target (lavapipe has no 2x; GT5 uses 2x), with
+RGBA32F and RGBA16F motion images, 24 frames each, 3 points per frame:
+
+| Check | Result |
+|---|---|
+| Motion vectors, all scenarios, 1x and 4x MSAA, RGBA32F and 16F | all probes within 0.75 px (the raw view's step is 0.25 px), e.g. moving cube -5.50 px measured vs -5.47 expected |
+| Depth view | floor and cubes at their own depths (cubes nearer) |
+| Jitter (`static`, `jitter` mode, 8 frames) | image shift follows Halton(2,3): x within 0.03 px; y tracks it (noisier measure); +x right, +y down in pixels |
+| Vulkan validation layer (motion, depth, jitter modes) | no errors beyond those with DLSS off |
+| `dlaa` built with the NGX SDK, no NVIDIA GPU | `NVSDK_NGX_VULKAN_Init failed (0xbad00001)`, image presented unchanged, no crash |
+
+Bugs it found (all fixed on the branch):
+
+1. **The motion attachment was write-masked off.** RPCS3 ANDs each colour attachment's write mask with the fragment
+   program's written outputs; a game program writing only `ocol0` masked the motion attachment (index 1) to 0. Only
+   pipelines built before that happened (the first draw) wrote motion. Every GT5 draw would have been affected.
+2. **Merged draws.** RPCS3 merges consecutive draws that only change vertex constants into one draw with sub-draws,
+   re-uploading the constants between them. Those uploads got a "no motion" block; now each sub-draw is a draw of its
+   own with its own matrix history.
+3. **Surface clip read as 0** for a draw (capture replay resets registers): the draw lost its motion and the next
+   frame's match. Falls back to the framebuffer size.
+4. **2x MSAA RGBA32F** may not be supported as a colour attachment: falls back to RGBA16F, with depth stored as
+   `1 - z` so half floats keep it precise near the far plane.
+5. **NGX failure** stopped the frame bookkeeping (only matters for the self-test, but now the game carries on).
+
+Earlier fixes from the same runs: frames whose flips draw nothing (re-present the last output), constant rewrites
+between draws (no history pollution), the scene target re-detected at every frame's first bind, and an upstream
+capture-replay regression (`Capture Replay: context alloc failed`, `System.cpp`: reserve the main memory area).
+
+Build and run (Linux, Ubuntu 24.04 tested; no Qt):
+
+```bash
+cmake -S rpcs3 -B build-core -G Ninja -DCMAKE_BUILD_TYPE=Release -DCMAKE_C_COMPILER=gcc-14 -DCMAKE_CXX_COMPILER=g++-14 \
+  -DBUILD_RPCS3_GUI=OFF -DBUILD_DLSS_SELFTEST=ON -DUSE_SDL=OFF -DUSE_DISCORD_RPC=OFF -DWITH_LLVM=OFF \
+  -DUSE_SYSTEM_FFMPEG=ON -DUSE_SYSTEM_PROTOBUF=OFF -DUSE_PRECOMPILED_HEADERS=OFF -DCMAKE_DISABLE_FIND_PACKAGE_Wayland=ON
+ninja -C build-core dlss_selftest
+rpcs3/rpcs3/dlss_selftest/run_selftest.sh build-core/bin/dlss_selftest /tmp/dlss-selftest
+```
+
+Needs `xvfb-run`, a Vulkan driver (Mesa lavapipe is enough) and Python 3 with numpy and Pillow.
+`DLSS_SELFTEST_VALIDATION=1` adds the Khronos validation layer. Notes from the cloud build: clang 18 was too old
+(gcc 14 works); a few `NP/` files hit a gcc 14 internal compiler error (built with clang 20); FFmpeg 6 needs a
+small local `media_utils.cpp` shim (not committed: the Windows build uses its own FFmpeg).
 
 ## Known limitations and risks
 
