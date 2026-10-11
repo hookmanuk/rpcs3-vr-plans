@@ -831,9 +831,10 @@ Notes: `profiles/BLUS30268-notes.md`. Profile and patch file in `vr-non-working/
 
 **Status (Matt, 2026-10-11): everything is done except the race-start frame rate.** Done: water lines (Canyon),
 bird shadows, the pre-race hang, the title screen on the fixed screen, menus, mirror, dust, edge culling with head
-turns. **Open: Quick Race Canyon start at Vblank 90** (Matt: ~50 FPS; now 74-80 for the first ~10 s at 300%, 85-90
-after; RSX thread 15-17 ms on 5,500-6,000 draws a frame). Next: cull draws the headset does not need at the start
-(crowd, tents, reflection-map and distant draws).
+turns. **Open: Quick Race Canyon start at Vblank 90** (Matt: ~50 FPS). 2026-10-11 (fork 2d6443f53): small reflection-map
+draws culled (`small_draw_cull`) and patch *Draw distance (VR performance)* 0.35: start ~82.5 FPS over the first 10 s
+(was 74-80), grid 80 (was 73.5), then 88-90 (simulator, 300%). Headset check: your start FPS. Remaining lever: the
+Wider view's side culling (~7 FPS; the game's culler takes only the vertical FOV, not found yet). See the notes.
 
 - **Matt, headset, 2026-10-10: 50 FPS in Quick Race, Canyon; water drawn as horizontal lines. 2026-10-11 night
   (simulator, Vblank 90, 300%): water fixed, frame rate improved.** States `sr_canyon_grid`, `sr_canyon_water` (route

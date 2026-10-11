@@ -300,3 +300,29 @@ ahead on the right). Route from the title: Return, Right (Quick Race), X, Right 
   follow the head). A real inconsistency found on the way: upstream scales `gl_FragCoord` by the window height <=
   min_scalable_dimension while surfaces scale by their larger side (a profile value above 720 makes 1280x720 draws
   unscaled for WPOS); changing it did not fix the water, so it was reverted.
+
+## 2026-10-11 day: the race-start frame rate (draw culls)
+
+Matt: Canyon start ~50 FPS in the headset (Vblank 90). Here at 300% the start was 74-80 before today (73.5 on the grid).
+RSX sampler on the grid: `set_begin_end` ~60% of the RSX thread (VKGSRender::end 41%, vr_setup_draw 17%, eye constants
+9%), the rest waiting for the flip: per-draw CPU work on ~5,500 draws (3,494 scene, ~1,370 into one of the two 512x512 car
+reflection maps, which take turns, 66 shadow). A/B must run at Vblank 90: at Matt's 60 the frame is capped and the
+RSX-thread figure shows no gain.
+
+- **Reflection maps:** ~890 of their draws have 48 vertices or fewer. New profile key `small_draw_cull` (512x512,
+  max 192 vertices, option `reflections`): grid 73.5 -> 77.5 FPS alone (12.75 vs 13.5 ms, three pairs); 96/192/400
+  vertices about the same (78-79.5). Car paint and rear window unchanged (`sg_refl0`/`sg_refl192`).
+- **Draw distance:** patch *Draw distance (VR performance)* (`0x17463c` -> cave `0x4d7160`, far distance x Scale, word
+  `0x4d7188`, default 0.35). The game drops scenery beyond it in bands: grid draws 5,519 -> 5,124 (0.5) -> 4,150 (0.35 and
+  0.25). No visible change at the grid or over the first 40 s of the drive (`far_*`). On top of it the reflection cull adds
+  nothing on the grid (its far reflection draws are gone too) but helps while driving: first 10 s 79.5 -> 82.5 FPS (two
+  pairs).
+- **Result:** Canyon start ~80 FPS on the grid, ~82.5 over the first 10 s, then 88-90 for the lap (simulator, Vblank 90).
+- **Not possible from the projection:** the Wider view's widening costs ~695 draws at the grid (scale 1.88 looking
+  ahead, set by the eye's vertical FOV; horizontally the game then culls ~139 degrees for ~100 needed): scale 1.0 = 84
+  FPS. Narrowing only the sides: a cave multiplying the projection builder's aspect (`0x174614`, `f1` -> `f2`) changed
+  the rendered projection but not the game's draw count (0.55-1.0: 5,462-5,683), so the culler takes the vertical FOV
+  only (camera record: `+0x4b0` near, `+0x4b4` far, `+0x4b8` FOV, `+0x4bc` (tan x c)^2 for screen-size tests). The
+  frustum culler itself is not found yet (next lever, ~7 FPS).
+- **Not usable:** per-object distance from constants (`c[28..31]` of the prop programs is not a translation: every draw
+  gives the camera's ~487 depth); the probe's `hide=` saves no RSX time (it skips after the texture setup).
