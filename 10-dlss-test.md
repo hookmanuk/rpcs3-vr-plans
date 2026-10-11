@@ -1,8 +1,8 @@
 # DLSS test: motion vectors and DLSS for PS3 games (Gran Turismo 5 first)
 
 An experiment, not a release feature. Branch `ccr-d7a07b1e-7eh4fp` of hookmanuk/rpcs3, on top of `openxr`
-(`0b51d79`). Written 2026-10-10, self-tested 2026-10-11. Flat (2D), and VR multiview for the motion vectors (each
-eye its own); DLSS itself in VR is the next step. The old two-draw VR stereo (no multiview) gets no motion.
+(`0b51d79`). Written 2026-10-10, self-tested 2026-10-11. Flat (2D), and VR multiview (each eye its own motion
+vectors and its own DLSS). The old two-draw VR stereo (no multiview) gets neither.
 
 **Status.** The motion vectors, depth, jitter and MSAA paths are verified numerically by a headless self-test (below)
 on Linux with Mesa's software Vulkan driver: every probe within 0.75 px, no new Vulkan validation errors. The NGX
@@ -13,8 +13,17 @@ would have shown up in GT5 as missing or wrong motion; they are fixed (see "Self
 **VR multiview (2026-10-11).** Each eye's constants (the game's, transformed for that eye by the VR camera code)
 carry their own motion block with a matrix history per eye; the motion image has a layer per eye; the `motion`,
 `depth` and `motionraw` views replace both eyes. Verified by the self-test with the fake headset
-(`RPCS3_VR_FAKE_HMD`): both eyes' motion matches each eye's matrices for camera, object and combined motion (1x and 4x MSAA, every probe). DLSS
-modes in VR leave the image unchanged for now (a log line says so).
+(`RPCS3_VR_FAKE_HMD`): both eyes' motion matches each eye's matrices for camera, object and combined motion (1x and 4x MSAA, every probe).
+
+**DLSS in the headset (2026-10-11).** At flip each eye is resolved from its motion layer and goes through its own
+NGX DLSS feature (its own history) into its own output; the headset's eye buffers take the two outputs and their
+size. There is no window to size the output by, so each eye is upscaled by the mode's ratio (DLAA 1, quality 1.5,
+balanced 1.72, performance 2, ultra performance 3; `RPCS3_DLSS_VR_SCALE` overrides it): lower Resolution Scale by
+as much to keep the headset's detail at less GPU cost. A switch between the headset view and the fixed screen
+(menus, videos) starts the history again. Verified without NVIDIA hardware by putting a bilinear upscale in NGX's
+place (`RPCS3_DLSS_STANDIN`): each presented eye is exactly its own rendered eye upscaled (both MSAA counts, ratios
+1.25 to 3, no validation errors from it). **Not yet tested: NGX evaluating per eye on an NVIDIA GPU, and the copy
+into a real OpenXR session's eye buffers** (the fake headset has no session; the published size is the outputs').
 
 ## What it does
 
@@ -97,8 +106,10 @@ Everything is set by environment variables, read once at start-up:
 | `RPCS3_DLSS_MOTION_16F` | RGBA16F motion image instead of RGBA32F (used anyway where the GPU cannot multisample RGBA32F) |
 | `RPCS3_DLSS_DEBUG` | per-draw log lines: draw keys and matrices, shader variant bits, skipped draws |
 | `RPCS3_REPLAY_TITLE_ID` | a title ID for an RSX capture replay, so the title's VR profile applies (replaying a GT5 capture in VR) |
+| `RPCS3_DLSS_VR_SCALE` | VR: each eye's upscale ratio (1 to 3) instead of the mode's, DLAA included |
+| `RPCS3_DLSS_STANDIN` | tests without an NVIDIA GPU: a bilinear upscale of the colour in NGX's place, everything around it as with DLSS |
 
-Use VR off (or no headset) and the Vulkan renderer. The log channel is `DLSS`: it reports the scene target,
+Use the Vulkan renderer; in VR, multiview. The log channel is `DLSS`: it reports the scene target,
 the motion image (size, samples, RGBA32F or 16F), NGX start-up and, every 300 frames, the camera draws matched
 against the previous frame. If NGX cannot start (no NVIDIA GPU, missing `nvngx_dlss.dll`, old driver) it logs an
 error and the game carries on with the normal image.
@@ -124,7 +135,12 @@ GT5's profile is in `vr-non-working/` on the branch, so set the camera block exp
 4. **Upscaling.** `RPCS3_DLSS=quality` with a large window and a lower Resolution Scale.
 5. **VR multiview motion.** With the headset (or `RPCS3_VR_FAKE_HMD=90`) and multiview on, `RPCS3_DLSS=motion`: both
    eyes show the colour wheel; turning the head or driving moves both; a car alongside stays dark in both eyes. The log
-   shows "Motion image ..., one layer per eye". DLSS modes do nothing in VR yet.
+   shows "Motion image ..., one layer per eye".
+6. **DLSS in the headset.** `RPCS3_DLSS=dlaa` at the usual Resolution Scale first: edges smooth and stable in both
+   eyes, no ghosting when turning the head (else the signs above). The log shows "DLSS feature ..." and
+   "DLSS feature (right eye) ...". Then `RPCS3_DLSS=quality` with Resolution Scale lowered by a third (e.g. 150 to
+   100): the headset gets 1.5x the eye size back (the log's "Eye swapchains" line). Go into a menu and back: the log
+   says the history starts again, and the first frame after it should not smear.
 
 ## Self-test
 
@@ -142,6 +158,7 @@ RGBA32F and RGBA16F motion images, 24 frames each, 3 points per frame:
 |---|---|
 | Motion vectors, all scenarios, 1x and 4x MSAA, RGBA32F and 16F | all probes within 0.75 px (the raw view's step is 0.25 px), e.g. moving cube -5.50 px measured vs -5.47 expected |
 | `run_selftest.sh`, flat and VR multiview, 1x and 4x MSAA, all scenarios (16 runs, 504 probes), twice | every probe within 0.75 px, no frame skipped |
+| DLSS output per eye in VR, NGX replaced by `RPCS3_DLSS_STANDIN` (part of `run_selftest.sh`; also 4x MSAA, ratios 1.25, 1.5, 2 and 3, and under validation) | every frame: both eyes at the ratio's size, each its own eye upscaled (mean difference 0.00 against the reference), no new validation errors |
 | Vulkan validation, VR multiview with motion | no errors from the DLSS code (after the multiview fix below). Left: RPCS3's own depth-to-colour `vkCmdCopyImage` (`01548`/`01551`, 4 at start-up, with DLSS off too: the render targets rescaled to the headset's eye shape at the first flip; upstream code that knowingly relies on drivers tolerating it) and the known shader/startup messages |
 | Depth view | floor and cubes at their own depths (cubes nearer) |
 | Jitter (`static`, `jitter` mode, 8 frames) | image shift follows Halton(2,3): x within 0.03 px; y tracks it (noisier measure); +x right, +y down in pixels |
@@ -196,6 +213,13 @@ screenshots hold both eyes side by side; each eye's expected motion comes from t
 recorded them for the presented frame, so the check covers the GPU side (each view reads its own block and writes its
 own layer) and that the recorded matrices are the ones drawn (the probe points land on the objects).
 
+The DLSS output path for the headset is checked too (the last line of `run_selftest.sh`): a VR run through
+`RPCS3_DLSS=performance` with `RPCS3_DLSS_STANDIN` (a bilinear upscale in NGX's place) against a run without it, both
+without jitter. `dlss_selftest_upscale_check.py` requires each presented eye to be twice the eye's size and to match
+its own rendered eye upscaled (not the other eye's). That covers the per-eye inputs (left from the multiview surface's
+layer 0, right from its copy), the per-eye outputs, the size change and the presentation; NGX itself is the part it
+cannot run.
+
 The capture holds the whole sequence (each frame's state, clear, draws with that frame's matrices, and an in-FIFO
 flip, `GCM_FLIP_COMMAND`, with the renderer in HLE mode for it). The first version replayed one frame per replay loop
 and rewrote its constants between loops; the replayer's own flip (requested from its thread after each loop) then
@@ -215,9 +239,10 @@ small local `media_utils.cpp` shim (not committed: the Windows build uses its ow
 - Pipelines with the motion attachment go into the shader cache; they are harmless with DLSS off.
 - GT5 scene detail: the mirror is drawn into the scene target with its own camera; its draws match their own
   previous frames (they are later repeats of the same meshes), so its motion should be right too.
-- VR: motion vectors per eye with multiview; the two-draw stereo gets none. Still to do for DLSS in the headset: an
-  NGX evaluation per eye (two features) on the eye images before OpenXR takes them, and a history reset when the VR
-  code switches between the fixed screen and the headset view (menus to driving): the eyes' projection and viewport
-  change at once, which matrix-only reprojection does not describe (the self-test saw it as a uniform offset).
+- VR: multiview only; the two-draw stereo gets nothing. Two DLSS features cost twice one (each at the eye's size).
+  The VR upscale ratio is fixed by the mode, not by the headset's recommended eye size (the fork's eye buffers have
+  always taken the rendered eye's size); with a ratio that overshoots the headset, lower `RPCS3_DLSS_VR_SCALE`.
+  The history restarts when the VR code switches between the fixed screen and the headset view (the eyes' projection
+  and viewport change at once, which matrix-only reprojection does not describe), not within either.
 - Draw identity counts repeats (the n-th draw of a mesh): a frame that adds or drops one draw before another of the
   same mesh shifts their matches for that frame.
