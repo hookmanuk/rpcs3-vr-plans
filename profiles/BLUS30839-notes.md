@@ -575,3 +575,6 @@ Later the same night: Matt's `BLUS30839_1_7` is not a renderer hang. It loads on
 commands (RSX sampler: `run_FIFO` yield). Start and Cross from the keyboard pad do not resume it, flat (desktop) the
 same, so it is the known "Matt's states do not run here" case (probably his real pad, as GT5's states). My
 `son_canyon_tunnel` loaded 6/6 after the framebuffer fix (fork 81a1335e2; it had failed to present once in ~15 before).
+The earlier one-in-15 `son_canyon_tunnel` "no present" was a process crash (stack overflow inside NVIDIA's Vulkan driver,
+dump 01:15): the same early-load race as GT5's (desktop swapchain rebuild vs the OpenXR thread's queue), fixed in fork
+1ec5dbc9f (GT5 notes "early-load failure").
