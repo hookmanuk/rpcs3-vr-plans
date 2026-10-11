@@ -26,15 +26,13 @@ here (its notes file keeps the history).
 
 | Game | ID | Approved | Files | Notes for vr-games.md |
 |---|---|---|---|---|
-| Dragon Age: Origins | BLUS30415 | Matt, 2026-10-08 | `vr_profiles/BLUS30415.json`, `patches/BLUS30415_patch.yml` (*Wider view (VR culling)* 1.2, on by default) | 120 Hz (castle, forest, combat); no frame-rate patch needed. Needs fork 2e6f8d7c5 (`either_layout_blocks`) and 4b97dc471. Sun rays hidden in VR |
-| Ratchet & Clank Collection (R&C 1, 2, 3) | BCUS98282 | Matt: R&C 1 2026-10-08, R&C 2 and 3 2026-10-10 | `vr_profiles/BCUS98282.json` + `BCUS98282.rc1.ppu.json`, `.rc2.ppu.json`, `.rc3.ppu.json` (per executable), `patches/BCUS98282_patch.yml` | R&C 1 and 3 90 Hz, R&C 2 120 Hz (desktop stereo, 300%); cutscenes drop to 60 (scene flags, forks 844d4933c, bc568bef8); character shadow via `depth_remap_uv`. Disc 01.00 |
-| Sonic & All-Stars Racing Transformed | BLUS30839 | Matt, 2026-10-11 | `vr_profiles/BLUS30839.json`, `patches/BLUS30839_patch.yml` (*Unlocked frame rate (follows Vblank Rate)* 2.0, *Disable mesh trimming (VR)*, *Disable camera shake (VR)*, *Wider view (VR culling)* 3.0, all on) | Disc 01.00. 90 Hz at 450% (the 16:9 frame under-samples the headset vertically: 450% recommended; 500% is the limit at 90). Simulates at the VR rate (patch 2.0 + profile `frame_rate_draws`). Needs forks 9585700b9 (`depth_remap_screen`: the Canyon Carnage cave lights) and 1ec5dbc9f. Matt's config: Vblank Rate 90, Frame Rate Unlimited, Resolution Scale 450 (check what a default config gives). Known: savestates made with the home menu open load onto the pause menu |
-| SEGA Rally Revo | BLUS30068 | Matt, 2026-10-11 | `vr_profiles/BLUS30068.json`, `patches/BLUS30068_patch.yml` (*Unlocked frame rate (follows Vblank Rate)*, *Wider view (VR culling)*, *Draw distance (VR performance)* 0.35, all on) | Disc 01.00. 90 Hz on the track at 300%; a race start runs ~82 for its first ~10 s (RSX-thread bound on the grid's draws), 72 Hz holds everywhere. Needs forks 2d6443f53 (`small_draw_cull`), f2c09242b (pre-race hang). Matt's config: Multithreaded RSX on (part of the 90 Hz work: check under Required settings); savestates need Compatible Savestate Mode and Disable SPU GETLLAR Spin Optimization (savestates only) |
-| MotorStorm: Pacific Rift | BCUS98155 | Matt, 2026-10-11 | `vr_profiles/BCUS98155.json`, `patches/BCUS98155_patch.yml` (*Unlocked frame rate (VR)* 1.1, *Disable Dynamic Resolution Scaling (VR)*, *Disable Motion Blur (VR)*, *Wider view (VR culling)*, *Disable camera shake (VR)*, *Model detail (VR options)* 1.2, all on) | Disc 01.00. **Needs multiview** for 72 Hz (300%: 72 sustained, the race start with the pack in view 69.6; 90 averages 87). Needs Write Color Buffers. Game options in the home menu (on by default): Highest Detail Models, Simpler Other Vehicles, Fewer Shadows (race start 40s -> 70s). Needs forks 13da162b8 (HUD in the box, steady VR clock, patches on savestates), 800c13c3a (pause bars, car shadow), c9aeb8786 (`clear_view_targets`: sky smear), 8267ac794 / fdae99821 / 0b51d798a (game options). Known: tree shadows aliased (the game's shadow-map resolution) |
 
 **Shipped in vr7 (2026-10-02): Tales of Xillia and Super Stardust HD** (sections removed; history in their notes files).
 **Shipped in vr8 (2026-10-03): God of War and God of War II (God of War Collection), Dante's Inferno, Asura's Wrath**
 (sections removed; history in `profiles/BCES00800-notes.md`, `BLUS30405-notes.md`, `BLUS30721-notes.md`).
+**Shipped in vr9 (2026-10-12, fork 9fcf9ddbf, tag v0.0.43-vr9): Dragon Age: Origins, Ratchet & Clank 1, 2 and 3,
+Sonic & All-Stars Racing Transformed, SEGA Rally Revo, MotorStorm: Pacific Rift** (release-list rows removed; history in
+their notes files). Gran Turismo 5 was approved but pulled before release (see its section).
 
 **New games 2026-10-04 (Matt): Sonic & All-Stars Racing Transformed, Dynasty Warriors: GUNDAM, X-Men Origins:
 Wolverine.** All three were 30 FPS games with no community patches: each got a fork frame-rate patch (real time
@@ -620,7 +618,7 @@ Notes: `profiles/BCUS98114-notes.md` (the most detailed). Evidence: `evidence/gt
 
 ## MotorStorm: Pacific Rift (BCUS98155 v01.00)
 
-**Approved for release (Matt, 2026-10-11): see the release list.** Open items below stay as known issues.
+**Shipped in vr9 (2026-10-12).** Open items below are its known issues.
 
 Notes: `profiles/BCUS98155-notes.md`. Evidence: `evidence/motorstorm/`. Moved to `vr-non-working/` at vr6.
 
@@ -761,7 +759,7 @@ and no recorded measurements: start from the playbook if it is picked up again.
 
 ## Sonic & All-Stars Racing Transformed (BLUS30839, disc 01.00)
 
-**Approved for release (Matt, 2026-10-11): see the release list.** Open items below stay as known issues.
+**Shipped in vr9 (2026-10-12).** Open items below are its known issues.
 
 Notes: `profiles/BLUS30839-notes.md`. Profile and patch file in `vr-non-working/` (copies untracked in `bin/`).
 
@@ -849,7 +847,7 @@ Notes: `profiles/BLUS30268-notes.md`. Profile and patch file in `vr-non-working/
 
 ## SEGA Rally Revo (BLUS30068, disc 01.00)
 
-**Approved for release (Matt, 2026-10-11): see the release list.**
+**Shipped in vr9 (2026-10-12).**
 
 **Status (Matt, 2026-10-11): everything is done except the race-start frame rate.** Done: water lines (Canyon),
 bird shadows, the pre-race hang, the title screen on the fixed screen, menus, mirror, dust, edge culling with head
