@@ -546,3 +546,26 @@ outside the area the game fitted its shadow maps to. **Correction:** the `hide=`
 probe file is comma-separated; I separated with a space, so nothing was hidden). Redo them. Needs Matt: is the "ghosting" these shadow pieces, or trails behind bright areas? Next: same-pose A/B of the
 shadow passes (`hide=` the cascade programs `ed46d28a122d7235`, `cec5b3488b8595e6`, `fc827cca71af7819`) at yaw 25.
 Note: the generator trigger writes `bin/vr_profiles/<ID>.eboot.json` (moved out to `C:pcs3-scratch` after this run).
+
+## 2026-10-11 night: green stripes on head turns (Matt, Canyon Carnage tunnel) fixed
+
+States (mine; Matt's `_1_4` was deleted by the per-game cap and restored from the backup after each save):
+`son_canyon_grid` (Career > World Tour > Sunshine Coast, Right to Canyon Carnage, Medium, Sonic; grid after the fly-by),
+`son_canyon_tunnel` (in the blue-lit cave ~1 min in; reached by holding R2, the car may get stuck on walls).
+Matt's `BLUS30839_1_7` does not present a frame here (as `_1_3` before). My own `son_canyon_tunnel` also hung once in
+~15 loads (no frame stats ever; CPU idle): the no-present hang is intermittent, not specific to Matt's states.
+
+- The stripes are the cave's tiled lighting: program `8761ccb6b94bd151` draws one quad per screen tile (479 a frame,
+  positions straight in clip space, `tc0` = view ray from `c[0].zw` = the game's tan(fov/2) x aspect, two point lights
+  per draw with distance falloff). Hiding it removes them. **Flat RPCS3 at 450% shows the same tiles** (a grid of hard
+  teal rectangles); at 100% the cave is evenly lit. VR head turns just show more of it.
+- Cause: the game builds a min/max depth chain 640x360 -> 320x180 -> ... -> 40x23 -> 20x12 (`3f4215b47aae1a90`,
+  `3f4214747aae1a90`) and reads the last level back to assign lights to tiles. Resolution-scaled, the 20x12 level is read
+  back through a filtered downscale, which mixes the packed depth bytes: lights are culled from the wrong tiles.
+- Fix: profile `min_scalable_dimension: 20` (only the 20x12 level stays native; tested 640/320/160/80/40/20 flat at 450%:
+  all clean; the Wider view Scale is not involved, 1.0 shows the same). VR yaw 0/+-30: left eye evenly lit.
+- Left open: the right eye can still show a small unlit block at some poses: the tile quads are in the game's screen
+  space and each eye's view of a tile covers slightly different content (asymmetric headset FOV), so a tile's light list
+  can miss lights there. A proper fix would map the tile quads into each eye's view (or draw this pass full screen with
+  `depth_remap`); `depth_remap_ray_texcoord` is per profile (the shadow cascades use texcoord 1, this pass texcoord 0).
+- Checked: the large dark area beside the car at yaw -30 is the cave overhang's shadow, consistent in both eyes.

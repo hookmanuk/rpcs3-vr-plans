@@ -737,9 +737,11 @@ and no recorded measurements: start from the playbook if it is picked up again.
 
 Notes: `profiles/BLUS30839-notes.md`. Profile and patch file in `vr-non-working/` (copies untracked in `bin/`).
 
-- **Open (Matt, headset, 2026-10-10): green stripes across the whole view when the head turns.** Career, Sunshine
-  Coast: go right past Coastal Cruise to **Canyon Carnage**, hold R2 to the tunnel. Turning the head left or right
-  lays green stripes over the whole screen. Matt's shots: `evidence/sonic-green-stripes/` (straight, turned).
+- **Green stripes on head turns (Matt, headset, 2026-10-10, Canyon Carnage tunnel): fixed 2026-10-11 night
+  (simulator), headset recheck.** A resolution-scaling bug (flat at 450% too): the cave's tiled lighting reads back a
+  20x12 min/max depth level; scaled, the readback mixes packed depth and lights land in the wrong tiles. Profile
+  `min_scalable_dimension: 20`. A small unlit block can remain in the right eye at some poses (tile quads in the
+  game's screen space; notes). States `son_canyon_grid`, `son_canyon_tunnel`.
 
 - **Frame rate:** fork patch *Unlocked frame rate (follows Vblank Rate)*: the vblank handler's flip interval 2 -> 1.
   Game time is measured: real-time at 60/120/180 (same track positions at the same wall times). Flat 130-180 FPS.
