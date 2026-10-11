@@ -59,8 +59,8 @@ Fixes on the branch (fork `d1bbd65b6`, after merging `openxr` in `3641a66eb`):
 `Performance`, `Ultra Performance`; read at each boot. `RPCS3_DLSS` still overrides it (and gives the debug views).
 In VR, lower Resolution Scale by the mode's ratio (Quality 1.5: 450% -> 300%) to keep the headset's detail.
 
-**Build on Windows.** `git clone --depth 1 https://github.com/NVIDIA/DLSS F:psc3\source\DLSS`, set
-`DLSS_SDK=F:psc3\source\DLSS` with QTDIR and VULKAN_SDK, build emucore, VKGSRender (and GLGSRender after the config
+**Build on Windows.** `git clone --depth 1 https://github.com/NVIDIA/DLSS F:\rpsc3\source\DLSS`, set
+`DLSS_SDK=F:\rpsc3\source\DLSS` with QTDIR and VULKAN_SDK, build emucore, VKGSRender (and GLGSRender after the config
 change), rpcs3 as usual; `nvngx_dlss.dll` is copied next to `rpcs3.exe`.
 
 **Open:** a headset run (Matt); GT5's RSX-thread cost (~2.5 ms on 1,600 draws); the HUD goes through DLSS with the scene.
