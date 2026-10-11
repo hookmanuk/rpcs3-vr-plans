@@ -13,7 +13,7 @@ would have shown up in GT5 as missing or wrong motion; they are fixed (see "Self
 **VR multiview (2026-10-11).** Each eye's constants (the game's, transformed for that eye by the VR camera code)
 carry their own motion block with a matrix history per eye; the motion image has a layer per eye; the `motion`,
 `depth` and `motionraw` views replace both eyes. Verified by the self-test with the fake headset
-(`RPCS3_VR_FAKE_HMD`): both eyes' motion matches each eye's matrices for camera, object and combined motion. DLSS
+(`RPCS3_VR_FAKE_HMD`): both eyes' motion matches each eye's matrices for camera, object and combined motion (1x and 4x MSAA, every probe). DLSS
 modes in VR leave the image unchanged for now (a log line says so).
 
 ## What it does
@@ -141,7 +141,8 @@ RGBA32F and RGBA16F motion images, 24 frames each, 3 points per frame:
 | Check | Result |
 |---|---|
 | Motion vectors, all scenarios, 1x and 4x MSAA, RGBA32F and 16F | all probes within 0.75 px (the raw view's step is 0.25 px), e.g. moving cube -5.50 px measured vs -5.47 expected |
-| Final run of `run_selftest.sh` on a clean build (8 runs, 192 probes) | 191 within 0.75 px. One miss: the moving cube read 0 motion in one frame (object, 4x). Not reproduced in 3 reruns with debug logging. Probably the test's own timing (the cube's matrix patched one replay late, so two frames drew it in the same place, where 0 is correct), but not confirmed |
+| `run_selftest.sh`, flat and VR multiview, 1x and 4x MSAA, all scenarios (16 runs, 504 probes), twice | every probe within 0.75 px, no frame skipped |
+| Vulkan validation, VR multiview with motion | no errors from the DLSS code (after the multiview fix below). Left: RPCS3's own depth-to-colour `vkCmdCopyImage` (`01548`/`01551`, 4 at start-up, with DLSS off too: the render targets rescaled to the headset's eye shape at the first flip; upstream code that knowingly relies on drivers tolerating it) and the known shader/startup messages |
 | Depth view | floor and cubes at their own depths (cubes nearer) |
 | Jitter (`static`, `jitter` mode, 8 frames) | image shift follows Halton(2,3): x within 0.03 px; y tracks it (noisier measure); +x right, +y down in pixels |
 | Vulkan validation layer (motion, depth, jitter modes) | no errors beyond those with DLSS off |
