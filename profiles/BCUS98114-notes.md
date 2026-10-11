@@ -693,3 +693,13 @@ Outcome (fork 9db719f39):
   only, leaving multiview's layer 1 in that layout untracked (~735 layout errors per load, gone). Not the crash.
 - Excluded on the way: late readbacks (a hold after the multiview switch: still lost), the Wider view culling word,
   layer-count checks on recycled surfaces, the framebuffer change, memory pressure (~2 GB of images live).
+
+## 2026-10-11 morning: `EnvironmentSetting::LOD` decoded; it does not move the car model switch
+
+From a memory dump (`RPCS3_VR_MEMDUMP`, `scratchpad gt5/dump.py`): the reflection member descriptors in BSS are 16 bytes
+`{accessor, next, name, offset}`; type `LOD` has 7 members: `discreteBase` +0x0, `base` +0x4, `meshBase` +0x8,
+`meshCurveBase` +0xc, `meshOffsetBase` +0x10, `meshGap` +0x14, `forceRoughestLOD` +0x18 (all 4-byte). The parent holds
+`lod` at +0x16c4 and `lodEnv` at +0x16e0; two live parents in the busy race (`0x4f8afffc`, `0x4f8b8054`), values
+{0, 1.0, 200, 1.8, -0.5, 0, 1.0}. Poked live in both (`scratchpad gt5/lodpoke.sh`, car tiers in observe mode):
+`discreteBase` -1/0/4, `base` 0.1/0.25/0.5/2, `meshBase` 50: all ten cars kept their full models out to 58 m and the frame
+rate stayed 54-55 FPS. Not the car LOD switch (perhaps scenery, or read only at load). Car LOD still not found.
