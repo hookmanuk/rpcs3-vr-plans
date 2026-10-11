@@ -28,6 +28,9 @@ here (its notes file keeps the history).
 |---|---|---|---|---|
 | Dragon Age: Origins | BLUS30415 | Matt, 2026-10-08 | `vr_profiles/BLUS30415.json`, `patches/BLUS30415_patch.yml` (*Wider view (VR culling)* 1.2, on by default) | 120 Hz (castle, forest, combat); no frame-rate patch needed. Needs fork 2e6f8d7c5 (`either_layout_blocks`) and 4b97dc471. Sun rays hidden in VR |
 | Ratchet & Clank Collection (R&C 1, 2, 3) | BCUS98282 | Matt: R&C 1 2026-10-08, R&C 2 and 3 2026-10-10 | `vr_profiles/BCUS98282.json` + `BCUS98282.rc1.ppu.json`, `.rc2.ppu.json`, `.rc3.ppu.json` (per executable), `patches/BCUS98282_patch.yml` | R&C 1 and 3 90 Hz, R&C 2 120 Hz (desktop stereo, 300%); cutscenes drop to 60 (scene flags, forks 844d4933c, bc568bef8); character shadow via `depth_remap_uv`. Disc 01.00 |
+| Gran Turismo 5 (XL Edition) | BCUS98114 | Matt, 2026-10-11 | `vr_profiles/BCUS98114.json`, `patches/BCUS98114_patch.yml` (*Pre-race at full frame rate*, *VR: Wider view (head-driven culling)* 1.3, both on; *VR: No camera jitter* off by default) | Disc 01.00 only (the 02.11 frame-rate entry no longer matches). 90 Hz in races at 400% on the simulator; busy starts with the pack ahead dip (RSX-thread bound). Game options in the home menu: Simpler Distant Cars, Reduced-Rate Reflections (car paint may lag up to 2 frames); VR setting Cinematic Scenes (pre-race views, default Fixed Screen). Needs forks 81a1335e2 (boot hang), 1ec5dbc9f (early-load crash), 9db719f39 (desktop mirror crop off: the desktop window shows each eye's whole surface). Matt's config: RSX FIFO Fetch Accuracy Fast (-0.35 ms; check under Required settings), Resolution Scale 500. Known: savestates load paused only with a pad connected; multicoloured car paint after some savestate loads |
+| Sonic & All-Stars Racing Transformed | BLUS30839 | Matt, 2026-10-11 | `vr_profiles/BLUS30839.json`, `patches/BLUS30839_patch.yml` (*Unlocked frame rate (follows Vblank Rate)* 2.0, *Disable mesh trimming (VR)*, *Disable camera shake (VR)*, *Wider view (VR culling)* 3.0, all on) | Disc 01.00. 90 Hz at 450% (the 16:9 frame under-samples the headset vertically: 450% recommended; 500% is the limit at 90). Simulates at the VR rate (patch 2.0 + profile `frame_rate_draws`). Needs forks 9585700b9 (`depth_remap_screen`: the Canyon Carnage cave lights) and 1ec5dbc9f. Matt's config: Vblank Rate 90, Frame Rate Unlimited, Resolution Scale 450 (check what a default config gives). Known: savestates made with the home menu open load onto the pause menu |
+| SEGA Rally Revo | BLUS30068 | Matt, 2026-10-11 | `vr_profiles/BLUS30068.json`, `patches/BLUS30068_patch.yml` (*Unlocked frame rate (follows Vblank Rate)*, *Wider view (VR culling)*, *Draw distance (VR performance)* 0.35, all on) | Disc 01.00. 90 Hz on the track at 300%; a race start runs ~82 for its first ~10 s (RSX-thread bound on the grid's draws), 72 Hz holds everywhere. Needs forks 2d6443f53 (`small_draw_cull`), f2c09242b (pre-race hang). Matt's config: Multithreaded RSX on (part of the 90 Hz work: check under Required settings); savestates need Compatible Savestate Mode and Disable SPU GETLLAR Spin Optimization (savestates only) |
 
 **Shipped in vr7 (2026-10-02): Tales of Xillia and Super Stardust HD** (sections removed; history in their notes files).
 **Shipped in vr8 (2026-10-03): God of War and God of War II (God of War Collection), Dante's Inferno, Asura's Wrath**
@@ -508,6 +511,8 @@ Notes: `profiles/BCUS98116-notes.md`. Evidence: `evidence/killzone2/`. Fork d12f
 
 ## Gran Turismo 5 (BCUS98114, XL Edition, US; disc 01.00 since 2026-10-03, was v02.11)
 
+**Approved for release (Matt, 2026-10-11): see the release list.** Open items below stay as known issues.
+
 Notes: `profiles/BCUS98114-notes.md` (the most detailed). Evidence: `evidence/gt5/`. Parked at vr5.
 
 - **Boot hang (Matt, 2026-10-10: "GT5 doesn't load"; ~1 boot in 3 died after "Accessing game data"): fixed 2026-10-11
@@ -747,6 +752,8 @@ and no recorded measurements: start from the playbook if it is picked up again.
 
 ## Sonic & All-Stars Racing Transformed (BLUS30839, disc 01.00)
 
+**Approved for release (Matt, 2026-10-11): see the release list.** Open items below stay as known issues.
+
 Notes: `profiles/BLUS30839-notes.md`. Profile and patch file in `vr-non-working/` (copies untracked in `bin/`).
 
 - **Green stripes on head turns (Matt, headset, 2026-10-10).** His report: Career > World Tour > Sunshine Coast, go Right
@@ -828,6 +835,8 @@ Notes: `profiles/BLUS30268-notes.md`. Profile and patch file in `vr-non-working/
   margin; headset run.
 
 ## SEGA Rally Revo (BLUS30068, disc 01.00)
+
+**Approved for release (Matt, 2026-10-11): see the release list.**
 
 **Status (Matt, 2026-10-11): everything is done except the race-start frame rate.** Done: water lines (Canyon),
 bird shadows, the pre-race hang, the title screen on the fixed screen, menus, mirror, dust, edge culling with head
