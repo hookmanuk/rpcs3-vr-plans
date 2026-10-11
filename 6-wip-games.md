@@ -792,7 +792,7 @@ Notes: `profiles/BLUS30839-notes.md`. Profile and patch file in `vr-non-working/
   blurs over several real pixels. `fragment_constant_overrides` setting them to 0 (FXAA off) is in the
   `vr-non-working` profile and the bin copy, **not yet checked visually or committed**.
 - **Ghosting on fast head turns (Matt, headset, 2026-10-11, state `BLUS30839_1_8` = `vrtest_sonic_matt_ghost2`): fixed
-  2026-10-11 (fork 7th commit of the day, profile `reproject_older_frames`), simulator; headset recheck.** The final
+  2026-10-11 (fork 6df850777, profile `reproject_older_frames`), simulator; headset recheck.** The final
   composite's radial blur blends a copy of the previous frame (texture `0xc1608000`, filled by a blit), drawn at an older
   head pose: doubled scenery mid-turn (`evidence/sonic-ghosting/fast_turn_*`). Earlier report below.
 - **Open (Matt, headset, 2026-10-09): turning the head leaves ghosting everywhere**, which Matt thinks is linked to the
