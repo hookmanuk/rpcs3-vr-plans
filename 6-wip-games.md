@@ -519,6 +519,9 @@ Notes: `profiles/BCUS98114-notes.md` (the most detailed). Evidence: `evidence/gt
   9db719f39).** The desktop mirror's crop of GT5's large display buffer is off by default (crop on 5/8 loads lost, off
   0/8); the desktop window now shows each eye's whole surface with the picture in its top-left part (headset unchanged).
   Cause inside the crop path not found. Notes "2026-10-11 morning".
+- **Rarer load failure ~2 s in (~1 in 8: a crash inside NVIDIA's driver, or a lost device): fixed (fork 1ec5dbc9f),**
+  **12/12 loads since.** The desktop swapchain rebuild waited for the device while the OpenXR thread used its own queue
+  (and created swapchains) unsynchronised. Also behind a Sonic "no present" load. Notes "early-load failure".
 
 - **Rain follows the head (Matt, headset, 2026-10-10): fixed 2026-10-11 night (simulator), headset recheck.** The
   spray/mist particles use the camera matrix from `c[4..7]`; profile `camera_blocks: [0, 4]` (was `[0]`). The car ahead

@@ -703,3 +703,18 @@ From a memory dump (`RPCS3_VR_MEMDUMP`, `scratchpad gt5/dump.py`): the reflectio
 {0, 1.0, 200, 1.8, -0.5, 0, 1.0}. Poked live in both (`scratchpad gt5/lodpoke.sh`, car tiers in observe mode):
 `discreteBase` -1/0/4, `base` 0.1/0.25/0.5/2, `meshBase` 50: all ten cars kept their full models out to 58 m and the frame
 rate stayed 54-55 FPS. Not the car LOD switch (perhaps scenery, or read only at load). Car LOD still not found.
+
+## 2026-10-11 morning: the early-load failure (~1 load in 8): a driver crash during the desktop swapchain rebuild
+
+The rarer load failure (no log after ~2 s, "RSX thread goes quiet") is a **process crash**: Windows Error Reporting,
+access violation writing address 0x4c8 in `nvoglv64.dll` (NVIDIA's Vulkan driver). Its dump
+(`%LOCALAPPDATA%\CrashDumpspcs3.exe.<pid>.dmp`; `scratchpad mdstack.py DUMP` lists the crashing thread's return addresses
+symbolized with dbghelp and `rpcs3.pdb`) shows the RSX thread in `shader_interpreter::preload` -> `VKGSRender::flip` ->
+`reinitialize_swapchain` -> the driver: the desktop swapchain is rebuilt at ~2 s (window size settles) while the OpenXR
+frame thread creates its first eye swapchains. Sonic's earlier "no present" (01:15 dump) was a stack overflow in the same
+area of the driver. Another load lost the device at that same moment (logged). vkDeviceWaitIdle needs every queue
+externally synchronized, but the OpenXR frame thread's own queue was guarded by a different lock than the one taken
+there, and xrCreateSwapchain/xrDestroySwapchain (where a runtime may submit) ran unlocked. Fork change: the device-wide
+wait holds both locks (`vr_lock_queues`), and the swapchain create/destroy calls hold the OpenXR queue lock.
+Fork 1ec5dbc9f. Race savestate loads after it: 12/12 fine, no crash dumps (the lock around the wait alone: 1 lost in
+10 at that moment). Encouraging, not conclusive at a ~1-in-8 rate; the change is what the Vulkan spec requires anyway.
