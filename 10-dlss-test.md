@@ -4,7 +4,7 @@ An experiment, not a release feature. Branch `ccr-d7a07b1e-7eh4fp` of hookmanuk/
 (`0b51d79`). Written 2026-10-10, self-tested 2026-10-11. Flat (2D), and VR multiview (each eye its own motion
 vectors and its own DLSS). The old two-draw VR stereo (no multiview) gets neither.
 
-**Status.** The motion vectors, depth, jitter and MSAA paths are verified numerically by a headless self-test (below)
+**Status (2026-10-11): working on an NVIDIA GPU, see below.** Earlier: the motion vectors, depth, jitter and MSAA paths are verified numerically by a headless self-test (below)
 on Linux with Mesa's software Vulkan driver: every probe within 0.75 px, no new Vulkan validation errors. The NGX
 calls compile and link against the SDK, and fail cleanly without an NVIDIA GPU. **Not yet tested: GT5 itself, and
 DLSS evaluating on an NVIDIA GPU** (no such GPU or the game in the cloud). The self-test found five bugs that
@@ -24,6 +24,46 @@ as much to keep the headset's detail at less GPU cost. A switch between the head
 place (`RPCS3_DLSS_STANDIN`): each presented eye is exactly its own rendered eye upscaled (both MSAA counts, ratios
 1.25 to 3, no validation errors from it). **Not yet tested: NGX evaluating per eye on an NVIDIA GPU, and the copy
 into a real OpenXR session's eye buffers** (the fake headset has no session; the published size is the outputs').
+
+## Working on an NVIDIA GPU (2026-10-11, Windows, RTX 5090)
+
+**Status: DLSS runs.** NGX (SDK and runtime 310.9.1) starts on the RTX 5090; DLAA, Quality and the other modes evaluate in
+the headset (VR multiview: a feature per eye, each eye's output into its own swapchain) and in flat play (upscaled to the
+window). Checked on the OpenXR Simulator and on the desktop, with Sonic & All-Stars Racing Transformed and Gran Turismo 5:
+
+| Test | Result |
+|---|---|
+| Sonic, VR, DLAA, 450% | NGX ready, `DLSS feature 2880x3240 -> 2880x3240` per eye, both eyes replaced, 90 FPS; no ghosting during a 40 deg/s head turn (`ramp_dlaa` vs `ramp_off`) |
+| Sonic, VR, Quality, 300% | 1920x2160 -> 2880x3240 per eye, eye swapchains follow, clean image, 90 FPS |
+| Sonic, flat, Quality, 50% | 640x360 -> 1920x1080 (window), sharp, 90 FPS |
+| GT5 busy race (`gt5_busy_race_2_17`), VR, DLAA 500% and Quality 334% | scene `0xc1980000` (2x MSAA), 1623 of 1623 draws matched per eye, image correct in both modes |
+| Motion view (`RPCS3_DLSS=motion`) | Sonic: smooth field over the world, car dark, both eyes alike; a constant-speed head turn moves everything, the sky included |
+
+Fixes on the branch (fork `d1bbd65b6`, after merging `openxr` in `3641a66eb`):
+1. **Ring-buffered geometry never matched.** Sonic builds its meshes each frame on the SPUs (EDGE) into a ring buffer, so a
+   draw's vertex and index addresses change every frame and no key repeated ("matched 0"). Draws are now also keyed
+   without the addresses (program, element count, repeat number); static geometry shares the camera matrix, so a wrong
+   pairing among those changes nothing. Sonic: ~200 of 210 draws matched, the camera reprojection found.
+2. **The sky had no motion.** Pixels no draw covers (sky drawn without depth) took zero motion, which in VR means DLSS
+   would smear the sky on every head turn. They now take the frame's camera reprojection (the most common R of the
+   eye) at the far plane, through the scene draws' viewport transform.
+3. **RSX-thread cost.** GT5 busy race: DLSS on cost ~5.7 ms a frame (55.5 -> 42.5 FPS). In VR multiview the view-0 pass
+   re-uploaded every draw's constants and kept a history the shaders never read (each eye's constants carry their own
+   block): it now only identifies the draw; the histories use dense maps (no allocation per insert). Now ~2.5 ms
+   (54 -> 47.5-48 FPS on this scene; Sonic, ~200 draws, no measurable cost).
+4. **Merge with `openxr`.** The depth remap's screen variant took control bit `0x80000000` the same day as the DLSS
+   motion variant: it moved to `0x200` (a GCM flag bit upstream never copies or reads); the depth remap block is 6 vec4
+   now, so the DLSS block and varyings (23-25) follow it.
+
+**Setting.** VR / `DLSS (test)` in the game's (or global) config: `Off` (default), `DLAA`, `Quality`, `Balanced`,
+`Performance`, `Ultra Performance`; read at each boot. `RPCS3_DLSS` still overrides it (and gives the debug views).
+In VR, lower Resolution Scale by the mode's ratio (Quality 1.5: 450% -> 300%) to keep the headset's detail.
+
+**Build on Windows.** `git clone --depth 1 https://github.com/NVIDIA/DLSS F:psc3\source\DLSS`, set
+`DLSS_SDK=F:psc3\source\DLSS` with QTDIR and VULKAN_SDK, build emucore, VKGSRender (and GLGSRender after the config
+change), rpcs3 as usual; `nvngx_dlss.dll` is copied next to `rpcs3.exe`.
+
+**Open:** a headset run (Matt); GT5's RSX-thread cost (~2.5 ms on 1,600 draws); the HUD goes through DLSS with the scene.
 
 ## What it does
 
