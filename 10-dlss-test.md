@@ -1,14 +1,20 @@
 # DLSS test: motion vectors and DLSS for PS3 games (Gran Turismo 5 first)
 
 An experiment, not a release feature. Branch `ccr-d7a07b1e-7eh4fp` of hookmanuk/rpcs3, on top of `openxr`
-(`0b51d79`). Written 2026-10-10, self-tested 2026-10-11. Flat (2D) only: with VR stereo rendering the motion path
-stays off.
+(`0b51d79`). Written 2026-10-10, self-tested 2026-10-11. Flat (2D), and VR multiview for the motion vectors (each
+eye its own); DLSS itself in VR is the next step. The old two-draw VR stereo (no multiview) gets no motion.
 
 **Status.** The motion vectors, depth, jitter and MSAA paths are verified numerically by a headless self-test (below)
 on Linux with Mesa's software Vulkan driver: every probe within 0.75 px, no new Vulkan validation errors. The NGX
 calls compile and link against the SDK, and fail cleanly without an NVIDIA GPU. **Not yet tested: GT5 itself, and
 DLSS evaluating on an NVIDIA GPU** (no such GPU or the game in the cloud). The self-test found five bugs that
 would have shown up in GT5 as missing or wrong motion; they are fixed (see "Self-test").
+
+**VR multiview (2026-10-11).** Each eye's constants (the game's, transformed for that eye by the VR camera code)
+carry their own motion block with a matrix history per eye; the motion image has a layer per eye; the `motion`,
+`depth` and `motionraw` views replace both eyes. Verified by the self-test with the fake headset
+(`RPCS3_VR_FAKE_HMD`): both eyes' motion matches each eye's matrices for camera, object and combined motion. DLSS
+modes in VR leave the image unchanged for now (a log line says so).
 
 ## What it does
 
@@ -38,10 +44,27 @@ PS3 games have no motion vectors, so the renderer makes them from the matrices t
    the displayed image's size. DLSS (NGX, Vulkan) takes the displayed image (post-processed, HUD included) and writes
    an RGBA8 output at the window's size (up to 3x, or 1x for DLAA), which is presented instead.
 
-Files: `rpcs3/Emu/RSX/VK/VKDLSS.h` (overview and all settings), `VKDLSS.cpp`, `VKGSRenderDLSS.cpp`; one-line hooks
-in `VKGSRender.cpp`, `VKDraw.cpp`, `VKPresent.cpp`, `VKRenderPass.cpp`, `VKVertexProgram.cpp`,
-`VKFragmentProgram.cpp`, `vkutils/instance.cpp`, `vkutils/device.cpp`, `Capture/rsx_vr_hooks.*`. Self-test:
-`rpcs3/dlss_selftest/` (Linux, CMake option `BUILD_DLSS_SELFTEST`).
+Files: `rpcs3/Emu/RSX/VK/VKDLSS.h` (overview and all settings), `VKDLSS.cpp`, `VKGSRenderDLSS.cpp` (the renderer
+side), `VKDLSS.cmake`, `buildfiles/msvc/dlss.props`. Self-test: `rpcs3/dlss_selftest/` (Linux, CMake option
+`BUILD_DLSS_SELFTEST`).
+
+### Upstream footprint (merging from RPCS3)
+
+The code reaches upstream RPCS3 files through the fork's existing VR hooks wherever one exists, so merges from
+upstream see almost nothing new:
+
+| Upstream file | Change beyond the fork's VR hooks |
+|---|---|
+| `VKGSRender.cpp` | 1 line in `load_program()`: the motion attachment's blend state (pipeline properties are fixed before compilation) |
+| `VKRenderPass.cpp` | 1 line after the colour attachments: the motion attachment (no hook point between colour and depth) |
+| `Emu/CMakeLists.txt` | 1 line: `include(RSX/VK/VKDLSS.cmake)` (sources, `DLSS_SDK`, `BUILD_DLSS_SELFTEST`) |
+| `VKGSRender.vcxproj` | 1 line: imports `dlss.props` (sources, SDK, the DLL copy) |
+| `System.cpp` | 1 changed line: the capture replay fix (an upstream bug, worth sending upstream) |
+
+Everything else edits lines the fork already changes (the constants tail, the render pass key, the framebuffer
+images, `vr_publish_frame`'s call, the shader and device hook calls' arguments) or lives in fork files
+(`VKGSRenderVR.*`, `VKMultiviewVR.*`, `VKShaderInterpreter.cpp`'s fork line, `Capture/rsx_*`). `VKDraw.cpp`, the
+vertex decompiler and `rpcs3/CMakeLists.txt` are untouched.
 
 ## Building
 
@@ -73,6 +96,7 @@ Everything is set by environment variables, read once at start-up:
 | `RPCS3_DLSS_DEPTH_INVERTED` | set if the game's depth is reversed (1 near, 0 far) |
 | `RPCS3_DLSS_MOTION_16F` | RGBA16F motion image instead of RGBA32F (used anyway where the GPU cannot multisample RGBA32F) |
 | `RPCS3_DLSS_DEBUG` | per-draw log lines: draw keys and matrices, shader variant bits, skipped draws |
+| `RPCS3_REPLAY_TITLE_ID` | a title ID for an RSX capture replay, so the title's VR profile applies (replaying a GT5 capture in VR) |
 
 Use VR off (or no headset) and the Vulkan renderer. The log channel is `DLSS`: it reports the scene target,
 the motion image (size, samples, RGBA32F or 16F), NGX start-up and, every 300 frames, the camera draws matched
@@ -98,6 +122,9 @@ GT5's profile is in `vr-non-working/` on the branch, so set the camera block exp
    means the motion vectors' sign is wrong (`RPCS3_DLSS_MV_SIGN=--`); a soft, wobbling image means the jitter sign is
    wrong (`RPCS3_DLSS_JITTER_SIGN=--`).
 4. **Upscaling.** `RPCS3_DLSS=quality` with a large window and a lower Resolution Scale.
+5. **VR multiview motion.** With the headset (or `RPCS3_VR_FAKE_HMD=90`) and multiview on, `RPCS3_DLSS=motion`: both
+   eyes show the colour wheel; turning the head or driving moves both; a car alongside stays dark in both eyes. The log
+   shows "Motion image ..., one layer per eye". DLSS modes do nothing in VR yet.
 
 ## Self-test
 
@@ -143,12 +170,26 @@ Build and run (Linux, Ubuntu 24.04 tested; no Qt):
 ```bash
 cmake -S rpcs3 -B build-core -G Ninja -DCMAKE_BUILD_TYPE=Release -DCMAKE_C_COMPILER=gcc-14 -DCMAKE_CXX_COMPILER=g++-14 \
   -DBUILD_RPCS3_GUI=OFF -DBUILD_DLSS_SELFTEST=ON -DUSE_SDL=OFF -DUSE_DISCORD_RPC=OFF -DWITH_LLVM=OFF \
-  -DUSE_SYSTEM_FFMPEG=ON -DUSE_SYSTEM_PROTOBUF=OFF -DUSE_PRECOMPILED_HEADERS=OFF -DCMAKE_DISABLE_FIND_PACKAGE_Wayland=ON
+  -DUSE_SYSTEM_FFMPEG=ON -DUSE_SYSTEM_PROTOBUF=OFF -DUSE_PRECOMPILED_HEADERS=OFF -DCMAKE_DISABLE_FIND_PACKAGE_Wayland=ON \
+  -DUSE_NATIVE_INSTRUCTIONS=OFF
 ninja -C build-core dlss_selftest
 rpcs3/rpcs3/dlss_selftest/run_selftest.sh build-core/bin/dlss_selftest /tmp/dlss-selftest
 ```
 
 Needs `xvfb-run`, a Vulkan driver (Mesa lavapipe is enough) and Python 3 with numpy and Pillow.
+`USE_NATIVE_INSTRUCTIONS=OFF`: cloud containers can move to another CPU between sessions (an AVX-512 build then
+dies with an illegal instruction).
+
+VR mode (`DLSS_SELFTEST_VR=1`, part of `run_selftest.sh`): the self-test writes a VR profile for the title
+`DLSST0001` (camera block `c[0]`, column vectors, `frames_without_3d_as_screen: false`), gives the replay that title
+(`RPCS3_REPLAY_TITLE_ID`) and runs the fake headset (`RPCS3_VR_FAKE_HMD=90`), so multiview renders both eyes. The
+screenshots hold both eyes side by side; each eye's expected motion comes from that eye's matrices as the renderer
+recorded them for the presented frame, so the check covers the GPU side (each view reads its own block and writes its
+own layer) and that the recorded matrices are the ones drawn (the probe points land on the objects).
+
+The capture replayer sometimes flips before a frame's draws are all replayed, or replays a draw twice (more often
+on slow hosts, and with `RPCS3_DLSS_DEBUG`). Such frames, and frames whose draws had no previous frame to match, are
+listed as "not checked"; a run fails when more frames are skipped than checked.
 `DLSS_SELFTEST_VALIDATION=1` adds the Khronos validation layer. Notes from the cloud build: clang 18 was too old
 (gcc 14 works); a few `NP/` files hit a gcc 14 internal compiler error (built with clang 20); FFmpeg 6 needs a
 small local `media_utils.cpp` shim (not committed: the Windows build uses its own FFmpeg).
@@ -162,5 +203,9 @@ small local `media_utils.cpp` shim (not committed: the Windows build uses its ow
 - Pipelines with the motion attachment go into the shader cache; they are harmless with DLSS off.
 - GT5 scene detail: the mirror is drawn into the scene target with its own camera; its draws match their own
   previous frames (they are later repeats of the same meshes), so its motion should be right too.
-- VR: not supported yet. Each eye would need its own R (from the per-eye matrices), its own motion layer and its own
-  DLSS feature; the multiview path is where that would go.
+- VR: motion vectors per eye with multiview; the two-draw stereo gets none. Still to do for DLSS in the headset: an
+  NGX evaluation per eye (two features) on the eye images before OpenXR takes them, and a history reset when the VR
+  code switches between the fixed screen and the headset view (menus to driving): the eyes' projection and viewport
+  change at once, which matrix-only reprojection does not describe (the self-test saw it as a uniform offset).
+- Draw identity counts repeats (the n-th draw of a mesh): a frame that adds or drops one draw before another of the
+  same mesh shifts their matches for that frame.
