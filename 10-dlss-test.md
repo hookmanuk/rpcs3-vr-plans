@@ -114,6 +114,7 @@ RGBA32F and RGBA16F motion images, 24 frames each, 3 points per frame:
 | Check | Result |
 |---|---|
 | Motion vectors, all scenarios, 1x and 4x MSAA, RGBA32F and 16F | all probes within 0.75 px (the raw view's step is 0.25 px), e.g. moving cube -5.50 px measured vs -5.47 expected |
+| Final run of `run_selftest.sh` on a clean build (8 runs, 192 probes) | 191 within 0.75 px. One miss: the moving cube read 0 motion in one frame (object, 4x). Not reproduced in 3 reruns with debug logging. Probably the test's own timing (the cube's matrix patched one replay late, so two frames drew it in the same place, where 0 is correct), but not confirmed |
 | Depth view | floor and cubes at their own depths (cubes nearer) |
 | Jitter (`static`, `jitter` mode, 8 frames) | image shift follows Halton(2,3): x within 0.03 px; y tracks it (noisier measure); +x right, +y down in pixels |
 | Vulkan validation layer (motion, depth, jitter modes) | no errors beyond those with DLSS off |
