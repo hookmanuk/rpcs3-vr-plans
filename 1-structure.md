@@ -79,6 +79,7 @@ F:\rpsc3\source\.tools\nuget\nuget.exe restore rpcs3.sln -NonInteractive
 
 $env:QTDIR = 'C:\Qt611\6.11.2\msvc2022_64'
 $env:VULKAN_SDK = 'C:\VulkanSDK\1.4.341.1'
+$env:DLSS_SDK = 'F:psc3\source\DLSS'   # DLSS (on openxr since 2026-10-11): without it the build has no NGX
 & 'C:\Program Files\Microsoft Visual Studio\18\Insiders\MSBuild\Current\Bin\amd64\MSBuild.exe' `
   rpcs3.sln /p:Configuration=Release /p:Platform=x64 `
   /p:PreferredToolArchitecture=x64 /m:16 /nr:false /v:minimal /nologo
@@ -99,6 +100,7 @@ references:
 ```powershell
 $env:QTDIR = 'C:\Qt611\6.11.2\msvc2022_64'
 $env:VULKAN_SDK = 'C:\VulkanSDK\1.4.341.1'
+$env:DLSS_SDK = 'F:psc3\source\DLSS'   # DLSS (on openxr since 2026-10-11): without it the build has no NGX
 & 'C:\Program Files\Microsoft Visual Studio\18\Insiders\MSBuild\Current\Bin\amd64\MSBuild.exe' `
   rpcs3\rpcs3.vcxproj /t:Build /p:Configuration=Release /p:Platform=x64 `
   /p:PreferredToolArchitecture=x64 /p:BuildProjectReferences=false `
@@ -140,6 +142,7 @@ The VS 2022 CMake tree successfully detected Qt and Vulkan with:
 ```powershell
 $env:Qt6_ROOT = 'C:\Qt611\6.11.2\msvc2022_64'
 $env:VULKAN_SDK = 'C:\VulkanSDK\1.4.341.1'
+$env:DLSS_SDK = 'F:psc3\source\DLSS'   # DLSS (on openxr since 2026-10-11): without it the build has no NGX
 cmake --fresh --preset msvc -DUSE_SYSTEM_SDL=OFF `
   -DALSOFT_ENABLE_MODULES=OFF `
   -DCMAKE_DISABLE_FIND_PACKAGE_SDL3=TRUE
