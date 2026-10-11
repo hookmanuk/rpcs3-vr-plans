@@ -511,6 +511,11 @@ Notes: `profiles/BCUS98116-notes.md`. Evidence: `evidence/killzone2/`. Fork d12f
 
 Notes: `profiles/BCUS98114-notes.md` (the most detailed). Evidence: `evidence/gt5/`. Parked at vr5.
 
+- **Boot hang (Matt, 2026-10-10: "GT5 doesn't load"; ~1 boot in 3 died after "Accessing game data"): fixed 2026-10-11
+  night (fork 81a1335e2, simulator).** Framebuffers were destroyed while queued GPU work still used them (VR keeps more
+  frames queued than upstream assumes); idle framebuffers now go through the resource manager. Interleaved disc boots:
+  0/10 hung with the fix, 4/10 without. Generic (every game). Notes "2026-10-11 night: boot hang fixed".
+
 - **Rain follows the head (Matt, headset, 2026-10-10): fixed 2026-10-11 night (simulator), headset recheck.** The
   spray/mist particles use the camera matrix from `c[4..7]`; profile `camera_blocks: [0, 4]` (was `[0]`). The car ahead
   is now hidden in spray as in flat; a sunny race state is pixel-identical. Notes "2026-10-11 night".
@@ -842,9 +847,12 @@ view 2.0 (now the default; 2.5 drops to 68 FPS).
   the patch cave in the code segment's read-only tail ("Access violation writing location 0x4d7180"). It now writes
   past the page protection, as a patch does. Fresh boot through the menus on the simulator: race loads in stereo.
   The savestate runs had not shown it. Headset recheck.
-- **Open (Matt, headset, 2026-10-08): bird shadows still wrong.** First race, sitting on the start line, turning the
-  head: the birds' large dark shadows on the ground slide with the head instead of staying put
-  (`evidence/segarally/matt-bird-shadows-2026-10-08.png`). Not fixed by the 10-06 depth change. See notes. Was (Matt, 2026-10-05): 72 Hz has no margin; aim for 90.
+- **Bird shadows slid with the head (Matt, headset, 2026-10-08): fixed later that day (fork 9d39f9c93, simulator),**
+  **headset recheck.** The 912x912 shadow map passes went into the head-fixed HUD box (the passthrough-HUD test compared
+  with the 512x512 mirror view); with `hud_display_buffers_only` only display-buffer draws can be HUD now. VR matches
+  flat at the same moment. Notes "Fixed 2026-10-08". Was: on the start line the birds' shadows slid over the ground as
+  the head turned (`evidence/segarally/matt-bird-shadows-2026-10-08.png`).
+- Old (Matt, 2026-10-05; since done: 90 Hz on 2026-10-09, the start 74-80 at 90 on 2026-10-11): 72 Hz had no margin, aim for 90.
   Old notes: Known so far: RSX thread ~12 ms a frame in stereo at 72 (~5 ms flat at
   175-225 FPS); Wider view 1.0 and 2.0 cost the same. Profile where the time goes (`RPCS3_VR_FRAMESTATS`,
   `RPCS3_VR_GPUPROF`, draw counts per pass) and look for passes to drop or share between the eyes (shadow

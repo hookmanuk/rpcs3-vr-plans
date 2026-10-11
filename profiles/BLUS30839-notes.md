@@ -569,3 +569,9 @@ Matt's `BLUS30839_1_7` does not present a frame here (as `_1_3` before). My own 
   can miss lights there. A proper fix would map the tile quads into each eye's view (or draw this pass full screen with
   `depth_remap`); `depth_remap_ray_texcoord` is per profile (the shadow cascades use texcoord 1, this pass texcoord 0).
 - Checked: the large dark area beside the car at yaw -30 is the cave overhang's shadow, consistent in both eyes.
+
+Later the same night: Matt's `BLUS30839_1_7` is not a renderer hang. It loads onto the game's own GAME PAUSED menu
+(grey background, Resume highlighted); the game draws that once and then does not flip, the RSX thread idles waiting for
+commands (RSX sampler: `run_FIFO` yield). Start and Cross from the keyboard pad do not resume it, flat (desktop) the
+same, so it is the known "Matt's states do not run here" case (probably his real pad, as GT5's states). My
+`son_canyon_tunnel` loaded 6/6 after the framebuffer fix (fork 81a1335e2; it had failed to present once in ~15 before).

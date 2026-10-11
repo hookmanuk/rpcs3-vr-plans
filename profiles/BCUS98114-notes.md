@@ -642,3 +642,28 @@ pixels, all in the spray: the car ahead is now mostly hidden in spray, as in fla
 
 Load failures seen on the way (savestate loads, not disc boots): `VK_ERROR_DEVICE_LOST` twice in ~25 loads (once 3 s
 in, right after "headset eye shape applied before the first frame"); 6/6 loads of `2_20` fine in a separate batch.
+
+## 2026-10-11 night: boot hang fixed (framebuffers freed while still queued)
+
+The disc-boot hang (first frames after "Accessing game data": CB chain out of entries, nvlddmkm 153, a GPU write to an
+unmapped address) was a use-after-free of **framebuffers**. Upstream `remove_unused_framebuffers()` destroys a
+framebuffer (and the image views it owns) after two idle frame ends, assuming the GPU is at most two frames behind; in
+VR the GPU is the bottleneck and a swapchain's worth of frames queue up. Fork 81a1335e2: idle framebuffers go to the
+resource manager, which frees them once everything submitted before has finished.
+
+How it was found:
+- Interleaved disc boots (`scratchpad gt5/quick.sh`): Headset Eye Shape on 3/10 hung, off 0/14 (plus one unrelated
+  device loss 2.6 s into a boot); multiview on 1/8, off 0/8. Neither was the cause; both change GPU load and timing.
+- The two caught faults (`RPCS3_VR_GPU_CHECKPOINTS`, 2026-10-10) sat at different commands (inside the eye copy of
+  `publish_eyes`, and after the flip), i.e. the faulting memory was used by more than one command.
+- Vulkan validation (`Debug output: true` in the game config, `VK_KHRONOS_VALIDATION_DUPLICATE_MESSAGE_LIMIT=0`; script
+  `gt5/val.sh`): with multiview, `vkDestroyFramebuffer(): can't be called on VkFramebuffer ... currently in use by
+  VkCommandBuffer`, from `advance_queued_frames -> remove_unused_framebuffers`. Gone with the change.
+- A/B with the dev switch `RPCS3_VR_FBO_RETIRE=0` (old behaviour), interleaved, eye shape and multiview on: **0/10
+  hung with the change, 4/10 without**.
+
+Validation also reports, with multiview only, draws with "no valid pipeline bound" and depth bias/bounds "never set" in
+the command buffer (the display-buffer composite draws, 2048x1080). Our bind cache was checked (a real bind in the same
+recording, same handle, no destroyed handle reused, no submit between bind and draw) and the frames render correctly:
+the layer's own bookkeeping, left alone. Also reported: the OpenXR runtime creates a timeline semaphore on our device
+without the `timelineSemaphore` feature enabled (harmless on NVIDIA; one line in device creation if it ever matters).
