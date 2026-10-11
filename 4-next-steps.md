@@ -900,6 +900,21 @@ Video > VR > Headset Eye Shape (default on), `RPCS3_VR_EYE_SHAPE=0/1`. Fork comm
 - Experiments reverted: SPU-decrementer-only and sleep-only clock scaling (Dragon Age: Inquisition's load hang; the PPU
   timebase is the trigger); a timebase-read histogram hook (`RPCS3_TB_TRACE`, interpreter).
 
+## After vr9: first-run HUD and menus while shaders compile (open, 2026-10-11)
+
+- [ ] **To do after the vr9 release (Matt).** With the default `Shader Mode` *Async Recompiler with Shader Interpreter*,
+  draws whose shaders are not compiled yet go through the shader interpreter, and in VR those frames are wrong until
+  the cache fills: MotorStorm's HUD stuck to the face, or menus flipping between the fixed screen and the headset view
+  (Matt, 2026-10-11: first run wrong, second run right, on every build that changed the shaders). Every user's first
+  session of a game, and the first after each update, runs cold. Idea: in VR, skip a draw whose shader is still
+  compiling (missing for a moment instead of misplaced) instead of interpreting it; measure the cost on a cold cache
+  before shipping. vr9 lists it under known issues.
+- **Testing lesson:** judge a VR rendering change on a warm cache (the second run of a build). A cold first run
+  confounded tonight's MotorStorm bisect.
+- Also fixed on 2026-10-11 (fork 382db6c6f): the depth remap is 5 vec4 again for `depth_remap_programs` (6 only for
+  `depth_remap_screen`), and the shader cache skips pipelines with the DLSS motion bit when DLSS is off (dev builds had
+  used that bit for `depth_remap_screen`; reading such entries as the wrong variant crashed MotorStorm's shader compile).
+
 ## Unreleased games
 
 Per-game state for everything not yet released (Split/Second, Blur, inFamous 1 and 2, MGS4, NFS Most Wanted,
