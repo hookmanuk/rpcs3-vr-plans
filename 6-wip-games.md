@@ -791,6 +791,10 @@ Notes: `profiles/BLUS30839-notes.md`. Profile and patch file in `vr-non-working/
   (`ad9998b4d5599447`) has its tap offsets (fc5, fc7, fc10, fc12) sized in guest pixels, so at high resolution scale it
   blurs over several real pixels. `fragment_constant_overrides` setting them to 0 (FXAA off) is in the
   `vr-non-working` profile and the bin copy, **not yet checked visually or committed**.
+- **Ghosting on fast head turns (Matt, headset, 2026-10-11, state `BLUS30839_1_8` = `vrtest_sonic_matt_ghost2`): fixed
+  2026-10-11 (fork 7th commit of the day, profile `reproject_older_frames`), simulator; headset recheck.** The final
+  composite's radial blur blends a copy of the previous frame (texture `0xc1608000`, filled by a blit), drawn at an older
+  head pose: doubled scenery mid-turn (`evidence/sonic-ghosting/fast_turn_*`). Earlier report below.
 - **Open (Matt, headset, 2026-10-09): turning the head leaves ghosting everywhere**, which Matt thinks is linked to the
   sunlight. State `BLUS30839_1_6` (17:49), hard-linked as `vrtest_sonic_matt_ghosting`. Not investigated yet.
 - **Open:** headset run.

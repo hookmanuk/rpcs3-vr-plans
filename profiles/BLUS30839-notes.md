@@ -619,3 +619,16 @@ Matt's `BLUS30839_1_7` still loads onto the GAME PAUSED menu and never flips her
 DRAWING_END callback without a BEGIN callback" at load (the state was saved with the home menu open: the game had
 DRAWING_BEGIN and SYSTEM_MENU_OPEN). Opening and closing the home menu (keyboard pad PS Button = Backspace) and Cross on
 Resume do not wake it. My own states load and run.
+
+## 2026-10-11: ghosting on fast head turns fixed (`reproject_older_frames`)
+
+Matt (headset): turning the head quickly shows ghosting / accumulation of previous frames; not visible on the desktop.
+State `BLUS30839_1_8` (paused, scene still drawn) = `vrtest_sonic_matt_ghost2`. Reproduced on the simulator by writing
+the head pose at ~90 Hz (yaw +-30 degrees, 1 Hz; `scratchpad/sweep.py`; the simulator's own pose_sweep command was acked but
+not seen in the views): mid-turn the tower and trees are doubled and the picture washed out. Cause: the final composite
+(`520b713527e8c714`, fp with 26 constants) is a radial blur that averages three samples of a 1280x720 texture `0xc1608000`
+toward the screen centre with the current colour, weighted by `c[26].x` x distance from the centre; no draw writes that
+texture in the frame (a blit copy of the previous frame), so it holds the previous head pose. Fix: profile
+`reproject_older_frames: true` (older-pose buffers turned to the current pose): no doubling mid-turn; race state at yaw 0/30
+and mid-sweep clean, 90 FPS. A `fragment_constant_overrides` of `c[26]` was rejected: ~90 composite variants share the
+vertex program, several with 27-29 constants.
