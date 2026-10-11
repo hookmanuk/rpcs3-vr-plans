@@ -629,3 +629,16 @@ VP analysis 2.3 with heap allocations), submits 4.2, blits + inline transfers ~6
   perf work, not the headset overlay, not the shader/hdd1 caches; never without an OpenXR session (0/8 desktop).
   `RPCS3_VR_GPU_CHECKPOINTS=1`: a GPU **write to an unmapped address** after the fork's flip work (last marker reached:
   flip end) and before the next frame's first draw. Finer markers and the address binding reports hide it (28 clean).
+
+## 2026-10-11 night: rain (spray) followed the head (Matt, Arcade second track)
+
+Matt's state `BCUS98114_2_20` (rain race, cockpit view, paused). The spray/mist particles behind the cars
+(`855df23514c57cc4`, ~11,700 vertices, blended) transform with a view-projection in `c[4..7]`, the same matrix as the
+scene camera in `c[0..3]` (both widened by the Wider view patch: |y|/|x| 3.556), but the profile listed only `c[0]`, so
+they were drawn head-locked with the game's widened projection. `camera_blocks: [0, 4]` makes them camera draws.
+Checks: paused frames are deterministic (two old-profile loads differ by 234 pixels); the new profile changes ~9,700
+pixels, all in the spray: the car ahead is now mostly hidden in spray, as in flat (old VR showed it clearly). `2_19`
+(sunny race, cars, HUD): 0 pixels different. Headset recheck: does the rain still follow the head anywhere?
+
+Load failures seen on the way (savestate loads, not disc boots): `VK_ERROR_DEVICE_LOST` twice in ~25 loads (once 3 s
+in, right after "headset eye shape applied before the first frame"); 6/6 loads of `2_20` fine in a separate batch.
