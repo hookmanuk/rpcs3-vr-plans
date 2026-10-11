@@ -515,6 +515,10 @@ Notes: `profiles/BCUS98114-notes.md` (the most detailed). Evidence: `evidence/gt
   night (fork 81a1335e2, simulator).** Framebuffers were destroyed while queued GPU work still used them (VR keeps more
   frames queued than upstream assumes); idle framebuffers now go through the resource manager. Interleaved disc boots:
   0/10 hung with the fix, 4/10 without. Generic (every game). Notes "2026-10-11 night: boot hang fixed".
+- **Race savestate loads lost the GPU device about half the time (`2_17`, 2026-10-11 morning): worked around (fork
+  9db719f39).** The desktop mirror's crop of GT5's large display buffer is off by default (crop on 5/8 loads lost, off
+  0/8); the desktop window now shows each eye's whole surface with the picture in its top-left part (headset unchanged).
+  Cause inside the crop path not found. Notes "2026-10-11 morning".
 
 - **Rain follows the head (Matt, headset, 2026-10-10): fixed 2026-10-11 night (simulator), headset recheck.** The
   spray/mist particles use the camera matrix from `c[4..7]`; profile `camera_blocks: [0, 4]` (was `[0]`). The car ahead

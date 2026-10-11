@@ -667,3 +667,29 @@ the command buffer (the display-buffer composite draws, 2048x1080). Our bind cac
 recording, same handle, no destroyed handle reused, no submit between bind and draw) and the frames render correctly:
 the layer's own bookkeeping, left alone. Also reported: the OpenXR runtime creates a timeline semaphore on our device
 without the `timelineSemaphore` feature enabled (harmless on NVIDIA; one line in device creation if it ever matters).
+
+## 2026-10-11 morning: race savestate loads lost the GPU device (worked around, fork 9db719f39)
+
+`gt5_busy_race_2_17` (hard link of Matt's 2_17) loads in VR lose the device in roughly half the loads (it was ~2 in 25
+for other states on 10-11 night), ~0.3 s after "VR: camera draws again: headset view", which follows "multiview stereo on"
+(on a load the first ~25 s of race frames render in two-draw mode). Script `scratchpad gt5/ckload.sh STATE NAME [ENV..]`.
+Not the framebuffer change (fix off: 1/3 lost) and not the late readbacks (a 120-flip hold after the switch: still lost).
+- GPU checkpoints: always right after "flip end" with the next frame not reached; the CPU a whole frame ahead.
+- Fault address (VK_EXT_device_fault, write) mapped with address binding reports plus a temporary image create/destroy
+  log: twice inside the **desktop mirror's crop image** (`vr_crop_for_side_by_side`, 3200x3600 BGRA, one layer), created
+  in that frame in a freshly allocated 256 MB block, never destroyed; only ~2.1 GB of images live (not memory pressure).
+- The crop cache key had no eye: both eyes shared one crop image (the mirror showed one eye twice). Fixed (one per eye).
+- Not conclusive yet (rates drift; small samples): no crop at all 0/5 (instrumented), per-eye crop 0/6 instrumented but
+  2/6 clean, multiview off 0/3, eye shape off 0/3. Dev switch `RPCS3_VR_MIRROR_CROP=0` for the A/B.
+- A separate, rarer load stall (~1 in 8): the RSX thread goes quiet after the first present, before multiview, CPU idle
+  (also seen once in Sonic's `son_canyon_tunnel`). Needs an `RPCS3_RSX_SAMPLE=2` capture.
+
+Outcome (fork 9db719f39):
+- Interleaved loads, mirror crop on vs off (`RPCS3_VR_MIRROR_CROP`): **on 5 of 8 lost, off 0 of 8**. The crop is now
+  off by default: the desktop mirror shows each eye's whole 2048x1080 surface (the game's picture in its top-left part);
+  the headset is not affected. Default build: 6/6 loads and 2/2 disc boots fine. Cause inside the crop path not found
+  (its copy and images look valid; one fault was a write to address 0, so it may only expose another stray write).
+- Also found with validation and fixed: VKDraw.cpp moved a render target out of the feedback-loop layout for layer 0
+  only, leaving multiview's layer 1 in that layout untracked (~735 layout errors per load, gone). Not the crash.
+- Excluded on the way: late readbacks (a hold after the multiview switch: still lost), the Wider view culling word,
+  layer-count checks on recycled surfaces, the framebuffer change, memory pressure (~2 GB of images live).
