@@ -160,6 +160,14 @@ Bugs it found (all fixed on the branch):
 4. **2x MSAA RGBA32F** may not be supported as a colour attachment: falls back to RGBA16F, with depth stored as
    `1 - z` so half floats keep it precise near the far plane.
 5. **NGX failure** stopped the frame bookkeeping (only matters for the self-test, but now the game carries on).
+6. **Multiview state after a new render pass instance (a VR fork bug the motion path made frequent).** With multiview,
+   all non-render-pass state is undefined at the start of each subpass (`VK_KHR_multiview`): the pipeline,
+   descriptors, push constants and dynamic state must be set again after `vkCmdBeginRenderPass`. `emit_geometry`
+   binds them and only then begins the pass when it changed, and the command buffer's bind cache kept later draws
+   from binding again (validation: `vkCmdDraw-None-08606`, "no pipeline bound"). The VR fork hit it on the first
+   multiview frame; the motion image's per-frame clear (which ends the pass) made it every frame.
+   `vr_after_render_pass_bound` now binds everything again inside a newly begun multiview pass. NVIDIA drivers may
+   have tolerated it, but it was undefined behaviour in every multiview game.
 
 Earlier fixes from the same runs: frames whose flips draw nothing (re-present the last output), constant rewrites
 between draws (no history pollution), the scene target re-detected at every frame's first bind, and an upstream
@@ -187,9 +195,12 @@ screenshots hold both eyes side by side; each eye's expected motion comes from t
 recorded them for the presented frame, so the check covers the GPU side (each view reads its own block and writes its
 own layer) and that the recorded matrices are the ones drawn (the probe points land on the objects).
 
-The capture replayer sometimes flips before a frame's draws are all replayed, or replays a draw twice (more often
-on slow hosts, and with `RPCS3_DLSS_DEBUG`). Such frames, and frames whose draws had no previous frame to match, are
-listed as "not checked"; a run fails when more frames are skipped than checked.
+The capture holds the whole sequence (each frame's state, clear, draws with that frame's matrices, and an in-FIFO
+flip, `GCM_FLIP_COMMAND`, with the renderer in HLE mode for it). The first version replayed one frame per replay loop
+and rewrote its constants between loops; the replayer's own flip (requested from its thread after each loop) then
+landed inside the next frame now and then, worst in VR. With the unrolled capture every flip carries exactly the
+frame's three draws. Frames that still come out incomplete would be listed as "not checked" (a run fails when more
+are skipped than checked); none are now.
 `DLSS_SELFTEST_VALIDATION=1` adds the Khronos validation layer. Notes from the cloud build: clang 18 was too old
 (gcc 14 works); a few `NP/` files hit a gcc 14 internal compiler error (built with clang 20); FFmpeg 6 needs a
 small local `media_utils.cpp` shim (not committed: the Windows build uses its own FFmpeg).
