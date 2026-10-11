@@ -750,11 +750,15 @@ and no recorded measurements: start from the playbook if it is picked up again.
 
 Notes: `profiles/BLUS30839-notes.md`. Profile and patch file in `vr-non-working/` (copies untracked in `bin/`).
 
-- **Green stripes on head turns (Matt, headset, 2026-10-10, Canyon Carnage tunnel): fixed 2026-10-11 night
-  (simulator), headset recheck.** A resolution-scaling bug (flat at 450% too): the cave's tiled lighting reads back a
-  20x12 min/max depth level; scaled, the readback mixes packed depth and lights land in the wrong tiles. Profile
-  `min_scalable_dimension: 20`. A small unlit block can remain in the right eye at some poses (tile quads in the
-  game's screen space; notes). States `son_canyon_grid`, `son_canyon_tunnel`.
+- **Green stripes on head turns (Matt, headset, 2026-10-10).** His report: Career > World Tour > Sunshine Coast, go Right
+  to Canyon Carnage (not Coastal Cruise), hold R2 until the tunnel (the blue-lit cave); turning the head left or right puts
+  a green stripes overlay across the whole screen. State `BLUS30839_1_7`, screenshots `evidence/sonic-green-stripes/`.
+  **Fixed 2026-10-11 (fork 9585700b9, simulator), headset recheck:** the cave's tiled lights were drawn in the game's screen space, so the
+  teal light slid over walls and floor as the head turned and the right eye had unlit blocks. New profile key
+  `depth_remap_screen` (tile quads turn with the head, each eye pixel lit by its own tile's lights at its real position,
+  the light-culling depth pyramid read in the game's view); plus the night's `min_scalable_dimension: 20` (the readback grid
+  at 450%). Yaw 0/+-30 in the overhang and the blue cave: clean, eyes alike, 90 Hz at 450%. See the notes. Matt's `_1_7`
+  still never runs here (saved with the home menu open; see the notes).
 
 - **Frame rate:** fork patch *Unlocked frame rate (follows Vblank Rate)*: the vblank handler's flip interval 2 -> 1.
   Game time is measured: real-time at 60/120/180 (same track positions at the same wall times). Flat 130-180 FPS.

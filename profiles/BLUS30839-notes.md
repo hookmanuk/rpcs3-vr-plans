@@ -578,3 +578,44 @@ same, so it is the known "Matt's states do not run here" case (probably his real
 The earlier one-in-15 `son_canyon_tunnel` "no present" was a process crash (stack overflow inside NVIDIA's Vulkan driver,
 dump 01:15): the same early-load race as GT5's (desktop swapchain rebuild vs the OpenXR thread's queue), fixed in fork
 1ec5dbc9f (GT5 notes "early-load failure").
+
+## 2026-10-11 morning: the green stripes themselves (cave light following the head) fixed: `depth_remap_screen`
+
+Matt's report (headset, 2026-10-10): Career > World Tour > Sunshine Coast, go Right to Canyon Carnage (not Coastal Cruise),
+hold R2 until the tunnel (the blue-lit cave, `evidence/sonic-green-stripes/matt-cave-*.png`): turning the head left or
+right puts a green stripes overlay across the whole screen. His state `BLUS30839_1_7`.
+
+The night's `min_scalable_dimension: 20` fixed only the resolution-scaling part (the hard teal tile grid, flat at 450% too).
+With it, at yaw 0 the right eye still had large unlit rectangles (`overhang_before_yaw0_right_eye_blocks.png`) and on head
+turns the cave's teal light covered the floor (`cave_before_yaw0_30_-30.png`). Three faults in the tiled light pass
+(`8761ccb6b94bd151`, one 6-vertex quad per 64x64 screen tile in NDC, two to four point or spot lights per draw as fragment
+constants, 376-479 draws a frame; fragment variants fp380 = 4 point lights, fp370 = 2 spot lights, fp379):
+1. The quads sat at the game's screen position in both eyes, so a tile's lights landed on whatever each eye saw there.
+2. The pass rebuilt positions with the game's view ray (`tc0` = (x tan, y tan, -1) from `c[8].zw`) at the eye's pixel, so
+   the lighting was glued to the screen: turning the head dragged the light patches over the walls (the "overlay").
+3. The game culls each tile's lights against a min/max depth pyramid it reads back (`3f4215b47aae1a90` 1280x720 -> 640x360,
+   then `3f4214747aae1a90` down to 20x12; z = -nearest view distance, w = farthest, xy averaged flags), rendered from the
+   left eye's view at the same screen positions, not the game camera's.
+
+Fix (fork 9585700b9, profile `depth_remap_screen`, README): the tile quads are drawn through the scene camera's eye transform at the far
+end of the depth range (they turn with the head), widened by `tile_margin` 0.25 and with border sides pushed out (the eye sees
+past the game's 50-degree-high screen); the fragment shader takes each eye pixel's depth to the game camera, keeps it only if
+that point is in the quad's tile in the game's view (`vr_depth_remap[5]` = the tile rectangle read from the quad's vertices),
+and gives the program the game camera's ray to it and the eye pixel's G-buffer uv. The pyramid's first level reads, for each
+game direction, the eye's depth in that direction converted to game depth (`depth_programs`), so the tiles' depth ranges are
+the game view's (without it hard dark tiles remained, `tun_fix*`).
+
+Found on the way: the preprojected mapping used the latest camera block, which here is a shadow-cascade volume's (diagonal
+~290/517/-328, a non-uniform scale): its eye offset is distorted and the tiles landed a fraction of a tile off their pixels
+(dark lines at every tile column with margin 0.25, gone with 1.5). Screen programs now map through the scene camera's blocks,
+the same the depth remap uses.
+
+Checked on the simulator at 450% (fresh loads of `son_canyon_tunnel`; the cave itself ~21 s of R2 in): overhang yaw 0, +30,
+-30 and the blue cave at 0, +30, -30: no blocks, no slide, light fixed on the walls, eyes alike (`overhang_after_*`,
+`cave_after_yaw0_30_-30.png`); 90.0 FPS. Control without the key at the same point: green floor at +-30 (`cave_before_*`).
+Headset recheck needed.
+
+Matt's `BLUS30839_1_7` still loads onto the GAME PAUSED menu and never flips here: the log shows "Tried to enqueue a
+DRAWING_END callback without a BEGIN callback" at load (the state was saved with the home menu open: the game had
+DRAWING_BEGIN and SYSTEM_MENU_OPEN). Opening and closing the home menu (keyboard pad PS Button = Backspace) and Cross on
+Resume do not wake it. My own states load and run.

@@ -1,0 +1,22 @@
+# path: OpenXR Simulator, RPCS3_VR_MULTIVIEW=default, build 1ec5dbc9f VR: external queue sync for the device-wide wait a
+# BCUS98282 vrtest_rc1_veldin: Ratchet & Clank 1: Veldin, start (HelpDesk tip on screen)
+BCUS98282 vrtest_rc1_veldin vblank 72 scale 300%:
+   576 frames over 8.0 s: avg 72.0 FPS, 1% low 57.7, 0.1% low 55.4 (worst frame 18.0 ms), median 13.91 ms, late 0.00%, RSX thread 9.93 ms/frame, new frames 72.0/s
+   576 frames over 8.0 s: avg 72.0 FPS, 1% low 57.7, 0.1% low 55.1 (worst frame 18.1 ms), median 13.92 ms, late 0.00%, RSX thread 9.69 ms/frame, new frames 72.0/s
+   576 frames over 8.0 s: avg 72.0 FPS, 1% low 56.9, 0.1% low 55.0 (worst frame 18.2 ms), median 13.92 ms, late 0.00%, RSX thread 9.50 ms/frame, new frames 72.0/s
+   => median of 3 windows: avg 72.0 FPS, 1% low 57.7, late frames 0.00%, RSX thread 9.69 ms/frame
+   eyes: residual at 0 22.94, best shift -232 (2.84) 
+BCUS98282 vrtest_rc1_veldin vblank 90 scale 300%:
+   713 frames over 8.0 s: avg 89.0 FPS, 1% low 67.0, 0.1% low 63.3 (worst frame 15.8 ms), median 11.12 ms, late 0.00%, RSX thread 9.92 ms/frame, new frames 89.0/s
+   714 frames over 8.0 s: avg 89.2 FPS, 1% low 67.1, 0.1% low 61.9 (worst frame 16.1 ms), median 11.13 ms, late 0.00%, RSX thread 9.62 ms/frame, new frames 89.2/s
+   714 frames over 8.0 s: avg 89.2 FPS, 1% low 67.4, 0.1% low 53.3 (worst frame 18.8 ms), median 11.18 ms, late 0.14%, RSX thread 9.42 ms/frame, new frames 89.2/s
+   => median of 3 windows: avg 89.2 FPS, 1% low 67.1, late frames 0.00%, RSX thread 9.62 ms/frame
+   eyes: residual at 0 23.12, best shift -232 (2.88) 
+BCUS98282 vrtest_rc1_veldin vblank 120 scale 300%:
+   828 frames over 8.0 s: avg 103.4 FPS, 1% low 74.9, 0.1% low 70.0 (worst frame 14.3 ms), median 9.48 ms, late 0.12%, RSX thread 9.61 ms/frame, new frames 103.4/s
+   858 frames over 8.0 s: avg 107.2 FPS, 1% low 79.7, 0.1% low 74.6 (worst frame 13.4 ms), median 9.21 ms, late 0.00%, RSX thread 9.28 ms/frame, new frames 107.2/s
+   881 frames over 8.0 s: avg 110.0 FPS, 1% low 82.0, 0.1% low 74.5 (worst frame 13.4 ms), median 8.93 ms, late 0.11%, RSX thread 9.03 ms/frame, new frames 110.0/s
+   => median of 3 windows: avg 107.2 FPS, 1% low 79.7, late frames 0.11%, RSX thread 9.28 ms/frame
+   eyes: residual at 0 23.64, best shift -232 (3.25) 
+SUSTAINABLE BCUS98282 vrtest_rc1_veldin: 90 Hz
+DONE /f/rpsc3/source/plans/evidence/vrtest/2026-10-11-1026-rc1recheck2

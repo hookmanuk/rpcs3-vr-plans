@@ -1,0 +1,10 @@
+# path: OpenXR Simulator, RPCS3_VR_MULTIVIEW=default, build a6da2e05a VR: headset-shaped eyes (per-axis resolution scale
+# BCUS98282 vrtest_rc1_veldin: Ratchet & Clank 1: Veldin, start (HelpDesk tip on screen)
+BCUS98282 vrtest_rc1_veldin vblank 90 scale 300%:
+   700 frames over 8.0 s: avg 87.5 FPS, 1% low 63.7, 0.1% low 56.9 (worst frame 17.6 ms), median 11.23 ms, late 0.14%, RSX thread 10.56 ms/frame, new frames 87.5/s
+   710 frames over 8.0 s: avg 88.7 FPS, 1% low 67.0, 0.1% low 61.4 (worst frame 16.3 ms), median 11.23 ms, late 0.00%, RSX thread 10.20 ms/frame, new frames 88.7/s
+   711 frames over 8.0 s: avg 88.8 FPS, 1% low 67.0, 0.1% low 62.3 (worst frame 16.1 ms), median 11.20 ms, late 0.00%, RSX thread 9.92 ms/frame, new frames 88.8/s
+   => median of 3 windows: avg 88.7 FPS, 1% low 67.0, late frames 0.00%, RSX thread 10.20 ms/frame
+   eyes: residual at 0 24.94, best shift -162 (3.28) 
+SUSTAINABLE BCUS98282 vrtest_rc1_veldin: none Hz
+# BCUS98282 vrtest_rc2_aranos: Ratchet & Clank 2: Aranos interior (light scene)
