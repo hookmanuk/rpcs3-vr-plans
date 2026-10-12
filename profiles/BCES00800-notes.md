@@ -256,3 +256,18 @@ already 720p (NFS Most Wanted, non-working, at 480p).
 Dev check (OpenXR Simulator, `render=1`, dev config set to 1920x1080 for the run): all three executables log the
 replacement, GOW1 reports `Screen Width: 1280 ... 1216x684`, and new-game gameplay switches to the headset view
 (`camera draws again: headset view` at 2:17; traces `C7476 x529`, pose advancing every frame).
+
+## 2026-10-12: gameplay hang about five minutes into God of War 1 (also in vr9)
+
+Matt, headset, fresh vr10 release folder (and the vr9 release): God of War 1 from a new game hangs in the same place
+in gameplay, ~5 minutes of fighting into the opening. Not caused by vr10's frame pacing (same hang with
+RPCS3_VR_XR_PACE=0) and present in vr9, so older than the vr10 changes. Savestates do not reproduce it (they do not
+work properly for this game). Log pattern in both hangs: the view switches between the headset view and the fixed
+screen every 1-2 s ("camera draws again" / "frames without camera draws") for ~10 s, then the game stops logging;
+cellVdec "waiting for a consumer" every 5 s (an in-game video decoder whose frames are no longer taken); CPU ~3%; PPU
+syscall counts keep rising (~5,000 sys_timer_usleep/s, ~650 sys_semaphore_wait/s): game threads poll for something
+that never arrives, most likely the RSX side. Stopping WipEout in the same session also found the RSX thread
+unresponsive ("rsx::thread is too sleepy").
+Next: a memory dump of the hung process (Task Manager > Create memory dump file) read with
+`tools/re/dumpstacks.ps1` (cdb from WinDbg, symbols rpcs3/bin/rpcs3.pdb of the same build) for every thread's stack.
+
