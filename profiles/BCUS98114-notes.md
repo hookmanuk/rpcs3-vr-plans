@@ -752,3 +752,21 @@ storage) to two worker threads (SPUA.) and steps the C++ interpreter until it is
 (async off) still hangs. Upstream bug report candidate.
 
 Also on a fresh install: the PKG dialog offers the disc's 2.11 update; the profile and patches are for 01.00 (Skip).
+
+## 2026-10-12: fresh install, text and race start (vr10)
+
+- **Garbled text in VR (fresh install):** GT5's Adjust Display Area defaults to 0.9 (a byte step count at 0x426bc960,
+  n = 10, area = 1 - n/100; the derived float at 0x4fe6a28c next to 1280, 720). The game shrinks its 2D layer to it and
+  rasterises the font atlas at the inverse (1/0.9); the profile's output_pixel_draws_not_hud wanted exactly 1:1, so the
+  atlas draws were boxed as HUD. Dev never showed it: Matt's save has 1.0. Found by seeding the fresh folder with dev's
+  pieces (Matt's suggestion): only the save mattered; then RPCS3_VR_HUDLOG=1 (each HUD-candidate draw's matrix scale):
+  only a 1.1111 draw differed. Fork 0c20456b3: uniform factor 0.8-1.25 counts as output pixels.
+- **Menus not on the fixed screen (fresh install):** at 0.9 the full-screen 2D targets are 2304x1296, not 2560x1440, so
+  screen_frame_draws and reduced_scale_frames never matched. Profile display_area_sizes (fork d4c29f8dd).
+  Matt: force 1.0 in VR instead (no benefit to less). Not done yet: the code that applies the byte was not found (the
+  float at 0x4fe6a28c is derived; writing it each frame changed nothing). 3D also renders into a 0.9 viewport then.
+- **Race-start hang:** the RSX thread waits forever on a fence in flip (GPU hang) right after the Resolution Scale goes
+  back from the pre-race views' 150% to 400%; sys_rsx_context_iomap and sys_mmapper block behind it. 2 of 3 fresh race
+  starts; 0 of 5 without the scale change. Matt: no reason to lower it (2D window). Profile reduced_scale_frames without
+  a scale (still marks cinematic frames), fork e0ecd0d65.
+- Fresh-install race driving: tools in the scratchpad (gt5f.sh, gt5drive.py, race.sh: Right X = Arcade, X x6, start).

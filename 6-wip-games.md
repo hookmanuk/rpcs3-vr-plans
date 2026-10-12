@@ -509,6 +509,10 @@ Notes: `profiles/BCUS98116-notes.md`. Evidence: `evidence/killzone2/`. Fork d12f
 
 ## Gran Turismo 5 (BCUS98114, XL Edition, US; disc 01.00 since 2026-10-03, was v02.11)
 
+**Back in for vr10 (2026-10-12, fork e0ecd0d65, zip rpcs3-v0.0.43-vr10-e0ecd0d6): works from a fresh install (SPU async
+compile, display-area fixes, no resolution switch at race starts; details in the notes file). Awaiting Matt's test.
+Open: force display area 1.0 in VR (Matt).**
+
 **Pulled from vr9 (Matt, 2026-10-12: "stop. Just remove GT5 from the release."; fork 9fcf9ddbf moved the profile and
 patch back to `vr-non-working/`).** Matt's report on the vr9 test folder (fresh install, 7d93c188): "on first boot it hangs
 on black screen in the menu. On a restart the menu text is all garbled, and running a race hangs on the race flyby."
