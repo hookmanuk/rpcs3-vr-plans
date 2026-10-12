@@ -275,4 +275,10 @@ chests", a parchment box at the bottom of the screen) that does not show in the 
 window. The dump (`dumpstacks.ps1`) agrees: the RSX thread was in handle_emu_flip's frame-limiter sleep
 (lv2_obj::wait_timeout, 0x2122 us), i.e. running normally. The headset/fixed-screen flicker before it is the message's
 frames (no camera draws) switching to the fixed screen. Open: why the message is not visible in the headset.
+**Update (Matt):** the message waits for X; pressing X (blind) continues the game, but the message then stays on
+screen. So two display bugs, no hang: (1) tutorial messages are invisible in the headset while the game waits for X
+(those frames have no camera draws and go to the fixed screen); (2) after X the message remains (a stale 2D layer).
+Both also in vr9. The dump's other threads were idle (main thread usleep polling, SPURS kernels idling, cellVdec queue
+full waiting for its consumer), consistent with the game waiting for the button. Separately: the dump had SPU async
+compile workers (SPUA.1/2) in a God of War process although only GT5's profile enables it - check.
 
