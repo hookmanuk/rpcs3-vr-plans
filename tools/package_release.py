@@ -95,6 +95,10 @@ def main():
     for n in os.listdir(shots):
         files['docs/vr-settings/' + n] = os.path.join(shots, n)
     files['LICENSE'] = os.path.join(SRC, 'LICENSE')
+    # Per-game settings for the shipped VR games (partial configs, applied over the global configuration).
+    configs = os.path.join(SRC, 'vr_configs')
+    for n in os.listdir(configs):
+        files['config/custom_configs/' + n] = os.path.join(configs, n)
 
     os.makedirs(OUT, exist_ok=True)
     zip_path = os.path.join(OUT, f'rpcs3-{version}_win64.zip')

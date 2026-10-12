@@ -789,3 +789,21 @@ WALK 0), Matt's GT5 custom config (it has **Reduced-Rate Reflections: false**). 
   - No cost: `camera_block_cache` off, `camera_blocks [0, 4]`, `spu_async_compile`, `display_area_sizes`.
 - Two outlier runs out of ~20 (59.2 and 62.2 FPS where the same setup gave ~68) not explained; savestate loads that
   never produce frames (~1 in 3) were retried, not investigated.
+
+## 2026-10-12: Wider View setting; the car beside the player stays cut
+
+- Looking ahead, culling_scale_f32 picked scale 2.0 (the simulator's headset view is 93 degrees wide plus the 3 degree
+  margin, against the game's ~75): ~1.2 ms of the RSX thread on 2_17, most of it at the first step (1.25: a 10th car at
+  55 m and the scenery at the edges come into view). Scale 1.0 15.84 ms, 1.25 16.86, 1.75 17.17, 2.0 17.02.
+- New VR setting **Wider View** (fork 54b3ef73c, home menu + VR settings tab, live): on = the whole headset view (as
+  before), off = the head turn only (the game's own half-angle around the view direction). Off in GT5's shipped
+  per-game settings (`vr_configs/config_BCUS98114.yml`, now packaged into `config/custom_configs/`) and in Matt's.
+  Off looking ahead: 16.09 ms, the edges of the view miss some scenery (a hole in the hillside at the far left).
+- Matt's `BCUS98114_2_21` (night race, a car level with the player on the left): turned 30-75 degrees left, only the
+  car's front (wing, front wheel, mirror, roof edge) is drawn, the rear half is missing. Same in vr9 (7d93c188), vr10,
+  with the car limit off (`RPCS3_VR_CAR_LIMIT=0`) and with the scale cap raised from 8 to 60 (a sliver more). Cause:
+  the game culls each piece against its camera's frustum, whose planes all start at the camera, so pieces behind the
+  camera's plane are dropped at any width. A fix would cull from a point behind the camera without moving the view
+  (find where the culler takes its camera); not started.
+- Simulator note: `simpose.py` positive yaw turns the head **left**.
+
