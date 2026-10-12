@@ -708,7 +708,8 @@ rate stayed 54-55 FPS. Not the car LOD switch (perhaps scenery, or read only at 
 
 The rarer load failure (no log after ~2 s, "RSX thread goes quiet") is a **process crash**: Windows Error Reporting,
 access violation writing address 0x4c8 in `nvoglv64.dll` (NVIDIA's Vulkan driver). Its dump
-(`%LOCALAPPDATA%\CrashDumpspcs3.exe.<pid>.dmp`; `scratchpad mdstack.py DUMP` lists the crashing thread's return addresses
+(`%LOCALAPPDATA%\CrashDumps
+pcs3.exe.<pid>.dmp`; `scratchpad mdstack.py DUMP` lists the crashing thread's return addresses
 symbolized with dbghelp and `rpcs3.pdb`) shows the RSX thread in `shader_interpreter::preload` -> `VKGSRender::flip` ->
 `reinitialize_swapchain` -> the driver: the desktop swapchain is rebuilt at ~2 s (window size settles) while the OpenXR
 frame thread creates its first eye swapchains. Sonic's earlier "no present" (01:15 dump) was a stack overflow in the same
@@ -770,3 +771,21 @@ Also on a fresh install: the PKG dialog offers the disc's 2.11 update; the profi
   starts; 0 of 5 without the scale change. Matt: no reason to lower it (2D window). Profile reduced_scale_frames without
   a scale (still marks cinematic frames), fork e0ecd0d65.
 - Fresh-install race driving: tools in the scratchpad (gt5f.sh, gt5drive.py, race.sh: Right X = Arcade, X x6, start).
+
+## 2026-10-12: busy-race frame rate since the 73.8 FPS build, accounted
+
+Matt: 2_17 down to ~48-58 FPS in VR (was 72). `gt5_busy_race_2_17`, simulator, 300%, Vblank 90, `vr1pct.sh` (SETTLE 40,
+WALK 0), Matt's GT5 custom config (it has **Reduced-Rate Reflections: false**). Two or more good runs each:
+- Old build d85e15e12 (rebuilt) with that day's profile/patch: 68.4 / 68.9 FPS, RSX 14.5 ms (the notes' 73.8 / 13.45 ms
+  was a different day: ~1 ms of the gap is the machine, not the code).
+- **Current exe, old-equivalent profile and patch: 69.1 / 68.3 FPS, 14.4 / 14.6 ms. No code regression.**
+- Current exe, vr10 profile + patch: 57.6 / 58.0 / 57.9 FPS, 17.2 ms. The 2.7 ms:
+  - Reduced-Rate Reflections off (Matt's config; the rule is gated by `"option": "reflections"`, the old profile had no
+    gate): vr10 with the gates removed 62.9 / 62.2 FPS, 15.8 / 15.95 ms, **~1.3 ms** (matches the 1.1-1.9 ms measured
+    when the cube faces went into `shared_frame_targets`).
+  - Wider view patch + `culling_scale_f32`: vr10 without it 62.6 / 62.4 FPS, 15.9 / 16.0 ms, **~1.3 ms** (added alone
+    to the old profile: +1.0-1.4 ms). The wider culling draws more of the scene and more cars (10 cars vs 9 in view).
+  - Car distances 30 / 45 m (was 20 / 40): ~0.2 ms (the cars at 21 and 23 m stay complete). `full_nearest` alone: 0.
+  - No cost: `camera_block_cache` off, `camera_blocks [0, 4]`, `spu_async_compile`, `display_area_sizes`.
+- Two outlier runs out of ~20 (59.2 and 62.2 FPS where the same setup gave ~68) not explained; savestate loads that
+  never produce frames (~1 in 3) were retried, not investigated.
