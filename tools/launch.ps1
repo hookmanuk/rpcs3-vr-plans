@@ -1,5 +1,5 @@
 param([Parameter(Mandatory)][string]$Game, [string]$Probe = '', [string]$Work = "$env:TEMP\rpcs3-vrprofile",
-      [switch]$NoHeadset, [string]$Audit = '', [int]$FakeHmd = 0)
+      [switch]$NoHeadset, [string]$Audit = '', [int]$FakeHmd = 0, [string]$Bin = 'F:\rpsc3\source\rpcs3\bin')
 # Restart RPCS3 on a game with the VR development hooks:
 #   inspector   RPCS3_STEREO_INSPECT=$Work\insp\   (create $Work\insp\ARM to capture one frame)
 #   probe file  RPCS3_VR_PROBE_FILE=$Work\probe.txt (rewritten any time; re-read every frame)
@@ -9,7 +9,7 @@ param([Parameter(Mandatory)][string]$Game, [string]$Probe = '', [string]$Work = 
 #   -NoHeadset          RPCS3_OPENXR=0: both eyes side by side on the desktop
 #   -Audit 25 | pitch:35  rotation audit: right eye yawed/pitched, left eye as reference
 #   -FakeHmd 100        with -NoHeadset: render the headset view (HUD box, head transform, 100-degree FOV) on the desktop
-$bin = 'F:\rpsc3\source\rpcs3\bin'
+$bin = $Bin  # -Bin: another RPCS3 folder (a release test folder)
 New-Item -ItemType Directory -Force "$Work\insp" | Out-Null
 Get-Process rpcs3 -ErrorAction SilentlyContinue | ForEach-Object { $_.CloseMainWindow() | Out-Null }; Start-Sleep 5
 Get-Process rpcs3 -ErrorAction SilentlyContinue | Stop-Process -Force; Start-Sleep 2

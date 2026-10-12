@@ -10,7 +10,7 @@ w = int(sys.argv[3]) if len(sys.argv) > 3 else 960
 crop = tuple(map(float, sys.argv[4].split(','))) if len(sys.argv) > 4 and sys.argv[4] != '-' else None
 wait = float(sys.argv[5]) if len(sys.argv) > 5 else 0
 time.sleep(wait)
-d = rf'F:\rpsc3\source\rpcs3\bin\screenshots\{tid}'
+d = os.path.join(os.environ.get('SHOT_BIN', r'F:\rpsc3\source\rpcs3\bin'), 'screenshots', tid)  # SHOT_BIN: another RPCS3 folder
 os.makedirs(d, exist_ok=True)
 before = set(glob.glob(d + r'\*.png'))
 open(os.path.join(os.environ['TEMP'], 'rpcs3-vrprofile', 'SHOT'), 'w').close()

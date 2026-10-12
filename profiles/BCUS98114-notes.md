@@ -718,3 +718,37 @@ there, and xrCreateSwapchain/xrDestroySwapchain (where a runtime may submit) ran
 wait holds both locks (`vr_lock_queues`), and the swapchain create/destroy calls hold the OpenXR queue lock.
 Fork 1ec5dbc9f. Race savestate loads after it: 12/12 fine, no crash dumps (the lock around the wait alone: 1 lost in
 10 at that moment). Encouraging, not conclusive at a ~1-in-8 rate; the change is what the Vulkan spec requires anyway.
+
+## 2026-10-12: fresh-install first-boot hang (an upstream RPCS3 bug, cold SPU cache)
+
+Matt's vr9 test folder: "on first boot it hangs on black screen in the menu ... running a race hangs on the race flyby".
+Reproduced from scratch: a fresh release folder (`release/gt5base` = vr9 zip + Matt's configs + GT5 profile and patch +
+keyboard pad; scratchpad `gt5f.sh`, `gt5drive.py` drive it from screenshots), X on "Accessing game data", X on Adjust
+Display Area, Start to skip the intro: the menu load hangs **every time** (10+ runs) within ~5 s of the skip, also
+when the intro is left to play, with VR off, without the GT5 profile and patch, with dev's GT5 config.
+**Official upstream RPCS3 (v0.0.43-20284, 2026-10-11) hangs the same way**: not the fork.
+
+State in the hang (key-script `dump` command, fork dev hook): SPURS kernels idle (no workload ready), the PPU thread
+`gFKsE` spins in 0xcd29e8 waiting on `GPUSyncArray` (object 0x1a13f00, header 0x1a13e80): consumer slot 1 progress stays 0.
+
+What it depends on: the **SPU cache**. Seeded with dev's SPU cache (or the cache a hung first boot leaves behind, i.e.
+Matt's second boot) the menu loads; PPU cache, game data, save data, disk cache make no difference. SPU interpreter:
+loads. LLVM and ASMJIT recompilers (cold): hang. Not fixed by: Precise SPU Verification, SPU Block Size Safe, GETLLAR
+spin optimization off, Accurate SPU DMA, Accurate Cache Line Stores, Compatible Savestate Mode, Max SPURS Threads 5,
+ZCull queries off. The race-start hang in Matt's folder is presumably the same (race SPU programs never cached there).
+Bisecting the cold cache's entries: neither half of the last 500 programs avoids it alone, so it is not one program.
+
+Mechanism (key-script `dump`): the render thread `gFKsE` (0x8cff20, holding the object lock obj+0xc8) spins in 0xcd29e8
+until every consumer of `GPUSyncArray` (0x1a13f00 -> header 0x1a13e80, SPURS workload 4, policy module 0x177f200) has
+taken its items; the consumer's SPURS ready count is 0 (its start was lost), so it never runs; `fmBKi` waits on the same
+lock. Game patches tried and dropped: release the lock around the wait (still hung), re-kick workload 4 or 0-6 from
+the wait loop (1 in 4, other queues stalled at 4 of 31). Runtime experiments: synchronous full LLVM, fast tier without
+the LLVM upgrade, ASMJIT, 1 LLVM thread, decrementer frozen during compiles, clocks 50%/10%: all hang. SPU interpreter:
+fine. Common factor: an SPU stops for the analysis and compile of new code mid-guest-code.
+
+**Fix (fork e7a60548e): `Emu/Cell/SPUAsyncCompile.cpp`.** dispatch() queues the new program (with a copy of local
+storage) to two worker threads (SPUA.) and steps the C++ interpreter until it is compiled. Per game: profile key
+`spu_async_compile` (GT5 only); `RPCS3_SPU_ASYNC=0/1`. Fresh first boots: 5/5 reach the menu (flat and VR); the control
+(async off) still hangs. Upstream bug report candidate.
+
+Also on a fresh install: the PKG dialog offers the disc's 2.11 update; the profile and patches are for 01.00 (Skip).
