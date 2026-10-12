@@ -257,7 +257,7 @@ Dev check (OpenXR Simulator, `render=1`, dev config set to 1920x1080 for the run
 replacement, GOW1 reports `Screen Width: 1280 ... 1216x684`, and new-game gameplay switches to the headset view
 (`camera draws again: headset view` at 2:17; traces `C7476 x529`, pose advancing every frame).
 
-## 2026-10-12: gameplay hang about five minutes into God of War 1 (also in vr9)
+## 2026-10-12: "hang" about five minutes into God of War 1 was an invisible tutorial message (also in vr9)
 
 Matt, headset, fresh vr10 release folder (and the vr9 release): God of War 1 from a new game hangs in the same place
 in gameplay, ~5 minutes of fighting into the opening. Not caused by vr10's frame pacing (same hang with
@@ -270,4 +270,9 @@ that never arrives, most likely the RSX side. Stopping WipEout in the same sessi
 unresponsive ("rsx::thread is too sleepy").
 Next: a memory dump of the hung process (Task Manager > Create memory dump file) read with
 `tools/re/dumpstacks.ps1` (cdb from WinDbg, symbols rpcs3/bin/rpcs3.pdb of the same build) for every thread's stack.
+**Resolved as a display bug, not a hang:** the game was waiting at a tutorial message ("Press and hold R2 to open
+chests", a parchment box at the bottom of the screen) that does not show in the headset; Matt saw it in the desktop
+window. The dump (`dumpstacks.ps1`) agrees: the RSX thread was in handle_emu_flip's frame-limiter sleep
+(lv2_obj::wait_timeout, 0x2122 us), i.e. running normally. The headset/fixed-screen flicker before it is the message's
+frames (no camera draws) switching to the fixed screen. Open: why the message is not visible in the headset.
 
