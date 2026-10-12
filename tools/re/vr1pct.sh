@@ -3,6 +3,7 @@
 # bin/savestates/ID/STATE.SAVESTAT.zst at a fixed Vblank rate, with a headset session on the OpenXR Simulator (gboot.ps1;
 # VR Enabled and Frame Rate Unlimited for the run, so the Vblank Rate paces the game; audio Null so a locked desktop
 # cannot stop it). Env DESKTOP=1: the old desktop-only stereo instead.
+# Env MEASURE = seconds measured after the settle (default 26); ALLWIN=1 = print and summarise every window from the boot on.
 # Env PROBE = probe options (default render=1; render=0 measures flat), SCALE = resolution scale % (default 300), SETTLE = seconds before measuring (default 10), VIDEO_EXTRA = more Video
 # settings for the run, "Key=value;Key=value" (e.g. "Relaxed ZCULL Sync=true").
 # Only Vblank Rate and Resolution Scale are merged into the game's custom config for the run (other settings kept;
@@ -84,11 +85,12 @@ if [ "${4:-1}" = 1 ]; then
 elif [ "${4:-1}" != 0 ] && [ "${4:-1}" != script ]; then
   sh keys.sh "$4 25000 50\n"
 fi
-sleep 26
+sleep "${MEASURE:-26}"
 SHOT_MOVE=1 py -3.13 shot.py "$1" "p1_$2_$3" 480 >/dev/null
 [ -z "$GB" ] && py -3.13 simshot.py "sim_$2_$3" 960 >/dev/null 2>&1
 # Windows that start after the settle: skip the one under way when measuring began.
 lines=$(grep -a "VR frame stats" $L | tail -n +$((n0 + 2)) | sed -E 's/.*VR frame stats: //' | head -3)
+[ -n "$ALLWIN" ] && lines=$(grep -a "VR frame stats" $L | sed -E 's/.*VR frame stats: //')
 echo "$1 $2 vblank $3 scale ${SCALE:-300}%:"; echo "$lines" | sed 's/^/   /'
 med() { sort -n | awk '{a[NR]=$1} END{if(NR) printf "%s", a[int((NR+1)/2)]}'; }
 low=$(echo "$lines" | grep -o "FPS, 1% low [0-9.]*" | grep -o "[0-9.]*$" | med)

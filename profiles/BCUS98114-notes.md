@@ -807,3 +807,25 @@ WALK 0), Matt's GT5 custom config (it has **Reduced-Rate Reflections: false**). 
   (find where the culler takes its camera); not started.
 - Simulator note: `simpose.py` positive yaw turns the head **left**.
 
+## 2026-10-12 evening: pre-race views at Matt's settings; headset frames lost when GPU-bound (fork bd55a2a24)
+
+Matt (headset, 72 Hz, fpsVR, no motion smoothing): the pre-race flyby and the views after it under 30 FPS. My earlier
+desktop numbers (50-60) were wrong twice over: the simulator's default 1920x2160 eyes (Matt's are 2880x2880) and
+Vblank 60 capping the game at 60; and they counted game flips, not frames reaching the headset.
+
+- New measurement: `RPCS3_VR_FRAMELOG=<file>` (one CSV row per game flip and per headset frame, with the frame thread's
+  step times), `tools/re/framerun.sh OUT STATE [XAT] [DUR]` (Matt's config, uncapped, simulator at 2880x2880, no
+  screenshots while measuring), `tools/re/framelog.py` (per-second chart and per-scene table), `tools/re/gt5shots.sh`
+  (full-size shots of grid / TV view / race). Simulator settings.json render_width/height 2880.
+- Baseline (Rome, X at 20 s): grid flyby game 16-41 FPS, **headset 5-10**; TV-camera views 32-47; race 90.
+- Headset frame time in the flyby: 85 ms, of which **81 ms waiting for the ready fence** of the newest published frame:
+  the GPU-bound game queued ~4 frames ahead, so 3 of 4 game frames were never shown. Fix: signal_published waits for the
+  previous published frame (at most one ahead). Headset = game rate (Indy grid 13 -> 48.8). Busy race 69.0 -> 69.4.
+- The flyby is GPU-bound by its 4x MSAA scene on top of 400%: **MSAA Disabled** in GT5's config -> flyby ~90, TV views
+  77-81, race 90; busy race unchanged (69.4, RSX-bound). Screenshots (grid, TV, race) show nothing missing.
+- Tried and reverted on the way (patch kept in the session scratchpad, prerace_inner_scale.patch): drawing the pre-race
+  scene at 720p inside the 400% surfaces (profile inner_scale) plus partial MSAA resolves; it worked on the desktop but
+  Matt measured <30 (the lost-frames problem above) and an Arcade-menu GPU hang followed its activation in menus.
+  Also: 1 MB readback (0xc9e80800 / 0xc9afb000) in the TV views answered late cut the RSX thread 21 -> 8 ms there; not
+  committed (not needed with MSAA off; revisit if the TV views drop).
+
