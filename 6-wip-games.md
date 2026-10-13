@@ -1026,7 +1026,8 @@ Matt's request. The triage above was on 01.00 and has not been redone on 01.10.
 late-readback crash fixed (fork 90bd7ed59); 45 FPS locked via the game's own limiter (`default_fps 45`,
 `vblanks_per_frame 2`, community *Unlock FPS* off); a head-driven *Wider view (VR culling)* patch fills the deck, hull and
 ocean at every head pose; 2.0 (Matt reported lower-detail models with 1.0) enlarges the geometry jobs' viewport 16x so
-no triangles are trimmed (combat 44.7 -> ~39 FPS with 2.0, 42.3 with 1.0). Matt (2026-10-13): combat drops under 45 when unpaused (his
+no triangles are trimmed (combat 44.7 -> ~39 FPS with 2.0, 42.3 with 1.0). DLSS (settings shown again) recovers it: combat 53.8 FPS
+with Performance + model E at 250%, 45.3 with Quality + E at 333% (37.3 at 500% without). Matt (2026-10-13): combat drops under 45 when unpaused (his
 savestate `BCUS98103_1_0`); the game's SPU/PPU work sets the ceiling (~45 there), no emulator setting moved it.
 
 ## Prince of Persia (BLUS30214, disc 01.00)

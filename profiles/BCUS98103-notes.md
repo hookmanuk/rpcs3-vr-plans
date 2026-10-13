@@ -80,3 +80,12 @@ SPU visibility job (code RAM `0x857c00` -> LS `0x4000`, packet DMA'd to LS `0xdc
 (temporary SPU interpreter LS watch); `zcull_approximate` changed nothing. A PPU read watch on the constant packet's
 view-projection found `0x452420` copying it into the viewport block. Temporary SPU hooks used (not kept): a DMA watch
 in `spu_thread::do_dma_transfer` and an LS load/store watch in `SPUInterpreter.cpp`.
+
+## DLSS (2026-10-13)
+
+The DLSS settings are shown again (fork 59b26e4df: VR tab; the home menu offers them live in a session that booted with
+DLSS on). Matt's combat state, 2880x2880 eyes, Wider view 2.0, Vblank 600 uncapped: DLSS off at 500% 37.3 FPS; Quality +
+model E at 333% 45.3; Performance + model E at 250% 53.8 (the default model, K, at Performance 250%: 44.9). Plain 250%
+without DLSS: 58.6 (so the GPU, not only the game's CPU work, limits it at 500%). The image on the simulator matched
+500% without DLSS (boat, straight and turned); HUD fine. Note: builds need DLSS_SDK set, or they log "This build has
+no DLSS SDK (HAVE_DLSS)" and DLSS does nothing.
