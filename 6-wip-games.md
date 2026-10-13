@@ -344,6 +344,8 @@ pass mark** for fully compatible.
 | MX vs ATV Reflex | BLUS30321 | `vr-non-working/` + untracked `bin/` copy | no (`max_fps 30`) | not measured | not played | generated 2026-09-28; no notes |
 | Uncharted: Drake's Fortune | BCUS98103 | none | no: 42-46 flat | not measured | - | SPU/PPU-bound; not pursued |
 | Final Fantasy X/X-2 HD Remaster | BLUS31211 | none | no: 80-91 flat | not measured | - | RSX-bound flat; not pursued |
+| Prince of Persia | BLUS30214 | `vr-non-working/` + untracked `bin/` copies (profile, patch) | yes (fork patch *Unlocked frame rate*: 30 -> vblank rate; game clocks real time) | **90 Hz** (canyon, walking: 89.9, 0.28% late; 120 reaches 116.8), 2026-10-13 | simulator only (real head poses checked 2026-10-13) | new (Matt, 2026-10-13). Open: the game's 45-degree frustum culls near rock at the view edges on head turns (needs a Wider view patch); main menu, cutscenes, combat HUD and world scale unchecked. Pause menu fixed (`hud_over_scene`). See notes |
+| NiGHTS into dreams... | NPUB30798 (PSN) | `vr-non-working/` + untracked `bin/` copy (hand profile) | **no: 30 FPS** (every second vblank), no patch yet | below 72 (30) | simulator only | new (Matt, 2026-10-13). **Blocked on the frame rate (30) and an RPCS3 rendering fault: tree billboards and the yellow orbs draw on opaque green squares (flat too).** Savestates fail (SPU lock). Hand profile renders in stereo (bare projection `c[24]`, like God of War). See notes |
 
 ## Testing in the headset (applies to all)
 
@@ -1003,3 +1005,21 @@ Triaged 2026-09-30 with no profile made. Native 30. The flat ceiling at vblank 1
 42-46, with every SPU thread at 100%, so it is SPU/PPU-bound and 90 is not reachable. Evidence:
 `evidence/uncharted/boat-vblank180-45fps.png`. Its boot crash in `VKGSRender::flip` (Frame limit Auto) was a
 generic bug, fixed in fork 4704701a2.
+
+## Prince of Persia (BLUS30214, disc 01.00)
+
+New 2026-10-13 (Matt). 30 FPS game: the fork patch *Unlocked frame rate (follows Vblank Rate)* clears the GCM label the
+vblank handler counts down (1 instruction); game clocks stay real time (memory dumps at 30 and ~85 FPS). Generated
+profile (column vectors `c[200]`/`c[206]`, HUD `c[200]`, 45-degree FOV) plus the new `screen_space.hud_over_scene`
+(fork 2b7a97544): the pause menu depth-tests against the scene and near rock hid it on head turns. **90 Hz at 300%**
+(walking in the first canyon), RSX-thread bound (~73 FPS at 400%). Open: edge culling on head turns (Wider view patch),
+main menu / cutscenes / combat HUD / world scale. States `pop_desert`, `pop_play`. Notes: `profiles/BLUS30214-notes.md`.
+
+## NiGHTS into dreams... (NPUB30798, PSN 01.00)
+
+New 2026-10-13 (Matt). Gameplay runs at 30 FPS (every second vblank), no community patch; the logic is probably
+frame-locked (Saturn engine): a frame-rate patch is the main job. RPCS3 draws tree billboards and the yellow orbs on
+opaque green squares (also flat, no VR): not the colour key (registers 0), not isolated yet. Savestates fail. The
+generated profile is wrong (picked indexed light vectors at `c[68]`); the hand profile (`row_vectors`, bare projection
+`c[24]`, HUD ortho `c[68]`) renders in stereo on the simulator. Notes: `profiles/NPUB30798-notes.md`.
+
