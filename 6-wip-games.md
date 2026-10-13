@@ -565,6 +565,17 @@ Notes: `profiles/BCUS98116-notes.md`. Evidence: `evidence/killzone2/`. Fork d12f
 
 ## Gran Turismo 5 (BCUS98114, XL Edition, US; disc 01.00 since 2026-10-03, was v02.11)
 
+**Open (Matt, headset, 2026-10-13): "GT5 doesnt work at 45fps"**: at VR Frame Rate 45 (with or without frame generation,
+which halves 90 to 45) the cars move "painfully slowly" and the audio stutters; 90 is fine. Measured so far (simulator,
+`gt5_busy_race_2_17`, resume with X): the race clock keeps real time at 45 and 90 (it follows real time whatever the
+physics does, so it is no measure of game speed); the race's step function `0x18054c` (frame step from `0x184680c`, one
+step per call via `0x17ebb0` -> `0x17e5d4`) is called 45 times a second with 1/45 s at 45 and 90 times with 1/90 at 90
+(a temporary counter cave): the main loop is real time. Tried and reverted: (1) the 1/59.94 constant `0x1846960` (passed
+each race frame to `0xd3eb90` at `0x17eac0`) and its twin `0x184acbc` set to the frame time when longer than 1/59.94
+(Matt: no change, frame rate worse in places); (2) the emulated vblank kept at 60 Hz or more (45 -> 90) with the
+frame limiter holding 45 (the limiter did not hold: the game ran at 90 with a 1/45 step). Next: measure the car physics
+directly (an AI car's progress per race-clock second at 90 vs 45), then find what ticks the cars and audio.
+
 **Back in for vr10 (2026-10-12, fork e0ecd0d65, zip rpcs3-v0.0.43-vr10-e0ecd0d6): works from a fresh install (SPU async
 compile, display-area fixes, no resolution switch at race starts; details in the notes file). Awaiting Matt's test.
 Open: force display area 1.0 in VR (Matt).**
