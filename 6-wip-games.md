@@ -371,6 +371,47 @@ patch in `Manage > Game Patches`. Those patches are not "Enabled By Default". Th
 
 ---
 
+## DLSS (all games; open issues)
+
+DLSS (NGX, VR multiview, per-eye features) and its frame generation are experimental (fork `framegen` branch; design and
+history `10-dlss-test.md`, `8-framegen.md`). State 2026-10-13: DLSS can be turned on live from Off again (the context
+and NGX's extensions exist from boot with the SDK; Off costs nothing per draw); a live mode change scales Resolution
+Scale by the modes' upscale ratio (the headset eye shape snaps x to 25 % steps and never uses 100 %, so the output can
+come out one step smaller: SEGA Rally Off 300 % 2240x2160 -> Performance 150 % 1920x2160); VR > DLSS Sharpening (RCAS,
+0..100 = 0..-0.36 stops, default 0). Dev diagnostics: `RPCS3_DLSS=motion|depth|warp`, `RPCS3_DLSS_RSTATS=1` (paired draws
+whose motion is not the camera's; programs drawn without a camera matrix), `RPCS3_DLSS_JITTER_SCALE`, `RPCS3_DLSS_JITTER_BITS`.
+
+### Sonic & All-Stars Racing Transformed (BLUS30839): scenery jumps up and down (open)
+
+Matt (headset, 2026-10-13): "certain parts of the scenary (to the right ahead) jump up and down in my latest save state"
+(the rock pillars and trees ahead on the right of the track, his crop). "its just a DLSS issue, frame gen is irrevalent.
+it happens off & on." Paused it is fine: "it only happens unpaused". State `BLUS30839_1_9` (2026-10-13 20:47), hard link
+`vrtest_sonic_matt_dlss_jump`; his config: 385 %, DLSS Quality (2560x2700 -> 3840x4050 per eye), Frame Rate Unlimited.
+Unpause with Start (keyboard pad Return) after the load; the race then runs on (a fresh load per check).
+
+Ruled out so far:
+- Not frame generation (Matt).
+- Not the draw pairing: Sonic builds its geometry on the SPUs, so draws pair by program + element count + order (the
+  address key never repeats). `RPCS3_DLSS_RSTATS` over 20 s of the race: ~230 paired draws a frame, **none** with motion
+  other than the camera's (Sonic's matrices carry only the camera), so a wrong pairing changes nothing. Pairing only
+  unambiguous draws was tried and reverted (no gain in the warp view; the A/B moments differed).
+- Not draws without motion: the programs drawn into the scene without a camera matrix are full-screen passes (4-48
+  elements, no depth test): `63572270c1a084d2`, `ae412e7fb7d97794`, `8761ccb6b94bd151`, `f780fabddcd9eba2`, `520b713527e8c714`.
+
+Next: whether it is the jitter (as MotorStorm): `RPCS3_DLSS_JITTER_SCALE=0` (or a temporary `dlss_jitter: 0` in the
+profile for Matt's headset check); if so, bisect the program with `RPCS3_DLSS_JITTER_BITS`. Then the depth those rocks
+write (alpha-tested or drawn twice?) and the warp view on a deterministic A/B (same delay after a fresh load, a control
+run). Note: the warp view crashed RPCS3 until fork ef9a96a00 (its shader lacked two inputs).
+
+### MotorStorm: Pacific Rift (BCUS98155): black ground patches with DLSS (worked around)
+
+Matt (headset): random blocky black "shadows" on the ground, "like ambient occlusion", never in the air, with DLSS on
+(frame generation not involved). Gone without DLSS's sub-pixel jitter (`RPCS3_DLSS_JITTER_SCALE=0`; Matt: "perfect"):
+profile key `dlss_jitter: 0` in `BCUS98155.json` (DLSS still upscales, with less sub-pixel detail). Every scene program
+gets the jitter (logged with `RPCS3_DLSS_DEBUG`), and no colour pass on the scene depth escapes it, so the pass that
+compares jittered against unjittered depth is not found (the blocky edges suggest a low-resolution pass upsampled
+against depth). Earlier MotorStorm fix: depth-only passes jittered through the viewport (`dlss_jitter_viewport`).
+
 ## Dragon's Dogma: Dark Arisen (BLUS31155 v01.02)
 
 Notes: `profiles/BLUS31155-notes.md`. Evidence: `evidence/ddda/`. Profile `BLUS31155.json`, patch file
