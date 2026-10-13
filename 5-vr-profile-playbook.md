@@ -399,7 +399,9 @@ eye swapchains are refused or shots come out squashed.
   continuously: needed to see head-locked screens or anything that changes with head movement.
 - Capture: `tools/re/simshot.py OUT` (the composited eyes, as the headset shows them); `shot.py` gives RPCS3's own
   image for comparison. `runtime_status.json` has frame time and the head pose.
-- Local patches (branch `rpcs3-vr`, not pushed): the Dream Air profile, and `xrEndSession` moves the session to IDLE
+- Local patches (branch `rpcs3-vr`, not pushed): unique swapchain handles (0acbd05, 2026-10-13: handles were `size() + 2`, so
+  recreated eye swapchains could get the overlay's images: device lost on ~half of God of War savestate loads), the Dream Air
+  profile, and `xrEndSession` moves the session to IDLE
   only (it re-sent STOPPING, so RPCS3 looped STOPPING/IDLE after a collection's executable switch, 9 million log
   lines). Rebuild after pulling: `cmake --build build` in the VS dev shell.
 - `tools/re/simscreen.sh ID ISO OUT [WAIT] [SHOTS]`: boot on the simulator at Vblank 90 and capture the headset view
@@ -616,6 +618,7 @@ check for each symptom:
 | Walls or sky missing when looking around | a "Wider view" patch for the game's culling, then `stereo.eye_offset: "baseline"` so the wider projection keeps the eye distance; then check the camera logic still sees the game's own FOV (Known traps) | ICO, SotC, WipEout HD (pi/180 for pi/360 at the camera update: FOV x2 in one instruction) |
 | Objects flash or pop in (CPU/SPU occlusion culling on the depth buffer) | `occlusion_depth_readback` | SotC |
 | The game's clock runs fast or slow at a changed vblank | `game_refresh_rate_f32` | Pure, SotC |
+| Menus, the pause screen or messages black or stuck for the rest of the session, after a hitch (also after a savestate load); fine without the frame-rate word | the frame-rate words followed a measured dip (log `Game frame rate at ...: 90 -> 38`), and the game sets up UI state from the word. Test with `RPCS3_VR_NOMINAL_RATE=1` | `game_rate_measured: false` | God of War (Power Up, pause, tutorial messages) |
 | One game of a collection needs different values | the generator already writes `<TITLE_ID>.<executable>.json` beside an existing `<TITLE_ID>.json` | SotC |
 
 Also never generated: `reference_screen_width` (only matters for native-3D TV tuning), and

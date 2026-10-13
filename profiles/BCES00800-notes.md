@@ -282,3 +282,35 @@ Both also in vr9. The dump's other threads were idle (main thread usleep polling
 full waiting for its consumer), consistent with the game waiting for the button. Separately: the dump had SPU async
 compile workers (SPUA.1/2) in a God of War process although only GT5's profile enables it - check.
 
+
+## 2026-10-13 night: Power Up / pause black and tutorial messages invisible: fixed (fork 5ce006eba)
+
+**Cause: the rate word dipped.** Since fork 147ca6fb2 (2026-10-06) the profile's frame-rate words follow the *measured*
+rate whenever a game runs more than 3% below the VR rate. God of War's `game_fps_u32` (`0x531dd0`, GoW II `0x5720f4`)
+then dips in any hitch: after a savestate load the log shows `Game frame rate at 0x531dd0: 90 -> 38 -> 40 -> 43 -> 45`,
+then back to 90. The game sets up its menus and messages from that word; after a dip, opening the Power Up screen
+(Start) gave black frames for good (the frame is only the scene resolve + copy, the menu art `a3b1455d` is never drawn,
+input ignored), and the pause menu and tutorial messages went black or stuck. Matt's 22:56 state `gow1_tut_b` (copy
+in `bin/savestates/BCES00800/`) was saved in that broken state: world not drawn, only the HUD and two text draws
+(`246db670`), the same with VR off.
+
+How it was isolated (OpenXR Simulator, `vrtest_gow1_matt_blur`, Start 5 s after the load):
+- black in every stereo run; drawn with VR off and with `render=0` (where the load had no hitch, so no dip);
+- still black at 100% scale, with frame pacing off, with multiview off, with Headset Eye Shape off, without
+  `frames_without_3d_as_screen`, with async SPU compile, with occlusion queries off (GoW writes no ZCULL reports);
+- drawn without `game_fps_u32` in the profile, and with `RPCS3_VR_NOMINAL_RATE=1`;
+- Vblank 60: one clean change 90 -> 60 at load (nominal) is fine; with the measured dips it is black.
+The game times slow frames itself (`0x1c3ef0`: dt x measured frame time / expected, capped at 4x), so the measured rate
+is not needed here. **Fix:** new profile key `game_rate_measured: false` (both GoW profiles): the words keep the VR rate.
+Checked: Power Up drawn, pause (Select) opens, Circle returns to play; GoW II renders and its screens draw. Not checked:
+a tutorial message in play (Matt's states are past it or broken; ~5 minutes of fighting from a new game).
+
+Side finds:
+- The engine picks PAL movies (`/_movies/%s.pal.m2v`) whenever its rate is not 60 (`0x1d4644`); at 90 it asks for the
+  PAL files. Movies played normally so far.
+- "Savestates don't work properly": loads stalled in ~50% of runs on the simulator. That was an **OpenXR Simulator bug**
+  (swapchain handles were `size() + 2`, so recreating the eye swapchains beside the overlay gave one eye the overlay's
+  1920x1080 images; our 2160-row copy then lost the device and the RSX thread spun forever draining the present queue).
+  Fixed in the simulator (local branch `rpcs3-vr`, 0acbd05): 6/6 loads fine. Matt's headset runtime is not affected.
+  Found with Vulkan validation (`vkCmdCopyImage ... extent.height (2160) exceeds ... 1080`) after a drain-loop log showed
+  the fence status `VK_ERROR_DEVICE_LOST`.
