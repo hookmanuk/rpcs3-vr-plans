@@ -62,3 +62,18 @@ stream, most likely the SPU post chain (Write/Read Color Buffers: the left eye's
 on the SPUs, written into the display buffer). So both eyes show the left eye's post-processed image. A fix needs the
 display buffer per eye: present the scene target (`0xc07b0000`) per eye and redraw the HUD on it (the SPU post effects
 would be lost in VR, as in Puppeteer), or a new "display_redirect" profile key. Not done: Killzone 2 is also below 72 Hz.
+
+## 2026-10-13: performance recheck (Matt)
+
+`vr1pct.sh` on `vrtest_kz2_carrier`, 300%, OpenXR Simulator, walking (Vblank = 2 x rate: `vblanks_per_frame 2`):
+- **72 Hz now holds: 72.0 avg, 0.00% late** (Vblank 144; was 63 on 2026-10-04 before the RSX-thread and multiview work).
+- 90 Hz: 84.6 (fails; needs 89.1).
+- Where 90 goes (Vblank 180, `RPCS3_RSX_SAMPLE=2`, `RPCS3_VR_GPUPROF=1`): draws are cheap (~320 draws, 1.3 ms of the
+  RSX thread's 11.3 ms); 59% of the RSX thread waited in `get_occlusion_query_result` (ZCULL sync from the game's
+  semaphore releases). With `zcull_relaxed_sync` those waits vanish but the frame rate stays 84.9: the RSX thread then
+  idles waiting for the game. Per-thread CPU: PPU main thread 88%, the low-priority SPURS kernel 89%, other SPU kernels
+  ~47%: the game's own PPU/SPU work is the limit (flat it peaked at 86-89 too). Guest blocked in readbacks 0.7 ms/frame.
+- Settings A/B at Vblank 180 (run-to-run spread ~84-88): **SPU Block Size Mega 86.4-88.4 (kept: set in
+  `config_BCUS98116.yml`)**; Accurate SPU Reservations off 85.7 (noise); Sleep Timers As Host 80.9 (worse); SPU loop
+  detection 83.7 (worse); `zcull_relaxed_sync` 84.9 (no gain, reverted: it can change flares).
+- With Mega: 72 Hz 72.0 / 0.00% late; 90 Hz 86.4. Combat (Corinth River) still unmeasured.
