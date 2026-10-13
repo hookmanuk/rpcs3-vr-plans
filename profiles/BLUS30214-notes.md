@@ -18,7 +18,7 @@ title (Start), Main menu > New Game, "Into the Storm" loads, a cinematic (Start 
 
 ## VR profile (`bin/vr_profiles/BLUS30214.json`, generated then edited)
 Generated in the first canyon: `column_vectors`, camera blocks `c[200]`, `c[206]`, rigid + camera-aspect checks,
-HUD (orthographic) block `c[200]`, projection A 2.414 (**horizontal FOV only 45 degrees**), near 0.05 units = metres,
+HUD (orthographic) block `c[200]`, horizontal FOV 71 degrees (vertical 44), near 0.05 units = metres,
 `eye_baseline` 0.064. Edited: `max_fps`/`default_fps` 0 (the patch), and `screen_space.hud_over_scene` (new, fork
 2b7a97544): the pause menu depth-tests (LEQUAL) against the scene's depth at its own deep z; in the headset the fixed box
 covered near rock, which hid all but strips of the menu as the head turned (`evidence/pop/2026-10-13-pause-poses-*`).
@@ -30,8 +30,15 @@ covered near rock, which hid all but strips of the menu as the head turned (`evi
   menu box stays whole with `hud_over_scene`.
 
 ## Open
-- **Culling at the edges:** with the game's 45-degree frustum, geometry outside it is not drawn. At yaw +20 the near rock
-  under the overhang is missing (straight-edged holes showing lit walls behind). Needs a *Wider view* (culling) patch.
+- **Culling at the edges:** geometry outside the game's frustum (71 x 44 degrees; the generator's "A 2.414" was the
+  wrong axis: x scale 1.392, y 2.474) is not drawn. At yaw +20 the near rock under the overhang is missing
+  (straight-edged holes showing lit walls behind). Needs a *Wider view* (culling) patch. Trail so far (2026-10-13):
+  the render camera at `0x1083cca0` (heap, `pop_play` load) holds the projection at `+0x360` (`0x1083d000`), the view and
+  view-projection after it, and `-tan(h/2)`, `-tan(v/2)` at `+0x1e8`/`+0x1ec` (0.7186, 0.4042). Those are copied each
+  frame (`0x6b3400`, also `0x865e58`) from the logic camera at `0x10cecc20` (same offsets), which recomputes them every
+  frame: poking either does not stick. Next: find the code computing `+0x1e8` in the logic camera (the FOV source) and
+  whether the culling reads those tangents or the view-projection; test widening with a code poke under the PPU
+  interpreter (write watches stall this game).
 - The generator flagged two screen passes that read depth (`f0a481c330cbbbd8`, `f7865139bce5eba2`) and a pre-projected
   program (`1c95a3b2b10bbbd8`): not yet checked for sliding effects with head turns (none seen in the pose shots).
 - Not checked yet: main menu and loading screens in the headset, cutscenes, combat HUD, world scale.

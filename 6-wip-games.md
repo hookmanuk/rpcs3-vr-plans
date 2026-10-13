@@ -49,6 +49,19 @@ headset: R&C shadows, SEGA Rally title and dust, KH pause (uncommitted pose-hold
 without `frames_without_3d_as_screen`). Needs you: a hung `rpcs3.exe` (PID 54120) and `dwm.exe` on 4 cores, see below
 (end that dwm.exe or reboot; `bin/rpcs3.zombie.exe`, `bin/RPCS3.buf.zombie` and `log/RPCS3.zombie.log` can go after).
 
+**Matt, overnight 2026-10-13 (simulator-checked; headset recheck):**
+- **God of War Power Up / pause black, tutorial messages invisible: fixed** (fork 5ce006eba, pushed). The renderer's
+  "game runs below the VR rate" adaptation rewrote GoW's rate word during hitches (90 -> 38 -> 45 -> 90 after a load or
+  a loading hitch), and the game's menus and messages broke for the rest of the session. New profile key
+  `game_rate_measured: false` on both GoW profiles. Power Up and pause checked on the simulator; a tutorial message in
+  play not (your 22:56 state was saved already broken). Details: `profiles/BCES00800-notes.md`.
+- **"Savestates don't work" for GoW on my side** was an OpenXR Simulator bug (fixed in the simulator); your headset
+  runtime is not affected by it. Your two states: 22:51 is the title screen, 22:56 is the broken-message state.
+- **Prince of Persia: works, 90 Hz at 300%** with a new fork patch *Unlocked frame rate* (game clocks real time). Pause
+  menu fixed with a new key `hud_over_scene`. Open: edge culling on head turns (needs a Wider view patch).
+- **NiGHTS: stopped.** Its logic is frame-locked at 30 (unlocked, it runs ~2x fast), and RPCS3 draws its trees and orbs
+  on green squares (flat too). A hand profile renders in stereo, but it cannot reach 72.
+
 **Matt, 2026-10-09 evening (simulator-checked; headset recheck):**
 - **SEGA Rally:** the hang before a race is fixed (fork f2c09242b, a write into the read-only patch cave).
 - **R&C 2 and 3:** cutscene detection now uses each game's scene flag (forks 844d4933c, bc568bef8); the second New
@@ -1012,7 +1025,8 @@ New 2026-10-13 (Matt). 30 FPS game: the fork patch *Unlocked frame rate (follows
 vblank handler counts down (1 instruction); game clocks stay real time (memory dumps at 30 and ~85 FPS). Generated
 profile (column vectors `c[200]`/`c[206]`, HUD `c[200]`, 45-degree FOV) plus the new `screen_space.hud_over_scene`
 (fork 2b7a97544): the pause menu depth-tests against the scene and near rock hid it on head turns. **90 Hz at 300%**
-(walking in the first canyon), RSX-thread bound (~73 FPS at 400%). Open: edge culling on head turns (Wider view patch),
+(walking in the first canyon), RSX-thread bound (~73 FPS at 400%). Open: edge culling on head turns (Wider view patch;
+the frustum tangents and the camera objects are found, see notes),
 main menu / cutscenes / combat HUD / world scale. States `pop_desert`, `pop_play`. Notes: `profiles/BLUS30214-notes.md`.
 
 ## NiGHTS into dreams... (NPUB30798, PSN 01.00)
