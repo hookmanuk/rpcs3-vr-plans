@@ -77,3 +77,23 @@ would be lost in VR, as in Puppeteer), or a new "display_redirect" profile key. 
   `config_BCUS98116.yml`)**; Accurate SPU Reservations off 85.7 (noise); Sleep Timers As Host 80.9 (worse); SPU loop
   detection 83.7 (worse); `zcull_relaxed_sync` 84.9 (no gain, reverted: it can change flares).
 - With Mega: 72 Hz 72.0 / 0.00% late; 90 Hz 86.4. Combat (Corinth River) still unmeasured.
+
+## 2026-10-13: shared eye image fixed (SPU post layer hidden)
+
+By now the scene itself is per eye; the shared part was the SPU post layer. Draw `e47548c5` (last draws into the
+display buffer, `vrtest_kz2_carrier`) adds, premultiplied (`ONE, ONE_MINUS_SRC_ALPHA`), over the sharp per-eye scene:
+`tex1` `0x31a7d200` 640x360 (the SPUs' motion blur / depth of field / sun haze, alpha = blur amount), `tex0`
+`0x31d2e300` 160x90 (bloom, `* c1`) and `tex2` 128x128 grain: `rgb = tex1 + tex0.rgb*c1 + (tex2.x + c0)*tex0.a`,
+`a = tex1.a`. The SPUs build both from main-memory copies of the left eye (`0x3199c200` 640x360, `0x31c77600`
+320x180), so the right eye showed the left eye's blurred image as a ghost (two antennas, the sun haze in the left
+eye's place: `evidence/killzone2/shared-eye-2026-10-13/before-ghost.jpg`).
+
+- Tried: `texture_redirects` to those per-eye main-memory targets (main-memory `to` support written for it). Stereo
+  clean, but the image washed out (mean luminance 124 vs 76): the copies are the SPU job's inputs, not
+  premultiplied, so the whole scene is added twice. Reverted the code (it fixed nothing).
+- Kept: `hidden_draws` for `e47548c5` with texture 0 160x90. Both eyes clean and alike (`before-top-after-bottom.jpg`),
+  also at yaw -20/+20 and pitch 10 / roll 15 on the simulator. Lost in VR: the motion blur and depth of field (both
+  unwanted in a headset anyway), the sun haze/bloom and grain; image ~13% darker in the bright test view. `"hidden":
+  false` brings it back (with the ghost). Next draw `4d6a8c2b` (lens flare sprites) only binds the layer, never reads it.
+- 72 Hz with it: 72.0 avg, 0.00% late, 1% low 63.6 (Vblank 144, 300%, walking).
+- A real per-eye fix would reproject the left eye's layer to the right eye by depth: not done.
