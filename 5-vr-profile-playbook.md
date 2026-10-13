@@ -620,6 +620,7 @@ check for each symptom:
 | Walls or sky missing when looking around | a "Wider view" patch for the game's culling, then `stereo.eye_offset: "baseline"` so the wider projection keeps the eye distance; then check the camera logic still sees the game's own FOV (Known traps) | ICO, SotC, WipEout HD (pi/180 for pi/360 at the camera update: FOV x2 in one instruction) |
 | Objects flash or pop in (CPU/SPU occlusion culling on the depth buffer) | `occlusion_depth_readback` | SotC |
 | The game's clock runs fast or slow at a changed vblank | `game_refresh_rate_f32` | Pure, SotC |
+| Slow motion below 60 FPS (VR 45, frame generation), fine at 60; raising the vblank makes it too fast | the game steps once per vblank (find the waiters of the vblank counter with a PPU read watch; memory dumps at 45 / 60 / 90 with `posspeed`-style speed ratios against a 60-vs-60 control) | `vblank_steps: true` | Gran Turismo 5 |
 | Menus, the pause screen or messages black or stuck for the rest of the session, after a hitch (also after a savestate load); fine without the frame-rate word | the frame-rate words followed a measured dip (log `Game frame rate at ...: 90 -> 38`), and the game sets up UI state from the word. Test with `RPCS3_VR_NOMINAL_RATE=1` | `game_rate_measured: false` | God of War (Power Up, pause, tutorial messages) |
 | One game of a collection needs different values | the generator already writes `<TITLE_ID>.<executable>.json` beside an existing `<TITLE_ID>.json` | SotC |
 

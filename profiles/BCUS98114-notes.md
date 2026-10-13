@@ -829,3 +829,22 @@ Vblank 60 capping the game at 60; and they counted game flips, not frames reachi
   Also: 1 MB readback (0xc9e80800 / 0xc9afb000) in the TV views answered late cut the RSX thread 21 -> 8 ms there; not
   committed (not needed with MSAA off; revisit if the TV views drop).
 
+## 2026-10-14: game speed at VR 45 (and 90): the race steps per vblank (fork 5e10624bf)
+
+Matt (headset): slow motion and stuttering audio at VR Frame Rate 45; with the vblank raised to 90 (limiter 45) "too quickly".
+- **Measure with memory dumps, not the speedometer.** The busy-race state's player car leaves the road without steering (X is
+  the throttle on the keyboard pad, W is R2 and does nothing), so coasting curves differ by path. `tools/re/gt5_dump3.sh` takes
+  three dumps ~2 s apart; `posspeed.py A0,A1 B0,B1` gives per-object speed ratios (the savestate fixes the heap layout). A 60-vs-60
+  control agrees at 1.00 for ~5,500 xyz triplets; `rateratio.py` found a seconds clock at heap `0x422c37d8` (1.00/s at 60, 1.50/s at 90).
+- **Vblank chain (01.00):** GT5 runs LLE libgcm (`isHLE 0`, module at 0x1ab0000, TOC 0x1ac88d0). Its vblank handler `0xceaefc`
+  (TOC 0x18765a8, descriptor 0x183d948) bumps a u64 counter at `0x1a3ae20` (struct `*(0x187b0c4)` = 0x1a3ad70, +0xa8 object),
+  stores a timestamp and wakes the waiters of `0xce8b08` (wait N vblanks). Waiters: thread 0xbf9c30 (relays each vblank to an event),
+  the worker loop `0x8ce390` (one tick per vblank when its interval is 0; making it wait 2 vblanks changed nothing in the speeds).
+- **The race step adds a fixed tick:** `0x28fc6c` turns a tick count (virtual call at `0x186604`) into race time with
+  `lfs f12,0x447c(r2)` (1/60); 100 steps = +1.65 s. The physics gets the frame-time word as dt (`0x17e5e0` f31 = f1 -> `0x5012e0`
+  stores it at `0x1892da4`). One step per vblank: at a 90 Hz vblank with a 1/45 word, 2 steps a frame (physics 2x, ticks 1.5x).
+- Results (objects / tick clock vs 60): 45 Hz vblank 0.75; 90 Hz vblank + 1/45 word 1.7-2 / 1.5; 90 Hz vblank + 1/90 word (also VR 90)
+  1.7-2 / 1.5; **60 Hz vblank, limiter 45, 1/60 word: 1.00 / 1.00** -> profile `vblank_steps`.
+- Tried and dropped: the 1/59.94 at `0x1846960`/`0x184acbc` set to 1/90 (no change); vblank events delivered to the game at 60 while
+  the vblank ran at 90 (the game paces its frames on them: 90 dropped to 60 FPS); the worker's timed-wait path (crashes: never set up).
+- Open: VR 90 runs the ticks 1.5x (WIP entry).
