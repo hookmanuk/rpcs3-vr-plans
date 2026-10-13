@@ -355,7 +355,7 @@ pass mark** for fully compatible.
 | Dragon Age II | BLUS30645 | `vr-non-working/` + untracked `bin/` copy (profile) | yes (no patch needed, clocks at 1.0 measured) | **Parked (Matt, 2026-10-08): corrupted graphics and poor performance.** **72 Hz, at the edge** (71.5-71.6 FPS, 0.5-0.7% late after the stereo fix, 2026-10-07, measured with the miner busy). **2026-10-08 on a clean idle CPU: 67.5-69.0, 4.3-6.7% late (fails)**; flat the same (69.0; 74.7 uncapped): the game is CPU-bound near 72 and sensitive to wake-up latency (passes with idle states off or a background load). No RPCS3 setting fixes it (Sleep Timers, scheduler, Multithreaded RSX, SPU busy-wait 70.3) | simulator only (real head poses checked 2026-10-07) | **stereo fixed 2026-10-07** (both eyes had shown the same scene: SPU copy blitted back; `texture_redirects` "camera"); Kirkwall, cutscenes unchecked |
 | Dragon Age: Inquisition | BLUS30997 | none | - | - | - | **Parked (Matt, 2026-10-08): corrupted graphics and poor performance.** **emulation blocker:** hangs loading the start menu and each level (a GPU frame fence the SPU job system never kicks); Clocks scale 30 gets past it but runs at 9 FPS. `profiles/BLUS30997-notes.md` |
 | MX vs ATV Reflex | BLUS30321 | `vr-non-working/` + untracked `bin/` copy | no (`max_fps 30`) | not measured | not played | generated 2026-09-28; no notes |
-| Uncharted: Drake's Fortune | BCUS98103 | none | no: 42-46 flat | not measured | - | SPU/PPU-bound; not pursued |
+| Uncharted: Drake's Fortune | BCUS98103 (update 01.10) | `vr-non-working/` + untracked `bin/` copies (profile, *Wider view (VR culling)* patch) | yes (community *Unlock FPS*, but the profile runs the game's own limiter at 45: two vblanks a frame at 90 Hz) | **below 72**: 45 locked (44.3-44.9, <0.6% late, boat, 500%); unlocked ceiling 48-57 boat, ~45 in combat (42.5 with Wider view): the game's SPU/PPU work | simulator only (real head poses checked 2026-10-13 with Wider view) | Matt's profile (2026-10-13). Fixed: a VR late-readback crash (fork 90bd7ed59); edge culling (head-driven Wider view, ~-2.5 FPS in combat). Open: combat dips under 45; settings and the shadow/lighting patches gave nothing. See notes |
 | Final Fantasy X/X-2 HD Remaster | BLUS31211 | none | no: 80-91 flat | not measured | - | RSX-bound flat; not pursued |
 | Prince of Persia | BLUS30214 | `vr-non-working/` + untracked `bin/` copies (profile, patch) | yes (fork patch *Unlocked frame rate*: 30 -> vblank rate; game clocks real time) | **90 Hz** (canyon, walking: 89.9, 0.28% late; 120 reaches 116.8), 2026-10-13 | simulator only (real head poses checked 2026-10-13) | new (Matt, 2026-10-13). Edge culling: none to fix (checked to yaw 60; a head-driven Wider view patch was built and tested, not shipped). Open: combat HUD and world scale unchecked. Pause menu fixed (`hud_over_scene`). See notes |
 | NiGHTS into dreams... | NPUB30798 (PSN) | `vr-non-working/` + untracked `bin/` copy (hand profile) | **no: frame-locked at 30** (software limiter, 33.3 ms at `0x743fd8`; unlocked it runs ~2x fast) | below 72 (30) | simulator only | new (Matt, 2026-10-13). **Blocked on the frame rate (30) and an RPCS3 rendering fault: tree billboards and the yellow orbs draw on opaque green squares (flat too).** Savestates fail (SPU lock). Hand profile renders in stereo (bare projection `c[24]`, like God of War). See notes |
@@ -1012,7 +1012,7 @@ game's own render/SPU job pipeline, about 88-95 in the intro and 120 in menus: s
 in-engine battle at 30 FPS); same engine and pipeline as FFX, not pursued further. FFX-2 Last Mission and Eternal
 Calm (short extras) not tried.
 
-## Uncharted: Drake's Fortune (BCUS98103 v01.00)
+## Uncharted: Drake's Fortune (BCUS98103, update 01.10)
 
 Triaged 2026-09-30 with no profile made. Native 30. The flat ceiling at vblank 180 on the boat is only
 42-46, with every SPU thread at 100%, so it is SPU/PPU-bound and 90 is not reachable. Evidence:
@@ -1021,6 +1021,12 @@ generic bug, fixed in fork 4704701a2.
 
 Title update 01.10 (the latest, `UP9000-BCUS98103_00-UNCHARTEDDF1SCEA-A0110-V0101-PE.pkg`) installed 2026-10-13 at
 Matt's request. The triage above was on 01.00 and has not been redone on 01.10.
+
+2026-10-13: Matt made the profile with the generator; details in `profiles/BCUS98103-notes.md`. In short: a VR
+late-readback crash fixed (fork 90bd7ed59); 45 FPS locked via the game's own limiter (`default_fps 45`,
+`vblanks_per_frame 2`, community *Unlock FPS* off); a head-driven *Wider view (VR culling)* patch fills the deck, hull and
+ocean at every head pose (costs ~2.5 FPS in combat). Matt (2026-10-13): combat drops under 45 when unpaused (his
+savestate `BCUS98103_1_0`); the game's SPU/PPU work sets the ceiling (~45 there), no emulator setting moved it.
 
 ## Prince of Persia (BLUS30214, disc 01.00)
 
