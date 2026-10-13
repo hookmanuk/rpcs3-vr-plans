@@ -1019,6 +1019,9 @@ Triaged 2026-09-30 with no profile made. Native 30. The flat ceiling at vblank 1
 `evidence/uncharted/boat-vblank180-45fps.png`. Its boot crash in `VKGSRender::flip` (Frame limit Auto) was a
 generic bug, fixed in fork 4704701a2.
 
+Title update 01.10 (the latest, `UP9000-BCUS98103_00-UNCHARTEDDF1SCEA-A0110-V0101-PE.pkg`) installed 2026-10-13 at
+Matt's request. The triage above was on 01.00 and has not been redone on 01.10.
+
 ## Prince of Persia (BLUS30214, disc 01.00)
 
 New 2026-10-13 (Matt). 30 FPS game: the fork patch *Unlocked frame rate (follows Vblank Rate)* clears the GCM label the
