@@ -345,7 +345,7 @@ pass mark** for fully compatible.
 | Uncharted: Drake's Fortune | BCUS98103 | none | no: 42-46 flat | not measured | - | SPU/PPU-bound; not pursued |
 | Final Fantasy X/X-2 HD Remaster | BLUS31211 | none | no: 80-91 flat | not measured | - | RSX-bound flat; not pursued |
 | Prince of Persia | BLUS30214 | `vr-non-working/` + untracked `bin/` copies (profile, patch) | yes (fork patch *Unlocked frame rate*: 30 -> vblank rate; game clocks real time) | **90 Hz** (canyon, walking: 89.9, 0.28% late; 120 reaches 116.8), 2026-10-13 | simulator only (real head poses checked 2026-10-13) | new (Matt, 2026-10-13). Open: the game's 45-degree frustum culls near rock at the view edges on head turns (needs a Wider view patch); main menu, cutscenes, combat HUD and world scale unchecked. Pause menu fixed (`hud_over_scene`). See notes |
-| NiGHTS into dreams... | NPUB30798 (PSN) | `vr-non-working/` + untracked `bin/` copy (hand profile) | **no: 30 FPS** (every second vblank), no patch yet | below 72 (30) | simulator only | new (Matt, 2026-10-13). **Blocked on the frame rate (30) and an RPCS3 rendering fault: tree billboards and the yellow orbs draw on opaque green squares (flat too).** Savestates fail (SPU lock). Hand profile renders in stereo (bare projection `c[24]`, like God of War). See notes |
+| NiGHTS into dreams... | NPUB30798 (PSN) | `vr-non-working/` + untracked `bin/` copy (hand profile) | **no: frame-locked at 30** (software limiter, 33.3 ms at `0x743fd8`; unlocked it runs ~2x fast) | below 72 (30) | simulator only | new (Matt, 2026-10-13). **Blocked on the frame rate (30) and an RPCS3 rendering fault: tree billboards and the yellow orbs draw on opaque green squares (flat too).** Savestates fail (SPU lock). Hand profile renders in stereo (bare projection `c[24]`, like God of War). See notes |
 
 ## Testing in the headset (applies to all)
 
@@ -1017,8 +1017,8 @@ main menu / cutscenes / combat HUD / world scale. States `pop_desert`, `pop_play
 
 ## NiGHTS into dreams... (NPUB30798, PSN 01.00)
 
-New 2026-10-13 (Matt). Gameplay runs at 30 FPS (every second vblank), no community patch; the logic is probably
-frame-locked (Saturn engine): a frame-rate patch is the main job. RPCS3 draws tree billboards and the yellow orbs on
+New 2026-10-13 (Matt). Gameplay runs at 30 FPS and the logic is frame-locked (measured: unlocking the 33.3 ms limiter
+runs the game ~2x fast; no float clocks): **stopped below 72** until the logic step can be split from rendering. RPCS3 draws tree billboards and the yellow orbs on
 opaque green squares (also flat, no VR): not the colour key (registers 0), not isolated yet. Savestates fail. The
 generated profile is wrong (picked indexed light vectors at `c[68]`); the hand profile (`row_vectors`, bare projection
 `c[24]`, HUD ortho `c[68]`) renders in stereo on the simulator. Notes: `profiles/NPUB30798-notes.md`.

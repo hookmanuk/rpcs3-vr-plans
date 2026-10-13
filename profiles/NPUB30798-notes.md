@@ -6,9 +6,14 @@ Return x4 through the warning, logos and intro, Start at the title, X Brand New 
 through the Nightmaren cutscene); keyboard pad from the template (temporary, `input_configs/NPUB30798`).
 
 ## Step 0
-- **Frame rate: 30.** Gameplay flips every second vblank (29.5 FPS at Vblank 60); title, menus and movies run at 60.
-  No community patch (patch.yml has none). Not yet known whether the logic is frame-locked (a Saturn-era engine, very
-  likely). A frame-rate patch is the main work; without it the game cannot reach 72.
+- **Frame rate: 30, and the logic is frame-locked.** Gameplay runs at 29.5 FPS; title, menus and movies at 60. No
+  community patch. The cap is a software limiter on the main thread (PSGL game, CriWare middleware): `0x2ba74` reads a
+  timer and sleeps 1 us at a time until the frame interval, the double at `0x743fd8` (`[r2-0x7c70]`, r2 `0x74bc48`) =
+  **33.3 ms**, has passed (gated by the byte `[0x76283c+1]`). Poked to 16.6 ms the game ran ~58 FPS (PPU interpreter),
+  and memory dumps (`rateratio.py`, 30 vs 58 FPS) show **no float clocks at all** and logic counters that scale with the
+  frame rate (`0x3721ed8c` 1.89 -> 3.44/s, frame counters x1.9): the game would run ~2x fast. A 72 Hz version needs the
+  per-frame steps of the (Saturn-derived, fixed-point) game logic halved or split from rendering: not attempted.
+  **Stopped here (below 72), per the profile process.**
 - **Savestates fail**: "failed to lock SPU threads execution", also with Compatible Savestate Mode and the GETLLAR spin
   optimization off (both put back to false).
 - **Green squares (RPCS3 rendering, flat, no VR):** tree billboards and the yellow orbs draw on opaque green squares.
