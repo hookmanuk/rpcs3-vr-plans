@@ -45,8 +45,25 @@ Branch `framegen` of `rpcs3/` (from `openxr` 0eb6a05f5). Fork files only, as for
 
 | Stage | Status |
 |---|---|
-| 1. FG device/instance extensions, capability check and log, setting | |
-| 2. Per-eye feature creation and evaluation into interpolated images (debug: show only generated frames) | |
-| 3. OpenXR generated-slot queue, midpoint pose, ordered presentation | |
-| 4. Simulator checks (motion, head turns, HUD), FPS and late frames at 45 -> 90 | |
-| 5. Headset (Matt) | |
+| 1. FG device/instance extensions, capability check and log, setting | done (`c07a78a9a`): setting `Video/VR/DLSS Frame Generation (experimental)` (config file only, no UI yet) or `RPCS3_DLSSG=1`; NGX on Vulkan accepts it (5090: up to 5 generated frames) |
+| 2. Per-eye feature creation and evaluation into interpolated images (debug: show only generated frames) | done; `RPCS3_DLSSG_ONLY=1` shows only generated frames (`68a137d28`) |
+| 3. OpenXR generated-slot queue, midpoint pose, ordered presentation | done; the frame thread logs "N of M headset frames showed a generated pair" every 5 s |
+| 4. Simulator checks (motion, head turns, HUD), FPS and late frames at 45 -> 90 | partly, see below; head turns with simpose not yet checked |
+| 5. Headset (Matt) | Uncharted 2026-10-13: "looks like it might work", but the game's own rate is too low for 90 |
+
+## Simulator results (2026-10-13, VR Frame Rate 45, DLSS on, 16 s windows)
+
+| Game (state) | Game FPS FG off -> on | Headset frames generated | Generated frames |
+|---|---|---|---|
+| Uncharted (`BCUS98103_1_0` combat, 300%, Performance E) | 45.0 -> 43.4 median (dips to 37) | 216 of 433 per 5 s (~87 Hz) | coherent in a camera spin; clouds/sky smeared, a faint mast ghost in the right eye |
+| MotorStorm PR (`vrtest_mspr_race`, 350%, Quality) | 45.0 -> 45.0 | 225 of 450 (90 Hz) | car and track fine; HUD timer blurred (no HUD-less input yet). Race-start brightness pulses are the game's (control run the same) |
+| Journey (`vrtest_journey_dune`, 300%, Quality) | 45.0 -> 44.9 | ~2x (static scene) | identical to the real frame when still |
+| Jak 3 (`vrtest_jak3_spargus`, 300%, Quality) | 44.9 -> 44.8 | 224 of 448 | clean (lava blobs, platforms) |
+| Killzone 2 (`vrtest_kz2_carrier`) | 45 | none | DLSS never finds the scene's camera draws ("camera draws 0"), so no FG input: a DLSS issue |
+
+FG needs a game that holds 45 solidly: a dip below 45 leaves a headset frame without a new picture. Matt's configs for
+MotorStorm, Journey and the Jak collection were set to Frame Rate 45 + DLSS Quality + FG for him to try (backups
+`config_<ID>.yml.pre-framegen.bak`); Uncharted's has FG on top of its own settings.
+
+Next: HUD-less input (`hud_pre`) so HUDs stop smearing; head-turn check of the midpoint pose; 3x (MFG) after Matt's 2x
+verdict; a UI setting.
