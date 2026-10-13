@@ -57,34 +57,26 @@ pitch -25 a small corner of the right eye still shows. Evidence: `evidence/uncha
 
 Not checked: the aim/zoom camera, cutscenes.
 
-### LOD (open, 2026-10-13)
+### Lower-detail models (fixed: Wider view 2.0, 2026-10-13)
 
-Matt: with Wider view 1.0 the game uses lower-detail models. Measured on his combat state (loads paused: the frame is
-frozen), inspector capture, scene target `c0f50000`: no widening 628 draws / 281,538 vertices; Wider view 1.0 at
-scale 3.6 658 / 214,545 (-24% vertices). Tool: `lodcap.sh` (session scratchpad; sess start, pose, inspector ARM,
-per-target sums). Variants (all at scale 3.6, straight ahead):
+Matt: with Wider view 1.0 the game used lower-detail models. Not a LOD switch: the geometry jobs (SPU) drop triangles
+that cover no pixel centre of the game's 1280x720 viewport, and the widened projection shrinks every triangle on that
+viewport. The viewport block is built per pass at `0x452420` (`[r31+0x338]`: u16 scissor 0, width, 0, height at
+`+8..+0xe`, the view-projection copied from the constant packet at `+0x10`, viewport scales and offsets at
+`+0x50..+0x5c`). Patch 2.0 (cave at `0x452554`) multiplies the four floats and the scissor width/height by 16 before
+the view-projection is copied (as Sonic's *Disable mesh trimming (VR)*). Measured on Matt's combat state (paused, so the
+frame is frozen), scene target `c0f50000`, straight ahead (scale 3.6): no widening 628 draws / 281,538 vertices; 1.0
+658 / 214,545; 2.0 699 / 374,865 (more than the game shipped with: its own trimming at 1280x720 is gone at 500%).
+A dynamic grid factor (the scale word instead of 16) gave 703 / 341,763 at the same cost, so 2.0 keeps 16.
 
-| Variant | Scene draws / vertices | Deck filled |
-|---|---|---|
-| none | 628 / 281,538 | no |
-| v1 tangent at the camera build (`0x4b4d3c`) | 658 / 214,545 | yes |
-| v2 only the plane builder `0x1547d0` (at `0x154af0`) | 628 / 281,538 | no (only a shadow map changes) |
-| v5 only projection-builder path A (`0x156b78`) | 625 / 203,763 | yes |
-| v9 cot scaled around the call at `0xe40ac` only | 625 / 203,763 | yes |
-| v10 cot scaled around the call at `0x1647f8` only | 628 / 281,538 | no |
-| v8 = v5 + packet projection diagonal restored | as v5 | yes |
-| v12 = v9 + packet view-projection x/y rows restored | 628 / 281,538 | no |
-| v13 / v14 = v9 + only the x / only the y row | 620 / 221,709 ; 627 / 244,356 | |
-| v15 = v9 + packet pixel factors (`+0x250`) x scale | as v9 | yes |
+Cost (Matt's combat state, Vblank 600, two runs each): no widening 44.7 / 44.8; 1.0 42.1 / 42.5; 2.0 39.2 / 38.6
+(the 16x viewport alone 41.4). Head poses on the simulator with 2.0: whole at yaw 0, +-20, pitch +10 / -25, roll 15
+(`evidence/uncharted/widerview2-headposes-2026-10-13.png`, `widerview2-none-v1-v2.png`).
 
-Data flow: `0xe4070` (called after the builder `0x156750` at `0xe40ac`) writes a 0x390-byte packet (transposed: `+0x00`
-camera +0x10 matrix, `+0x80` view, `+0xc0` projection, `+0x100` view-projection, `+0x140` camera +0x110, `+0x1c0..`,
-`+0x200` camera +0x150, `+0x250` pixel factors [k1/W, k1/H, k2/W, k2/H]) to `0xe5b020` (and RSX constant copies at
-`0x3264xxxx`). No PPU code reads the `0xe5b020` copy: the SPURS job DMAs it to LS `0xdc00` (job code RAM
-`0x857c00-0x8603a0` -> LS `0x4000-0xc7a0`, in the executable's data segment, so a normal patch can change it; object
-batches stream from `0x31b6xxxx` / `0x2002xxxx` in 0x2000 chunks). The job's main function (around LS `0x9a00`, RAM
-`0x85d600`) loads the packet with r3 = 0xdc00 (`lqd` 0/16/32/48, +128.., +192.., +256.., +592, +752, +864, +880) and
-shuffles the matrices into columns for a software-pipelined per-object loop: both the frustum test and the LOD use the
-view-projection there. A fix has to change that SPU loop (feed the LOD an unwidened copy, or widen only the clip test).
-Found with a temporary SPU DMA watch in `do_dma_transfer` (env `RPCS3_SPU_DMA_WATCH=<ea>`, SPU interpreter; not kept).
-Job disassembly: `tools/re/spudis.py elf/BCUS98103-0110.elf 857c00 8603a0 853c00`.
+How it was found (dead ends included, for the next game): splitting the projection on the PPU (the frustum-plane
+builder `0x1547d0`, the projection builder `0x156750` per call site, the per-frame packet `0xe4070` written to
+`0xe5b020` for the SPU visibility job and to `0x3264xxxx` constant packets) always moved culling and "LOD" together; the
+SPU visibility job (code RAM `0x857c00` -> LS `0x4000`, packet DMA'd to LS `0xdc00`) never reads the view-projection
+(temporary SPU interpreter LS watch); `zcull_approximate` changed nothing. A PPU read watch on the constant packet's
+view-projection found `0x452420` copying it into the viewport block. Temporary SPU hooks used (not kept): a DMA watch
+in `spu_thread::do_dma_transfer` and an LS load/store watch in `SPUInterpreter.cpp`.
