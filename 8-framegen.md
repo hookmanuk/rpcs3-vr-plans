@@ -98,3 +98,20 @@ verdict; a UI setting.
 - MotorStorm's random black ground patches (Matt: with DLSS on, also without frame generation): DLSS's jitter (gone with
   `RPCS3_DLSS_JITTER_SCALE=0`). New profile key `dlss_jitter` (0..1), 0 for BCUS98155. The pass that breaks under jitter is
   not identified (blocky edges: likely a low-resolution pass upsampled against depth).
+
+## 2026-10-13 late: settings live, HUD at the halfway pose, sharpening (fork 64edf9fc4 .. b2d9dcea1)
+
+- **Live on/off**: the setting was read once per RPCS3 run (unticking did nothing until a restart). The context and its
+  Vulkan extensions now exist whenever DLSS is on at boot; the checkbox (settings tab and home menu) works live, and
+  turning it or DLSS off puts the game back at the full VR rate.
+- Head-turn fallback to the game's vectors (7696ca2db) tried and reverted: Matt, hybrid is better all round.
+- **HUD**: DLSS-G's HUD-less input kept the world-fixed HUD box in place on head turns (worse). Now DLSS-G generates
+  from DLSS's output before the HUD composite, and the frame's HUD is composited onto each generated eye through the
+  rotation homography from the frame's pose to the halfway pose (`render_pose_halfway_homography`). Matt: "great".
+- **DLSS Sharpening** (VR, 0..100, default 0, live): RCAS on each fresh DLSS output before the HUD and frame generation,
+  at 4x the FSR CAS slider's strength (0..-2 stops). The CAS slider never reached the headset (desktop FSR only).
+- Crash found on the way: a new image copied into before any layout change returned to UNDEFINED ("Attempted to
+  transition to an invalid layout"); new images now get a layout first.
+
+Status: stages 1-4 done on the simulator; Matt's headset: MotorStorm 45 -> 90 good, GT5 "sort of works" (fixed pacing
+since). Open: 3x (MFG), cost measurements (sharpening ~0.2 ms estimated, DLSS-G per eye), merge into openxr.
