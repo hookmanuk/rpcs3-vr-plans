@@ -67,3 +67,20 @@ MotorStorm, Journey and the Jak collection were set to Frame Rate 45 + DLSS Qual
 
 Next: HUD-less input (`hud_pre`) so HUDs stop smearing; head-turn check of the midpoint pose; 3x (MFG) after Matt's 2x
 verdict; a UI setting.
+
+## 2026-10-13 evening: pacing, ghosting (fork ef6e9d0cc, 9edb53d07, 2c9ad1325)
+
+- **Pacing** (Matt, GT5: no longer 90 when the frame time rose): the frame thread waited for each commit and then for the
+  flip's GPU work (render, DLSS, DLSS-G x2), so any game frame whose GPU work ran past one headset frame lost a headset
+  frame. Now, while frame generation is active, it runs every headset frame and never waits: a queue (3 deep) holds the
+  generated and real pairs in order, the oldest is shown once its fence has signalled, otherwise the last frame again
+  (no acquire: the runtime keeps the last released image). MotorStorm: 225 generated + 226 real per 5 s, 0 repeats.
+- **`motionVectorsInvalidValue` was 0**: every still pixel counted as invalid. Now FLT_MAX.
+- **Ghosting on MotorStorm's car in motion (gone when paused)**: the motion debug view shows the car with the world's
+  motion (it should be ~0 under the chase camera): its vertices are not moved by the matrices the DLSS context tracks
+  (built on the SPU). DLSS-G with every vector marked invalid (its own motion estimate) was "much better" (Matt,
+  headset) and is the default; `RPCS3_DLSSG_MV=game` or `%TEMP%/rpcs3-vrprofile/DLSSG_MV_GAME` (`bin/dlssg_mv_game.cmd` /
+  `dlssg_mv_own.cmd`, live) give the game's vectors back. Possible later: game vectors where a depth check says the
+  pixel is static world, invalid only on objects that move by themselves.
+- Dev: `RPCS3_DLSSG_ONLY=2` puts the left eye's generated frame left and its real frame right (one capture compares them).
+- Open: random "black shadow" flashes (Matt) not found in captures yet; HUD smear (no HUD-less input).
