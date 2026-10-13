@@ -39,6 +39,10 @@ covered near rock, which hid all but strips of the menu as the head turned (`evi
   frame: poking either does not stick. Next: find the code computing `+0x1e8` in the logic camera (the FOV source) and
   whether the culling reads those tangents or the view-projection; test widening with a code poke under the PPU
   interpreter (write watches stall this game).
+  The logic camera's FOV is at `+0x80` (0.76824 rad vertical; near 0.1 at `+0x84`, far 1500 at `+0x88`, aspect at
+  `+0xd8`) and is rewritten every frame from a settings object at `0x10d922f0` (pointer at camera `+0x1f8`, field `+0xc0`),
+  itself rewritten every frame (holding it at 1.2 changed nothing); the data-segment value at `0x1409d74` (same bits)
+  sticks but has no effect live (read at camera setup?). Not solved yet.
 - The generator flagged two screen passes that read depth (`f0a481c330cbbbd8`, `f7865139bce5eba2`) and a pre-projected
   program (`1c95a3b2b10bbbd8`): not yet checked for sliding effects with head turns (none seen in the pose shots).
 - Not checked yet: main menu and loading screens in the headset, cutscenes, combat HUD, world scale.
