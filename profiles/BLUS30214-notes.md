@@ -30,19 +30,19 @@ covered near rock, which hid all but strips of the menu as the head turned (`evi
   menu box stays whole with `hud_over_scene`.
 
 ## Open
-- **Culling at the edges:** geometry outside the game's frustum (71 x 44 degrees; the generator's "A 2.414" was the
-  wrong axis: x scale 1.392, y 2.474) is not drawn. At yaw +20 the near rock under the overhang is missing
-  (straight-edged holes showing lit walls behind). Needs a *Wider view* (culling) patch. Trail so far (2026-10-13):
-  the render camera at `0x1083cca0` (heap, `pop_play` load) holds the projection at `+0x360` (`0x1083d000`), the view and
-  view-projection after it, and `-tan(h/2)`, `-tan(v/2)` at `+0x1e8`/`+0x1ec` (0.7186, 0.4042). Those are copied each
-  frame (`0x6b3400`, also `0x865e58`) from the logic camera at `0x10cecc20` (same offsets), which recomputes them every
-  frame: poking either does not stick. Next: find the code computing `+0x1e8` in the logic camera (the FOV source) and
-  whether the culling reads those tangents or the view-projection; test widening with a code poke under the PPU
-  interpreter (write watches stall this game).
-  The logic camera's FOV is at `+0x80` (0.76824 rad vertical; near 0.1 at `+0x84`, far 1500 at `+0x88`, aspect at
-  `+0xd8`) and is rewritten every frame from a settings object at `0x10d922f0` (pointer at camera `+0x1f8`, field `+0xc0`),
-  itself rewritten every frame (holding it at 1.2 changed nothing); the data-segment value at `0x1409d74` (same bits)
-  sticks but has no effect live (read at camera setup?). Not solved yet.
+- **Edge culling: not an issue (2026-10-13, Matt asked for a GT5-style head-driven patch).** The "holes" at yaw +20
+  were real scenery: sunlit rock seen through a gap (same at yaw 60 with and without widening). At yaw 60 (90 degrees
+  off the game's axis) nothing is missing either way. Built and tested, then not shipped:
+  - The projection builder is `0x27b3d0` (args f1 near, f2 far, f3 FOV, f4 aspect, r8 viewport rect, r9 output for the
+    frustum extents: `+8` horizontal tangent, `+0xc` vertical); the main camera calls it at `0x2db34c` (aspect loaded at
+    `0x2db344` from camera `+0xd8`), another camera at `0x2dbee0`. Found with a PPU write watch on the camera's P11
+    (`0x10cecd54`) with a narrow code range (the earlier whole-range watches had only made the game crawl).
+  - Full widening (aspect x the head-driven word `0x15855d0`, `culling_scale_f32` tangent_x, step 0.25): works (x scale
+    1.392 -> 0.232 at scale 6) but the shadow cascades follow the camera frustum: cliffs lost their shading and a crack
+    decal showed (`evidence/pop/2026-10-13-yaw20-full-widening-shadows.png`). It also needs `require_camera_aspect` off
+    (the widened camera fails the aspect check: no head tracking, squeezed image).
+  - Culling only (the builder's horizontal tangent output x the word, cave at `0x27b50c`;
+    `evidence/pop/BLUS30214_patch.wider-view-cull-only.yml`): no visible change at yaw 20 or 60.
 - The generator flagged two screen passes that read depth (`f0a481c330cbbbd8`, `f7865139bce5eba2`) and a pre-projected
   program (`1c95a3b2b10bbbd8`): not yet checked for sliding effects with head turns (none seen in the pose shots).
 - Not checked yet: main menu and loading screens in the headset, cutscenes, combat HUD, world scale.

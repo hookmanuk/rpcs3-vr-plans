@@ -1,0 +1,31 @@
+Version: 1.2
+
+PPU-8254e202229bc5be77d12bf298d6f40b169c4cde:
+  "Unlocked frame rate (follows Vblank Rate)":
+    Games:
+      "Prince of Persia":
+        BLUS30214: [ 01.00 ]
+    Author: "VR fork"
+    Notes: "Presents a frame on every vblank instead of every second one. The game's vblank handler (0x1bc810) counts GCM label 0x43 down once per vblank; each frame sets it to 2 and the GPU waits for 0 before the next frame. The handler now clears it on every vblank, so the frame rate follows the Vblank Rate (the VR rate in VR). Game time is real time: its clocks advance 1.0 per second at 30 and at 60 FPS."
+    Patch Version: 1.0
+    Enabled By Default: true
+    Apply To Savestates: true
+    Patch:
+      - [ be32, 0x001bc86c, 0x3ba00000 ] # li r29, 0 (was subf r29, r0, r29: label 0x43 minus 1 while above 0)
+
+  "VR: Wider view (head-driven culling)":
+    Games:
+      "Prince of Persia":
+        BLUS30214: [ 01.00 ]
+    Author: "VR fork"
+    Notes: "Prince of Persia draws only what its own camera sees (71 x 44 degrees), so in the headset the near rock at the sides of a turned view had holes. This widens the game's camera horizontally by a scale (word 0x15855d0) that the VR profile sets each frame from the head pose (culling_scale_f32, tangent_x): just wide enough to cover both eyes left to right, 1.0 on the fixed screen. The camera's aspect (0x2db344, read by the projection builder 0x27b3d0, which also writes the culling tangents) is multiplied by the scale; the height is the game's own. The headset view keeps its framing (VR re-projects it). Untick to go back to the game's own view."
+    Patch Version: 1.0
+    Enabled By Default: true
+    Apply To Savestates: true
+    Patch:
+      - [ be32, 0x015855d0, 0x3f800000 ]  # scale (1.0), written by the VR profile; past the data segment's end (0x15855c8), same page
+      - [ calloc, 0x0027b50c, 4 ]          # projection builder 0x27b3d0, culling output (was stfs f0,8(r31): the horizontal tangent)
+      - [ be32, 0x0, 0x3d800158 ]          # lis r12,0x158
+      - [ be32, 0x0, 0xc1ac55d0 ]          # lfs f13,0x55d0(r12)    scale
+      - [ be32, 0x0, 0xec000372 ]          # fmuls f0,f0,f13        culling tangent x scale; the projection is the game's own
+      - [ be32, 0x0, 0xd01f0008 ]          # stfs f0,8(r31)

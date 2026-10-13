@@ -58,7 +58,7 @@ without `frames_without_3d_as_screen`). Needs you: a hung `rpcs3.exe` (PID 54120
 - **"Savestates don't work" for GoW on my side** was an OpenXR Simulator bug (fixed in the simulator); your headset
   runtime is not affected by it. Your two states: 22:51 is the title screen, 22:56 is the broken-message state.
 - **Prince of Persia: works, 90 Hz at 300%** with a new fork patch *Unlocked frame rate* (game clocks real time). Pause
-  menu fixed with a new key `hud_over_scene`. Open: edge culling on head turns (needs a Wider view patch).
+  menu fixed with a new key `hud_over_scene`. (Edge culling I reported was real scenery; nothing culled to yaw 60.)
 - **NiGHTS: stopped.** Its logic is frame-locked at 30 (unlocked, it runs ~2x fast), and RPCS3 draws its trees and orbs
   on green squares (flat too). A hand profile renders in stereo, but it cannot reach 72.
 
@@ -357,7 +357,7 @@ pass mark** for fully compatible.
 | MX vs ATV Reflex | BLUS30321 | `vr-non-working/` + untracked `bin/` copy | no (`max_fps 30`) | not measured | not played | generated 2026-09-28; no notes |
 | Uncharted: Drake's Fortune | BCUS98103 | none | no: 42-46 flat | not measured | - | SPU/PPU-bound; not pursued |
 | Final Fantasy X/X-2 HD Remaster | BLUS31211 | none | no: 80-91 flat | not measured | - | RSX-bound flat; not pursued |
-| Prince of Persia | BLUS30214 | `vr-non-working/` + untracked `bin/` copies (profile, patch) | yes (fork patch *Unlocked frame rate*: 30 -> vblank rate; game clocks real time) | **90 Hz** (canyon, walking: 89.9, 0.28% late; 120 reaches 116.8), 2026-10-13 | simulator only (real head poses checked 2026-10-13) | new (Matt, 2026-10-13). Open: the game's 45-degree frustum culls near rock at the view edges on head turns (needs a Wider view patch); main menu, cutscenes, combat HUD and world scale unchecked. Pause menu fixed (`hud_over_scene`). See notes |
+| Prince of Persia | BLUS30214 | `vr-non-working/` + untracked `bin/` copies (profile, patch) | yes (fork patch *Unlocked frame rate*: 30 -> vblank rate; game clocks real time) | **90 Hz** (canyon, walking: 89.9, 0.28% late; 120 reaches 116.8), 2026-10-13 | simulator only (real head poses checked 2026-10-13) | new (Matt, 2026-10-13). Edge culling: none to fix (checked to yaw 60; a head-driven Wider view patch was built and tested, not shipped). Open: combat HUD and world scale unchecked. Pause menu fixed (`hud_over_scene`). See notes |
 | NiGHTS into dreams... | NPUB30798 (PSN) | `vr-non-working/` + untracked `bin/` copy (hand profile) | **no: frame-locked at 30** (software limiter, 33.3 ms at `0x743fd8`; unlocked it runs ~2x fast) | below 72 (30) | simulator only | new (Matt, 2026-10-13). **Blocked on the frame rate (30) and an RPCS3 rendering fault: tree billboards and the yellow orbs draw on opaque green squares (flat too).** Savestates fail (SPU lock). Hand profile renders in stereo (bare projection `c[24]`, like God of War). See notes |
 
 ## Testing in the headset (applies to all)
@@ -1025,9 +1025,7 @@ New 2026-10-13 (Matt). 30 FPS game: the fork patch *Unlocked frame rate (follows
 vblank handler counts down (1 instruction); game clocks stay real time (memory dumps at 30 and ~85 FPS). Generated
 profile (column vectors `c[200]`/`c[206]`, HUD `c[200]`, 45-degree FOV) plus the new `screen_space.hud_over_scene`
 (fork 2b7a97544): the pause menu depth-tests against the scene and near rock hid it on head turns. **90 Hz at 300%**
-(walking in the first canyon), RSX-thread bound (~73 FPS at 400%). Open: edge culling on head turns (Wider view patch;
-the frustum tangents and the camera objects are found, see notes),
-main menu / cutscenes / combat HUD / world scale. States `pop_desert`, `pop_play`. Notes: `profiles/BLUS30214-notes.md`.
+(walking in the first canyon), RSX-thread bound (~73 FPS at 400%). No edge culling to fix (to yaw 60). Open: combat HUD, world scale. States `pop_desert`, `pop_play`. Notes: `profiles/BLUS30214-notes.md`.
 
 ## NiGHTS into dreams... (NPUB30798, PSN 01.00)
 
