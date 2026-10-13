@@ -84,3 +84,17 @@ verdict; a UI setting.
   pixel is static world, invalid only on objects that move by themselves.
 - Dev: `RPCS3_DLSSG_ONLY=2` puts the left eye's generated frame left and its real frame right (one capture compares them).
 - Open: random "black shadow" flashes (Matt) not found in captures yet; HUD smear (no HUD-less input).
+
+## 2026-10-13 night: hybrid motion, settings, half rate (fork a78002bb4)
+
+- DLSS-G's own estimate ghosted every car on head turns (Matt); the game's vectors ghosted his car. **Hybrid** (default):
+  the motion image's coverage channel carries each draw's depth ratio k = R's w / p's w (0 = not covered); a check pass
+  (`dlss_framegen_check_pass`, VKDLSS) marks a vector invalid where last frame's depth at p + mv is not what a static
+  point would have had (1 - z ~ n / w; tolerance 4 %, `RPCS3_DLSSG_DEPTH_TOLERANCE`). Matt: "looks good".
+- Settings: VR > **DLSS Frame Generation (experimental)** (checkbox, at boot) and **DLSS Frame Generation Motion**
+  (Hybrid / Game; live, also in the home menu). Dev switches remain (`RPCS3_DLSSG_MV=hybrid|own|game`, files).
+- While frame generation runs, the game renders at **half the VR Frame Rate** (90 -> 45; Unlimited -> half the headset
+  refresh), from the first DLSS-G feature on (`rsx::vr::set_framegen_active`). Matt's frame-gen configs moved 45 -> 90.
+- MotorStorm's random black ground patches (Matt: with DLSS on, also without frame generation): DLSS's jitter (gone with
+  `RPCS3_DLSS_JITTER_SCALE=0`). New profile key `dlss_jitter` (0..1), 0 for BCUS98155. The pass that breaks under jitter is
+  not identified (blocky edges: likely a low-resolution pass upsampled against depth).
