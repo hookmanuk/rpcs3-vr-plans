@@ -89,3 +89,23 @@ model E at 333% 45.3; Performance + model E at 250% 53.8 (the default model, K, 
 without DLSS: 58.6 (so the GPU, not only the game's CPU work, limits it at 500%). The image on the simulator matched
 500% without DLSS (boat, straight and turned); HUD fine. Note: builds need DLSS_SDK set, or they log "This build has
 no DLSS SDK (HAVE_DLSS)" and DLSS does nothing.
+
+## Shadows that moved with the head (2026-10-13)
+
+Matt: all the shadows are wrong, they move with the head (DLSS on or off). The sun shadows are a full-screen pass
+(`fc15ec0752d20290`, inspector draw ~3022 of the boat: target `0xc16d0000` 1280x720, texture 0 `0xc2d50000` 1280x720
+format 0xa5, the 2432x2432 shadow map `0xc3ee0000` at unit 1). Its fragment program decodes a 24-bit depth from
+texture 0 (`floor(tex.wxy * 255)` dotted with fc1), rebuilds the view position from `tc0` (a 0..1 screen uv, from the
+vertex input) with fc4..fc6 and takes it to light space with fc12..fc18: positions for the game camera. Texture 0 is a
+colour copy: the previous draw (same program, target `0xc2d50000`) reads the 2x MSAA depth `0xc0f50000` (2560x720) as
+Z24-as-RGBA8 and writes one sample's bytes. With Wider view the game's NDC covers a 3.6x wider view than the eye's, so
+the shadows were wrong even looking straight ahead.
+
+Fix (fork 0eb6a05f5): profile `depth_remap_programs` entry gated to texture 0 1280x720 format a5 with a target of that
+size (only this pass of the program), `depth_remap_uv`, `depth_remap_packed_unit: 0`. Checks: an identity remap
+reproduces the unpatched picture exactly (the decode and re-encode round-trip); with the remap the shadow pattern no
+longer changes with yaw +-15 on a paused frame, where the unpatched one changes shape. Not confirmed on the simulator:
+that every shadow sits where flat play puts it (the pause menu covers the comparison area); Matt to check in the
+headset. A texture redirect to the depth surface itself was tried first and dropped: the copy's 1280-wide pitch against
+the 2560-wide MSAA surface read interleaved rows (blocky). Other passes that rebuild positions from the same copy
+(`2ffe2bfb47d877be`, 4 draws into the scene; the 640x360 depth downsamples) are not remapped.
