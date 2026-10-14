@@ -866,3 +866,14 @@ Matt (headset): slow motion and stuttering audio at VR Frame Rate 45; with the v
   pacing on the 60 Hz vblank must come from the present side if Matt's repeats return).
 - Open: `car+0x1df4/0x1e34/0x1e74/0x1eb4` (per wheel) advance 0.6x at 90; written at `0x328420` (LR `0x328a0c` <- `0x2fb6dc`,
   the per-car update) once per frame: the increment is wrong, not the cadence.
+
+### Wheel rotation (the third 60): `0x184cb98`
+
+- The per-wheel counters `car+0x1df4/0x1e34/0x1e74/0x1eb4` (revolutions) advance in `0x328124` (per car update, `0x2fb6dc`):
+  `wheel+0x14 += dt x |omega| / 2pi` with `omega = wheel+0x10 / 0.2` (`0x18f02c8`, a constant) and `wheel+0x10` a spin
+  accumulator (`0x328638` += f12, `0x328770` decays). dt is the car's real dt; omega was 2/3 at 90 (probe cave at `0x3283b8`).
+- Upstream: `0x32ff6c`/`0x330050` compute `(f1 - f31) x 60.0` (angles from `0xd43790`) and store the rate: the 60.0 is the data
+  word `0x184cb98` (main TOC + 0x60a8). Poking the 88 words of 60.0 in writable data to 120 at 60 FPS doubled the wheel
+  revolutions per metre (`bisect2.sh`; 7 runs to the single word). Not involved: the physics objects' `0x5cc` (60/scale, from
+  `0x185f650`; set to 90 it changed nothing) and the 1/60 words.
+- Profile `game_refresh_rate_f32: ["0x184cb98"]`: wheels 0.96-1.00x at 90, 0.97-0.99x at 45; cars, clock, RPM unchanged.

@@ -578,21 +578,25 @@ Notes: `profiles/BCUS98116-notes.md`. Evidence: `evidence/killzone2/`. Fork d12f
 
 **VR 45 game speed (Matt, headset, 2026-10-13: "GT5 doesnt work at 45fps", slow motion, audio stutter; then with a 90 Hz vblank "now it runs too quickly. Compare it to a run at 60fps"): fixed 2026-10-14 (fork 5e10624bf, profile `vblank_steps`), Matt to check in the headset.** GT5 steps its race once per vblank: the physics by the frame-time word, plus a race tick of a fixed 1/60 s (`0x28fd18`: tick count x 1/60). The new key keeps a 60 Hz vblank below 60 FPS (the limiter holds 45), writes 1/60 to the frame-time words and skips the measured-rate fallback. Measured on the simulator with memory dumps of `gt5_busy_race_2_17` (object speeds per wall second against a 60 FPS run; a 60-vs-60 control agrees at 1.00 for ~5,500 objects): 45 now 1.00x (5,197 of 6,263 objects, tick clock 1.00); before 0.75x at a 45 Hz vblank and 1.5-2x at a 90 Hz vblank. Frame generation (90 -> 45) unchanged: a generated pair on 225 of 451 headset frames, none repeated. Audio not checked (Null audio).
 
-**Real 90 (Matt: "Make 90 real work"): fixed 2026-10-14 (fork e4254e45b), headset check pending.** On disc 01.00 the vehicle
-physics stepped a fixed 1/60 per race step: at VR 90 the cars ran 1.6-2.3x and the race clock 1.5x, ignoring the profile's
-frame-time words. Found by poking every 1/60 word in writable data (42) to 1/120 at 60 FPS and bisecting with
-`tools/re/xformspeed.py` (object transforms' speeds between two dumps; a 60-vs-60 control is exact, 1.000): one constant,
-`0x185f64c`, is the physics step (`0x56a1ac` sets each car's physics object to scale x it; `0x5c8`/`0x5cc` have 19/8 readers).
-The profile writes it (`game_frame_time_f32`). The race clock adds a fixed 1/60 tick per step (`0x40e420`, ticks = 1 from
-`0x17d7bc`): patch *Race ticks follow the frame time* (cave `0x1782500`, a 16-bit fraction accumulator) adds the frame
-time's worth. Measured at 90 against 60: AI cars 1.00-1.07x, the race clock 1.00x, 45 FPS 1.02x; the player identical under
-full throttle on the Indy oval (59/58/59/60/61 vs 61/58/59/60/61 km/h at 4-20 s) and in coasting decay (0.32-0.34 over 5 s;
-its 10 % offset in the busy state is a resume transient, the same before and after). Not it: the 60.0 companion at `0x185f650`
-(written as the rate it made the player worse), the 41 other 1/60 words (no effect on the cars), a 90 Hz vblank at 45 FPS
-(the game then steps only ~54-60 a second: 0.74x; `vblank_steps` keeps 60 Hz, which measures 1.0). Frame generation 2x/3x
-at 90 on the simulator: a generated pair on 225/301 of 451 headset frames, 0 repeats (Matt's 150 repeats and "nothing
-happens when I activate frame gen" not reproduced; his log showed it switching itself off 150 ms after on). Open: four
-per-wheel values (`car+0x1df4..0x1eb4`) advance at 0.6x at 90 (written per update at `0x328420`); audio unchecked (Null).
+**Real 90 (Matt: "Make 90 real work"): fixed 2026-10-14 (fork e4254e45b + the wheel commit), headset check pending.** On
+disc 01.00 three things assumed 60 steps a second, each found by measurement against a 60 FPS run (a 60-vs-60 control is
+exact, 1.000; `tools/re/xformspeed.py`, `gt5_dump3.sh`, `bisect.sh`/`bisect2.sh`):
+1. The vehicle physics step: the constant `0x185f64c` (1/60 in writable data; `0x56a1ac` sets each car's physics object to
+   scale x it). Found by poking all 42 words of 1/60 to 1/120 at 60 FPS and bisecting on the AI cars' speed. Profile
+   `game_frame_time_f32`. Cars at 90: 1.6-2.3x -> 1.00-1.07x.
+2. The race clock: +1 tick of 1/60 per step (`0x40e420`). Patch *Race ticks follow the frame time*. 1.5x -> 1.00x.
+3. The wheel rotation rate: the car-update layer computes (angle - previous) x 60.0 (`0x32ff6c`, `0x330050`; the word
+   `0x184cb98`), so the wheels spun at 2/3 at 90 (per-wheel counters 0.60-0.66x; found by poking all 88 words of 60.0 to
+   120 and bisecting on wheel revolutions per metre). Profile `game_refresh_rate_f32`. 0.96-1.00x at 90, 0.97-0.99x at 45.
+The player: identical to 60 under full throttle on the Indy oval (59/58/59/60/61 vs 61/58/59/60/61 km/h at 4-20 s) and in
+coasting decay (0.32-0.34 over 5 s); its 10 % lower speed in the busy state is a resume transient (same decay after it).
+Engine-RPM fields in the physics object ~1.05x at 90. Not it: the 60.0 companion `0x185f650` (reached the physics objects,
+changed nothing), the other 1/60 and 60.0 words, a 90 Hz vblank at 45 FPS (the game then steps only ~54-60 a second).
+Frame generation 2x/3x at 90 on the simulator: a generated pair on 225/301 of 451 headset frames, 0 repeats; Matt's 150
+repeats and "nothing happens when I activate frame gen" not reproduced. His log showed frame generation switching itself
+off 150 ms after on: `VKGSRenderDLSS.cpp` disables it when the live setting reads false, so the 2D settings dialog saving
+its stale value (changing Frame Rate there) is the likely cause; toggle it in one place. Audio unchecked (Null).
+Open: a few car fields still off at 90 (`car+0x1080..` 1.3x, `+0x1a0` ~3x, unknown quantities).
 
 **Back in for vr10 (2026-10-12, fork e0ecd0d65, zip rpcs3-v0.0.43-vr10-e0ecd0d6): works from a fresh install (SPU async
 compile, display-area fixes, no resolution switch at race starts; details in the notes file). Awaiting Matt's test.
