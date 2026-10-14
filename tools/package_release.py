@@ -14,7 +14,11 @@ OUT = sys.argv[1] if len(sys.argv) > 1 else r'F:\rpsc3\source\release'
 
 # Build outputs next to rpcs3.exe (not in git). The CI removes rpcs3.exp/.lib/.pdb and vc_redist.
 BUILD_FILES = ['rpcs3.exe', 'openxr_loader.dll', 'opencv_world4140.dll',
-               'avcodec-61.dll', 'avformat-61.dll', 'avutil-59.dll', 'swresample-5.dll', 'swscale-8.dll']
+               'avcodec-61.dll', 'avformat-61.dll', 'avutil-59.dll', 'swresample-5.dll', 'swscale-8.dll',
+               # DLSS (vr11): the MIT plugin holding every NVIDIA SDK call, and NVIDIA's runtime under NVIDIA's license.
+               # rpcs3.exe links none of it (GPL): see rpcs3/ngx_plugin.
+               'rpcs3_ngx.dll', 'nvngx_dlss.dll', 'nvngx_dlssg.dll']
+DLSS_SDK = os.path.join(os.path.dirname(SRC), 'DLSS')
 BUILD_GLOBS = [r'^Qt6[A-Za-z]+\.dll$']
 BUILD_DIRS = ['qt6']
 
@@ -95,6 +99,9 @@ def main():
     for n in os.listdir(shots):
         files['docs/vr-settings/' + n] = os.path.join(shots, n)
     files['LICENSE'] = os.path.join(SRC, 'LICENSE')
+    # The DLSS plugin's own license (MIT) and NVIDIA's for the SDK it is built with and the nvngx runtime DLLs.
+    files['rpcs3_ngx_LICENSE.txt'] = os.path.join(SRC, 'rpcs3', 'ngx_plugin', 'LICENSE')
+    files['NVIDIA_RTX_SDK_LICENSE.txt'] = os.path.join(DLSS_SDK, 'LICENSE.txt')
     # Per-game settings for the shipped VR games (partial configs, applied over the global configuration).
     configs = os.path.join(SRC, 'vr_configs')
     for n in os.listdir(configs):

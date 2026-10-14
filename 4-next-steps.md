@@ -1009,6 +1009,10 @@ build emucore/VKGSRender/rpcs3 so the exe carries that commit, run `plans/tools/
 VR number is not above every released tag's), smoke-test
 the zip from a non-temporary folder, push `openxr` and the annotated tag; Matt tests the zip and publishes the GitHub release himself.
 
+**DLSS licensing (vr11, 2026-10-14).** NVIDIA's RTX SDKs license forbids the SDK inside a GPL program (4e: no open-source license over it; 2c: distributed on terms as protective as NVIDIA's) and needs NVIDIA attribution in the About box (supplement 7.1(b)). So every NGX call lives in the MIT plugin `rpcs3/ngx_plugin` (rpcs3_ngx.dll, C table `rpcs3_ngx.h`); rpcs3.exe loads it at run time and must never link `nvsdk_ngx_*.lib` (check: no `NGXCore`/`NVSDK_NGX_Parameter_` strings in rpcs3.exe). The zip ships rpcs3_ngx.dll, nvngx_dlss.dll, nvngx_dlssg.dll, `rpcs3_ngx_LICENSE.txt` and `NVIDIA_RTX_SDK_LICENSE.txt` (package_release.py stops if a DLL is missing). Matt chose one zip over a separate NVIDIA add-on (a zip of NVIDIA's DLLs plus a shim risks 4b, "stand-alone product").
+
+**vr11 (2026-10-14):** tagged `v0.0.43-vr11` on b17b92db7, zip `release/rpcs3-v0.0.43-vr11-b17b92db_win64.zip`, notes `release/vr11-release-notes.md`, prefilled release link `release/vr11-release-url.txt`. Smoke test from the extracted zip (firmware, GT5 data and the 2_17 state copied in; DLSS Quality + Frame Generation by env): patches, profile and plugin load, DLSS and frame generation run (90 headset FPS, 5 min stable on warm caches). Two of three cold runs lost the GPU device (once ~1 s after the first generated frame, while the eye swapchains grow to the DLSS output size: the known swapchain-recreate area; once after ~2.5 min). Matt tests and publishes.
+
 **Out-of-box check (every release, since vr8).** Each shipped game must play as a user gets it, without the dev
 setup. vr8 shipped two games that only worked in dev: God of War capped at 60 FPS by the online config database,
 and Asura's Wrath slow and blurred without the community patches. Before tagging:
