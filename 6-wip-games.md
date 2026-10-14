@@ -398,10 +398,21 @@ Ruled out so far:
 - Not draws without motion: the programs drawn into the scene without a camera matrix are full-screen passes (4-48
   elements, no depth test): `63572270c1a084d2`, `ae412e7fb7d97794`, `8761ccb6b94bd151`, `f780fabddcd9eba2`, `520b713527e8c714`.
 
-Next: whether it is the jitter (as MotorStorm): `RPCS3_DLSS_JITTER_SCALE=0` (or a temporary `dlss_jitter: 0` in the
-profile for Matt's headset check); if so, bisect the program with `RPCS3_DLSS_JITTER_BITS`. Then the depth those rocks
-write (alpha-tested or drawn twice?) and the warp view on a deterministic A/B (same delay after a fresh load, a control
-run). Note: the warp view crashed RPCS3 until fork ef9a96a00 (its shader lacked two inputs).
+- Not the jitter (Matt, headset, `dlss_jitter: 0`: "nope, jitter off didn't fix that either").
+- **Not reproduced on the simulator (2026-10-14).** Measured with `RPCS3_DLSS_SEQ` (now with the motion vectors, depth, raw
+  motion image and frame number) and `tools/re/mvcheck.py` (each 16x16 block's motion vector against its measured motion in the
+  DLSS input; search +-26 px, so blocks moving faster are not judged: `parity3.py` counts only those under 18 px) and
+  `kymo.py` (x-t strips, input against output): the vectors match the image to ~1 px (median) and the output strips match the
+  input's, at Frame Rate Unlimited (60) and 90. Earlier "wrong vectors" on a near rock were the search window (it moves ~70 px a frame).
+- Unpaired draws (~35 % in Sonic, geometry rebuilt on the SPUs) by the previous frame's camera motion are the most accurate:
+  per-frame alternation in one run, 42.8 bad blocks a frame against 63.4 for the nearest previous matrix; this frame's motion
+  (b83d83a2e) and a vote among paired draws no better. Reverted to the previous frame's (fork be6bd86ad).
+- Pairing: the busy program (`...41b3833855`) draws with one matrix a frame (the camera's), so a wrong fallback pairing cannot
+  move it; disabling the fallback key is far worse (all draws unpaired).
+- At VR 90 the game sits just under 90 with DLSS (the measured-rate fallback switched 7 times in 22 s; none with DLSS off).
+
+Next: needs a reproduction: Matt's headset at his frame rate and head motion; whether it shows with DLAA, at Frame Rate 60,
+or with `game_rate_measured: false` (the 90 Hz rate switching).
 
 ### MotorStorm: Pacific Rift (BCUS98155): black ground patches with DLSS (worked around)
 
