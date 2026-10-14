@@ -145,3 +145,44 @@ Tried as the default for every game (Matt: "Add it as default with an opt out if
 (`RPCS3_DLSS_PAIR=alt`, nearest on even frames, draw order on odd; `tools/re/mvcheck.py` + `parity3.py`, 300 %, throttle and a
 +-8 deg head sweep): Sonic 76.8 vs 44.3 bad blocks a frame, MotorStorm 105.2 vs 104.8, SEGA Rally 356.1 vs 337.7. Worse or no
 better outside GT5: `dlss_pair_nearest` stays a per-game key (GT5). The vote fix (main view only, merged motions) is generic.
+
+## 2026-10-14: rate conversion, 60 -> 90 (Matt's request)
+
+**Rule.** Frame generation on and a VR Frame Rate below the headset's refresh (60 on 90 Hz): the game keeps that rate
+(`rsx::vr::framegen_rate_conversion`; at or above the refresh the old 1/multiplier rule applies). The refresh comes from
+`XR_FB_display_refresh_rate` or, without it (SteamVR, the simulator), the shortest `predictedDisplayPeriod` over 2 s
+(`set_headset_cadence`, used only here). Ratio game : display reduced (60:90 = 2:3); one pair's frames lie on a 1/display grid,
+so display - 1 generated frames per pair must fit DLSS-G (3x: RTX 50) and our two outputs, else no conversion.
+
+**Schedule** (`framegen_on_flip`): headset frame j shows game moment j * game / display, counted from the flip count (not
+from when the flips came). 60 -> 90 alternates "the 2/3 frame" and "the 1/3 frame, then the real frame"; every other real
+frame is committed (its pose feeds the next generated frames) but not queued (`commit_eyes(..., shown=false)`). Each
+generated pair is declared at its own phase (pose slerp and HUD homography at index / 3).
+
+**DLSS-G multi-frame needs every index every frame.** Measured with the new dev dump `RPCS3_DLSSG_PHASE` (file request
+"x y w h flips": the left eye's real input and each evaluated index as raw RGBA8) and `tools/re/fgphase.py` (block matching
+against r(n-2), r(n-1), r(n); t = 0 at the last real frame, 1 at this one), MotorStorm `vrtest_mspr_race` driving, 60 FPS:
+
+| Calls per flip | 1/3 frame t | 2/3 frame t |
+|---|---|---|
+| only the index shown (2 / 1 alternating) | -0.30 | -0.70 |
+| same + `DLSSG.BackbufferFrameID` | -0.30 | -0.70 |
+| 1..index shown (1 / 1+2 alternating) | -0.31, index 1 on "1+2" flips -1.3 | -0.67 |
+| **1 and 2 every flip (shipped)** | **+0.33** | **+0.67** |
+| control: 2x at VR 90 (game 45) | +0.50 | |
+
+Only the constant call pattern gives frames between the last real frame and this one. Cost: 4 evaluations per game frame
+(2 per eye), versus 2 for the sparse attempt (which held 60 but showed wrong frames).
+
+**Results, simulator 90 Hz, Matt's MotorStorm config (DLSS Performance, Hybrid), RSX thread ms/frame median:**
+
+| Setting | FPS | headset frames generated / repeated per 5 s | RSX ms |
+|---|---|---|---|
+| 300 % (eyes 3840x4320), FG off, VR 60 | 60.0 | - | 10.9 |
+| 300 %, rate conversion (4 evaluations) | 51-58 | 253-300 / 2-70 of 451 | 17.0 |
+| 200 % (eyes 3200x2880), rate conversion | 60.0 | 300-301 / 0-1 of 451 | 13.2 |
+| 300 %, 2x at VR 90 (game 45, 2 evaluations) | 45.0 | 225 / 0 | 14.9 |
+
+Each DLSS-G evaluation at 3840x4320 costs ~1.5 ms (13.8 ms with 2, 17.0 with 4, 10.9 with none), so at 300 % the four push
+a 10.9 ms frame past 16.7 ms although the game alone reaches 72+. At 200 % it holds 60 -> 90 with no repeats. Open: Matt's
+headset check; head turns (simpose) and HUD at the 1/3 and 2/3 poses; a game dropping below 60 (repeats, no re-phasing).
