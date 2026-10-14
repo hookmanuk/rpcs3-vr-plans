@@ -207,3 +207,9 @@ The App downloaded `ProgramData\NVIDIA\NGX\models\dlssg\versions\20318480\files\
   Settings or `0x10E41DF1` = 3 on an rpcs3.exe profile (Profile Inspector), and check with `RPCS3_NGX_LOG=1` for
   "Applying settings for render preset". Copy the DLL after the last build: `buildfiles/msvc/dlss.props` (CopyDlssRuntime)
   copies the SDK's `lib/Windows_x86_64/rel/nvngx_dlss*.dll` into bin after every build (it put 310.9.1 back here).
+
+Unused-frame shortcuts (2026-10-14): the rate conversion's unused index (the 1/3 frame on "2/3" flips and vice versa) with
+only a 64x64 output (`outputInterpSubrectSize`, `EvalFlags_UpdateOnlyInsideExtents`): 60 FPS again (RSX 14.2-14.8 ms, 0-7
+repeats), but the shown frames broke (t -0.6..+0.1, the 2/3 frame showing the scene before the last real frame). DLSS-G's
+later frames depend on each earlier output being made in full, so cheapening or skipping (never submitting) the unused one is
+out. Reverted. Left: fewer pixels for frame generation (a lower Resolution Scale, or generating at a reduced size).
