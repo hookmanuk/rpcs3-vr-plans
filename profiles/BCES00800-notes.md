@@ -314,3 +314,16 @@ Side finds:
   Fixed in the simulator (local branch `rpcs3-vr`, 0acbd05): 6/6 loads fine. Matt's headset runtime is not affected.
   Found with Vulkan validation (`vkCmdCopyImage ... extent.height (2160) exceeds ... 1080`) after a drain-loop log showed
   the fence status `VK_ERROR_DEVICE_LOST`.
+
+## 2026-10-14: culling widened (patch "VR: Wider view (head-driven culling)", fork 3999d704c)
+
+- Matt: "God of War 1 needs to cull less things" (plenty of GPU headroom). The picture is 54 x 32 degrees (projection
+  1.945 / -3.457 / -1.002 / -20.02, written per draw at `0x1a38b8` into the constants at `0x301axxxx`; PPU write watch
+  `w,301a0000,20000,10000,800000` under the interpreter).
+- Beside the writer, `0x1a3748` (leaf) builds the four side planes (`+0x2c0..0x2f0`, normal (1, 0, -t)/sqrt(1+t^2)) from
+  tangents at camera `+0x380, +0x384, +0x390, +0x394`. The patch branches each `lfs` to a cave in the text segment's zero
+  padding (`0x4ccf00`, text ends at `0x4ca4e0`) that multiplies by the word `0x4ccff0`; LLVM handles the cave.
+- Profile `culling_scale_f32` (tangent, fov 32.27, aspect 1.7775, margin 10, max 8, step 0.25): 7.25 looking ahead (the
+  vertical view sets it), 8 at yaw 40. Poke test at 3x and the patch: mast, rigging and doorway at the edges drawn; 90 FPS.
+- Not checked: GoW II (likely the same engine code at another address), cutscenes, the 32.31 words at `0x5356d4..` (not the
+  FOV: poking them changed nothing).
