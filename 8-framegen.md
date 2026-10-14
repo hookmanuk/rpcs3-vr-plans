@@ -191,3 +191,18 @@ Cost is GPU (2026-10-14, 300 %, VR 60, `nvidia-smi` utilisation while driving + 
 64 % (max 75 %), 60 FPS; rate conversion 94 % (max 97 %), 55-57 FPS. The RSX thread's CPU time rises (13 -> 19 ms/frame), all of
 it in the "textures" bucket (2.2 -> 8.5-11.4 ms): the thread waiting on a saturated GPU, not CPU work (the same calls at 200 %
 hold 60).
+
+## 2026-10-14: NVIDIA's Frame Generation "Preset C" (FG Lite)
+
+NVIDIA App beta (2026-10-13): Frame Generation Preset C, "a faster and lighter algorithm" (up to 35 % on an RTX 5060), set in
+the App's DLSS Override > Model Presets. Not in our SDK (1.5 headers: presets only for Super Resolution / Ray Reconstruction).
+The App downloaded `ProgramData\NVIDIA\NGX\models\dlssg\versions\20318480\files\160_E658700.bin` (2026-10-13 21:29): an
+`nvngx_dlssg.dll` 310.9.16 "nvapp_override" build with a new kernel `Kernel_BlendCandidatesFGLite` and
+`EndpointConfiguration::ApplyRenderPreset`. Copied over `bin\nvngx_dlssg.dll` it loads and runs in RPCS3 (same FPS, no preset).
+- How the preset is chosen: not an NGX parameter. Setting `DLSSG.LiteCandidateBlendingEnabled` as one changed nothing (removed);
+  that name sits with the DLL's registry overrides (`EndpointConfiguration::ReadRegkeys`, HKLM `...\Global\NGXCore`). The
+  preset ID most likely comes from driver profile key `0x10E41DF1` (read by `DLSSGDRSKeys`, both builds; 310.9.1 logs
+  "Preset ID", "Preset A/B selected" there), which the App writes. RPCS3 has no driver profile (`drsProfileName` empty).
+- Both routes (driver profile, HKLM) need admin; untested. To try: 310.9.16 DLL in bin, then Preset C via the App's Global
+  Settings or `0x10E41DF1` = 3 on an rpcs3.exe profile (Profile Inspector), and check with `RPCS3_NGX_LOG=1` for
+  "Applying settings for render preset".
