@@ -222,3 +222,7 @@ Simulator, GT5 `gt5_busy_race_2_17` (RSX-thread bound at 38-40 FPS in both modes
 besides the log fields).
 
 Merged into openxr 2026-10-14 (fast-forward to ace69ad4d), pushed.
+
+Bug (2026-10-14, fixed 0dc7f5d0c): the queue-wait log (ace69ad4d) split the frame thread's if/else chain, so with frame
+generation off every headset frame repeated the first one (black headset; Matt: GT5 after he turned FG off). Found with a
+temporary per-2 s layer log in the frame thread (repeat 1 on every frame with FG off).
