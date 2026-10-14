@@ -578,7 +578,18 @@ Notes: `profiles/BCUS98116-notes.md`. Evidence: `evidence/killzone2/`. Fork d12f
 
 **VR 45 game speed (Matt, headset, 2026-10-13: "GT5 doesnt work at 45fps", slow motion, audio stutter; then with a 90 Hz vblank "now it runs too quickly. Compare it to a run at 60fps"): fixed 2026-10-14 (fork 5e10624bf, profile `vblank_steps`), Matt to check in the headset.** GT5 steps its race once per vblank: the physics by the frame-time word, plus a race tick of a fixed 1/60 s (`0x28fd18`: tick count x 1/60). The new key keeps a 60 Hz vblank below 60 FPS (the limiter holds 45), writes 1/60 to the frame-time words and skips the measured-rate fallback. Measured on the simulator with memory dumps of `gt5_busy_race_2_17` (object speeds per wall second against a 60 FPS run; a 60-vs-60 control agrees at 1.00 for ~5,500 objects): 45 now 1.00x (5,197 of 6,263 objects, tick clock 1.00); before 0.75x at a 45 Hz vblank and 1.5-2x at a 90 Hz vblank. Frame generation (90 -> 45) unchanged: a generated pair on 225 of 451 headset frames, none repeated. Audio not checked (Null audio).
 
-**Open (found 2026-10-14): at VR 90 the race runs ~1.5x.** The tick clock runs 1.50x of 60 FPS and most moving objects 1.7-2x (same dumps); the physics follows the 1/90 word, but every step still adds a 1/60 tick. A fix needs the tick consumers patched (the clock at `0x28fd18` reads `0x447c(r2)`; ~100 u32 counters also run 1.5x). Matt has called 90 "fine" so far.
+**Open (2026-10-14): on disc 01.00 the race world steps a fixed amount per race step; only 60 steps a second is right.**
+Memory dumps of `gt5_busy_race_2_17` (object speeds per wall second against a 60 FPS run; `posspeed.py`):
+- The game makes one race step per vblank. The cars and other moving objects ignore the frame-time words the profile writes:
+  at 60 with both words halved (poke) they kept 1.00x; at 90 with or without the words they ran 1.7-2.1x. So VR 90 runs the
+  race ~1.5-2x (never measured on 01.00 before; the race clock looked real-time only because it is a separate clock).
+- The race clock is a 60 Hz tick count (`inner+0x1e0`, ms = ticks x 50/3 at `0x4030ac`), +1 per step at `0x40e420`, called
+  with ticks = 1 at `0x17d7bc`. A cave making it follow the frame-time word fixed the clock (1.00x at 90) but not the cars; reverted.
+- Frame generation 2x (game 45) with the 60 Hz vblank: right speed, but frames start on the 60 Hz grid (1 % low 11-21 FPS)
+  and DLSS-G repeats frames (Matt, headset: 150 of 451). A 90 Hz vblank there paces evenly but runs the race fast; reverted.
+  3x (game 30, vblank 60, two steps a frame) is even and at the right speed; 37-39 repeats in 451 at 400 % to look into.
+- Options: cap GT5 at 60 (headset reprojection to 90; 3x frame gen for 90), or find the cars' fixed step (SPU physics) to
+  make 90 real. Matt to decide.
 
 **Back in for vr10 (2026-10-12, fork e0ecd0d65, zip rpcs3-v0.0.43-vr10-e0ecd0d6): works from a fresh install (SPU async
 compile, display-area fixes, no resolution switch at race starts; details in the notes file). Awaiting Matt's test.
