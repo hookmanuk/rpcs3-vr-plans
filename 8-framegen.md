@@ -123,3 +123,20 @@ there; the game's rate comes from the frame limiter (Unlimited: `XR_FB_display_r
 the game keeps 90 and Matt sets 45 by hand. We ignore the predicted period on purpose (`VKOpenXR.cpp`: SteamVR halves it
 whenever the app runs late, and following it spirals the game down). Possible fix, not started: an opt-in VR Frame Rate choice
 that follows the predicted period, smoothed and snapped to exact divisors of the refresh. Nothing to send to the OFXR dev.
+
+## 2026-10-14: GT5 cars smeared on head turns (fork, DLSS motion)
+
+Matt (headset, SteamVR mirror, Motion Smoothing off): with frame generation the cars smeared on head turns, more the faster,
+even paused; the background stayed sharp. Cause: draws that fall back on "the camera's motion" (the most common motion among
+paired draws) lost the head turn. The main view's motions split by float rounding into several votes and the rear-view mirror
+(~290 draws in a 448x86 inset with its own camera) won; and GT5's cars (vertex data rebuilt every frame, shared meshes, triangle
+counts changing with the view) fell back for half their draws or paired with another car by draw order.
+Fix: votes merge motions within 0.2 % and come only from draws covering a quarter of the target; profile `dlss_pair_nearest`
+(GT5) pairs an address miss with the previous matrix nearest to where this frame's camera motion puts it.
+
+How it was found (tools): `tools/re/headturn.py` (simulator real head pose with a neck pivot), `RPCS3_DLSSG_ONLY=2` (the left
+eye's generated frame next to its real frame, full-size capture: showed the smear in our output), `RPCS3_DLSS_SEQ` with motion
+vectors and `mvcheck.py`/`mvcheck2.py` (block motion vs vectors, the latter coarse-to-fine for +-192 px), and the decisive one:
+dev `RPCS3_DLSS_STATIC_CHECK=1` (paused scene: every draw's motion must equal the camera's; per program, by pairing kind, plus
+the vote clusters). Car draws wrong after the fix: 0 of ~50,500. Sonic (same-run A/B of the vote): no regression (62 vs 72 bad
+blocks a frame).
