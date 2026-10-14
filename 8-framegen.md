@@ -115,3 +115,11 @@ verdict; a UI setting.
 
 Status: stages 1-4 done on the simulator; Matt's headset: MotorStorm 45 -> 90 good, GT5 "sort of works" (fixed pacing
 since). Open: 3x (MFG), cost measurements (sharpening ~0.2 ms estimated, DLSS-G per eye), merge into openxr.
+
+## Parked (Matt, 2026-10-14): external OpenXR frame-generation layers (OFXR)
+
+OFXR halves the app's rate through `xrWaitFrame` (a doubled `predictedDisplayPeriod`). Only our OpenXR frame thread waits
+there; the game's rate comes from the frame limiter (Unlimited: `XR_FB_display_refresh_rate`, else the configured vblank), so
+the game keeps 90 and Matt sets 45 by hand. We ignore the predicted period on purpose (`VKOpenXR.cpp`: SteamVR halves it
+whenever the app runs late, and following it spirals the game down). Possible fix, not started: an opt-in VR Frame Rate choice
+that follows the predicted period, smoothed and snapped to exact divisors of the refresh. Nothing to send to the OFXR dev.
