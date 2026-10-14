@@ -205,4 +205,6 @@ The App downloaded `ProgramData\NVIDIA\NGX\models\dlssg\versions\20318480\files\
   "Preset ID", "Preset A/B selected" there), which the App writes. RPCS3 has no driver profile (`drsProfileName` empty).
 - Both routes (driver profile, HKLM) need admin; untested. To try: 310.9.16 DLL in bin, then Preset C via the App's Global
   Settings or `0x10E41DF1` = 3 on an rpcs3.exe profile (Profile Inspector), and check with `RPCS3_NGX_LOG=1` for
-  "Applying settings for render preset".
+  "Applying settings for render preset". Copy the DLL after the last build: `buildfiles/msvc/dlss.props` (CopyDlssRuntime)
+  copies the SDK's `libWindows_x86_64el
+vngx_dlss*.dll` into bin after every build (it put 310.9.1 back here).
