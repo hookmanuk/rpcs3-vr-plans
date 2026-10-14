@@ -140,3 +140,8 @@ vectors and `mvcheck.py`/`mvcheck2.py` (block motion vs vectors, the latter coar
 dev `RPCS3_DLSS_STATIC_CHECK=1` (paused scene: every draw's motion must equal the camera's; per program, by pairing kind, plus
 the vote clusters). Car draws wrong after the fix: 0 of ~50,500. Sonic (same-run A/B of the vote): no regression (62 vs 72 bad
 blocks a frame).
+
+Tried as the default for every game (Matt: "Add it as default with an opt out if it works well"): same-run A/B
+(`RPCS3_DLSS_PAIR=alt`, nearest on even frames, draw order on odd; `tools/re/mvcheck.py` + `parity3.py`, 300 %, throttle and a
++-8 deg head sweep): Sonic 76.8 vs 44.3 bad blocks a frame, MotorStorm 105.2 vs 104.8, SEGA Rally 356.1 vs 337.7. Worse or no
+better outside GT5: `dlss_pair_nearest` stays a per-game key (GT5). The vote fix (main view only, merged motions) is generic.
