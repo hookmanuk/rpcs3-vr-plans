@@ -213,3 +213,10 @@ only a 64x64 output (`outputInterpSubrectSize`, `EvalFlags_UpdateOnlyInsideExten
 repeats), but the shown frames broke (t -0.6..+0.1, the 2/3 frame showing the scene before the last real frame). DLSS-G's
 later frames depend on each earlier output being made in full, so cheapening or skipping (never submitting) the unused one is
 out. Reverted. Left: fewer pixels for frame generation (a lower Resolution Scale, or generating at a reduced size).
+
+Headset (Matt, GT5, 2026-10-14): first run of 60 -> 90 "lag stutter and smearing all seem worse, even at low clean stretches"
+than 45 -> 90 ("45->90 worked perfectly"); his log had clean windows (300 of 451 generated, 0 repeats) and others with 14-76
+repeats per 5 s (the intro cannot hold the rate). New log fields (fork, 5 s line): queue wait, frames behind, full-queue drops.
+Simulator, GT5 `gt5_busy_race_2_17` (RSX-thread bound at 38-40 FPS in both modes, not representative): 60 -> 90 waited 15-16 ms,
+45 -> 90 16-17 ms, no drops: no queue build-up. Later the same day (Matt): "it looks quite good now" (no code change in between
+besides the log fields).
