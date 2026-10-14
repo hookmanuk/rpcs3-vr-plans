@@ -186,3 +186,8 @@ Only the constant call pattern gives frames between the last real frame and this
 Each DLSS-G evaluation at 3840x4320 costs ~1.5 ms (13.8 ms with 2, 17.0 with 4, 10.9 with none), so at 300 % the four push
 a 10.9 ms frame past 16.7 ms although the game alone reaches 72+. At 200 % it holds 60 -> 90 with no repeats. Open: Matt's
 headset check; head turns (simpose) and HUD at the 1/3 and 2/3 poses; a game dropping below 60 (repeats, no re-phasing).
+
+Cost is GPU (2026-10-14, 300 %, VR 60, `nvidia-smi` utilisation while driving + `RPCS3_VR_GPUPROF`): frame generation off
+64 % (max 75 %), 60 FPS; rate conversion 94 % (max 97 %), 55-57 FPS. The RSX thread's CPU time rises (13 -> 19 ms/frame), all of
+it in the "textures" bucket (2.2 -> 8.5-11.4 ms): the thread waiting on a saturated GPU, not CPU work (the same calls at 200 %
+hold 60).
