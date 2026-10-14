@@ -848,3 +848,21 @@ Matt (headset): slow motion and stuttering audio at VR Frame Rate 45; with the v
 - Tried and dropped: the 1/59.94 at `0x1846960`/`0x184acbc` set to 1/90 (no change); vblank events delivered to the game at 60 while
   the vblank ran at 90 (the game paces its frames on them: 90 dropped to 60 FPS); the worker's timed-wait path (crashes: never set up).
 - Open: VR 90 runs the ticks 1.5x (WIP entry).
+
+## 2026-10-14 (later): real 90 (fork e4254e45b)
+
+- Method: `tools/re/gt5_dump3.sh RATE LABEL` (three guest dumps ~2 s apart after the resume) and `xformspeed.py A0,A1 B0,B1`
+  (4x4 transforms with unit rows and a position row: per-object speed per wall second and the B/A ratio). Control 60 vs 60:
+  1.000 (0.999-1.001). `bisect.sh LABEL ADDR...` pokes data words to 1/120 after the load (RPCS3_VR_POKE) and prints the ratio.
+- The 42 words equal to 1/60 (or 1/59.94) in 0x1840000-0x1948000 (`poke60.txt`): only `0x185f64c` changes the cars (0.44-0.8x
+  when halved). Its reader `0x56a1ac`: `f0 = 0x5c4(r9) * dt -> 0x5c8`, `f12 = 60.0 (0x185f650) / 0x5c4 -> 0x5cc`, called per
+  frame per car from the race step (`0x31a74c`, `0x555b50`). `0x5c8` is read at 19 sites (0x390c24..0x3af53c, 0x56a2b0), `0x5cc`
+  at 8 (0x54862c, 0x55bb50, 0x561c48.., 0x5689a8: per-step delta x steps-per-second).
+- The per-car timer `0xf60`/`0xf64` (ms) takes the measured real dt (`0x30e14c`: `0x38(r23)`), so it was right already.
+- Race clock: `0x40e914` is called with ticks = 1 (`0x17d7bc`) and dt = the frame-time word; the clock count `inner+0x1e0`
+  += ticks at `0x40e420`. The cave converts the frame-time word to ticks (x 60, 16-bit fraction at `0x1a48220/24`).
+- Tried and dropped: the 60.0 companion as `game_refresh_rate_f32` (player 0.90 -> 0.87); all 42 words (player no better);
+  a 90 Hz vblank at 45 FPS (steps/s fell to ~54-60: cars 0.74x, clock 0.6x; frame gen then paced with 0 repeats, so even
+  pacing on the 60 Hz vblank must come from the present side if Matt's repeats return).
+- Open: `car+0x1df4/0x1e34/0x1e74/0x1eb4` (per wheel) advance 0.6x at 90; written at `0x328420` (LR `0x328a0c` <- `0x2fb6dc`,
+  the per-car update) once per frame: the increment is wrong, not the cadence.
