@@ -10,5 +10,6 @@ a, b = int(sys.argv[2], 16), int(sys.argv[3], 16)
 for va, off, fs in segs:
     if va <= a < va + fs:
         md = capstone.Cs(capstone.CS_ARCH_PPC, capstone.CS_MODE_64 | capstone.CS_MODE_BIG_ENDIAN)
+        md.skipdata = True  # keep going past words capstone cannot decode (shown as .byte)
         for ins in md.disasm(d[off + a - va:off + b - va], a):
             print(f'{ins.address:08x}: {ins.bytes.hex()}  {ins.mnemonic} {ins.op_str}')

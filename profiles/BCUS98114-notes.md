@@ -877,3 +877,16 @@ Matt (headset): slow motion and stuttering audio at VR Frame Rate 45; with the v
   revolutions per metre (`bisect2.sh`; 7 runs to the single word). Not involved: the physics objects' `0x5cc` (60/scale, from
   `0x185f650`; set to 90 it changed nothing) and the 1/60 words.
 - Profile `game_refresh_rate_f32: ["0x184cb98"]`: wheels 0.96-1.00x at 90, 0.97-0.99x at 45; cars, clock, RPM unchanged.
+
+## 2026-10-14: shadow cascades (patch "VR: Sharp shadows further out")
+
+- Matt: the closest car's black shadows moved when turning the head, and shadows turned soft about 20 m out.
+- GT5 draws 3 shadow cascades into a 1024x2048 depth atlas (`c5380000`, slices 1024x682). Split distances are
+  `f31 (per-view scale) x factor (1, 6.25, 25)` in the loop at `0x4c1dec`; the setter `0x91b6c4` stores them at
+  `0x4ff22798+0x30`, the getter `0x91b6ac` feeds `0x965094` (distance -> depth NDC, `((f+n)d - 2fn) / ((f-n)d)` + overlap)
+  which writes the cascade object `0x4ff0adb0` (+0 near, +4 far per 0x100 block). Projection near ~0.109.
+- Head-driven Wider view refits the cascades (the cascade fit in `0x967xxx` writes `0x4ff0ae00` via `0x103f4ac`; SPU
+  culling GETs the view struct `0x4fec0000+0x900`). Wider view off stopped the shift; a fixed 4.0 widening and a
+  high-res atlas (profile scaled_targets) did not help and were reverted.
+- Patch: cave at `0x1782600` multiplies split 0 by 2.5 (`0x1782620`), called from `0x4c1df4`. Splits 8.70/54.4/217 ->
+  21.7/54.4/217; cascade 0 far NDC 0.9807 -> 0.9912. Matt: the sharpness step moved out and the head-turn shift stopped too.
