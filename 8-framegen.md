@@ -221,4 +221,4 @@ Simulator, GT5 `gt5_busy_race_2_17` (RSX-thread bound at 38-40 FPS in both modes
 45 -> 90 16-17 ms, no drops: no queue build-up. Later the same day (Matt): "it looks quite good now" (no code change in between
 besides the log fields).
 
-Merged into openxr 2026-10-14 (fast-forward to ace69ad4d; openxr not pushed yet).
+Merged into openxr 2026-10-14 (fast-forward to ace69ad4d), pushed.
