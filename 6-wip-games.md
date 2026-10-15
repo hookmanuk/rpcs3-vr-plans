@@ -1145,6 +1145,12 @@ Calm (short extras) not tried.
    buffer was sized for (the same kind of overflow as God of War III's frame heap). Fix: enlarge the 2 MB buffer with a
    patch, or cap the widening.
 4. *"the intro video doesn't work, its in a tiny green box."*
+5. *"in the jungle shadows are also misaligned and flickery and some rotate with your head."* Shadows on the ground and
+   foliage don't line up with what casts them, flicker, and some turn with the head pose instead of staying fixed in the
+   world. Candidates: the sun shadow mask pass (`fc15ec0752d20290`, full-screen, reads the depth buffer: if it
+   reconstructs positions with the unrotated / one-eye camera, its shadows follow the head), and the shadow maps
+   (`c3ee0000` / `c44d0000`, 2432x1216: if the game's cascade fit uses the widened culling or a per-eye camera, the
+   cascades shift between frames and flicker). Check on the simulator with `simpose.py` yaw/roll against a level pose.
 
 Triaged 2026-09-30 with no profile made. Native 30. The flat ceiling at vblank 180 on the boat is only
 42-46, with every SPU thread at 100%, so it is SPU/PPU-bound and 90 is not reachable. Evidence:
