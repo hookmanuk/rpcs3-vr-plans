@@ -140,3 +140,15 @@ override), the menu screen and the HUD stay world-fixed at yaw 25. Recommend set
 Tried for frame rate, no gain (`gaia2`, two runs each): SPU Block Size Mega / Giga, SPU loop detection, SPU reservation
 busy waiting, `camera_block_cache`. About one run in eight runs at half speed (RSX thread ~34 ms/frame) for its whole
 window; not explained (VRAM 18 of 32 GB, no errors).
+
+### Tangent caps: no opening crash, faster (2026-10-15, 04:30)
+
+Rule `max` 1.2 for x (50 degrees) and 2.0 for the y word (tan y 1.125, 48 degrees) instead of 8: the head-driven
+floors needed x 1.51 / tan y 1.56 on the simulator (its per-eye FOV plus 3 degrees margin). A fresh boot through the
+opening ran 5:44 with no crash (it crashed at ~1:53 twice uncapped), and the busy fight `gaia2` runs **54.8-54.9 FPS,
+2% late** (was 42.5). A full eye dump (`RPCS3_VR_RTDUMP`, 1920x2160, pitch -10) shows no holes at the edges; a headset
+with a wider FOV than the simulator's may show the cut. Matt: check the edges of the view in the headset.
+
+`hud_skips_passes: true`: in the opening a white box filled the HUD box (a red low-health overlay and a copy of the
+scene drawn full-screen through the HUD ortho `c[256]`); with it those passes are drawn as normal full-screen passes.
+The health emblem still sits at the eye's corner in that scene (another draw than `a87982423fedbeb4`).
