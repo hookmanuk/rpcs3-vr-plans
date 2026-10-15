@@ -1151,6 +1151,9 @@ Calm (short extras) not tried.
    reconstructs positions with the unrotated / one-eye camera, its shadows follow the head), and the shadow maps
    (`c3ee0000` / `c44d0000`, 2432x1216: if the game's cascade fit uses the widened culling or a per-eye camera, the
    cascades shift between frames and flicker). Check on the simulator with `simpose.py` yaw/roll against a level pose.
+   Matt (follow-up): *"it also shifts and flickers when you rotate the stick"*: the shadows also shift and flicker when the
+   in-game camera turns with the right stick (no head movement), so it is not only the head pose. That points at the
+   shadow maps' fit following the (widened) game camera: compare with the *Wider view* patch off, flat vs stereo.
 
 Triaged 2026-09-30 with no profile made. Native 30. The flat ceiling at vblank 180 on the boat is only
 42-46, with every SPU thread at 100%, so it is SPU/PPU-bound and 90 is not reachable. Evidence:
