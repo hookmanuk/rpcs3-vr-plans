@@ -1,0 +1,29 @@
+# path: OpenXR Simulator, RPCS3_VR_MULTIVIEW=default, build 0f9415b7a VR: RSX wait accounting in the frame stats, and ea
+# BCUS98114 vrtest_gt5_race_start: Gran Turismo 5: race start
+BCUS98114 vrtest_gt5_race_start vblank 120 scale 300%:
+   960 frames over 8.0 s: avg 119.9 FPS, 1% low 95.0, 0.1% low 77.0 (worst frame 13.0 ms), median 8.39 ms, late 0.10%, RSX thread 5.86 ms/frame, new frames 119.9/s; RSX waits ms/frame: FIFO empty 3.23, FIFO spin 0.04, FIFO fetch 0.00, semaphore 0.00, GPU fence 0.00, limiter 2.07; eager submits 0.0/frame
+   961 frames over 8.0 s: avg 120.0 FPS, 1% low 100.4, 0.1% low 89.0 (worst frame 11.2 ms), median 8.32 ms, late 0.00%, RSX thread 5.43 ms/frame, new frames 120.0/s; RSX waits ms/frame: FIFO empty 3.70, FIFO spin 0.03, FIFO fetch 0.00, semaphore 0.00, GPU fence 0.00, limiter 2.52; eager submits 0.0/frame
+   959 frames over 8.0 s: avg 119.9 FPS, 1% low 102.8, 0.1% low 57.9 (worst frame 17.3 ms), median 8.40 ms, late 0.10%, RSX thread 5.77 ms/frame, new frames 119.9/s; RSX waits ms/frame: FIFO empty 3.79, FIFO spin 0.03, FIFO fetch 0.00, semaphore 0.00, GPU fence 0.00, limiter 2.25; eager submits 0.0/frame
+   => median of 3 windows: avg 119.9 FPS, 1% low 100.4, late frames 0.10%, RSX thread 5.77 ms/frame
+   eyes: residual at 0 54.88, best shift -232 (13.31) 
+FRAMERATE BCUS98114 vrtest_gt5_race_start at 120 Hz: 119.9 FPS (1% low 100.4, late 0.10%, RSX thread 5.77 ms/frame)
+SUSTAINABLE BCUS98114 vrtest_gt5_race_start: 120 Hz
+# BCUS98155 vrtest_mspr_race: MotorStorm: Pacific Rift: Free-Play, Kanaloa Bay, 11 AI, rally car, countdown "1" (holds R2)
+BCUS98155 vrtest_mspr_race vblank 120 scale 300%:
+   794 frames over 8.0 s: avg 99.2 FPS, 1% low 66.8, 0.1% low 48.7 (worst frame 20.5 ms), median 9.52 ms, late 1.76%, RSX thread 9.36 ms/frame, new frames 99.2/s; RSX waits ms/frame: FIFO empty 0.26, FIFO spin 0.00, FIFO fetch 0.00, semaphore 0.38, GPU fence 0.00, limiter 0.51; eager submits 0.0/frame
+   960 frames over 8.0 s: avg 119.9 FPS, 1% low 100.6, 0.1% low 71.2 (worst frame 14.0 ms), median 8.38 ms, late 0.10%, RSX thread 6.66 ms/frame, new frames 119.9/s; RSX waits ms/frame: FIFO empty 0.04, FIFO spin 0.00, FIFO fetch 0.00, semaphore 2.34, GPU fence 0.00, limiter 1.27; eager submits 0.0/frame
+   871 frames over 8.0 s: avg 108.9 FPS, 1% low 81.5, 0.1% low 43.7 (worst frame 22.9 ms), median 8.89 ms, late 0.46%, RSX thread 8.49 ms/frame, new frames 108.9/s; RSX waits ms/frame: FIFO empty 0.01, FIFO spin 0.00, FIFO fetch 0.00, semaphore 1.20, GPU fence 0.00, limiter 0.46; eager submits 0.0/frame
+   => median of 3 windows: avg 108.9 FPS, 1% low 81.5, late frames 0.46%, RSX thread 8.49 ms/frame
+   eyes: residual at 0 35.60, best shift -232 (19.40) 
+FRAMERATE BCUS98155 vrtest_mspr_race at 120 Hz: 108.9 FPS (1% low 81.5, late 0.46%, RSX thread 8.49 ms/frame)
+SUSTAINABLE BCUS98155 vrtest_mspr_race: none Hz
+# BLUS30068 vrtest_segarally_race: SEGA Rally Revo: Safari, race start (holds R2; Unlocked frame rate + Wider view 2.0)
+BLUS30068 vrtest_segarally_race vblank 120 scale 300%:
+   955 frames over 8.0 s: avg 119.3 FPS, 1% low 86.8, 0.1% low 68.9 (worst frame 14.5 ms), median 8.40 ms, late 0.21%, RSX thread 6.70 ms/frame, new frames 119.3/s; RSX waits ms/frame: FIFO empty 0.00, FIFO spin 0.09, FIFO fetch 0.00, semaphore 0.07, GPU fence 0.00, limiter 1.41; eager submits 0.0/frame
+   952 frames over 8.0 s: avg 119.0 FPS, 1% low 87.0, 0.1% low 67.8 (worst frame 14.7 ms), median 8.42 ms, late 0.32%, RSX thread 7.61 ms/frame, new frames 119.0/s; RSX waits ms/frame: FIFO empty 0.00, FIFO spin 0.09, FIFO fetch 0.00, semaphore 2.00, GPU fence 0.00, limiter 0.62; eager submits 0.0/frame
+   883 frames over 8.0 s: avg 110.3 FPS, 1% low 77.2, 0.1% low 62.5 (worst frame 16.0 ms), median 8.67 ms, late 0.91%, RSX thread 8.73 ms/frame, new frames 110.3/s; RSX waits ms/frame: FIFO empty 0.00, FIFO spin 0.12, FIFO fetch 0.00, semaphore 0.85, GPU fence 0.00, limiter 0.20; eager submits 0.0/frame
+   => median of 3 windows: avg 119.0 FPS, 1% low 86.8, late frames 0.32%, RSX thread 7.61 ms/frame
+   eyes: residual at 0 23.77, best shift -244 (5.89) 
+FRAMERATE BLUS30068 vrtest_segarally_race at 120 Hz: 119.0 FPS (1% low 86.8, late 0.32%, RSX thread 7.61 ms/frame)
+SUSTAINABLE BLUS30068 vrtest_segarally_race: 120 Hz
+DONE /f/rpsc3/source/plans/evidence/vrtest/2026-10-15-1241-120-eager-off

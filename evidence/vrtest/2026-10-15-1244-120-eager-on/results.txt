@@ -1,0 +1,28 @@
+# path: OpenXR Simulator, RPCS3_VR_MULTIVIEW=default, build 0f9415b7a VR: RSX wait accounting in the frame stats, and ea
+# BCUS98114 vrtest_gt5_race_start: Gran Turismo 5: race start
+BCUS98114 vrtest_gt5_race_start vblank 120 scale 300%:
+   960 frames over 8.0 s: avg 120.0 FPS, 1% low 98.5, 0.1% low 89.4 (worst frame 11.2 ms), median 8.38 ms, late 0.00%, RSX thread 5.89 ms/frame, new frames 120.0/s; RSX waits ms/frame: FIFO empty 3.23, FIFO spin 0.04, FIFO fetch 0.00, semaphore 0.00, GPU fence 0.00, limiter 2.11; eager submits 2.0/frame
+   960 frames over 8.0 s: avg 120.0 FPS, 1% low 96.7, 0.1% low 73.7 (worst frame 13.6 ms), median 8.33 ms, late 0.10%, RSX thread 5.33 ms/frame, new frames 120.0/s; RSX waits ms/frame: FIFO empty 3.58, FIFO spin 0.03, FIFO fetch 0.00, semaphore 0.00, GPU fence 0.00, limiter 2.67; eager submits 2.0/frame
+   959 frames over 8.0 s: avg 119.8 FPS, 1% low 93.9, 0.1% low 46.3 (worst frame 21.6 ms), median 8.35 ms, late 0.10%, RSX thread 5.32 ms/frame, new frames 119.8/s; RSX waits ms/frame: FIFO empty 3.70, FIFO spin 0.03, FIFO fetch 0.00, semaphore 0.00, GPU fence 0.00, limiter 2.72; eager submits 1.2/frame
+   => median of 3 windows: avg 120.0 FPS, 1% low 96.7, late frames 0.10%, RSX thread 5.33 ms/frame
+   eyes: residual at 0 55.42, best shift -232 (13.00) 
+FRAMERATE BCUS98114 vrtest_gt5_race_start at 120 Hz: 120.0 FPS (1% low 96.7, late 0.10%, RSX thread 5.33 ms/frame)
+SUSTAINABLE BCUS98114 vrtest_gt5_race_start: 120 Hz
+# BCUS98155 vrtest_mspr_race: MotorStorm: Pacific Rift: Free-Play, Kanaloa Bay, 11 AI, rally car, countdown "1" (holds R2)
+BCUS98155 vrtest_mspr_race vblank 120 scale 300%:
+   809 frames over 8.0 s: avg 101.1 FPS, 1% low 63.7, 0.1% low 57.9 (worst frame 17.3 ms), median 9.67 ms, late 2.22%, RSX thread 8.90 ms/frame, new frames 101.1/s; RSX waits ms/frame: FIFO empty 0.36, FIFO spin 0.00, FIFO fetch 0.00, semaphore 0.10, GPU fence 0.00, limiter 0.78; eager submits 7.1/frame
+   958 frames over 8.0 s: avg 119.7 FPS, 1% low 87.3, 0.1% low 68.3 (worst frame 14.6 ms), median 8.43 ms, late 0.31%, RSX thread 6.61 ms/frame, new frames 119.7/s; RSX waits ms/frame: FIFO empty 0.02, FIFO spin 0.00, FIFO fetch 0.00, semaphore 0.33, GPU fence 0.00, limiter 1.42; eager submits 6.2/frame
+   879 frames over 8.0 s: avg 109.8 FPS, 1% low 79.8, 0.1% low 34.9 (worst frame 28.6 ms), median 9.02 ms, late 0.23%, RSX thread 8.03 ms/frame, new frames 109.8/s; RSX waits ms/frame: FIFO empty 0.01, FIFO spin 0.00, FIFO fetch 0.00, semaphore 0.01, GPU fence 0.02, limiter 0.84; eager submits 9.3/frame
+   => median of 3 windows: avg 109.8 FPS, 1% low 79.8, late frames 0.31%, RSX thread 8.03 ms/frame
+   eyes: residual at 0 33.75, best shift -234 (19.11) 
+FRAMERATE BCUS98155 vrtest_mspr_race at 120 Hz: 109.8 FPS (1% low 79.8, late 0.31%, RSX thread 8.03 ms/frame)
+SUSTAINABLE BCUS98155 vrtest_mspr_race: none Hz
+# BLUS30068 vrtest_segarally_race: SEGA Rally Revo: Safari, race start (holds R2; Unlocked frame rate + Wider view 2.0)
+BLUS30068 vrtest_segarally_race vblank 120 scale 300%:
+   955 frames over 8.0 s: avg 119.3 FPS, 1% low 90.2, 0.1% low 73.1 (worst frame 13.7 ms), median 8.36 ms, late 0.10%, RSX thread 5.82 ms/frame, new frames 119.3/s; RSX waits ms/frame: FIFO empty 0.00, FIFO spin 0.10, FIFO fetch 0.00, semaphore 0.18, GPU fence 0.00, limiter 2.27; eager submits 4.1/frame
+   909 frames over 8.0 s: avg 113.6 FPS, 1% low 82.4, 0.1% low 60.3 (worst frame 16.6 ms), median 8.53 ms, late 0.22%, RSX thread 7.50 ms/frame, new frames 113.6/s; RSX waits ms/frame: FIFO empty 0.00, FIFO spin 0.12, FIFO fetch 0.00, semaphore 0.34, GPU fence 0.00, limiter 1.11; eager submits 7.0/frame
+   => median of 2 windows: avg 113.6 FPS, 1% low 82.4, late frames 0.10%, RSX thread 5.82 ms/frame
+   eyes: residual at 0 22.47, best shift -242 (6.32) 
+FRAMERATE BLUS30068 vrtest_segarally_race at 120 Hz: 113.6 FPS (1% low 82.4, late 0.10%, RSX thread 5.82 ms/frame)
+SUSTAINABLE BLUS30068 vrtest_segarally_race: none Hz
+DONE /f/rpsc3/source/plans/evidence/vrtest/2026-10-15-1244-120-eager-on
