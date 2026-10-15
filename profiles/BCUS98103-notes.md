@@ -262,3 +262,18 @@ camera / aim angles written directly. Found so far: the camera matrix (right / u
 (`0x3070364c` / `0x3078364c` in radians, offset from the matrix's yaw) are derived too: written back each frame. Next:
 follow `0x164814`'s inputs to the orbit camera's yaw / pitch state, or find the stick turn-rate constant and scale it
 while head aim drives.
+
+**Direct camera (fork `f1a482b45`, Matt: "do it properly with the camera").** The render camera setup `0x4b4b90`
+(called from `0x4c65c0` with r3 = camera source `0xe9f9f4`, r4 = a temp camera on the stack) first calls `0x4c11f0`,
+which builds the camera quaternion at r28+0x10 (x, y, z, w) from Euler angles in degrees at temp+0x20 / +0x24 / +0x28
+(sin / cos at `0x7198c8`). `0x4b4b90` then turns it into the render camera's rows at `0xc9cd70`+0x190 / +0x1a0 / +0x1b0
+(row0 = right, horizontal; row1 = up; row2 = back / forward). Patch "VR: Head aim (direct camera)": a cave at `0x4b4bd0`
+(the nop after `bl 0x4c11f0`) does q = yaw x q x pitch (Hamilton), yaw at `0x11eff10` (about world up: a x q turns
+about world axes), pitch at `0x11eff20` (q x a: about the camera's own axes; local x = right). Signs: a +y yaw
+quaternion turns the camera left, a +x pitch one down, so the profile's `direct` has yaw_sign -1, pitch_sign -1. The
+game's own angles are untouched (nothing accumulates). Profile: `"head_aim": { "button": "L1", "mode": "gaze",
+"return_deg_per_s": 180, "direct": { "address": "0x11eff10", "yaw_sign": -1, "pitch_sign": -1 } }`. Gaze learns the
+residual (the game's own over-the-shoulder shift at the press, ~2.4 degrees) while the head is still. Simulator,
+jungle state, L1 held: head straight, yaw 20 right, yaw 10 left + pitch 12 up all log a head-to-aim error of
+0.00 degrees, and Drake aims where the head points. The aim lags the head only by the PPU-to-RSX pipeline (a few
+frames).
