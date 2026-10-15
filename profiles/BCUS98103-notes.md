@@ -121,3 +121,24 @@ Splitting *Wider view* into x and y scales (God of War III: +13 FPS, the headset
 height here too) is not a one-site patch in this game: the projection builder derives y = x / `[cam+0x1d0]` at
 `0x1569d4`, and many other functions read the scale at `+0x1d4` (culling planes included), so each would need the same
 change.
+
+## Wider view 3.0: per-axis, head-driven (2026-10-15)
+
+The culling has followed the head since 10-13 (`culling_scale_f32`, as GT5), but one scale widened both axes by the
+larger need: straight ahead the headset needs ~2x the game's width and ~3.6x its height (its FOV is far beyond the
+game's 75 x 47 degrees, so the widening never drops to 1 looking forward). The projection builder derives y = x /
+`[camera +0x1d0]` (aspect 0.5625), so the cave at `0x4b4d3c` also writes the aspect: base x sy / sx, with the game's own
+value kept at `0x7cdd88` and the last value written at `0x7cdd8c` (a change from the game becomes the new base). Words:
+x `0x7cdd80` (`tangent_x`), y `0x7cdd84` (`tangent_y`), unused zeros in the code segment. Straight ahead: sx 1.97,
+sy 3.60; projection P00 -0.662, P11 0.643 (checked live). Note: a `calloc` count one too high made RPCS3 skip the
+cave silently (the branch was never written; the old values stayed); count the instructions.
+
+| `BCUS98103_1_0` combat, 300%, simulator | v2 (one scale) | v3 (per axis) | no widening |
+|---|---|---|---|
+| Vblank 600 uncapped, median FPS (2 runs) | 46.7 / 46.8 (min 43.7-44.9) | 47.2 / 48.0 (min 45.9-46.4) | - |
+| 45 locked (Vblank 90), 1 s windows under 44.5 of 30 | 0, 7 | 1, 4, 0, 1, 2 | 1, 3 |
+
+At 45 locked, v3 dips as often as no widening at all: the remaining dips (1-3 s per 30, to 39-43) are the game's
+own combat spikes. Coverage: full eye dumps at pitch -25 with yaw 0 / +35 / -35 show the same small corner holes as v2
+(`evidence/uncharted/v3_edges_*`, `v2_edges_*`); head poses 0 / +-20 / pitch +-10 / roll 15 whole
+(`v3pose_sheet.png`). Model detail unchanged (the 16x geometry viewport stays).
