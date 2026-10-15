@@ -1169,6 +1169,11 @@ Calm (short extras) not tried.
    Matt (follow-up): *"it also shifts and flickers when you rotate the stick"*: the shadows also shift and flicker when the
    in-game camera turns with the right stick (no head movement), so it is not only the head pose. That points at the
    shadow maps' fit following the (widened) game camera: compare with the *Wider view* patch off, flat vs stereo.
+   2026-10-15 (simulator, `vrtest_uncharted_jungle`): not reproduced in stills. The head-driven culling words change with
+   every small head movement (x 1.97 -> 2.50 over 6 degrees of yaw), but the sun patches are the same with the words
+   frozen, so the culling words are not it; both eyes agree at yaw 0 / +-30. Needs a temporal capture (it flickers) or
+   Matt's exact spot. Seen meanwhile: at yaw +-30 the outer edge of each eye shows salmon sky through missing scenery
+   (beyond the culling cap of 6, ~77 degrees; the eye's outer corner is ~88 degrees off the game's axis there).
 
 Triaged 2026-09-30 with no profile made. Native 30. The flat ceiling at vblank 180 on the boat is only
 42-46, with every SPU thread at 100%, so it is SPU/PPU-bound and 90 is not reachable. Evidence:
