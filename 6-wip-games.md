@@ -1187,6 +1187,9 @@ patched: not done.
    State `BLUS30214_1_1` (14:45). His shot: looking up between two rocks, a curved strip of grass / leaf sprites hangs in
    the sky in the middle of the view. Playbook candidates: "Objects hang in view when looking up: their program keeps the
    camera in another block" (add the block to `camera_blocks`), or sprites the game places itself (CPU-projected).
+4. *"Oh also in Prince of Persia there is a heavy outline on characters, I suspect this is overdone compared to flatscreen
+   100% Can you check and if so fix it to make it thinner"* (the ink outline pass is probably sized in pixels: at 300 %
+   it may be drawn thicker, or thinner and denser, than at 100 % flat: compare flat 100 % against VR 300 %).
 3. *"can you try and optimise the frame rate too."* (Last measured: 90 Hz at 300 % in the first canyon, RSX-thread bound,
    ~73 FPS at 400 %, 2026-10-13; to remeasure DLSS-off at 120 Hz, heaviest views too.)
 
