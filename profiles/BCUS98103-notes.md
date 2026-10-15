@@ -197,3 +197,14 @@ shape) and DLSS upscales to 2880x2880; so it costs ~5 ms of present plus GPU con
 7.9 ms) for anti-aliasing, a sharper upscale and frame generation. With DLSS off the jungle has 4 ms of headroom under
 a 45 lock. Plans for cutting pixel work without lowering the centre resolution: `11-vrs-plan.md`,
 `12-hidden-area-mask-plan.md`.
+
+## VRS and the hidden-area mask in the jungle (2026-10-15, branch `vr-pixel-savings`)
+
+Both work on the simulator and gain little here: VRS **+1 FPS** (39.6-40.4 -> 40.7-41.6), the synthetic hidden-area
+mask at 20 % of the target **+0.6 FPS**. The scene passes are geometry / per-draw bound: the colour pass `c07d0000`
+costs 9.2 ms at 300 % and 8.2 ms at 100 %, ~2.05 M vertices per frame (doubled by multiview). Pixel-scaled costs are
+present (DLSS + frame generation, 5.3 ms) and the full-screen passes (1.8 ms). VRS needs the special depth compare
+dropped in its passes (the EQUAL colour pass broke at coarse rates). Details: `11-vrs-plan.md` and
+`12-hidden-area-mask-plan.md` section 7. Next leads for the jungle are vertex work: the shadow maps (~583 k vertices,
+not multiview), and the 16x geometry viewport (a savestate keeps the patched code, so only a fresh-boot A/B can test
+removing it).

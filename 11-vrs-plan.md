@@ -125,3 +125,33 @@ per setting) with `RPCS3_VR_GPUPROF=1` for the per-target split, DLSS off and on
   those features silently keep 1x1 (not an error).
 - Not for the simulator's eyes to judge: the simulator window shows the eye unblurred, so the periphery will look
   worse there than in the headset. Judge on the headset; the simulator is for correctness and the GPU profile.
+
+## 7. Progress (branch `vr-pixel-savings` of `rpcs3/`)
+
+Stages 1-3 are in (`bf631edb8`, off by default, dev `RPCS3_VR_VRS`: 1 mild = 1x1 inside 70 % of each eye's lens
+ellipse, 2 strong = 55 %, 2x2 to the visible edge, 4x4 beyond; 3 = the attachment at 1x1 everywhere, 4 = 2x2
+everywhere, both for tests; `RPCS3_VR_VRS_TARGET=<hex colour address>` limits it to one target). Driver: texel 16x16,
+fragments up to 4x4, depth writes allowed at coarse rates.
+
+What went differently from the plan:
+- One rate map per eye-target size, never freed while a framebuffer may still use it: Uncharted alternates
+  1920x2160 and 960x1080 targets, and rebuilding one map between them freed it under a framebuffer in flight (device
+  lost).
+- RPCS3's "Emulate Special Depth Comparison" (on in Uncharted's config: off shows khaki patches) writes
+  `gl_FragDepth` = the stored depth, read per pixel. At a coarse rate the shader runs once per 2x2 or 4x4 block, so
+  the other pixels of the block fail Uncharted's EQUAL colour pass and the periphery showed the clear colour with ghost
+  geometry. In passes with the rate attachment the emulation is dropped (`rsx::vr::set_vrs_bound` ->
+  `set_vr_program_ctrl`) and EQUAL tests become LESS_OR_EQUAL (GREATER_OR_EQUAL after a reverse-Z clear) in the
+  pipeline (`vr_vrs_apply_pipeline_props`): the colour pass redraws the prepass's surfaces without writing depth, so
+  this matches. Picture whole on the simulator in both modes.
+
+Result, `vrtest_uncharted_jungle`, 300 %, uncapped, DLSS Performance + frame generation, two fresh loads each:
+off 39.6 / 40.4 FPS, mild 40.7 / 41.6, strong 40.5 / 41.5: **about +1 FPS**. The GPU profile says why: the main colour
+pass (`c07d0000`) costs 9.2 ms with VRS off, 9.15 ms with strong, and still 8.2 ms at **100 %** scale; the normal pass
+(`c34b0000`, ~3 ms) and the depth prepass (2.85 ms) do not change at 100 % either. Uncharted's scene passes are bound by
+geometry and per-draw work, not pixels: the jungle frame draws ~2.05 M vertices (prepass 1159 draws / 614 k, colour
+993 / 555 k, two shadow maps 571 / 331 k and 353 / 252 k, the half-size pass `c31e0000` 497 / 221 k), and multiview
+runs every vertex twice. What does scale with resolution there: present (DLSS + frame generation + composite) 5.3 ms at
+300 % vs 2.2 ms at 100 %, and the full-screen passes (`c2d50000`) 1.8 vs 0.36 ms; neither is helped by VRS.
+
+Next: try the GoW III Gaia state (more pixel-heavy post passes) before deciding whether VRS is worth a setting.

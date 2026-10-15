@@ -96,3 +96,19 @@ Measurement as in the VRS plan: `unc_ab.sh`-style fresh loads with `RPCS3_VR_GPU
 - Games whose depth is cleared once per frame but whose eye target is drawn through several render targets of the
   same size (GoW III's prepass into target 0 with depth `0xc18e0000`, then the colour pass with the same depth): one
   fill after the clear covers all of them, since the depth surface is shared.
+
+## 7. Progress (branch `vr-pixel-savings` of `rpcs3/`)
+
+Stage 1 is in (`22e5956be`, off by default). Dev `RPCS3_VR_HIDDEN_AREA=<scale>` (the ellipse inscribed in each eye's
+visible field, scaled; 1 touches the visible edges), `RPCS3_VR_HIDDEN_AREA_INSET` (default 8 px kept inside),
+`RPCS3_VR_HIDDEN_AREA_DEBUG=1` (magenta colour there too). The fill runs from `vr_after_clear` after a full-frame
+depth clear of an eye-sized view target, per eye (view masks 2 / 3) in 8-row bands; `camera_probe::vr_eye_fovs`
+gives the rendered and visible fields. The reprojection margin (rendered minus visible) is never masked.
+
+Stage 2, `vrtest_uncharted_jungle`, 300 %: scale 1.0 masks 20 % of the shown target (more than a real lens mask:
+it cuts into what the simulator shows) and gains **+0.6 FPS**; scale 1.3 masks 1.1 %. Uncharted's scene passes are
+geometry-bound (see `11-vrs-plan.md` section 7: the colour pass costs 8.2 ms even at 100 %), and its foliage is alpha
+tested, so its draws run late-Z: the near depth fails them only after the shader ran. The mask is worth more where the
+expensive passes are full-screen and depth-tested early; to measure on GoW III.
+
+Stage 3 (the runtime's real mask) is needed before judging: the synthetic ellipse is a guess of the lens shape.
