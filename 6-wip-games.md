@@ -1155,7 +1155,11 @@ Calm (short extras) not tried.
    `0x30700000`, so it cannot grow in place). Any head turn of ~30 degrees sent both culling words to their max of 12
    (~85 degrees each way): job memory 1.94 of 2 MB in the jungle. Capped at 6 (~77 / 69 degrees): 1.33 MB at any yaw
    (5: 1.21, 7: 1.45). Headset recheck in the jungle, including combat.
-4. *"the intro video doesn't work, its in a tiny green box."*
+4. *"the intro video doesn't work, its in a tiny green box."* **Fixed 2026-10-15 (simulator; fork `b9afc086a`):** the movie
+   (after New Game) is drawn by the same generic full-screen program and 1280x720 texture as the sun shadow mask (the
+   profile's `depth_remap_programs` entry), so it was depth-remapped and landed at native size in a corner of the
+   eye-shaped target. The remap now applies only in frames that have drawn through a camera: the movie fills the fixed
+   screen; the jungle's shadows unchanged.
 5. *"in the jungle shadows are also misaligned and flickery and some rotate with your head."* Shadows on the ground and
    foliage don't line up with what casts them, flicker, and some turn with the head pose instead of staying fixed in the
    world. Candidates: the sun shadow mask pass (`fc15ec0752d20290`, full-screen, reads the depth buffer: if it
