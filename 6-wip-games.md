@@ -872,6 +872,14 @@ lists the movie quad (`a17105d6566d129d` + 1280x720 texture) and the logo (`611d
 title, loading and main menu go on the fixed screen, both eyes alike, no flicker. The window "tilting with my head":
 Matt's GoW III config has **HUD Fixed In Front: false**, which makes the HUD box and the fixed screen head-locked;
 set it on for a world-fixed screen.
+**Matt (2026-10-15 evening, headset), still open, in his words:** *"You havent fixed the god of war 2d screen issue. I've
+set the HUD to fixed in front, but still the actual game renders in a big box in front of me. If I turn my head I see
+the edges of the box and everything is black beside it. I think its not switched to proper 3d rendering."* So gameplay
+itself (not only the menus / movie) is shown as a flat box (the fixed screen) instead of the headset view: the frames
+are classified as screen frames (a `screen_frame_draws` entry matching gameplay, `frames_without_3d_as_screen`, or no
+camera draws found on his setup). My simulator checks used savestates `vrtest_gow3_gaia` / `gaia2` and a fresh boot only
+up to the main menu; check his route (New Game / Continue into gameplay) and the log line "frames without camera
+draws: shown as the fixed screen" vs "camera draws again: headset view".
 
 Notes: `profiles/BCUS98111-notes.md`. **2026-10-15 (overnight): from a white screen to a clean stereo picture.** New
 profile from the generator plus hand fixes: `camera_blocks [256, 260]` (the colour pass draws with depth test EQUAL
