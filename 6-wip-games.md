@@ -1192,6 +1192,11 @@ patched: not done.
    *VR: Wider view (head-driven culling)* multiplies both culling tangents of the projection builder (`0x27b3d0`: +8,
    +0xc; cave at `0x27b508`) by the same head-pose word. In a stick sweep at head pitch 20 a rock ledge missing in one
    frame is now there in every frame. Cost ~10 %: state 1 at 300 % uncapped 126-136 -> 114-120 FPS.
+   Matt (follow-up): *"its the wider view patch ... when I hold left or right to walk the camera swings massively"*: the
+   camera controller also reads the horizontal tangent. **Fixed (simulator):** the patch now widens only the vertical
+   tangent; walking left / right matches no patches, and the pop-in sweep still shows the ledge in every frame. My first
+   test only walked forward. Matt's patch manager had *Unlocked frame rate* and *Shadows* off from his isolation test:
+   turned back on.
 2. *"save state 2- if you look straight up in the air there is grass attached to the HMD again, like other games."*
    State `BLUS30214_1_1` (14:45). His shot: looking up between two rocks, a curved strip of grass / leaf sprites hangs in
    the sky in the middle of the view. Playbook candidates: "Objects hang in view when looking up: their program keeps the
