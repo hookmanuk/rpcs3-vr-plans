@@ -131,3 +131,10 @@ black), probe profile state (forced profile reload: still black), `clip_space_sc
 the sky draw as a camera draw with no slots changed in both the good and the bad session. What a fresh boot has and a
 savestate load does not: the main menu (a 3D background) and the cutscene before the fight, so the next suspects are
 texture-cache or surface state from those (a sky texture address that held a render target earlier?).
+
+Depth at the black sky (fresh boot, 2026-10-15 04:33): a dump of the depth buffer `0xc0780000` (Z24, 1920x2160 eye)
+reads **1.0 at the sky pixels** (cleared to far) and 0.95 on the ground, so the sky (z = w, LEQUAL) does not fail on
+the depth buffer: its own depth after the eye mapping must leave the clip range (z/w just above 1, clipped at the far
+plane). Suspect: state the probe keeps across the session (for example the last camera block used to map
+pre-projected draws, `m_vr_last_block`, or the projection learned from earlier cameras) set by the main menu's 3D
+background before the first gameplay frame; a savestate load starts without it.
