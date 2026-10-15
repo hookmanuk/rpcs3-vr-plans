@@ -112,3 +112,10 @@ tested, so its draws run late-Z: the near depth fails them only after the shader
 expensive passes are full-screen and depth-tested early; to measure on GoW III.
 
 Stage 3 (the runtime's real mask) is needed before judging: the synthetic ellipse is a guess of the lens shape.
+
+Correction (2026-10-15, later): the "geometry-bound" reading above was itself a misdiagnosis of the GPU profile,
+whose per-target times are wall intervals. An Nsight Systems trace showed the frame to be GPU busy time plus a ~3.5 ms
+submission bubble after each flip (`5-vr-profile-playbook.md` > Where the frame goes). Eager submission
+(`RPCS3_VR_EAGER_SUBMIT`) recovers it: Uncharted jungle 56 -> 64.5 FPS at 300 % DLSS-off. What the GPU's remaining
+15.5 ms is made of (draw / vertex work or shading) is still to be measured with Nsight's GPU metrics; this plan's
+value depends on that answer.

@@ -155,3 +155,10 @@ runs every vertex twice. What does scale with resolution there: present (DLSS + 
 300 % vs 2.2 ms at 100 %, and the full-screen passes (`c2d50000`) 1.8 vs 0.36 ms; neither is helped by VRS.
 
 Next: try the GoW III Gaia state (more pixel-heavy post passes) before deciding whether VRS is worth a setting.
+
+Correction (2026-10-15, later): the "geometry-bound" reading above was itself a misdiagnosis of the GPU profile,
+whose per-target times are wall intervals. An Nsight Systems trace showed the frame to be GPU busy time plus a ~3.5 ms
+submission bubble after each flip (`5-vr-profile-playbook.md` > Where the frame goes). Eager submission
+(`RPCS3_VR_EAGER_SUBMIT`) recovers it: Uncharted jungle 56 -> 64.5 FPS at 300 % DLSS-off. What the GPU's remaining
+15.5 ms is made of (draw / vertex work or shading) is still to be measured with Nsight's GPU metrics; this plan's
+value depends on that answer.
