@@ -249,3 +249,16 @@ The skip for back-to-back read-only barriers worked only every other draw: `post
 reset the tracker including `allow_skip`. Keeping `allow_skip` (one line in `VKRenderTargets.cpp`) leaves ~13,900
 barriers/s; **jungle 300 % DLSS-off uncapped 73.2 / 72.7 FPS** (eager submission on; was 63.6), picture unchanged.
 Uncharted is the only game in the set with Special Depth Comparison on. Today's chain: 56 (start) -> 64 (eager) -> 73.
+
+## Head aim (branch `ccr-90beb2ea-38jbn7`, 2026-10-15 evening)
+
+Hold L1 and the head moves the aim: the pad thread replaces the right stick with the head-to-aim error (fork
+`e93ee4c9b`); `gain` added (`b3197ee21`, Uncharted 2.5, full stick at 5 degrees). Matt: *"when I move my head the
+reticule moves slowly towards when I'm looking then stops when it gets there. Why is there a delay? It needs to move
+faster instantly."* A stick-driven aim is limited by the game's own camera turn rate at full stick. Instant needs the
+camera / aim angles written directly. Found so far: the camera matrix (right / up / forward rows, position in w) at
+`0x92eb30`..`0x92eb7f`, written each frame by `0x154af0` (called from `0x164814` <- `0x1647fc` <- `0x8f818` <-
+`0x4afd8`) from vectors, not angles (PPU interpreter store watch). Values that track the yaw exactly
+(`0x3070364c` / `0x3078364c` in radians, offset from the matrix's yaw) are derived too: written back each frame. Next:
+follow `0x164814`'s inputs to the orbit camera's yaw / pitch state, or find the stick turn-rate constant and scale it
+while head aim drives.
