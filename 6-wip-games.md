@@ -1197,6 +1197,13 @@ patched: not done.
    tangent; walking left / right matches no patches, and the pop-in sweep still shows the ledge in every frame. My first
    test only walked forward. Matt's patch manager had *Unlocked frame rate* and *Shadows* off from his isolation test:
    turned back on.
+   Matt (follow-up): *"No this doesnt work. The camera is fixed, but the culling issue is back."* **Still open; culling
+   patch removed (fork `c3b9a843e`).** Draws per frame were the same (within 1-2) with no patch, vertical-only and
+   both-axis widening in every scenario tried on `BLUS30214_1_2` (head pitch 15-30 with camera-stick nudges, walking
+   forward / back, camera tilted down), so the projection builder's tangents do not drive this pop-in; my "ledge fixed"
+   comparison was frames from different moments. Next: an exact repro (which stick, which tree / cliff, a present /
+   absent screenshot pair), then find what hides it (frustum culling inside batched draws, distance / LOD fade, or a
+   camera-obstruction fade), e.g. by the vertex counts of the scene draws rather than draw counts.
 2. *"save state 2- if you look straight up in the air there is grass attached to the HMD again, like other games."*
    State `BLUS30214_1_1` (14:45). His shot: looking up between two rocks, a curved strip of grass / leaf sprites hangs in
    the sky in the middle of the view. Playbook candidates: "Objects hang in view when looking up: their program keeps the
