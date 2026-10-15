@@ -860,6 +860,12 @@ Notes: `profiles/BLUS30300-notes.md`. Evidence: `evidence/splitsecond/`.
 
 ## God of War III (BCUS98111)
 
+**Matt's headset report (2026-10-15 afternoon), open, in his words:** *"God of War 3 is terrible. The menu screens are
+doubled and flicker, the game is in a slanted window not full screen which tilts with my head."* So in the headset:
+(1) menus doubled and flickering; (2) gameplay shown in a slanted window, not full screen, that tilts with the head
+(the screen-frame / fixed-screen detection or the camera blocks are not taking the game view as the 3D view on his
+headset). None of this showed on the simulator checks: reproduce on the simulator with real head poses first.
+
 Notes: `profiles/BCUS98111-notes.md`. **2026-10-15 (overnight): from a white screen to a clean stereo picture.** New
 profile from the generator plus hand fixes: `camera_blocks [256, 260]` (the colour pass draws with depth test EQUAL
 through `c[260]`, the same matrix as the depth prepass's `c[256]`; as a linked block it failed the test and the ground
@@ -1124,6 +1130,21 @@ in-engine battle at 30 FPS); same engine and pipeline as FFX, not pursued furthe
 Calm (short extras) not tried.
 
 ## Uncharted: Drake's Fortune (BCUS98103, update 01.10)
+
+**Matt's headset report (2026-10-15 afternoon, build `faf4a5bce` on `openxr`), open, in his words:**
+1. *"this jungle scene is massively dependent where you look, if you push up on the right stick then the frame rate
+   crashes into the 50s. This was quite misleading saying its now in the 70s."* His fpsVR shot (jungle, looking up into
+   the canopy): FPS 52, average 70.1, CPU frametime 9.2 ms, reprojection 22.8 %. My 72-73 FPS was one fixed view (the
+   savestate's camera, looking ahead); the canopy view is far heavier. Measure jungle frame rate at several camera
+   pitches (right stick up / level), not one view.
+2. *"the boat is still in the 40s."*
+3. *"in the jungle it keeps crashing, look at the logs."* Log (two crashes, 2:59 and 8:51): the game's SPU job memory
+   runs out, `SpuJobMemory::AllocateSingleBufferedMemory(1936, 16): Failed to allocate.` with `m_buffer = 30300000,
+   m_size = 2097152` (a fixed 2 MB buffer), then a SPURS job stops on its assert (`stopd` at SPU 0x7620, "Unknown STOP
+   code 0x3fff") and the game dies. Probably the *Wider view* culling sends more objects through the jobs than the
+   buffer was sized for (the same kind of overflow as God of War III's frame heap). Fix: enlarge the 2 MB buffer with a
+   patch, or cap the widening.
+4. *"the intro video doesn't work, its in a tiny green box."*
 
 Triaged 2026-09-30 with no profile made. Native 30. The flat ceiling at vblank 180 on the boat is only
 42-46, with every SPU thread at 100%, so it is SPU/PPU-bound and 90 is not reachable. Evidence:
