@@ -1214,6 +1214,12 @@ patched: not done.
    brighter."* The shadow fit shared the culling word (3.85 ahead, 6 from 20 degrees of yaw); a 6x fit spreads the shadow
    maps too thin. **Fixed (simulator):** the shadow fit has its own word `0x15855d4` (max 4: 3.85 ahead, 4.0 turned);
    culling keeps `0x15855d0` (max 6). Shadows keep their depth at yaw +-20 / +-40.
+   Matt (follow-up): *"This doesnt work. Look at the rock on the left of the first image on the edge of the screen, its
+   very light. When moved to the center of the screen (by turning my head left, its much darker. Possibly this is
+   something to do with the sand storm too, but its repeatable."* It was the sandstorm haze pass `149a9a825056ebba`: its
+   per-pixel world rays come from the camera's inverse view-projection (`c[200]`), i.e. the flat game camera's rays
+   stretched over the eye. **Fixed (simulator):** new profile key `inverse_camera_programs` rewrites that block per eye
+   (H * G * E^-1); distant rocks keep their colour at any head yaw, the centre unchanged.
 2. *"save state 2- if you look straight up in the air there is grass attached to the HMD again, like other games."*
    State `BLUS30214_1_1` (14:45). His shot: looking up between two rocks, a curved strip of grass / leaf sprites hangs in
    the sky in the middle of the view. Playbook candidates: "Objects hang in view when looking up: their program keeps the
