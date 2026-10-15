@@ -187,3 +187,13 @@ New state `vrtest_uncharted_jungle` (fresh boot, Continue, 3.1, normal pacing): 
 (Matt's DLSS Performance + frame generation config, simulator). Matt's Uncharted config has VR Frame Rate
 **Unlimited**: on a 90 Hz headset that targets 90 FPS (vblank 180 with the game's 2-vblank limiter), not the profile's
 45 lock; "Default" gives the 45 lock.
+
+## DLSS off vs on in the jungle (2026-10-15)
+
+`vrtest_uncharted_jungle`, 300%, uncapped (Vblank 600), two fresh loads each: DLSS Performance + frame generation
+(Matt's config) **40.5-40.8 FPS**, GPU 24.6 ms/frame, RSX thread 24.3 ms; DLSS off **55.3-56.0 FPS**, GPU 17.9-18.1,
+RSX 17.8. In this fork DLSS does not lower the render size: at 300% the eye renders 1920x2160 either way (the eye
+shape) and DLSS upscales to 2880x2880; so it costs ~5 ms of present plus GPU contention in the scene pass (9.4 ->
+7.9 ms) for anti-aliasing, a sharper upscale and frame generation. With DLSS off the jungle has 4 ms of headroom under
+a 45 lock. Plans for cutting pixel work without lowering the centre resolution: `11-vrs-plan.md`,
+`12-hidden-area-mask-plan.md`.
