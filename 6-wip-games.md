@@ -49,6 +49,19 @@ headset: R&C shadows, SEGA Rally title and dust, KH pause (uncommitted pose-hold
 without `frames_without_3d_as_screen`). Needs you: a hung `rpcs3.exe` (PID 54120) and `dwm.exe` on 4 cores, see below
 (end that dwm.exe or reboot; `bin/rpcs3.zombie.exe`, `bin/RPCS3.buf.zombie` and `log/RPCS3.zombie.log` can go after).
 
+**Matt, overnight 2026-10-15 (God of War III, Dragon Age II, Uncharted; simulator-checked, headset recheck):**
+- **God of War III: from a white screen to a working stereo picture, 29.5 -> 52-59 FPS** (300%, 2880x2880 eyes, VR 90).
+  New profile and a head-driven *Wider view* patch (fork 0f0757681..), MB/DOF off (community), HUD boxed, pause menu
+  on the fixed screen. Generic fork changes: one-layer copies of eye-invariant surfaces (fd5631db8), `tangent_y` culling
+  mode, profile `image_pool_mb` (7b798af7c). Below 72: the game's SPU job list fills with the wider view. Your GoW3
+  custom config has **HUD Fixed In Front: false** (HUD and menus follow the head): set it on. Check the view's edges
+  (culling capped at 50/48 degrees to stop a crash in the opening). Details: `profiles/BCUS98111-notes.md`.
+- **Dragon Age II: 86-88 FPS at VR 90** (2-4% late; game thread waits on an SPU job, no setting helps). Found, not
+  fixed: after a **fresh boot** the sky is black in stereo and Bethany's hair floats beside her (a savestate made there
+  and reloaded is fine): probably your "corrupted graphics"; conversation close-ups put faces huge and near.
+- **Uncharted: 46 FPS uncapped** in your combat state (dips 43-44.5): 45 + frame generation gives ~90 shown, with dips.
+  Game-bound; settings gave nothing (Accurate SPU Reservations off freezes it).
+
 **Matt, overnight 2026-10-13 (simulator-checked; headset recheck):**
 - **God of War Power Up / pause black, tutorial messages invisible: fixed** (fork 5ce006eba, pushed). The renderer's
   "game runs below the VR rate" adaptation rewrote GoW's rate word during hitches (90 -> 38 -> 45 -> 90 after a load or
@@ -1072,7 +1085,7 @@ waits 37% in `semaphore_acquire`. Tried at 90, no gain beyond noise: SPU reserva
 Graphics: in a paused frame (radial menu) both eyes match each other and the flat image; the shadow differences seen
 in a moving fight were motion. **Open:** conversation close-ups put the faces huge and near (the dialogue camera sits
 close to them); candidate fix: `screen_frame_draws` with a draw unique to conversations (needs a conversation
-savestate; a scripted fight did not reach one reliably). Matt's "corrupted graphics" (10-08) not found in the fight.
+savestate; a scripted fight did not reach one reliably). Matt's "corrupted graphics" (10-08): probably the **black sky and floating hair after a fresh boot** (found later that night; a savestate made there and reloaded renders correctly; causes ruled out in the notes).
 
 ## Dragon Age: Inquisition (BLUS30997, disc 01.01)
 
