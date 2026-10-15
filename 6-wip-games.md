@@ -1187,6 +1187,11 @@ patched: not done.
    camera. New patch *VR: Shadows cover the headset view* scales the shadow fit's frustum tangent (`0x1fb4e8`, after
    tanf) by a head-driven word (`0x15855d0`, `culling_scale_f32` mode `tangent`, max 6; 3.85 straight ahead). No straight
    edges at yaw 0 / +-90, pitch +-30; matches the flat game's shadows. Headset recheck, also while moving.
+   Matt (follow-up, 15:26, state `BLUS30214_1_2`): *"culling is still an issue ... if you look slighty up with the HMD and
+   move the joystick up and down you can see the tree and cliff come and go."* **Fixed 2026-10-15 (simulator):** patch
+   *VR: Wider view (head-driven culling)* multiplies both culling tangents of the projection builder (`0x27b3d0`: +8,
+   +0xc; cave at `0x27b508`) by the same head-pose word. In a stick sweep at head pitch 20 a rock ledge missing in one
+   frame is now there in every frame. Cost ~10 %: state 1 at 300 % uncapped 126-136 -> 114-120 FPS.
 2. *"save state 2- if you look straight up in the air there is grass attached to the HMD again, like other games."*
    State `BLUS30214_1_1` (14:45). His shot: looking up between two rocks, a curved strip of grass / leaf sprites hangs in
    the sky in the middle of the view. Playbook candidates: "Objects hang in view when looking up: their program keeps the
@@ -1198,7 +1203,10 @@ patched: not done.
    it may be drawn thicker, or thinner and denser, than at 100 % flat: compare flat 100 % against VR 300 %).
    **Fixed 2026-10-15 (simulator; fork `0a94520f7`):** the outline pass's taps scale to the game's 71 x 44 degrees
    (`fragment_constant_overrides` scaled form): a thin line like the flat game instead of a thick smudge. Headset recheck.
-3. *"can you try and optimise the frame rate too."* (Last measured: 90 Hz at 300 % in the first canyon, RSX-thread bound,
+3. *"can you try and optimise the frame rate too."* Measured 2026-10-15, DLSS off, uncapped, 300 % (Matt plays at 250 %),
+   head poses 0 / pitch +-30 / yaw +-90 / 180: state 1 126-136 FPS, state 2 129-135, `pop_play` 144-158 (was 116.8 at 120
+   on 10-13); with the culling fix state 1 114-120. RSX-thread bound (~7.3-8.6 ms/frame, ~1.6-2 ms of it waiting on the
+   game). Nothing PoP-specific optimised yet. (Last measured: 90 Hz at 300 % in the first canyon, RSX-thread bound,
    ~73 FPS at 400 %, 2026-10-13; to remeasure DLSS-off at 120 Hz, heaviest views too.)
 
 New 2026-10-13 (Matt). 30 FPS game: the fork patch *Unlocked frame rate (follows Vblank Rate)* clears the GCM label the
