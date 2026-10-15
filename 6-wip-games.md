@@ -1150,7 +1150,11 @@ Calm (short extras) not tried.
    m_size = 2097152` (a fixed 2 MB buffer), then a SPURS job stops on its assert (`stopd` at SPU 0x7620, "Unknown STOP
    code 0x3fff") and the game dies. Probably the *Wider view* culling sends more objects through the jobs than the
    buffer was sized for (the same kind of overflow as God of War III's frame heap). Fix: enlarge the 2 MB buffer with a
-   patch, or cap the widening.
+   patch, or cap the widening. **Fixed 2026-10-15 (simulator; fork `776234819`):** the buffer is sized at boot
+   (`0x3dd58` `lis r6,0x20`, laid out by `0x19d840` with the next region right after it; allocations follow at
+   `0x30700000`, so it cannot grow in place). Any head turn of ~30 degrees sent both culling words to their max of 12
+   (~85 degrees each way): job memory 1.94 of 2 MB in the jungle. Capped at 6 (~77 / 69 degrees): 1.33 MB at any yaw
+   (5: 1.21, 7: 1.45). Headset recheck in the jungle, including combat.
 4. *"the intro video doesn't work, its in a tiny green box."*
 5. *"in the jungle shadows are also misaligned and flickery and some rotate with your head."* Shadows on the ground and
    foliage don't line up with what casts them, flicker, and some turn with the head pose instead of staying fixed in the
