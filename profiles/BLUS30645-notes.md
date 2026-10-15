@@ -118,3 +118,16 @@ the sky renders. **A savestate made in the black-sky session (`vrtest_da2_blacks
 fresh load**, so the cause is session state from the boot path (the opening cutscene's fixed-screen frames? a pipeline
 built then?), not the frame. Probably Matt's "corrupted graphics" (10-08). Next: reproduce from a fresh boot with
 `RPCS3_VR_NO_INVARIANT` / multiview off, and log the sky draw's pipeline and depth state per eye.
+
+Same fresh-boot sessions also show **Bethany's hair off her head**: she looks bald and the hair floats as a dark blob
+near the ground beside her (`evidence/da2/freshboot_hair_floating_blacksky.png`); in the savestate-loaded fight
+Hawke's hair sits on his head. (The bald look in the 10-14 conversation shot came from a session loaded from
+`vrtest_da2_fight`, so the hair may also break there; not seen in a still frame yet.)
+
+Ruled out for the black sky (each a fresh boot through the opening, ~6 min, or a live change in that session): the
+cinematic fixed screen (`Cinematic Scenes: Full Quality`: still black), multiview (`RPCS3_VR_MULTIVIEW=0`: still
+black), probe profile state (forced profile reload: still black), `clip_space_scene_draws` off, dropping `c[269]` from
+`camera_blocks`, `require_camera_aspect` off, switching stereo off and on (render=0 -> 1). The probe's `why=` shows
+the sky draw as a camera draw with no slots changed in both the good and the bad session. What a fresh boot has and a
+savestate load does not: the main menu (a 3D background) and the cutscene before the fight, so the next suspects are
+texture-cache or surface state from those (a sky texture address that held a render target earlier?).
