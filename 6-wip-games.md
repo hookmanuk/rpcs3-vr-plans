@@ -1182,6 +1182,14 @@ Calm (short extras) not tried.
    frozen, so the culling words are not it; both eyes agree at yaw 0 / +-30. Needs a temporal capture (it flickers) or
    Matt's exact spot. Seen meanwhile: at yaw +-30 the outer edge of each eye shows salmon sky through missing scenery
    (beyond the culling cap of 6, ~77 degrees; the eye's outer corner is ~88 degrees off the game's axis there).
+   Matt (2026-10-15 evening): *"uncharted jungle shadows are only wrong WHILST the head is rotating, they snap back into
+   place once you stop rotating."* So it is a timing / reprojection effect, not a static mismatch (why stills at fixed
+   poses looked right): something in the shadow path uses a head pose from a different moment than the rest of the frame.
+   Candidates: the sun shadow mask's depth remap (`fc15ec0752d20290`) built from one frame's eye transform while the
+   depth / scene it reads were drawn with another (frame generation, or the remap matrix taken from the previous scene
+   draw), feedback textures shifted by the head rotation since their frame (`vr_shift_texture_params`), or the
+   late-readback path. Reproduce with `simpose.py` stepping the yaw every frame (a continuous sweep) and capture
+   mid-sweep, comparing against a still at the same pose.
 
 Triaged 2026-09-30 with no profile made. Native 30. The flat ceiling at vblank 180 on the boat is only
 42-46, with every SPU thread at 100%, so it is SPU/PPU-bound and 90 is not reachable. Evidence:
