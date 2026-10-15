@@ -1180,6 +1180,16 @@ patched: not done.
 
 ## Prince of Persia (BLUS30214, disc 01.00)
 
+**Matt's headset report (2026-10-15 afternoon), open, in his words:**
+1. *"save state 1 - there are culling issues, where shadows come and go behind you as you move."* State
+   `BLUS30214_1_0` (14:40).
+2. *"save state 2- if you look straight up in the air there is grass attached to the HMD again, like other games."*
+   State `BLUS30214_1_1` (14:45). His shot: looking up between two rocks, a curved strip of grass / leaf sprites hangs in
+   the sky in the middle of the view. Playbook candidates: "Objects hang in view when looking up: their program keeps the
+   camera in another block" (add the block to `camera_blocks`), or sprites the game places itself (CPU-projected).
+3. *"can you try and optimise the frame rate too."* (Last measured: 90 Hz at 300 % in the first canyon, RSX-thread bound,
+   ~73 FPS at 400 %, 2026-10-13; to remeasure DLSS-off at 120 Hz, heaviest views too.)
+
 New 2026-10-13 (Matt). 30 FPS game: the fork patch *Unlocked frame rate (follows Vblank Rate)* clears the GCM label the
 vblank handler counts down (1 instruction); game clocks stay real time (memory dumps at 30 and ~85 FPS). Generated
 profile (column vectors `c[200]`/`c[206]`, HUD `c[200]`, 45-degree FOV) plus the new `screen_space.hud_over_scene`
