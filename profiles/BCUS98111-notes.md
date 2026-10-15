@@ -152,3 +152,10 @@ with a wider FOV than the simulator's may show the cut. Matt: check the edges of
 `hud_skips_passes: true`: in the opening a white box filled the HUD box (a red low-health overlay and a copy of the
 scene drawn full-screen through the HUD ortho `c[256]`); with it those passes are drawn as normal full-screen passes.
 The health emblem still sits at the eye's corner in that scene (another draw than `a87982423fedbeb4`).
+
+### Game speed (2026-10-15)
+
+Two memory dumps 5 s apart at Vblank 90 (56 FPS) and at Vblank 30 (28 FPS), `memclock.py`: the clock-like floats have
+the same rate distribution in both runs (a frame-locked game shows its clocks doubling at the higher rate), so the game
+looks real-time at any frame rate, as on the PS3 (unlocked frame rate). Not checked against an on-screen timer.
+Regression state added: `vrtest_gow3_gaia2` in `tools/re/vrtest_states.txt` (`7-vr-regression.md`).

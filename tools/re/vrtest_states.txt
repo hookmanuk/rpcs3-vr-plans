@@ -43,3 +43,4 @@ NPUA70218   vrtest_journey_dune          1  I    40     Journey: first dune (hol
 BLUS30415   vrtest_dao_forest            1  1    10     Dragon Age: Origins: Dalish forest path, gameplay with HUD (after the elves conversation)
 NPUA80001   vrtest_flow_title            1  script 10   flOw: title playfield (tilts and boosts; walk script)
 BLUS30415   vrtest_dao_wolves            1  0    6      Dragon Age: Origins: first wolf fight in the forest (loads on the combat tutorial; no input)
+BCUS98111   vrtest_gow3_gaia2            1  0    10     God of War III: Gaia fight after the opening (no input; MB/DOF patches off at save)

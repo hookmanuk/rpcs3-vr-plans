@@ -88,6 +88,7 @@ speed at. The other games read their frame time every frame.
 | `segarally_race` | BLUS30068 | fork *Unlocked frame rate* + *Wider view* 2.0; custom config **Compatible Savestate Mode** + **Disable SPU GETLLAR Spin Optimization** (saves can still fail mid-race: retry Ctrl+S) | `tools/re/sr_boot.sh` (Start > Premier > Amateur > AZA Challenge > Safari > Subaru), save on the grid |
 | `dao_castle` | BLUS30415 | fork *Wider view* 2.0 | first boot installs data; New Game, Human Noble, Quick Play (Triangle), X through the opening dialogue to Castle Cousland's hall |
 | `da2_fight` | BLUS30645 | custom config **Compatible Savestate Mode** | `tools/re/da2_boot.sh` (New Game, Male Warrior, prologue to the first fight) |
+| `gow3_gaia2` | BCUS98111 | fork *Wider view (VR culling)* (`BCUS98111_patch.yml`); community *Skip intro*, *Disable MLAA*, *Disable Motion Blur*, *Disable Depth of Field* (boot patches: on when saving) | Boot, X through the logos, Start, New Game (God / Normal), X through the opening; saving fails while the intro video decoder is open: let Kratos die once, restart from the checkpoint, play a minute, then save in the Gaia fight. |
 | (NFS Most Wanted) | BLUS31010 | | Skipped: the disc image is no longer in `F:/rpsc3/games`. |
 
 ## RPCS3 savestate gotchas
