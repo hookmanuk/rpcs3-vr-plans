@@ -1204,6 +1204,12 @@ patched: not done.
    comparison was frames from different moments. Next: an exact repro (which stick, which tree / cliff, a present /
    absent screenshot pair), then find what hides it (frustum culling inside batched draws, distance / LOD fade, or a
    camera-obstruction fade), e.g. by the vertex counts of the scene draws rather than draw counts.
+   Matt's repro (with screenshots): *"1_2 save state. loads with no tree on the left cliff. move the right stick up, the
+   tree appears."* **Fixed 2026-10-15 (simulator; fork `9bbba7669`):** the game culls against its camera's projection matrix,
+   not the tangents. Patch *VR: Wider view (head-driven culling)* now divides the main camera's P[0][0] / P[1][1] by the
+   head-driven word right after it is built (cave at `0x2db350`). Tree present at load; head poses and framing unchanged;
+   walking left / right matches no patch; the sky there takes the game's own hazy look (matches flat with the camera
+   level; the vivid blue was the unrendered-sky case). Cost ~12 % (state 1 at 300 %: 111-118 FPS).
 2. *"save state 2- if you look straight up in the air there is grass attached to the HMD again, like other games."*
    State `BLUS30214_1_1` (14:45). His shot: looking up between two rocks, a curved strip of grass / leaf sprites hangs in
    the sky in the middle of the view. Playbook candidates: "Objects hang in view when looking up: their program keeps the
