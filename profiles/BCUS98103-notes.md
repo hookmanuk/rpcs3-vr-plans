@@ -142,3 +142,30 @@ At 45 locked, v3 dips as often as no widening at all: the remaining dips (1-3 s 
 own combat spikes. Coverage: full eye dumps at pitch -25 with yaw 0 / +35 / -35 show the same small corner holes as v2
 (`evidence/uncharted/v3_edges_*`, `v2_edges_*`); head poses 0 / +-20 / pitch +-10 / roll 15 whole
 (`v3pose_sheet.png`). Model detail unchanged (the 16x geometry viewport stays).
+
+## What costs what (2026-10-15, Matt's combat state, Wider view 3.0, his config: DLSS Performance + frame generation)
+
+GPU profile (`RPCS3_VR_GPUPROF=1`, 300%): ~21 ms of GPU work per 21.5 ms frame, GPU 85-89% busy. Per target:
+present (DLSS + frame generation + composite) 5.5 ms, main scene `c07d0000` 4.9 ms, `c34b0000` (a 102-draw pass of the
+world programs before the scene) 3.7 ms, depth prepass `c0f50000` 2.8 ms, depth copies/shadow mask `c2d50000` 1.8 ms,
+shadow maps 2432x1216 0.2 ms (1214 draws). Frame order: shadow maps, half-res scene `c31e0000` (277 draws), depth
+prepass, `c34b0000`, scene, sun-shadow/lighting `c16d0000`.
+
+| Change (uncapped, Vblank 600, two fresh loads each) | FPS |
+|---|---|
+| base, 300% | 46.9-48.0 |
+| Resolution Scale 250% | 53.0 / 53.0 |
+| Resolution Scale 100% | 66.2 / 68.5 |
+| DLSS Ultra Performance (300%) | 38.1 / 38.3 (slower; not investigated) |
+| Video MSAA Disabled (the game's passes are 2x MSAA, `aa_mode 3`) | 47.0 / 47.1 (no change) |
+| Dynamic shadows off (debug byte `0x8400d4` = 1, what the community patch sets; pokeable live) | 47.9 / 48.3 vs 47.6: +0.7, the whole level goes flat-lit |
+| `c34b0000` draws hidden (probe `hide=hash@c34b0000`) | +0.7, picture unchanged at a glance (noise level) |
+| half-res `c31e0000` draws hidden | no change |
+
+No single in-game effect is costly: the cost is the scene's pixel work at the eye resolution, and the present path.
+Note: the shadow-map programs also draw the depth prepass (both colour target 0), so a probe hide cannot separate them.
+
+Holding 45 locked (Vblank 90, the game's 2-vblank limiter): the 1 s windows under 44.5 come from single long frames
+(over 22.2 ms, shown for 3 vblanks = 33 ms); they appear at 250% (5-9 per 30 s) as at 300% (1-4) and with no widening
+(1-3): game-side spikes in combat, not GPU load. Idea not tried yet: a finer limiter (Vblank 180 with the game limiter
+word `0xbb4350` set to 4, init-time only, so a patch) so a late frame costs 5.5 ms instead of 11 ms.
