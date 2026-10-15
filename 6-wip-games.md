@@ -1196,6 +1196,16 @@ Calm (short extras) not tried.
    Matt (2026-10-15 evening): *"uncharted jungle shadows are only wrong WHILST the head is rotating, they snap back into
    place once you stop rotating."* So it is a timing / reprojection effect, not a static mismatch (why stills at fixed
    poses looked right): something in the shadow path uses a head pose from a different moment than the rest of the frame.
+   2026-10-15 late (simulator, `vrtest_uncharted_jungle`), ruled out so far: (a) a pose change inside the frame:
+   `RPCS3_VR_TRACE=1` shows every camera draw of a frame on one pose (`L453 ... C453`, updated at the flip), so the
+   shadow-mask pass (`fc15ec0752d20290`, depth-remapped) and the depth it reads share the pose; (b) the culling words:
+   stepping them 2.0 -> 2.6 with the head still left the sun patches unchanged (only 1.4, below what the view needs,
+   culls scenery and its shadows); (c) Fewer Shadows: Uncharted's profile has no `fewer_shadows` option. A head sweep at
+   90 deg/s (margin 3 vs 20) showed nothing in stills. Likely: the headset runtime's reprojection. The profile runs the
+   game at 45 (`default_fps` 45, `vblanks_per_frame` 2) on a 90 Hz headset; his fpsVR showed 22.8 % reprojection, and
+   SteamVR Motion Smoothing makes fine high-contrast patterns (dappled sun patches) swim while the head moves and settle
+   when it stops. The simulator doesn't reproject. To check with Matt: the same spot with Motion Smoothing off in
+   SteamVR, and / or VR Frame Rate at the headset rate.
    Candidates: the sun shadow mask's depth remap (`fc15ec0752d20290`) built from one frame's eye transform while the
    depth / scene it reads were drawn with another (frame generation, or the remap matrix taken from the previous scene
    draw), feedback textures shifted by the head rotation since their frame (`vr_shift_texture_params`), or the
