@@ -208,3 +208,23 @@ dropped in its passes (the EQUAL colour pass broke at coarse rates). Details: `1
 `12-hidden-area-mask-plan.md` section 7. Next leads for the jungle are vertex work: the shadow maps (~583 k vertices,
 not multiview), and the 16x geometry viewport (a savestate keeps the patched code, so only a fresh-boot A/B can test
 removing it).
+
+## The jungle, measured properly: a submission bubble, not pixels (2026-10-15, DLSS off)
+
+All numbers DLSS off (the rule from today: performance is always measured without DLSS / frame generation).
+300 %, uncapped, `vrtest_uncharted_jungle`: **56 FPS** (17.9 ms), 100 %: 67.5. GPU 84 % busy at 300 %.
+
+Nsight Systems (`tools/re/nsys_admin.ps1`, Vulkan GPU workloads + the new RSX wait counters in the frame stats):
+per 18.2 ms frame the GPU is busy 15.5 ms and idle 3.4 ms in **one gap right after the flip**, during which the RSX
+thread records the next frame's first ~1600 draws (2.6x its average recording rate) and only then submits: RPCS3
+submits at ~5 flush points per frame, half of them at the flip. The RSX thread's 17.7 ms of CPU per frame were 7.5 ms
+spinning on the game's FIFO, 1.3 ms in GPU fence waits and ~9 ms of work.
+
+Fork `0f9415b7a` (branch `vr-pixel-savings`), `RPCS3_VR_EAGER_SUBMIT=256`: submit when the GPU has run dry and 256
+draws are recorded (3.5 submits per frame). **300 %: 56.0 / 56.5 -> 64.5 / 64.2 FPS**, the frame now equal to the
+GPU's busy time; FIFO spin 5 -> 1 ms. 100 %: 67.2 -> 69.7, now RSX-thread bound (14.2 ms CPU, waits under 1 ms).
+
+So at 300 % the remaining limit is the GPU's 15.5 ms. Whether that is draw / vertex work or shading is the next
+question (Nsight GPU metrics `GPUMET=10000`: SM active vs vertex / pixel warps); VRS and the hidden-area mask
+(`11-vrs-plan.md`, `12-hidden-area-mask-plan.md`) only gained ~1 FPS, so it is probably not shading. At 100 % the
+RSX thread (13.5 ms of work for 3450 draws, both eyes through multiview) is the ceiling.

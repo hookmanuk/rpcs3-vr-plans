@@ -159,3 +159,10 @@ Two memory dumps 5 s apart at Vblank 90 (56 FPS) and at Vblank 30 (28 FPS), `mem
 the same rate distribution in both runs (a frame-locked game shows its clocks doubling at the higher rate), so the game
 looks real-time at any frame rate, as on the PS3 (unlocked frame rate). Not checked against an on-screen timer.
 Regression state added: `vrtest_gow3_gaia2` in `tools/re/vrtest_states.txt` (`7-vr-regression.md`).
+
+### Eager submission (2026-10-15, DLSS off)
+
+`vrtest_gow3_gaia2`, 300 %, uncapped: 52.3 -> 55.2 / 56.5 FPS with `RPCS3_VR_EAGER_SUBMIT=256` (20 submits per
+frame; see `BCUS98103-notes.md` for the finding). The RSX thread is the limit here: 15.8 ms of CPU per frame with
+0.1 ms of waits (4800 draws per frame), GPU 32 % busy. One run of the pair hit the known half-speed state (31.9 FPS,
+RSX 25 ms) with the switch off.
