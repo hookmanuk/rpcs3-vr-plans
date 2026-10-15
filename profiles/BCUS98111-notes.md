@@ -127,3 +127,16 @@ size. Patch removed. Without the wider view the opening runs. Not crashed in the
 
 `vrtest_gow3_gaia` (MB/DOF on) and `vrtest_gow3_gaia2` (MB/DOF off, 2026-10-15). Saving fails while the intro video's
 decoder is open; after a death and a checkpoint restart, a few minutes of play, it saves.
+
+### Pause menu and HUD placement (2026-10-15)
+
+The pause menu is a 3D casket drawn through a near-square menu camera (`c[256]` A 0.662, B 0.643): rejected by
+`require_camera_aspect`, so it was drawn untransformed. `screen_frame_draws` `65b096c6ed0aba8c` with its 128x128
+texture (the casket; in no gameplay capture) puts those frames on the fixed screen; the Power Up tip pages have no
+camera draws and go there by themselves. **Matt's custom config for this game has `HUD Fixed In Front: false`** (from
+the early experiments?): with it the HUD box and the fixed screen follow the head. With it on (checked with a session
+override), the menu screen and the HUD stay world-fixed at yaw 25. Recommend setting it back to on.
+
+Tried for frame rate, no gain (`gaia2`, two runs each): SPU Block Size Mega / Giga, SPU loop detection, SPU reservation
+busy waiting, `camera_block_cache`. About one run in eight runs at half speed (RSX thread ~34 ms/frame) for its whole
+window; not explained (VRAM 18 of 32 GB, no errors).
