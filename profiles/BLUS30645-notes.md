@@ -103,3 +103,18 @@ the fight (scripted attacks, ~5 min) reached a conversation once: the dialogue c
 headset they are huge and near, with the dialogue wheel small on the face. A fix would be `screen_frame_draws` (the
 conversation on the fixed screen) with a draw that only conversations make; the scripted play did not reach a
 conversation a second time, so no savestate or capture yet.
+
+## 2026-10-15: black sky after a fresh boot (found, not fixed)
+
+Fresh boot from the disc on the simulator (VR on, 300%, Vblank 90), New Game, X/Return through the opening (the
+Cassandra cutscene: her face fills the view; some shots of it go to the fixed screen, others not), into Varric's
+prologue fight: **the sky is black in stereo**, a jagged white band at the horizon; flat (probe render=0) the same frame
+has clouds and the sun (`evidence/da2/blacksky_freshboot_vr_vs_flat.png`). It is missing in the scene targets
+themselves (`c03c0000`, `c0000000`, `c0f70000` dumps: `blacksky_scene_targets.png`), and stayed for minutes (not shader
+warm-up). The sky is `8d9f0acc423270eb` (one draw, 2457 vertices; clip = rows x, y, w, w of camera block `c[271]`, so it
+sits on the far plane; depth test LEQUAL, no depth write); hiding it in flat darkens the sky region (147 -> 15),
+hiding the depth-prepass programs in stereo changes nothing. Its constants are identical to the fight state's, where
+the sky renders. **A savestate made in the black-sky session (`vrtest_da2_blacksky`) renders the sky correctly after a
+fresh load**, so the cause is session state from the boot path (the opening cutscene's fixed-screen frames? a pipeline
+built then?), not the frame. Probably Matt's "corrupted graphics" (10-08). Next: reproduce from a fresh boot with
+`RPCS3_VR_NO_INVARIANT` / multiview off, and log the sky draw's pipeline and depth state per eye.
