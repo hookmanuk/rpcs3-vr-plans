@@ -1,5 +1,5 @@
 #!/bin/sh
-# sess.sh start ID STATE [SCALE=300] | stop ID: an interactive VR session on the OpenXR Simulator for driving a game step
+# sess.sh start ID STATE|GAME_PATH [SCALE=300] | stop ID: an interactive VR session on the OpenXR Simulator for driving a game step
 # by step (keys.sh for input, simshot.py / simpose.py for looks). start: as posecheck.sh (cfgtemp VR on, Frame Rate
 # Unlimited, Null audio, env EXTRA more settings (quoted: EXTRA='"Video/VR/Headset Eye Shape=false"'), keyboard pad from the template when the game has none) and returns once frame stats appear.
 # stop: kills rpcs3, restores the config and removes a pad it added (marker file .sess_pad_ID).
@@ -14,7 +14,8 @@ if [ "$cmd" = start ]; then
   [ "${DLSS:-0}" = 1 ] || py -3.13 cfgtemp.py $id set "Video/VR/DLSS (experimental)=Off" "Video/VR/DLSS Frame Generation (experimental)=false" >/dev/null
   [ -n "$EXTRA" ] && eval py -3.13 cfgtemp.py $id set $EXTRA >/dev/null
   py -3.13 simpose.py 0 0 0 >/dev/null
-  RPCS3_VR_FRAMESTATS=1 timeout 60 powershell -File gboot.ps1 -Iso "F:/rpsc3/source/rpcs3/bin/savestates/$id/$st.SAVESTAT.zst" -Probe ${PROBE:-render=1} >/dev/null 2>&1
+  G="F:/rpsc3/source/rpcs3/bin/savestates/$id/$st.SAVESTAT.zst"; case "$st" in *.iso|*/*) G="$st";; esac  # a game path: fresh boot
+  RPCS3_VR_FRAMESTATS=1 timeout 60 powershell -File gboot.ps1 -Iso "$G" -Probe ${PROBE:-render=1} >/dev/null 2>&1
   sleep 8; powershell -File simwin.ps1 >/dev/null 2>&1
   for i in $(seq 1 240); do grep -aq "VR frame stats" $L && break; sleep 0.5; done
   echo started

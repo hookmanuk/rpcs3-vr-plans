@@ -880,6 +880,17 @@ are classified as screen frames (a `screen_frame_draws` entry matching gameplay,
 camera draws found on his setup). My simulator checks used savestates `vrtest_gow3_gaia` / `gaia2` and a fresh boot only
 up to the main menu; check his route (New Game / Continue into gameplay) and the log line "frames without camera
 draws: shown as the fixed screen" vs "camera draws again: headset view".
+**Not reproduced on the simulator (2026-10-15 late, build 7ebad6b21 = openxr + head aim):** fresh boot, title, main
+menu (fixed screen, clean), *Load* -> his autosave (`BCUS98111-AUTOSAVE`, not overwritten; backup in
+`F:psc3\sourceackup_saves\gow3_*`) into gameplay, with his config: Frame Rate Default, Vblank 36 and again at 90,
+HUD Fixed In Front on, wider view applied. Every run showed gameplay as the full headset view (log "camera draws again:
+headset view"), 36.0 FPS at Vblank 36 (1% low 34), 39.8 at 90 Hz. The profile's view checks use the PS3 output size
+(his 1280x720), not the headset's eye shape, so his MeganeX shouldn't change them. Seen along the way: (a) idle at the
+load point Kratos dies; the death screen shows as a yellow full view with a black box on the HUD box (frames count as
+camera frames); (b) "BATCHJOB: AddJob: waiting for room in job list 3" hundreds of times after each load (546 in one
+run), and in one run (key script went another way, probably a movie) the game froze with cellVdec "waiting for a
+consumer": a frozen game shows the last frame as a box with black around it when the head turns, which matches his
+description. Next: ask Matt for a savestate where it happens, or whether it still happens on this build.
 
 Notes: `profiles/BCUS98111-notes.md`. **2026-10-15 (overnight): from a white screen to a clean stereo picture.** New
 profile from the generator plus hand fixes: `camera_blocks [256, 260]` (the colour pass draws with depth test EQUAL
