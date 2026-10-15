@@ -316,6 +316,10 @@ Every problem found here should become a Step 7 reproduction on the simulator (r
 
 ## VR frame-rate measurement (2026-10-01)
 
+**DLSS and DLSS Frame Generation are always off for performance testing** (Matt, 2026-10-15): they hide the
+game's own cost and are irrelevant to how fast the game runs. The test tools switch both off for the run (`DLSS=1`
+keeps them, only for looking at DLSS itself). Every recorded FPS or per-pass GPU figure is DLSS-off unless it says so.
+
 **Pass mark: 72 Hz.** A game is fully VR compatible when it **sustains 72** in stereo at **Resolution Scale
 300%**: run at a fixed rate like a headset (Vblank = rate x vblanks per frame) while the player moves, after the
 game has settled, with **under 1% late frames** (a late frame takes over 1.5x the median frame time) and an **average of at least

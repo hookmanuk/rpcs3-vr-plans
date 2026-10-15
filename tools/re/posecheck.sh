@@ -11,6 +11,8 @@ P=/f/rpsc3/source/rpcs3/bin/config/input_configs/$id
 padhad=0; [ -d "$P" ] && padhad=1
 [ $padhad = 0 ] && { mkdir -p "$P"; cp ../keyboard-pad-template.yml "$P/Default.yml"; }
 py -3.13 cfgtemp.py $id set "Video/VR/Enabled=true" "Video/VR/Frame Rate=Unlimited" "Video/Resolution Scale=$sc" "Audio/Renderer=Null" >/dev/null
+# Performance runs measure the game, never DLSS or frame generation (env DLSS=1 keeps the game's DLSS settings).
+[ "${DLSS:-0}" = 1 ] || py -3.13 cfgtemp.py $id set "Video/VR/DLSS (experimental)=Off" "Video/VR/DLSS Frame Generation (experimental)=false" >/dev/null
 py -3.13 simpose.py 0 0 0 >/dev/null
 RPCS3_VR_FRAMESTATS=1 timeout 60 powershell -File gboot.ps1 -Iso "F:/rpsc3/source/rpcs3/bin/savestates/$id/$st.SAVESTAT.zst" -Probe render=1 >/dev/null 2>&1
 sleep 8; powershell -File simwin.ps1 >/dev/null 2>&1

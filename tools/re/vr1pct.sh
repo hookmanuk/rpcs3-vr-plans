@@ -58,6 +58,10 @@ if not desktop:
     nested('Video', 'VR', 'Enabled', 'true')
     nested('Video', 'VR', 'Frame Rate', 'Unlimited')
     nested('Audio', None, 'Renderer', '"Null"')
+if os.environ.get('DLSS', '0') != '1':
+    # Performance runs measure the game, never DLSS or frame generation (DLSS=1 to look at them).
+    nested('Video', 'VR', 'DLSS (experimental)', 'Off')
+    nested('Video', 'VR', 'DLSS Frame Generation (experimental)', 'false')
 open(p, 'w', encoding='utf8', newline='\n').write(s)
 PY
 P=/f/rpsc3/source/rpcs3/bin/config/input_configs/$1; padhad=0; [ -d "$P" ] && padhad=1

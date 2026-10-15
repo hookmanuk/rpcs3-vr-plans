@@ -15,6 +15,8 @@ P=/f/rpsc3/source/rpcs3/bin/config/input_configs/BCUS98114
 padhad=0; [ -d "$P" ] && padhad=1
 [ $padhad = 0 ] && [ "$xat" != 0 ] && { mkdir -p "$P"; cp ../keyboard-pad-template.yml "$P/Default.yml"; }
 eval py -3.13 cfgtemp.py BCUS98114 set "\"Video/VR/Enabled=true\"" "\"Video/VR/Frame Rate=Unlimited\"" "\"Video/Vblank Rate=90\"" $EXTRA >/dev/null
+# Performance runs measure the game, never DLSS or frame generation (env DLSS=1 keeps the game's DLSS settings).
+[ "${DLSS:-0}" = 1 ] || py -3.13 cfgtemp.py BCUS98114 set "Video/VR/DLSS (experimental)=Off" "Video/VR/DLSS Frame Generation (experimental)=false" >/dev/null
 ok=0
 for try in 1 2 3; do
   powershell -NoProfile -Command "Get-Process rpcs3 -ErrorAction SilentlyContinue | Stop-Process -Force"; sleep 3

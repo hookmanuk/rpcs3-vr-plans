@@ -4,7 +4,7 @@ The VR regression run (`tools/re/vr_regress.sh`, method in `5-vr-profile-playboo
 measurement) boots one savestate per game, listed in `tools/re/vrtest_states.txt`. The savestates are 20-300 MB
 each and live only in `rpcs3/bin/savestates/<ID>/` on the PC that made them, so another PC has to recreate them.
 Frame rates also differ between PCs: keep each PC's own baseline (`evidence/vrtest/<date-time>/results.txt`) and
-compare runs on the same PC.
+compare runs on the same PC. Runs are always DLSS-off: `vr1pct.sh` switches DLSS and frame generation off for each run.
 
 ## Before making any savestate
 
