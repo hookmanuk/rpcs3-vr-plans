@@ -169,3 +169,21 @@ Holding 45 locked (Vblank 90, the game's 2-vblank limiter): the 1 s windows unde
 (over 22.2 ms, shown for 3 vblanks = 33 ms); they appear at 250% (5-9 per 30 s) as at 300% (1-4) and with no widening
 (1-3): game-side spikes in combat, not GPU load. Idea not tried yet: a finer limiter (Vblank 180 with the game limiter
 word `0xbb4350` set to 4, init-time only, so a patch) so a late frame costs 5.5 ms instead of 11 ms.
+
+## Wider view 3.1 and a frame-pacing idea that did not help (2026-10-15)
+
+3.0 kept the game's aspect and the last written value at `0x7cdd88`/`0x7cdd8c` (code segment): writable after a
+savestate load, read-only on a fresh boot, so a fresh boot crashed after the intro (VM access violation writing
+`0x7cdd88`). 3.1 keeps them at `0x11eff00`/`0x11eff04`, zeros between the end of .bss (`0x11e22e8`) and the heap
+(`0x11f0000`). Fresh boot, Continue into "The Search for El Dorado" (jungle): runs, words correct (base 0.5625).
+
+Finer limiter (tried, reverted): the limiter word `0xbb4350` (2 vblanks) is stored at boot by `0xe515c`
+(`stw r8, 8(r29)`); a patch storing 4 with the profile at `vblanks_per_frame 4` (vblank 180) ran. But the same jungle
+spot runs 38.1-38.4 FPS with it and 38.4-38.6 without, median frame 26 ms in both: RPCS3 flips a late frame as soon
+as it is done (no vsync quantisation), so a missed 22.2 ms slot costs only the lateness, not a whole vblank. Nothing
+to gain.
+
+New state `vrtest_uncharted_jungle` (fresh boot, Continue, 3.1, normal pacing): a heavy scene, ~38 FPS at 300%
+(Matt's DLSS Performance + frame generation config, simulator). Matt's Uncharted config has VR Frame Rate
+**Unlimited**: on a 90 Hz headset that targets 90 FPS (vblank 180 with the game's 2-vblank limiter), not the profile's
+45 lock; "Default" gives the 45 lock.
