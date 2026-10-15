@@ -1182,14 +1182,22 @@ patched: not done.
 
 **Matt's headset report (2026-10-15 afternoon), open, in his words:**
 1. *"save state 1 - there are culling issues, where shadows come and go behind you as you move."* State
-   `BLUS30214_1_0` (14:40).
+   `BLUS30214_1_0` (14:40). **Fixed 2026-10-15 (simulator; fork `24e9b2433`):** the game fits its shadow maps to its own
+   71 x 44 degree camera, so the ground below and beside it had no shadows, with a straight edge that moved with the
+   camera. New patch *VR: Shadows cover the headset view* scales the shadow fit's frustum tangent (`0x1fb4e8`, after
+   tanf) by a head-driven word (`0x15855d0`, `culling_scale_f32` mode `tangent`, max 6; 3.85 straight ahead). No straight
+   edges at yaw 0 / +-90, pitch +-30; matches the flat game's shadows. Headset recheck, also while moving.
 2. *"save state 2- if you look straight up in the air there is grass attached to the HMD again, like other games."*
    State `BLUS30214_1_1` (14:45). His shot: looking up between two rocks, a curved strip of grass / leaf sprites hangs in
    the sky in the middle of the view. Playbook candidates: "Objects hang in view when looking up: their program keeps the
    camera in another block" (add the block to `camera_blocks`), or sprites the game places itself (CPU-projected).
+   **Fixed 2026-10-15 (simulator; fork `533f0b3cb`):** the grass / leaf program `d2113f906456e49b` gets the full constant
+   upload and keeps its camera at `c[202]`; `camera_blocks` is now `[200, 202, 206]`. Gone at head pitch 75. Headset recheck.
 4. *"Oh also in Prince of Persia there is a heavy outline on characters, I suspect this is overdone compared to flatscreen
    100% Can you check and if so fix it to make it thinner"* (the ink outline pass is probably sized in pixels: at 300 %
    it may be drawn thicker, or thinner and denser, than at 100 % flat: compare flat 100 % against VR 300 %).
+   **Fixed 2026-10-15 (simulator; fork `0a94520f7`):** the outline pass's taps scale to the game's 71 x 44 degrees
+   (`fragment_constant_overrides` scaled form): a thin line like the flat game instead of a thick smudge. Headset recheck.
 3. *"can you try and optimise the frame rate too."* (Last measured: 90 Hz at 300 % in the first canyon, RSX-thread bound,
    ~73 FPS at 400 %, 2026-10-13; to remeasure DLSS-off at 120 Hz, heaviest views too.)
 
