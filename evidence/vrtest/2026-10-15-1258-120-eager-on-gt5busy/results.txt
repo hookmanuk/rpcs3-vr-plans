@@ -1,0 +1,10 @@
+# path: OpenXR Simulator, RPCS3_VR_MULTIVIEW=default, build ae7e50c32 VR: eager command buffer submission on by default 
+# BCUS98114 vrtest_gt5_busy_race: Gran Turismo 5: busy race, pack in view (gt5_busy_race_2_17; loads PAUSED with Matt's pad connected, keep it paused: unpaused it reaches the cap in 3 s)
+BCUS98114 vrtest_gt5_busy_race vblank 120 scale 300%:
+   443 frames over 8.0 s: avg 55.3 FPS, 1% low 39.9, 0.1% low 34.1 (worst frame 29.3 ms), median 17.54 ms, late 0.45%, RSX thread 17.86 ms/frame, new frames 55.3/s; RSX waits ms/frame: FIFO empty 0.94, FIFO spin 0.45, FIFO fetch 0.00, semaphore 0.00, GPU fence 0.00, limiter 0.00; eager submits 10.7/frame
+   448 frames over 8.0 s: avg 55.9 FPS, 1% low 43.7, 0.1% low 38.1 (worst frame 26.2 ms), median 17.56 ms, late 0.00%, RSX thread 17.69 ms/frame, new frames 55.9/s; RSX waits ms/frame: FIFO empty 0.94, FIFO spin 0.45, FIFO fetch 0.00, semaphore 0.00, GPU fence 0.00, limiter 0.00; eager submits 10.6/frame
+   => median of 2 windows: avg 55.3 FPS, 1% low 39.9, late frames 0.00%, RSX thread 17.69 ms/frame
+   eyes: residual at 0 42.14, best shift -232 (9.66) 
+FRAMERATE BCUS98114 vrtest_gt5_busy_race at 120 Hz: 55.3 FPS (1% low 39.9, late 0.00%, RSX thread 17.69 ms/frame)
+SUSTAINABLE BCUS98114 vrtest_gt5_busy_race: none Hz
+DONE /f/rpsc3/source/plans/evidence/vrtest/2026-10-15-1258-120-eager-on-gt5busy

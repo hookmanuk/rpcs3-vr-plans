@@ -19,7 +19,7 @@ BCES00800   vrtest_gow2_rhodes           1  1    10     God of War II: Rhodes, f
 BCUS98259   vrtest_icosotc_1             1  1    10     ICO & SotC Collection (released): SotC, a valley
 BLUS30443   vrtest_demons_1              1  1    10     Demon's Souls (released): tutorial corridor
 BLUS30367   vrtest_bayonetta_play        1  1    10     Bayonetta: graveyard fight, Prologue (continued from the chapter menu)
-BCUS98114   vrtest_gt5_race_start        1  0    40     Gran Turismo 5: race start
+BCUS98114   vrtest_gt5_busy_race         1  0    45     Gran Turismo 5: busy race, pack in view (gt5_busy_race_2_17; loads PAUSED with Matt's pad connected, keep it paused: unpaused it reaches the cap in 3 s)
 # BLUS31010 vrtest_nfsmw_1  1 0 10  Need for Speed Most Wanted: disc image no longer in F:/rpsc3/games (2026-10-01), skipped
 BLUS30182   vrtest_pure_race             1  W    10     Pure (released): Alto Vista race, from the start line (holds R2)
 BCAS20001   vrtest_rr7_boot              1  0    84     Ridge Racer 7 (released): no savestate; disc boot + key script; Rave City Riverfront countdown and tunnel run
