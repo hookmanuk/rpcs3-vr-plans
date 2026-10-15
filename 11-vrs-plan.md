@@ -162,3 +162,12 @@ submission bubble after each flip (`5-vr-profile-playbook.md` > Where the frame 
 (`RPCS3_VR_EAGER_SUBMIT`) recovers it: Uncharted jungle 56 -> 64.5 FPS at 300 % DLSS-off. What the GPU's remaining
 15.5 ms is made of (draw / vertex work or shading) is still to be measured with Nsight's GPU metrics; this plan's
 value depends on that answer.
+
+## 8. Status: shelved (2026-10-15)
+
+Measured and shelved. After eager submission and the depth-barrier fix (both merged into `openxr`, `27ca44435`..
+`faf4a5bce`), Uncharted's jungle is bound by the RSX thread (13.6 ms of a 13.8 ms frame), and VRS / the mask gain
+nothing: baseline 72.6 / 72.5 FPS, VRS mild 72.2, VRS strong 71.8, mask 73.1 (300 %, DLSS off, uncapped). Before the
+barrier fix they gained 1-2 FPS; GoW III and GT5 are RSX-thread bound and gain nothing. The code stays on branch
+`vr-pixel-savings` (off by default, not merged). Pick it up again only for a game whose GPU time is mostly pixel
+shading at high resolution, measured with Nsight's GPU metrics first (`5-vr-profile-playbook.md` > Where the frame goes).

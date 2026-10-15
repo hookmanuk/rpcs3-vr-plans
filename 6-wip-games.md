@@ -1166,7 +1166,8 @@ generated profile is wrong (picked indexed light vectors at `c[68]`); the hand p
 
 - **Uncharted (2026-10-15, branch `vr-pixel-savings`):** jungle at 300 %, DLSS off, uncapped **56 -> 73 FPS** from eager
   command buffer submission (on by default) and a fix for a per-draw depth barrier (Special Depth Comparison). Details in
-  `profiles/BCUS98103-notes.md`. Not yet merged into `openxr` or released.
+  `profiles/BCUS98103-notes.md`. Merged into `openxr` (`27ca44435`..`faf4a5bce`), not yet released. Now RSX-thread
+  bound (13.6 ms of a 13.8 ms frame); VRS and the hidden-area mask were measured and shelved (`11`/`12` section 8).
 - **WipEout HD regression, open (2026-10-15):** `vrtest_wipeout_race` at 120 Hz now 100 FPS with **28-32 % late frames**
   (RSX 3.1-3.3 ms); the 10-11 runs had 100.0 FPS, 0 % late, RSX 1.3-1.6 ms. Not caused by eager submission (off: 29.6 %)
   nor the depth-barrier fix (without it: 27.8 %): something on `openxr` since 10-11. To bisect.

@@ -376,8 +376,12 @@ waiting on the game or the GPU, and the per-target GPU times are wall intervals 
 - What it found: the frame = GPU busy time + a ~3.5 ms **submission bubble**. RPCS3 submits only at flush points (five
   per frame, half at the flip), so after the flip the GPU idles while the RSX thread records the next frame's first
   ~1600 draws. `RPCS3_VR_EAGER_SUBMIT=256` (fork, `vr_eager_submit`) submits when the GPU has run dry: Uncharted
-  jungle 300 % DLSS-off 56 -> 64.5 FPS, the frame time now equal to the GPU's busy time. Regression run pending
-  before it becomes the default.
+  jungle 300 % DLSS-off 56 -> 64.5 FPS, the frame time now equal to the GPU's busy time. On by default since
+  `bbeac4feb` (`RPCS3_VR_EAGER_SUBMIT=0` turns it off; a one-submit-per-frame cap lost the whole gain).
+- `RPCS3_VR_BARRIER_CENSUS=1` logs pipeline barriers per second by call chain. It found Uncharted's per-draw depth
+  barrier (Special Depth Comparison; the read-only skip worked every other draw), fixed in `a316cc8d9`: 64 -> 73 FPS.
+- GPU metrics (`GPUMET=10000`): "GR Active" high with low "SMs Active" and low pixel / vertex warps means the GPU's
+  front end (draws, state changes, barriers) is the cost, not shading: resolution, VRS and masks will not help.
 
 ### Finding and measuring RSX-thread cost (2026-10-01)
 
