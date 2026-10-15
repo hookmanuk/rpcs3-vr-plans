@@ -865,6 +865,13 @@ doubled and flicker, the game is in a slanted window not full screen which tilts
 (1) menus doubled and flickering; (2) gameplay shown in a slanted window, not full screen, that tilts with the head
 (the screen-frame / fixed-screen detection or the camera blocks are not taking the game view as the 3D view on his
 headset). None of this showed on the simulator checks: reproduce on the simulator with real head poses first.
+**Fixed 2026-10-15 (simulator, fresh boot; fork `28c2017bb`):** the intro movie and the title / main menu counted as
+camera frames (their 2D draws read `c[256..261]`), so the movie and the menu text were drawn in the HUD box over a held
+3D frame, and the menu's 3D Kratos close-up (a few tens of cm from the camera) was doubled. `screen_frame_draws` now also
+lists the movie quad (`a17105d6566d129d` + 1280x720 texture) and the logo (`611d3d65c7fb2bdc`, 256x256): logos, movie,
+title, loading and main menu go on the fixed screen, both eyes alike, no flicker. The window "tilting with my head":
+Matt's GoW III config has **HUD Fixed In Front: false**, which makes the HUD box and the fixed screen head-locked;
+set it on for a world-fixed screen.
 
 Notes: `profiles/BCUS98111-notes.md`. **2026-10-15 (overnight): from a white screen to a clean stereo picture.** New
 profile from the generator plus hand fixes: `camera_blocks [256, 260]` (the colour pass draws with depth test EQUAL
