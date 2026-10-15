@@ -320,6 +320,10 @@ Every problem found here should become a Step 7 reproduction on the simulator (r
 game's own cost and are irrelevant to how fast the game runs. The test tools switch both off for the run (`DLSS=1`
 keeps them, only for looking at DLSS itself). Every recorded FPS or per-pass GPU figure is DLSS-off unless it says so.
 
+**Every test records the actual frame rate** (Matt, 2026-10-15): avg FPS, 1% low, late %, RSX ms/frame, measured
+where the game is not capped (120 Hz, the regression's default, or uncapped for A/Bs). Pass/fail at a rate the game
+holds ("72 Hz: pass") is not enough: it hides the headroom and leaves nothing to compare the next run with.
+
 **Pass mark: 72 Hz.** A game is fully VR compatible when it **sustains 72** in stereo at **Resolution Scale
 300%**: run at a fixed rate like a headset (Vblank = rate x vblanks per frame) while the player moves, after the
 game has settled, with **under 1% late frames** (a late frame takes over 1.5x the median frame time) and an **average of at least

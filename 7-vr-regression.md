@@ -5,6 +5,10 @@ measurement) boots one savestate per game, listed in `tools/re/vrtest_states.txt
 each and live only in `rpcs3/bin/savestates/<ID>/` on the PC that made them, so another PC has to recreate them.
 Frame rates also differ between PCs: keep each PC's own baseline (`evidence/vrtest/<date-time>/results.txt`) and
 compare runs on the same PC. Runs are always DLSS-off: `vr1pct.sh` switches DLSS and frame generation off for each run.
+**Since 2026-10-15 the run records actual frame rates:** one run per state at 120 Hz (the fastest headset rate) by
+default, with a `FRAMERATE <ID> <STATE> at 120 Hz: <avg> FPS (1% low, late %, RSX ms/frame)` line each. Earlier runs
+climbed 72/90/120 and recorded only which rate held (a game that held 90 logged 90.0), so they carry no frame rates
+to compare against. `RATES="72 90 120"` still climbs.
 
 ## Before making any savestate
 
