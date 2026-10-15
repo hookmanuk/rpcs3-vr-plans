@@ -1,0 +1,26 @@
+# path: OpenXR Simulator, RPCS3_VR_MULTIVIEW=default, build e63b77591 VR: home menu shows DLSS's options as soon as a DL
+# BCUS98155 vrtest_mspr_race: MotorStorm: Pacific Rift: Free-Play, Kanaloa Bay, 11 AI, rally car, countdown "1" (holds R2)
+BCUS98155 vrtest_mspr_race vblank 72 scale 300%:
+   565 frames over 8.0 s: avg 70.5 FPS, 1% low 59.6, 0.1% low 51.8 (worst frame 19.3 ms), median 14.10 ms, late 0.00%, RSX thread 13.55 ms/frame, new frames 70.5/s
+   576 frames over 8.0 s: avg 72.0 FPS, 1% low 62.8, 0.1% low 60.7 (worst frame 16.5 ms), median 13.93 ms, late 0.00%, RSX thread 11.85 ms/frame, new frames 72.0/s
+   573 frames over 8.0 s: avg 71.5 FPS, 1% low 61.8, 0.1% low 23.9 (worst frame 41.8 ms), median 13.97 ms, late 0.17%, RSX thread 12.61 ms/frame, new frames 71.5/s
+   => median of 3 windows: avg 71.5 FPS, 1% low 61.8, late frames 0.00%, RSX thread 12.61 ms/frame
+   eyes: residual at 0 34.46, best shift -238 (21.27) 
+SUSTAINABLE BCUS98155 vrtest_mspr_race: 72 Hz
+# BLUS30839 vrtest_sonic_race: Sonic & All-Stars Racing Transformed: Ocean View, mid-lap 1 (holds R2; Unlocked frame rate + Wider view 3.0)
+BLUS30839 vrtest_sonic_race vblank 72 scale 300%:
+   576 frames over 8.0 s: avg 72.0 FPS, 1% low 68.8, 0.1% low 68.1 (worst frame 14.7 ms), median 13.93 ms, late 0.00%, RSX thread 13.58 ms/frame, new frames 72.0/s
+   576 frames over 8.0 s: avg 72.0 FPS, 1% low 68.8, 0.1% low 67.9 (worst frame 14.7 ms), median 13.98 ms, late 0.00%, RSX thread 13.73 ms/frame, new frames 72.0/s
+   573 frames over 8.0 s: avg 71.5 FPS, 1% low 68.7, 0.1% low 14.4 (worst frame 69.4 ms), median 13.97 ms, late 0.17%, RSX thread 13.50 ms/frame, new frames 71.5/s
+   => median of 3 windows: avg 72.0 FPS, 1% low 68.8, late frames 0.00%, RSX thread 13.58 ms/frame
+   eyes: residual at 0 50.12, best shift -238 (11.35) 
+SUSTAINABLE BLUS30839 vrtest_sonic_race: 72 Hz
+# BLUS30068 vrtest_segarally_race: SEGA Rally Revo: Safari, race start (holds R2; Unlocked frame rate + Wider view 2.0)
+BLUS30068 vrtest_segarally_race vblank 72 scale 300%:
+   575 frames over 8.0 s: avg 71.9 FPS, 1% low 65.5, 0.1% low 41.7 (worst frame 24.0 ms), median 13.93 ms, late 0.17%, RSX thread 11.40 ms/frame, new frames 71.9/s
+   576 frames over 8.0 s: avg 72.0 FPS, 1% low 61.7, 0.1% low 44.4 (worst frame 22.5 ms), median 13.90 ms, late 0.17%, RSX thread 11.41 ms/frame, new frames 72.0/s
+   575 frames over 8.0 s: avg 71.8 FPS, 1% low 56.0, 0.1% low 43.3 (worst frame 23.1 ms), median 13.88 ms, late 0.17%, RSX thread 11.22 ms/frame, new frames 71.8/s
+   => median of 3 windows: avg 71.9 FPS, 1% low 61.7, late frames 0.17%, RSX thread 11.40 ms/frame
+   eyes: residual at 0 23.21, best shift -242 (4.83) 
+SUSTAINABLE BLUS30068 vrtest_segarally_race: 72 Hz
+DONE /f/rpsc3/source/plans/evidence/vrtest/2026-10-15-0216

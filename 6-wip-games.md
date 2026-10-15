@@ -340,7 +340,7 @@ pass mark** for fully compatible.
 | Metal Gear Solid 4 | BLUS30109 | `vr-non-working/` | yes (patch) | not measured | not played | ~35 stereo in Act 1; one hang |
 | inFamous | BCUS98119 | `vr-non-working/` + untracked `bin/` copy | no patch needed | not measured | not played | ~25 stereo: too slow |
 | Split/Second | BLUS30300 | `vr-non-working/` | yes (patch) | not measured | not played | race load-bound |
-| God of War III | BCUS98111 | `vr-non-working/` + untracked `bin/` copy | no (`max_fps 36`) | not measured | not played | early experimental; no notes |
+| God of War III | BCUS98111 | `vr-non-working/` + untracked `bin/` copies (profile, patch) | runs uncapped (frame rate not yet checked against real time) | **below 72**: 42-52 FPS stereo at 90 Hz with full culling coverage (300%, simulator, 2026-10-15); ~74-80 with culling left at the game's view (black edges) | simulator only (pose check 2026-10-15) | new profile 2026-10-15 (stereo, lighting, HUD box fixed); head-driven *Wider view* patch; **crashes in the opening on Gaia with the wider view** (frame heap overflow); SPU job list is the limit. See notes |
 | Sonic & All-Stars Racing Transformed | BLUS30839 | `vr-non-working/` + untracked `bin/` copies (profile, patch) | yes (patch, measured time) | **90 Hz** with Wider view 3.0 (120 with it off), 2026-10-04 | simulator only (real head poses checked 2026-10-05) | ~~distant shadows differ per eye~~ fixed 2026-10-04 (depth remap ray variant); ~~horizontal lines and per-eye shadow (`BLUS30839_1_0`)~~ **fixed 2026-10-06: Wider view 2.0 widens only the culling (game FOV for rendering and shadows, SPU frustum test off); faster than 1.0**; **not ready (Matt, headset, 2026-10-06 with 2.0): shadows misaligned between the eyes; some shadows sit in the wrong place on the track (stay in the middle of the track while driving); feels like 60 FPS inside 90 Hz although it reports 90 locked. See notes**; **2026-10-06: measured:** the game simulates at a fixed **60 Hz** at any vblank rate (60.0 new frames/s at VR 72, 90 and 120, new frame-stats measure); the extra flips repeat a frame. The 60 Hz source is not found yet (not the ELF's 1/60 floats, not the flip interval), see notes; headset run |
 | Dynasty Warriors: GUNDAM | BLUS30058 | `vr-non-working/` + untracked `bin/` copies (profile, patch) | yes (patch *Frame rate follows VR*) | **120 Hz** (with Wider view 3.0), 2026-10-04 | simulator only (real head poses checked 2026-10-05) | space mission checked 2026-10-04 (120 Hz, correct); cutscenes, cutscenes unchecked; turned left, dark wedge at the far left edge (likely the game culling the starfield); ~~menus broken~~ title and main menu fixed 2026-10-06 (fixed screen); portraits: briefing ones fixed 2026-10-06 (head models on the game camera); **battle dialogue portraits still blank (DXT5 texture drawn blank only while VR renders; see notes)** |
 | X-Men Origins: Wolverine | BLUS30268 | `vr-non-working/` + untracked `bin/` copies (profile, patch) | yes (measured time; the patch removes a 62 FPS cap) | **72 Hz** (Vblank 144, two vblanks a frame; 90 reaches 79), 2026-10-04 | simulator only (real head poses checked 2026-10-05) | **parked (Matt, headset, 2026-10-08): graphics look terrible and low-res, and it performs badly.** Earlier: top-left sky edge in the headset (not culling: a 75-degree FOV source found, widening it changes nothing); per-eye shading fixed 2026-10-04; **headset (Matt, 2026-10-05): HUD rotates with the head; image very pixelated even at 400% resolution** ; **2026-10-06: regressed to 52-55 FPS at 72 (RSX thread 17-19 ms/frame) on both today's builds; it held 72 on 2026-10-04: find the change (bisect fork commits since 10-04)**. Ruled out (A/B 2026-10-06): the depth-3D change, eye-invariant sharing (`RPCS3_VR_NO_INVARIANT=1`), the removed `camera_position.slot`. Two-draw (`RPCS3_VR_MULTIVIEW=0`) gives 64 FPS (RSX 15.4 ms) vs 55 multiview (17.6 ms): the multiview path costs X-Men ~2 ms; new frames 60/s of 64 flips. (Measured under the DWM caveat above.) |
@@ -847,8 +847,21 @@ Notes: `profiles/BLUS30300-notes.md`. Evidence: `evidence/splitsecond/`.
 
 ## God of War III (BCUS98111)
 
-Early experimental profile (`row_vectors`, camera blocks 256/260/0, `max_fps 36`). It has no notes file
-and no recorded measurements: start from the playbook if it is picked up again.
+Notes: `profiles/BCUS98111-notes.md`. **2026-10-15 (overnight): from a white screen to a clean stereo picture.** New
+profile from the generator plus hand fixes: `camera_blocks [256, 260]` (the colour pass draws with depth test EQUAL
+through `c[260]`, the same matrix as the depth prepass's `c[256]`; as a linked block it failed the test and the ground
+vanished), `require_camera_aspect` (the final full-screen pass has a square w = z matrix in `c[256]`: bands and diagonal
+cuts at the eye edges), HUD box (`orthographic_block 256` + the 3D health emblem `a87982423fedbeb4` in `hud_programs`).
+Community *Disable Motion Blur* and *Disable Depth of Field* on (their screen-space passes smeared the view). Fork patch
+*Wider view (VR culling)* (`BCUS98111_patch.yml`): the camera's tangents raised to what the headset needs, per axis
+(x ~1.51, y ~1.56 straight ahead against the game's 0.51 / 0.29). State `vrtest_gow3_gaia2` (Gaia fight, MB/DOF off).
+Frame rate (stereo, 300%, 90 Hz, simulator): 29.5 at the start of the night -> **42-52** (fork fd5631db8: one-layer
+copies of the shadow map; separate x/y culling: 34 -> 47; tangent floors instead of a fixed-FOV ratio: 47 -> 52 in
+`vrtest_gow3_gaia`, 42.5 in the busier `gaia2` fight). Without the wider view it runs 74-80 (black edges).
+**Open:** (1) the game crashes in the opening (fresh boot, the Gaia climb) with the wider view: a 4.4 MB double-buffered
+frame heap (bump allocator `0x20a440`, set up at `0x26e9f8`) overflows; enlarging it breaks the boot (SPU fault).
+(2) The SPU job list fills ("BATCHJOB: AddJob: waiting for room") with the wider view: the SPUs are the limit there.
+(3) World scale unmeasured (generator's 0.064). (4) Frame rate vs real time unchecked. (5) Headset run.
 
 ## Sonic & All-Stars Racing Transformed (BLUS30839, disc 01.00)
 
@@ -1050,6 +1063,16 @@ Real time without a patch. Generated profile (`c[256, 269, 263, 271]`,
 `tools/re/da2_boot.sh`; savestates need Compatible Savestate Mode (set). **Misses 72** by a hair in the fight (70.1-70.6
 FPS, 1.2-2.3% late), limited by the game's PPU/SPU work (RSX thread mostly waiting); measure a town scene next.
 
+**2026-10-15 (overnight, Matt asked for all three games at 90):** `vrtest_da2_fight` now runs **86-88 FPS at VR 90**
+(300%, 2880x2880 eyes, simulator), 2-4.6% late (the 10-08 run was 67-69 at 72): close to 90, not sustained. The game
+thread is the limit: 40-43% of `Eclipse::Update` polls an SPU job (`usleep(30)` loop at `0x2998e0`); the RSX thread
+waits 37% in `semaphore_acquire`. Tried at 90, no gain beyond noise: SPU reservation busy waiting (86.1-87.2 vs
+85.9-86.4), Usleep Time Addend -25 (86.9-87.5 vs 87.1-88.2). Late frames are scattered, not periodic (frame log).
+Graphics: in a paused frame (radial menu) both eyes match each other and the flat image; the shadow differences seen
+in a moving fight were motion. **Open:** conversation close-ups put the faces huge and near (the dialogue camera sits
+close to them); candidate fix: `screen_frame_draws` with a draw unique to conversations (needs a conversation
+savestate; a scripted fight did not reach one reliably). Matt's "corrupted graphics" (10-08) not found in the fight.
+
 ## Dragon Age: Inquisition (BLUS30997, disc 01.01)
 
 **Parked (Matt, 2026-10-08): corrupted graphics and poor performance.** Not worked on until the other games are done.
@@ -1103,6 +1126,13 @@ ocean at every head pose; 2.0 (Matt reported lower-detail models with 1.0) enlar
 no triangles are trimmed (combat 44.7 -> ~39 FPS with 2.0, 42.3 with 1.0). DLSS (settings shown again) recovers it: combat 53.8 FPS
 with Performance + model E at 250%, 45.3 with Quality + E at 333% (37.3 at 500% without). Matt (2026-10-13): combat drops under 45 when unpaused (his
 savestate `BCUS98103_1_0`); the game's SPU/PPU work sets the ceiling (~45 there), no emulator setting moved it.
+
+**2026-10-15 (overnight):** Matt's combat state at Vblank 600 uncapped (300%, his config: DLSS Performance + frame
+generation): **46 FPS median (dips 43-44.5)**, so 45 + frame generation gives ~90 shown frames, with dips. RSX thread
+waits 35% of the time; PPU main 88%, six SPU threads 87-100%: game-bound. Tried: SPU Block Size Giga (no change),
+Accurate SPU Reservations off (the game freezes on its pause screen). Splitting the *Wider view* into x and y scales
+(as God of War III, where it gave +13 FPS) would need every reader of camera `+0x1d4` (many; y = x / `+0x1d0`)
+patched: not done.
 
 ## Prince of Persia (BLUS30214, disc 01.00)
 

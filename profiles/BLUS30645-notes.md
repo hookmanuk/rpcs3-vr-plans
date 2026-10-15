@@ -86,3 +86,20 @@ busy waiting 70.3 / 2.5%, both 69.9. Game-side CPU bound near 72 with wake-up la
 ## Parked (Matt, 2026-10-08)
 
 Corrupted graphics and poor performance. Parked with The Darkness, Anarchy Reigns and X-Men Origins.
+
+## 2026-10-15 overnight: frame rate at 90 and graphics check
+
+`vrtest_da2_fight`, VR 90, 300%, 2880x2880 eyes (simulator), fork fd5631db8: **86-88 FPS, 2-4.6% late**, RSX thread
+10.3 ms/frame. Uncapped at Vblank 120 it settles on two vblanks (62 FPS).
+- RSX thread (sampled): 37% `nv406e::semaphore_acquire`, 20% `SwitchToThread`, 8% lock waits: it waits on the game.
+- `Eclipse::Update` (PPU sampler): 40-43% at `0x2998e0` (the `usleep(30)` SPU-job poll), 8% at `0x46289c`.
+- Frame log: late frames (exactly two vblanks) scattered, gaps 1-146 frames, no period.
+- A/B at 90 (two runs each, alternating): SPU Reservation Busy Waiting on 86.1 / 87.2 vs 85.9 / 86.4; Usleep Time
+  Addend -25 86.9 / 87.5 vs 87.1 / 88.2. Noise. Nothing kept.
+
+Graphics: L2 (radial menu) pauses the fight with the scene visible: a frozen frame compared flat vs stereo shows both
+eyes alike and like the flat image (the shadow streak differences seen in moving shots were motion). Playing on from
+the fight (scripted attacks, ~5 min) reached a conversation once: the dialogue camera is close to the faces, so in the
+headset they are huge and near, with the dialogue wheel small on the face. A fix would be `screen_frame_draws` (the
+conversation on the fixed screen) with a draw that only conversations make; the scripted play did not reach a
+conversation a second time, so no savestate or capture yet.

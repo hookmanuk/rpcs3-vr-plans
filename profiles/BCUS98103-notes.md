@@ -109,3 +109,15 @@ that every shadow sits where flat play puts it (the pause menu covers the compar
 headset. A texture redirect to the depth surface itself was tried first and dropped: the copy's 1280-wide pitch against
 the 2560-wide MSAA surface read interleaved rows (blocky). Other passes that rebuild positions from the same copy
 (`2ffe2bfb47d877be`, 4 draws into the scene; the 640x360 depth downsamples) are not remapped.
+
+## 2026-10-15 overnight: frame rate re-check
+
+Matt's combat state `BCUS98103_1_0`, Vblank 600 uncapped, 300%, his config (SPU Block Size Mega, DLSS Performance,
+frame generation): **46.0 / 46.2 FPS median, minima 42.9-44.5**, RSX thread 21.4 ms/frame (35% of its samples waiting
+for the FIFO). Threads: PPU main 88%, SPU kernels 87-100%. SPU Block Size Giga 45.5 (no change). Accurate SPU
+Reservations off: the game stays on its pause screen (freeze), not usable.
+
+Splitting *Wider view* into x and y scales (God of War III: +13 FPS, the headset needs ~2x the width but ~3.6x the
+height here too) is not a one-site patch in this game: the projection builder derives y = x / `[cam+0x1d0]` at
+`0x1569d4`, and many other functions read the scale at `+0x1d4` (culling planes included), so each would need the same
+change.
