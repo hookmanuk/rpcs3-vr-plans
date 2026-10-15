@@ -239,3 +239,13 @@ So the GPU is neither pixel- nor vertex-throughput bound: its time goes to the f
 draws, ~700 pipeline binds, ~157 descriptor updates and ~120 pipeline barriers per frame. That is why VRS (+2 FPS
 strong), the mask (+0.9) and resolution (100 % only +5 FPS) move it so little. Levers: fewer barriers (each drains the
 pipe), less state churn per draw, fewer draws (the wider culling adds draws), and keeping the GPU fed mid-frame.
+
+### The per-draw depth barrier: 63.6 -> 73 FPS (2026-10-15, fork `ae009c868`, branch `vr-pixel-savings`)
+
+A dev barrier census (`RPCS3_VR_BARRIER_CENSUS=1`, fork `6d7e3242c`) counted ~43,500 pipeline barriers a second in the
+jungle (~740 a frame), 74 % from `render_target::texture_barrier` called by `load_texture_env`: with **Emulate Special
+Depth Comparison** (needed here) every draw of the EQUAL colour pass transitions the bound depth buffer for reading.
+The skip for back-to-back read-only barriers worked only every other draw: `post_texture_barrier`'s read-only branch
+reset the tracker including `allow_skip`. Keeping `allow_skip` (one line in `VKRenderTargets.cpp`) leaves ~13,900
+barriers/s; **jungle 300 % DLSS-off uncapped 73.2 / 72.7 FPS** (eager submission on; was 63.6), picture unchanged.
+Uncharted is the only game in the set with Special Depth Comparison on. Today's chain: 56 (start) -> 64 (eager) -> 73.

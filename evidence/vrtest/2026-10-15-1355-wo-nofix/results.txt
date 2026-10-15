@@ -1,0 +1,11 @@
+# path: OpenXR Simulator, RPCS3_VR_MULTIVIEW=default, build ae7e50c32 VR: eager command buffer submission on by default 
+# BCES00664 vrtest_wipeout_race: WipEout HD (released): in a race, ship at speed
+BCES00664 vrtest_wipeout_race vblank 120 scale 300%:
+   801 frames over 8.0 s: avg 99.9 FPS, 1% low 53.8, 0.1% low 51.8 (worst frame 19.3 ms), median 10.97 ms, late 21.60%, RSX thread 3.28 ms/frame, new frames 99.9/s; RSX waits ms/frame: FIFO empty 0.00, FIFO spin 0.14, FIFO fetch 0.00, semaphore 1.43, GPU fence 0.00, limiter 1.85; eager submits 0.0/frame
+   800 frames over 8.0 s: avg 100.0 FPS, 1% low 53.2, 0.1% low 51.5 (worst frame 19.4 ms), median 10.35 ms, late 27.75%, RSX thread 3.07 ms/frame, new frames 100.0/s; RSX waits ms/frame: FIFO empty 0.00, FIFO spin 0.15, FIFO fetch 0.00, semaphore 1.25, GPU fence 0.00, limiter 2.05; eager submits 0.0/frame
+   801 frames over 8.0 s: avg 100.1 FPS, 1% low 52.9, 0.1% low 47.8 (worst frame 20.9 ms), median 8.93 ms, late 40.20%, RSX thread 3.03 ms/frame, new frames 100.1/s; RSX waits ms/frame: FIFO empty 0.00, FIFO spin 0.16, FIFO fetch 0.00, semaphore 1.19, GPU fence 0.00, limiter 2.10; eager submits 0.0/frame
+   => median of 3 windows: avg 100.0 FPS, 1% low 53.2, late frames 27.75%, RSX thread 3.07 ms/frame
+   eyes: residual at 0 43.90, best shift -238 (17.77) 
+FRAMERATE BCES00664 vrtest_wipeout_race at 120 Hz: 100.0 FPS (1% low 53.2, late 27.75%, RSX thread 3.07 ms/frame)
+SUSTAINABLE BCES00664 vrtest_wipeout_race: none Hz
+DONE /f/rpsc3/source/plans/evidence/vrtest/2026-10-15-1355-wo-nofix
