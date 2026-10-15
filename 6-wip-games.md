@@ -60,6 +60,9 @@ without `frames_without_3d_as_screen`). Needs you: a hung `rpcs3.exe` (PID 54120
   fixed: after a **fresh boot** the sky is black in stereo and Bethany's hair floats beside her (a savestate made there
   and reloaded is fine): probably your "corrupted graphics"; conversation close-ups put faces huge and near.
 - **Uncharted: 46 FPS uncapped** in your combat state (dips 43-44.5): 45 + frame generation gives ~90 shown, with dips.
+- **Uncharted: head aim on L1** (2026-10-15, fork e93ee4c, not yet tried in the game): hold L1 and turning your head moves the
+  aim; the view stays steady while the game camera follows. Setting *Head Aim* (VR, Game section). See
+  `profiles/BCUS98103-notes.md`.
   Game-bound; settings gave nothing (Accurate SPU Reservations off freezes it).
 
 **Matt, overnight 2026-10-13 (simulator-checked; headset recheck):**

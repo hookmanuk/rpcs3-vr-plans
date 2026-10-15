@@ -249,3 +249,28 @@ The skip for back-to-back read-only barriers worked only every other draw: `post
 reset the tracker including `allow_skip`. Keeping `allow_skip` (one line in `VKRenderTargets.cpp`) leaves ~13,900
 barriers/s; **jungle 300 % DLSS-off uncapped 73.2 / 72.7 FPS** (eager submission on; was 63.6), picture unchanged.
 Uncharted is the only game in the set with Special Depth Comparison on. Today's chain: 56 (start) -> 64 (eager) -> 73.
+
+## Head aim on L1 (2026-10-15, fork e93ee4c, branch `ccr-90beb2ea-38jbn7`)
+
+Matt: while L1 (aim) is held, the head should move the aim, as the right stick does, until L1 is let go. Profile
+`"head_aim": { "button": "L1", ... }` and the VR setting *Head Aim* (Game section, live, on by default). Format and
+mechanism: `profiles/README.md`, `head_aim`.
+
+How it works: each frame the game camera is measured at the first scene-camera draw (its clip x, y and w axes). While
+L1 is held, the pad thread sends the right stick in proportion to the angle between where the head looks and where the
+game camera aims (0 under 0.75 degrees, 0.15 just past it, full at 10 degrees). The game camera's turn is folded into an
+offset between the game camera and the shown view, so the world does not turn twice (once with the head, again when the
+camera follows); the HUD box, crosshair included, stays on the game camera's forward. Mode `relative` (default): head
+movement after the press moves the aim, as asked. Let go of L1: the view turns back onto the game camera at 120
+degrees a second (if you are still looking to the side, the world turns by that much). The right stick still works
+while aiming (big turns), and the head carries on from there.
+
+Simulation (`tools/head_aim_sim.py`: 120 / 90 degrees a second at full stick, two frames of lag): a 20 degree head turn
+and 10 degrees up converge in ~0.8 s with the shown view following the head alone; an inverted look axis is detected
+(camera turning against the stick for 6 frames) and flipped once.
+
+Not checked yet (no game or headset here, only a syntax build of the probe): that the first scene-camera draw is
+Uncharted's main camera (a model-view block of a moving object would make the measured turn wrong), the game's stick
+dead zone and turn rate in its aim mode (tune `min_stick`, `full_stick_deg`), and the HUD's crosshair on the aim. To
+check in the headset: aim at a fixed point and turn the head; the world must not swim, and the crosshair must end
+where you look. The log has "Head aim: on/off" and, every ~2 s while aiming, the error, stick and offset.
