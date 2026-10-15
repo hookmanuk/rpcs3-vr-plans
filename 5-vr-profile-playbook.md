@@ -354,6 +354,27 @@ jitter shows ~64 while every frame is on time, hence the late-frame count.
   Run `vr_regress.sh` after renderer changes and compare with the previous run. Add a state for every new game.
   How to recreate the set on another PC: `7-vr-regression.md`.
 
+### Where the frame goes: Nsight Systems and the RSX wait counters (2026-10-15)
+
+Before blaming the GPU's pixels or the RSX thread's draws, measure the pipeline. "GPU 84 % busy" and "RSX thread
+17.5 ms of a 17.9 ms frame" were both true of Uncharted's jungle and both misleading: the RSX thread spins while
+waiting on the game or the GPU, and the per-target GPU times are wall intervals that absorb the GPU's idle gaps.
+
+- `RPCS3_VR_FRAMESTATS` logs **RSX waits ms/frame**: FIFO empty (the game has not written commands), FIFO spin
+  (jump-to-self, the game is still producing the frame), semaphore acquires, GPU fence waits, limiter sleep, and
+  `eager submits`. Real work = RSX thread CPU minus these.
+- **Nsight Systems** (installed, `tools/re/nsys_run.sh OUT ID STATE [SCALE] [DELAY] [DUR]`): Vulkan API + GPU
+  workloads + OpenXR; needs admin for the Vulkan layer registration and CPU sampling, so run it through
+  `tools/re/nsys_admin.ps1 OUT ID STATE ...` (a UAC prompt Matt clicks; output in `tools/re/nsys_admin.log`).
+  `GPUMET=10000` adds the GPU hardware metrics (SM active, vertex / pixel warps). `tools/re/nsys_an.py REPORT.sqlite`
+  prints GPU busy vs idle, the Vulkan waits per thread and the CPU samples; `schema` lists the tables for ad-hoc SQL
+  (`VULKAN_WORKLOAD` start/end = GPU execution per submit, `VULKAN_API` per thread, `COMPOSITE_EVENTS` samples).
+- What it found: the frame = GPU busy time + a ~3.5 ms **submission bubble**. RPCS3 submits only at flush points (five
+  per frame, half at the flip), so after the flip the GPU idles while the RSX thread records the next frame's first
+  ~1600 draws. `RPCS3_VR_EAGER_SUBMIT=256` (fork, `vr_eager_submit`) submits when the GPU has run dry: Uncharted
+  jungle 300 % DLSS-off 56 -> 64.5 FPS, the frame time now equal to the GPU's busy time. Regression run pending
+  before it becomes the default.
+
 ### Finding and measuring RSX-thread cost (2026-10-01)
 
 In stereo the RSX thread is usually the bottleneck (it draws every draw twice): Ratchet & Clank used 13 ms of a
