@@ -1210,6 +1210,10 @@ patched: not done.
    head-driven word right after it is built (cave at `0x2db350`). Tree present at load; head poses and framing unchanged;
    walking left / right matches no patch; the sky there takes the game's own hazy look (matches flat with the camera
    level; the vivid blue was the unrendered-sky case). Cost ~12 % (state 1 at 300 %: 111-118 FPS).
+   Matt (follow-up, state `BLUS30214_1_4`): *"turning your HMD left or right shows shadows (behind the tree) become much
+   brighter."* The shadow fit shared the culling word (3.85 ahead, 6 from 20 degrees of yaw); a 6x fit spreads the shadow
+   maps too thin. **Fixed (simulator):** the shadow fit has its own word `0x15855d4` (max 4: 3.85 ahead, 4.0 turned);
+   culling keeps `0x15855d0` (max 6). Shadows keep their depth at yaw +-20 / +-40.
 2. *"save state 2- if you look straight up in the air there is grass attached to the HMD again, like other games."*
    State `BLUS30214_1_1` (14:45). His shot: looking up between two rocks, a curved strip of grass / leaf sprites hangs in
    the sky in the middle of the view. Playbook candidates: "Objects hang in view when looking up: their program keeps the
