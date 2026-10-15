@@ -228,3 +228,14 @@ So at 300 % the remaining limit is the GPU's 15.5 ms. Whether that is draw / ver
 question (Nsight GPU metrics `GPUMET=10000`: SM active vs vertex / pixel warps); VRS and the hidden-area mask
 (`11-vrs-plan.md`, `12-hidden-area-mask-plan.md`) only gained ~1 FPS, so it is probably not shading. At 100 % the
 RSX thread (13.5 ms of work for 3450 draws, both eyes through multiview) is the ceiling.
+
+### What the GPU's time is made of: Nsight GPU metrics (2026-10-15, eager submission on, DLSS off, 300 %)
+
+`evidence/nsys/unc_jungle_gpumet` (not in git, 700 MB; `tools/re/nsys_admin.ps1` with `GPUMET=10000`). 62 FPS, 16.2 ms.
+While the GPU is busy (GR Active 97.5 %), the shader cores are mostly idle: **SMs active 42 %, SM issue 15.6 %, pixel
+warps 18 % of capacity, vertex warps 1 %, DRAM read / write 6 % / 5 %**. Over the whole frame GR Active is 74 %: about
+4 ms a frame the GPU still waits for the RSX thread, in two mid-frame stretches (30-45 % and 70-80 % of the frame).
+So the GPU is neither pixel- nor vertex-throughput bound: its time goes to the front end working through ~3,450 small
+draws, ~700 pipeline binds, ~157 descriptor updates and ~120 pipeline barriers per frame. That is why VRS (+2 FPS
+strong), the mask (+0.9) and resolution (100 % only +5 FPS) move it so little. Levers: fewer barriers (each drains the
+pipe), less state churn per draw, fewer draws (the wider culling adds draws), and keeping the GPU fed mid-frame.
