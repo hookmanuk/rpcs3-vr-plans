@@ -263,17 +263,23 @@ camera / aim angles written directly. Found so far: the camera matrix (right / u
 follow `0x164814`'s inputs to the orbit camera's yaw / pitch state, or find the stick turn-rate constant and scale it
 while head aim drives.
 
-**Direct camera (fork `f1a482b45`, Matt: "do it properly with the camera").** The render camera setup `0x4b4b90`
-(called from `0x4c65c0` with r3 = camera source `0xe9f9f4`, r4 = a temp camera on the stack) first calls `0x4c11f0`,
-which builds the camera quaternion at r28+0x10 (x, y, z, w) from Euler angles in degrees at temp+0x20 / +0x24 / +0x28
-(sin / cos at `0x7198c8`). `0x4b4b90` then turns it into the render camera's rows at `0xc9cd70`+0x190 / +0x1a0 / +0x1b0
-(row0 = right, horizontal; row1 = up; row2 = back / forward). Patch "VR: Head aim (direct camera)": a cave at `0x4b4bd0`
-(the nop after `bl 0x4c11f0`) does q = yaw x q x pitch (Hamilton), yaw at `0x11eff10` (about world up: a x q turns
-about world axes), pitch at `0x11eff20` (q x a: about the camera's own axes; local x = right). Signs: a +y yaw
-quaternion turns the camera left, a +x pitch one down, so the profile's `direct` has yaw_sign -1, pitch_sign -1. The
-game's own angles are untouched (nothing accumulates). Profile: `"head_aim": { "button": "L1", "mode": "gaze",
-"return_deg_per_s": 180, "direct": { "address": "0x11eff10", "yaw_sign": -1, "pitch_sign": -1 } }`. Gaze learns the
-residual (the game's own over-the-shoulder shift at the press, ~2.4 degrees) while the head is still. Simulator,
-jungle state, L1 held: head straight, yaw 20 right, yaw 10 left + pitch 12 up all log a head-to-aim error of
-0.00 degrees, and Drake aims where the head points. The aim lags the head only by the PPU-to-RSX pipeline (a few
-frames).
+**Direct camera, first try (fork `f1a482b45`), wrong.** It rotated the render camera's quaternion (cave after
+`0x4c11f0` in `0x4b4b90`). The view turned in place (into scenery at 40 degrees, Drake out of view) and Drake kept
+aiming along the game's own direction. Matt: *"when you aim straight ahead with the reticule, Nathan is looking about
+45 degrees off to the right, he's not aiming where the reticule is."*
+
+**Direct aim state (fork `df7e1fd7a`, patch "VR: Head aim (direct camera)" v3.0).** In aim mode (L1) the camera
+that's drawn is the FOV-45 class (output `0x4d8870`, object `0x34c72000` in the jungle state), and its aim direction
+persists from frame to frame at camera (normal controller, `0x34c70b00`) + `0x17a0` (copy at `0x34c72000+0x2a0`).
+The right stick turns it through `bl 0x2b60e8` (`0x4d99f0` / `0x4d98f0`); `0x4d8cc4` resets it from two points. The
+cave at `0x4d8b48` (`mr r3,r23`, per frame before `bl 0x4d7468` uses it) turns that vector by the change in running
+totals the probe writes (degrees, yaw + left at `0x11eff10`, pitch + down at `0x11eff14`, applied totals at
+`0x11eff18` / `0x11eff1c`, sin / cos by polynomial, pitch in the vector's vertical plane, skipped near vertical).
+Simulator, jungle state, L1 held: head straight, yaw 20 right, yaw 15 left + pitch 10 up all log a head-to-aim error
+of 0.00 degrees; the camera orbits Drake (he stays in frame) and the reticle sits on his gun's line.
+
+How the state was found, since memory pokes misled for hours: most camera vectors are rebuilt every frame (pokes
+vanish or never land), and the aim class `0x4c7b9c` (FOV 75, `0x34c38700`) and the normal orbit direction (+`0x12a0`,
+pitch +`0x124c`, which do drive the camera outside aim mode) don't drive the aim camera. The test that worked: write a
+20-degree-rotated copy of each candidate vector continuously for 0.8 s with PINE, and keep only the one that turns
+`0xe9fa04` by exactly 20 degrees and stays turned.
