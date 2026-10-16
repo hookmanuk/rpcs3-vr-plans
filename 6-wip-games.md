@@ -1245,6 +1245,19 @@ Calm (short extras) not tried.
    (culling words: 236). Culling words: continuous plus new `lead_s` 0.1 (margin grows with head turn speed, so the
    culling, a frame or two behind the head, keeps the leading edge). Jungle still head 69.8 FPS (71 before). Headset
    recheck: turn the head in the jungle and watch the sun patches.
+   Matt (2026-10-16): *"uncharted shadows are now flickering on and off between frames on the boat"*, and in those
+   frames the bridge window is bright (dark in 2D and all other frames). **Fixed 2026-10-16 (fork `297cf068c`, openxr
+   cherry-pick):** measured from fresh loads of the paused state `BCUS98103_1_0` (same delay, 300 consecutive frames
+   via `RPCS3_DLSS_SEQ`): 28/300 frames without sun shadows, the same frames in repeat runs, the window bright in exactly
+   those. The same in 2D with the fork's patches, 0 with them off; bisect: *VR: Shadows fit the game's own view*
+   alone. Its far-corner caves used `r9` as scratch and reset it to `r1-0x60`, but the function holds the camera's
+   `+0x1b0` row pointer there (set `0x14fcf0`, read `0x14fdd8`), so the cascade was built from stack data. Now
+   `r9 = r4 + 0x1b0`; after: 0/300 in 2D and VR, shadows in every frame, window dark. Lesson: a cave that borrows a
+   register must restore its live value, checked to the next read (not to an earlier value).
+   Head aim: Matt (2026-10-16) *"head aim is getting better, but its still not good, I think it needs to move a lot
+   faster"*. Measured: the camera already takes the whole head turn in one frame (~35 ms after the probe sends it).
+   Added a home-menu slider *Head Aim Speed* (50-500 %, scales the gain; 200 % on the simulator: 20 degrees of head
+   gives 40 of aim). Matt to pick a value.
    Candidates: the sun shadow mask's depth remap (`fc15ec0752d20290`) built from one frame's eye transform while the
    depth / scene it reads were drawn with another (frame generation, or the remap matrix taken from the previous scene
    draw), feedback textures shifted by the head rotation since their frame (`vr_shift_texture_params`), or the
