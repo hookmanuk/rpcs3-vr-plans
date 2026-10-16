@@ -1328,8 +1328,9 @@ Calm (short extras) not tried.
    **Open, Matt (2026-10-16):** *"I've made another save state, where textures haven't loaded properly. Moving will make
    them load, but on the initial state you can see in front to the left and right above Nate there are solid grey
    patches. Different models will flicker to gray as you move around, this is an issue everywhere, work out how to
-   texture correctly."* (State `BCUS98103_1_5`, saved 21:30.) Matt's headset shot: `evidence/uncharted/grey-textures-matt-2026-10-16.png` (grey panels upper left of
-   the arch and right of the hanging pillar, behind the crate). Not investigated yet.
+   texture correctly."* (State `BCUS98103_1_5`, saved 21:30.) Matt's headset shot: `evidence/uncharted/grey-textures-matt-2026-10-16.png` ; the grey parts, cropped by Matt:
+   `grey-textures-crop1-matt-2026-10-16.png` (a flat panel crossed by a diagonal beam, left of the arch) and
+   `grey-textures-crop2-matt-2026-10-16.png` (a tall narrow piece on the right), both untextured flat grey. Not investigated yet.
    Candidates: the sun shadow mask's depth remap (`fc15ec0752d20290`) built from one frame's eye transform while the
    depth / scene it reads were drawn with another (frame generation, or the remap matrix taken from the previous scene
    draw), feedback textures shifted by the head rotation since their frame (`vr_shift_texture_params`), or the
