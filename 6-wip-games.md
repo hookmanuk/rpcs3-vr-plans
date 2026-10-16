@@ -901,6 +901,16 @@ attempted (fork `6ea34c51b`, openxr `b0d0432a2`):** the profile's movie marker i
 gives counts: "VR: frames without camera draws: shown as the fixed screen (camera draws N, screen-frame draws M)" and
 "screen_frame_draws entry i (...) drawn after N camera draws". If it still happens: his RPCS3.log after seeing the box
 tells which path it is.
+**Found and fixed 2026-10-16 ~03:30 (simulator; fork `e4e646542`, openxr `70ed5e35c`):** the head pose was not
+reaching gameplay at all. The trace showed `L228(0.0)` with the simulator head at yaw -30 (frozen pose): the *Wider view*
+raises both of the camera's tangent floors (x 1.2, y 2.0), so the camera's projection aspect becomes ~1.07, and
+`require_camera_aspect` (16:9 +-10%) rejected the real camera. The scene stayed at an old pose, so turning the head
+showed a flat picture with its edges and black beyond: his box. (My stills at fixed poses looked like a full view
+because the frozen picture filled each eye's straight-ahead view.) New key `reject_camera_aspect: 1.0` (keeps the
+full-screen passes' square matrix out instead). Now the pose follows the head (`L904(-30.0)`) in both Gaia states;
+title, menu, gameplay and pause classified as before. **Frame rate with real tracking: 33-35 FPS** stereo at 300% /
+90 Hz (the 52-55 above was measured while the camera was rejected; culling widening off: 34.9). Open: a hard-edged sky
+patch at yaw +30 in `gaia2`; HUD emblem missing at some poses; frame rate.
 
 Notes: `profiles/BCUS98111-notes.md`. **2026-10-15 (overnight): from a white screen to a clean stereo picture.** New
 profile from the generator plus hand fixes: `camera_blocks [256, 260]` (the colour pass draws with depth test EQUAL
