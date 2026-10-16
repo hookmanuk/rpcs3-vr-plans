@@ -1322,6 +1322,8 @@ Calm (short extras) not tried.
    **Open, Matt (2026-10-16):** *"if you walk forward in the jungle you'll see water in front of you. Reflections in the
    water are broken, turning your head changes the reflections incorrectly."* (State `BCUS98103_1_2`, walk forward to
    the water.) Not investigated yet.
+   **Open, Matt (2026-10-16):** *"I've made a new save state for uncharted where the framerate is in the 30s. We need to
+   get this to at least 45."* (State `BCUS98103_1_3`, saved 21:15.) Not investigated yet.
    Candidates: the sun shadow mask's depth remap (`fc15ec0752d20290`) built from one frame's eye transform while the
    depth / scene it reads were drawn with another (frame generation, or the remap matrix taken from the previous scene
    draw), feedback textures shifted by the head rotation since their frame (`vr_shift_texture_params`), or the
