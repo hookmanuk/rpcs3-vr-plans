@@ -1315,6 +1315,13 @@ Calm (short extras) not tried.
    `evidence/uncharted/rock-depth-before-2026-10-16.png` (red = wrong depth) and `-after-`. Released games on
    `baseline_per_w` rechecked: Tales of Xillia 120.0 FPS, Dragon Age: Origins castle 119.8 / forest 120.0, disparity
    unchanged against their 10-09 shots. Headset check: the slab behind Nathan.
+   Head Aim Speed: Matt (2026-10-16) *"When its at 150% nathan turns 50% faster, but the head movement isn't 50% faster,
+   so the reticule shifts off center. It should also turn the camera faster too."* **Fixed (fork `e6abe5b35`, head-aim
+   branch only; openxr has no head aim):** the view held still against all of the camera's turn; now against 1 / speed of
+   it, so the view turns with the camera by the rest and the aim stays where the head looks. Matt: *"much better."*
+   **Open, Matt (2026-10-16):** *"if you walk forward in the jungle you'll see water in front of you. Reflections in the
+   water are broken, turning your head changes the reflections incorrectly."* (State `BCUS98103_1_2`, walk forward to
+   the water.) Not investigated yet.
    Candidates: the sun shadow mask's depth remap (`fc15ec0752d20290`) built from one frame's eye transform while the
    depth / scene it reads were drawn with another (frame generation, or the remap matrix taken from the previous scene
    draw), feedback textures shifted by the head rotation since their frame (`vr_shift_texture_params`), or the
