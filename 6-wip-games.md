@@ -1185,6 +1185,12 @@ Calm (short extras) not tried.
    savestate's camera, looking ahead); the canopy view is far heavier. Measure jungle frame rate at several camera
    pitches (right stick up / level), not one view.
 2. *"the boat is still in the 40s."*
+   2026-10-16 (simulator, `vrtest_uncharted_boat`, uncapped Vblank 180, 300%): 52-59 FPS with the VR culling, RSX thread
+   17 ms; culling words fixed at 1.0 (the game's own view): **88-89 FPS**, RSX 11 ms. Split: y widening alone 65,
+   x alone 77, both 57-59; the shadow-fit words cost nothing; head-driven = fixed at the same values (within noise);
+   camera block cache no gain. Straight ahead the headset needs x 1.97, y 3.6 (57 degrees vertical against the game's
+   23). So the boat's cost is the extra scenery the wider frustum lets through (more draws for the whole pipeline),
+   not VR overhead. Options not tried yet: a far-plane / LOD reduction while widened, or a smaller vertical margin.
 3. *"in the jungle it keeps crashing, look at the logs."* Log (two crashes, 2:59 and 8:51): the game's SPU job memory
    runs out, `SpuJobMemory::AllocateSingleBufferedMemory(1936, 16): Failed to allocate.` with `m_buffer = 30300000,
    m_size = 2097152` (a fixed 2 MB buffer), then a SPURS job stops on its assert (`stopd` at SPU 0x7620, "Unknown STOP
