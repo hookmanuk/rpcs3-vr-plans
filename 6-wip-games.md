@@ -891,6 +891,16 @@ camera frames); (b) "BATCHJOB: AddJob: waiting for room in job list 3" hundreds 
 run), and in one run (key script went another way, probably a movie) the game froze with cellVdec "waiting for a
 consumer": a frozen game shows the last frame as a box with black around it when the head turns, which matches his
 description. Next: ask Matt for a savestate where it happens, or whether it still happens on this build.
+Matt (2026-10-16 night): *"God of war 3 renders in a box, just rotate your head and you should see it."* Still not
+reproduced (simulator, 2026-10-16: savestates, fresh boot + Load, a plain `rpcs3.exe` launch without the dev launcher,
+MeganeX-shaped eyes, MLAA on and off, pause / tutorial / weapon menus and back): gameplay always fills the headset view.
+The box he describes (world-fixed with HUD Fixed In Front on, head-locked with it off) is the fixed screen. **Fix
+attempted (fork `6ea34c51b`, openxr `b0d0432a2`):** the profile's movie marker is a generic full-screen copy program
+(`a17105d6566d129d` + 1280x720), which would put any gameplay frame that uses it on the fixed screen; it is now
+`"without_camera": true` (counts only in frames without camera draws, judged over the whole frame). The switch log now
+gives counts: "VR: frames without camera draws: shown as the fixed screen (camera draws N, screen-frame draws M)" and
+"screen_frame_draws entry i (...) drawn after N camera draws". If it still happens: his RPCS3.log after seeing the box
+tells which path it is.
 
 Notes: `profiles/BCUS98111-notes.md`. **2026-10-15 (overnight): from a white screen to a clean stereo picture.** New
 profile from the generator plus hand fixes: `camera_blocks [256, 260]` (the colour pass draws with depth test EQUAL
@@ -1206,6 +1216,18 @@ Calm (short extras) not tried.
    SteamVR Motion Smoothing makes fine high-contrast patterns (dappled sun patches) swim while the head moves and settle
    when it stops. The simulator doesn't reproject. To check with Matt: the same spot with Motion Smoothing off in
    SteamVR, and / or VR Frame Rate at the headset rate.
+   Matt (2026-10-16 night): *"No, uncharted shadows are not due to reprojection. It happens at any frame rate and all
+   steamVR smoothing is off. Just turn your head and you will see smears of shadows."* **Fixed 2026-10-16 (simulator;
+   fork `ccb7749f4`, openxr `437856509`):** the sun's shadow cascades are fitted to the camera frustum (slice-corner
+   builder `0x14fc60` reads camera `+0x1d4` / `+0x1d0`), which the head-driven Wider view widened every frame of a head
+   movement: shadow-map dumps at culling scale 1 and 6 show completely different cascade footprints (shadows also
+   visibly softer at 6), so the cascades were refitted every frame while turning. New patch *VR: Shadows fit the
+   game's own view*: the builder uses the game's own projection widened by separate words `0x7cdd88` / `0x7cdd8c`
+   (shadow maps at culling 1 vs 6 now identical, mean difference 0.0008), which the profile moves in steps of 1.0 with
+   a new `hold_s` 1.0 (they only fall after the head has been still 1 s): 2 changes in 9 s of +-15 degree sweeps
+   (culling words: 236). Culling words: continuous plus new `lead_s` 0.1 (margin grows with head turn speed, so the
+   culling, a frame or two behind the head, keeps the leading edge). Jungle still head 69.8 FPS (71 before). Headset
+   recheck: turn the head in the jungle and watch the sun patches.
    Candidates: the sun shadow mask's depth remap (`fc15ec0752d20290`) built from one frame's eye transform while the
    depth / scene it reads were drawn with another (frame generation, or the remap matrix taken from the previous scene
    draw), feedback textures shifted by the head rotation since their frame (`vr_shift_texture_params`), or the
