@@ -1305,6 +1305,16 @@ Calm (short extras) not tried.
    is the visible frustum itself: the cascade is a bounding sphere of the widened slice and the game only draws casters
    its (equally widened) culling keeps, so the strip is exactly the headset view. Headset check: the jungle sun patches
    at Shadow Coverage 100 %, head turning.
+   Matt (2026-10-16 evening): *"ok shadows are fixed! great! Weirdly though this one rock directly behind Nathan has
+   the wrong depth, its way too far forward for where it sits"* (the flat stacked slab behind Nathan / Sully in the
+   jungle, `BCUS98103_1_2`). **Fixed (fork `0957c4d57`, openxr `240002070`; simulator):** both eyes' colour and depth
+   dumped, disparity fitted against depth: the slab sat 6.4 px nearer than its depth, everything else within 1 px.
+   Uncharted draws each object with its own matrix and some carry a scale (0.6 to 3.6, 20 % of draws, some uneven);
+   the profile's `eye_offset: "baseline"` scaled each object's eye offset by it. Now `baseline_per_w`, whose offset
+   comes from the projection's own x scale: every patch within 0.6 px. Evidence
+   `evidence/uncharted/rock-depth-before-2026-10-16.png` (red = wrong depth) and `-after-`. Released games on
+   `baseline_per_w` rechecked: Tales of Xillia 120.0 FPS, Dragon Age: Origins castle 119.8 / forest 120.0, disparity
+   unchanged against their 10-09 shots. Headset check: the slab behind Nathan.
    Candidates: the sun shadow mask's depth remap (`fc15ec0752d20290`) built from one frame's eye transform while the
    depth / scene it reads were drawn with another (frame generation, or the remap matrix taken from the previous scene
    draw), feedback textures shifted by the head rotation since their frame (`vr_shift_texture_params`), or the

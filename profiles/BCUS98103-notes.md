@@ -306,3 +306,18 @@ a bounding sphere of the widened slice (bigger than the slice), and the game dra
 (the Wider view words, the same 3 / 5.53) keeps. Not a bug. Dump decode: the two 2432x1216 targets are 7296x7296
 D16/D32F raw (4 bytes a texel in the dump), each a pair of 1216-wide cascades side by side; the `RTDUMP` request file
 is `%TEMP%\rpcs3-vrprofile\RTDUMP` (set by `launch.ps1`), one hex address a line.
+
+## The rock at the wrong depth (2026-10-16 evening, fork `0957c4d57`)
+
+Matt: the stacked flat slab behind Nathan (jungle, `BCUS98103_1_2`) stood far too far forward. Simulator shots at the
+default pose, five head angles and five head positions all looked consistent at shot resolution (1 px = 3 headset px),
+so the check that found it: dump both eyes' scene colour `c16d0000` and depth `c0f50000` (RTDUMP now writes the right
+eye's multiview layer), block-match patches and fit disparity = a + b x depth (linear for parallel eyes and a
+perspective depth buffer). The slab: +6.4 px off the line, the rest within 1 px (`scratchpad dispfit.py`, kept in the
+evidence images).
+
+Cause: c[0..3] is a per-object projection x view x model matrix. w-row length 1.0 for 2029 of 2557 depth-tested draws,
+the rest 0.6 to 3.6 (scaled instances), 185 of them unevenly (x/w not the camera's 0.662). `eye_offset: "baseline"`
+moved the eye by half the baseline times the x row's length, i.e. times the object's scale. Profile now
+`baseline_per_w`, and the probe's per-w offset takes the projection's x scale cached from the last rigid block instead of
+the draw's x/w ratio (which an uneven scale breaks). Generator updated to choose `baseline_per_w` for this pattern.
