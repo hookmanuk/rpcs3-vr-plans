@@ -1258,6 +1258,12 @@ Calm (short extras) not tried.
    faster"*. Measured: the camera already takes the whole head turn in one frame (~35 ms after the probe sends it).
    Added a home-menu slider *Head Aim Speed* (50-500 %, scales the gain; 200 % on the simulator: 20 degrees of head
    gives 40 of aim). Matt to pick a value.
+   Matt (2026-10-16, state `BCUS98103_1_1`): *"the video from the cutscene is too fast when locked at 45fps, the audio
+   is correct speed and lags behind the video."* **Fixed (fork `4c55768a9`):** the game shows each video frame for two
+   vblanks, so at the 90 Hz vblank the video ran 1.5x. Profile `video_vblank_rate: 60` (vblank 60 while the video
+   decoder is open): on the simulator the decoder opens at the cutscene and closes when the jungle gameplay starts
+   (the boat cutscene runs into the next chapter's intro, ~4 min), then back to 45 FPS. No game state word matched the
+   cutscene (searched). Headset check: audio in sync.
    Candidates: the sun shadow mask's depth remap (`fc15ec0752d20290`) built from one frame's eye transform while the
    depth / scene it reads were drawn with another (frame generation, or the remap matrix taken from the previous scene
    draw), feedback textures shifted by the head rotation since their frame (`vr_shift_texture_params`), or the
