@@ -908,9 +908,10 @@ raises both of the camera's tangent floors (x 1.2, y 2.0), so the camera's proje
 showed a flat picture with its edges and black beyond: his box. (My stills at fixed poses looked like a full view
 because the frozen picture filled each eye's straight-ahead view.) New key `reject_camera_aspect: 1.0` (keeps the
 full-screen passes' square matrix out instead). Now the pose follows the head (`L904(-30.0)`) in both Gaia states;
-title, menu, gameplay and pause classified as before. **Frame rate with real tracking: 33-35 FPS** stereo at 300% /
-90 Hz (the 52-55 above was measured while the camera was rejected; culling widening off: 34.9). Open: a hard-edged sky
-patch at yaw +30 in `gaia2`; HUD emblem missing at some poses; frame rate.
+title, menu, gameplay and pause classified as before. Frame rate with tracking: **50-52 FPS** in `gaia2` at Vblank 90
+(300%, RSX thread 16.5 ms; unchanged from before). Correction: the 33-35 FPS in the fork commit message and first note
+was his config's Vblank Rate 36 (limiter wait 9.5 ms/frame), not a cost of tracking. At yaw +-30 the outer edge shows
+the culling cap (50 / 48 degrees each way).
 
 Notes: `profiles/BCUS98111-notes.md`. **2026-10-15 (overnight): from a white screen to a clean stereo picture.** New
 profile from the generator plus hand fixes: `camera_blocks [256, 260]` (the colour pass draws with depth test EQUAL
