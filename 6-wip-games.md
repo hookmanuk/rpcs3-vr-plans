@@ -1287,6 +1287,24 @@ Calm (short extras) not tried.
    target rendered at the Resolution Scale x 2..4.5 by swapping the renderer's scaling config while it is bound):
    applied (log "boosted target ... 300% x 600%") but the GPU was lost within a second, at x2 as well; reverted, not
    committed. Next: a run with Vulkan validation to find the device-lost cause.
+   **Fixed 2026-10-16 evening (fork, head-aim branch; simulator):** the stripes were never a depth problem. Tested on
+   the same stick turn from fresh loads of `BCUS98103_1_2` (words fixed at 3.0 / 5.53, 90 frames each, frames matched by
+   content): a 2x shadow map (`boosted_targets`, device-lost fixed: `texture_cache_helpers.h` sized its gathers by the
+   renderer's global scale, now by the largest surface's), the map as D32F, a slope depth bias of 2 and 20 and a constant
+   bias of 3e5 all left the stripes (lit fill of the sun patches 0.57-0.61 vs 0.78 at fit 1); a constant bias of 3e6
+   just removed every shadow. Shadow-map dumps (`RPCS3_VR_RTDUMP`, raw D32F) showed clean geometry, so the cause had
+   to be the reader: the sun-shadow mask (`fc15ec0752d20290` / fragment `135614811b7e2009`) takes 4 shadow taps a fixed
+   texel distance apart (constant 19) around a per-pixel jitter `fract(wpos * c8)`. The fit enlarges a texel ~2.5x
+   (sqrt((3 tx)^2 + (5.53 ty)^2) / sqrt(tx^2 + ty^2) at 46.7 degrees, 16:9), so the taps spread 2.5x on the ground and
+   the jitter showed. Now `fragment_constant_overrides` can match the fragment program too (`"fragment"`) and divide a
+   constant by that fit growth from the live words (`"inverse_fit_words"`); with it and the 2x map (kept; 66 vs 66 FPS
+   uncapped without it) the patches are solid and crisper than the game's own fit (fill 0.84 vs 0.78; evidence
+   `evidence/uncharted/shadow-stripes-fixed-2026-10-16.png`, `-zoom-`). Shadow Coverage default is now 100 % (the fit
+   covers the whole headset view, so no bright bands at the edges). D32F and the depth bias were reverted (no effect).
+   The band seen in the fit-3 shadow-map dumps (casters only in a diagonal strip of each cascade, `shadow-map-fit3-`)
+   is the visible frustum itself: the cascade is a bounding sphere of the widened slice and the game only draws casters
+   its (equally widened) culling keeps, so the strip is exactly the headset view. Headset check: the jungle sun patches
+   at Shadow Coverage 100 %, head turning.
    Candidates: the sun shadow mask's depth remap (`fc15ec0752d20290`) built from one frame's eye transform while the
    depth / scene it reads were drawn with another (frame generation, or the remap matrix taken from the previous scene
    draw), feedback textures shifted by the head rotation since their frame (`vr_shift_texture_params`), or the

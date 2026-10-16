@@ -283,3 +283,26 @@ vanish or never land), and the aim class `0x4c7b9c` (FOV 75, `0x34c38700`) and t
 pitch +`0x124c`, which do drive the camera outside aim mode) don't drive the aim camera. The test that worked: write a
 20-degree-rotated copy of each candidate vector continuously for 0.8 s with PINE, and keep only the one that turns
 `0xe9fa04` by exactly 20 degrees and stays turned.
+
+## Shadow stripes with the wide fit, and a sharper shadow map (2026-10-16 evening)
+
+The grid / comb pattern in the sun patches whenever the shadow-fit words (`0x7cdd88` / `8c`) are above 1: not depth
+precision, not bias, not map resolution. Ruled out on the same stick turn from fresh loads of `BCUS98103_1_2`, words
+fixed at 3.0 / 5.53 (`turnab.sh`, frames matched by content): 2x shadow map, D32F map, slope depth bias 2 and 20,
+constant bias 3e5 (3e6 removed all shadows, so the bias did reach the hardware). Raw shadow-map dumps looked right.
+
+The reader: the sun-shadow mask pass (vertex `fc15ec0752d20290`, fragment `135614811b7e2009`, unit 1 = the
+2432x2432 shadow atlas, unit 3 = the 4-texel cascade scale/offset table). Its shader takes 4 `TEX2D_SHADOW` taps:
+base UV minus a jitter `fract(wpos.yx * fc8.x) * fc19.x`, then + 2x that offset in x / y. `fc19.x` is a tap spacing in
+shadow-map UV, so it is a fixed number of texels; over cascades the fit enlarged, a texel covers ~2.5x more ground
+(bounding-sphere radius ratio sqrt((3 tx)^2 + (5.53 ty)^2) / sqrt(tx^2 + ty^2), tx = tan(46.7/2) x 16/9) and the
+per-pixel jitter is visible as stripes. Fix in the profile: `fragment_constant_overrides` rule with `"fragment"` and
+`"inverse_fit_words"` (constant 19 divided by that ratio from the live words). The 2x map (`boosted_targets`) stays
+for crisper edges (frame rate unchanged, 66 vs 66 uncapped in the jungle state). Shadow Coverage default 100 %.
+
+Shadow-map dump at fit 3 / 5.53 vs 1 / 1 (`evidence/uncharted/shadow-map-fit3-2026-10-16.png`): casters sit in a
+diagonal strip of each cascade at fit 3 and fill the slice at fit 1. The strip is the headset frustum: the cascade is
+a bounding sphere of the widened slice (bigger than the slice), and the game draws only the casters its own culling
+(the Wider view words, the same 3 / 5.53) keeps. Not a bug. Dump decode: the two 2432x1216 targets are 7296x7296
+D16/D32F raw (4 bytes a texel in the dump), each a pair of 1216-wide cascades side by side; the `RTDUMP` request file
+is `%TEMP%\rpcs3-vrprofile\RTDUMP` (set by `launch.ps1`), one hex address a line.
