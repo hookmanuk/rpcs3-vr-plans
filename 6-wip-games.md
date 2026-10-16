@@ -1264,6 +1264,15 @@ Calm (short extras) not tried.
    decoder is open): on the simulator the decoder opens at the cutscene and closes when the jungle gameplay starts
    (the boat cutscene runs into the next chapter's intro, ~4 min), then back to 45 FPS. No game state word matched the
    cutscene (searched). Headset check: audio in sync.
+   Matt (2026-10-16, state `BCUS98103_1_2`): *"Shadows are better, but still not stable... if you rotate the stick left
+   and right you can see the shadows at the bottom right of the screen move and flicker"*; also during the game's own
+   camera moves; *"Shadows on the boat scene are crazy low res too, edges look terrible and jaggy."* Same cause: the
+   shadow map is a fixed size and the VR shadow fit stretches it over the headset view (x 3 / y 6 at that spot), so
+   texels are 3-6x larger. Shown in 2D, profile off, words by hand, same stick turn: fit 1.0 crisp and identical frame to
+   frame, 3/6 blocky and changing shape every frame. RPCS3 has one resolution scale for all targets, so no sharper
+   shadow map for now. **Fork `20911aba0`:** home-menu slider *Shadow Coverage* (default 50 %; 2/3 there, visibly cleaner
+   edges; 1.5/2 covers the view straight ahead, 1.0 leaves bright bands at the edges). Matt to pick a value. A real fix
+   (shadow map rendered at a higher resolution only) needs per-surface scaling in the surface cache.
    Candidates: the sun shadow mask's depth remap (`fc15ec0752d20290`) built from one frame's eye transform while the
    depth / scene it reads were drawn with another (frame generation, or the remap matrix taken from the previous scene
    draw), feedback textures shifted by the head rotation since their frame (`vr_shift_texture_params`), or the
