@@ -1273,6 +1273,20 @@ Calm (short extras) not tried.
    shadow map for now. **Fork `20911aba0`:** home-menu slider *Shadow Coverage* (default 50 %; 2/3 there, visibly cleaner
    edges; 1.5/2 covers the view straight ahead, 1.0 leaves bright bands at the edges). Matt to pick a value. A real fix
    (shadow map rendered at a higher resolution only) needs per-surface scaling in the surface cache.
+   Correction (2026-10-16 evening): the 2D "profile off, words by hand" runs quoted above had the profile's culling
+   rules still on, so the probe wrote 1.0 to the words every frame against the script's values: those comparisons are
+   void. Redone in VR (profile shadow rules off, words written once, `BCUS98103_1_2`, same stick turn, same frames):
+   the grid / crosshatch on the sun patches appears with any widened shadow words, including shadow words exactly
+   equal to the culling words (3.0 / 5.53), and never at 1 / 1. So it is not a mismatch between the shadow readers
+   (a second slice builder `0x1500d0` fed the shadow words changed nothing: tried and reverted). It is the shadow
+   comparison filter (a dithered pattern tuned for one shadow texel per pixel) showing the enlarged texels. Cascades:
+   two 2432x1216 depth maps = four 1216x1216 slices, bounding-sphere fit (scissor 1007x472 inside each slice), so a 3 /
+   5.5 widening grows texels ~2.5x, not 3-6x. Prince of Persia for comparison: four 1024x1024 maps, fit word 3.85
+   straight ahead, looks fine because its shadows are large and soft; Uncharted's are hard-edged dappled light.
+   Matt prefers Shadow Coverage 0 % (edges lose shadow). Proper fix tried: `boosted_targets` (the 2432x1216 depth-only
+   target rendered at the Resolution Scale x 2..4.5 by swapping the renderer's scaling config while it is bound):
+   applied (log "boosted target ... 300% x 600%") but the GPU was lost within a second, at x2 as well; reverted, not
+   committed. Next: a run with Vulkan validation to find the device-lost cause.
    Candidates: the sun shadow mask's depth remap (`fc15ec0752d20290`) built from one frame's eye transform while the
    depth / scene it reads were drawn with another (frame generation, or the remap matrix taken from the previous scene
    draw), feedback textures shifted by the head rotation since their frame (`vr_shift_texture_params`), or the
