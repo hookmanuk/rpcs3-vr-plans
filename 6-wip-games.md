@@ -1233,6 +1233,9 @@ and it kept the game camera. `nonrigid_camera_blocks: [8]` + `scaled_camera_bloc
 (2), (3): not reproduced in `1_0` (paused on the motorway; looking down 15 / 30 degrees the road reaches the bottom, no
 black lines). His shot is while driving past a roadside crash cushion, drawn black with a smear; needs a driving state
 at that spot. Frame rate: `zcull_all_visible` no gain here (73-75 either way, driving 1_0 uncapped at 440).
+Frame rate, free-roam drive at 440 uncapped: 61-62 FPS. Tried, no gain: the 640x640 target (591 draws, likely the
+shadow map) at 0.4 (59-60). RSX thread profile while driving is flat per-draw work (run_FIFO 7 %, emit_geometry 7 %,
+vertex copies 5 %): no single cost to cut.
 
 ## Uncharted: Drake's Fortune (BCUS98103, update 01.10)
 
