@@ -37,7 +37,7 @@ nothing to cut. The stereo RSX thread is ~1.5x flat's; the game draws ~3000 draw
 
 Generator (driving, vblank 240): `row_vectors` `c[8]` (97% of depth-tested scene draws), camera position `c[15]`,
 HUD `c[8]` with `hud_box_after_shader`, near plane 0.1 (metres, `eye_baseline` 0.064), scene rendered at 960x704
-(`camera_target_aspect` 1.3636), `baseline_per_w` (1845 scaled objects), max_fps 80. Added: `camera_block_cache`
+(`camera_target_aspect` 1.3636), `baseline_per_w` (1845 scaled objects), max_fps 80 (the generator's measured rate at vblank 240, RSX-bound; replaced 2026-10-17 at Matt's request by `max_fps` 0, `default_fps` 0 and `vblanks_per_frame` 2: Deltatime keeps real-time speed at any rate, and the game draws every 2nd vblank). Added: `camera_block_cache`
 (+~15 FPS), `culling_scale_f32` on the patch's two words (absolute tangents, fov_deg 90 / aspect 1, options
 horizontal_view / vertical_view). Candidates the generator logged and not yet looked at: depth-reading camera draws
 `6c4b44c41756c4b9`, `c7628bf0a6f97bc7`, `e22111c01de7af88`, `f399d5670e9e3129`, `f77f4dfeccd5eba2`; screen passes
