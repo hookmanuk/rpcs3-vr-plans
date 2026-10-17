@@ -1366,8 +1366,25 @@ everywhere the gfx are missing too."* Not investigated yet.
    drew: Sully, off the left eye's image at yaw +20, reflects in the right eye only). Headset check: walk to the river
    **Open again, Matt (2026-10-17, headset):** *"the river reflections are better but still wrong, moving my head up and
    down slightly massively changes whats reflected"* (`evidence/uncharted/water-reflection-head-up-matt-2026-10-17.png`,
-   `-head-down-`; repro: jungle state `BCUS98103_1_2`, walk forward to the river, tilt the head). Not investigated yet.
-   and turn the head.
+   `-head-down-`; repro: jungle state `BCUS98103_1_2`, walk forward to the river, tilt the head).
+   **Fixed 2026-10-17 (forks `8469c076b`, `c905a88ff`, `2b591ed79`; Matt, headset: "reflections are finally fixed!"):**
+   the pass projects (mirrored game camera + reflected view ray) into a mirror render of the scene (`c31e0000`, drawn
+   before it with the camera mirrored in the water) with rows made for a taller square camera. Fixed in turn: the
+   mirror was taken as part of the texture mapping (pitch turned the lookup the wrong way); the eye used the game's
+   v scale (0.5 x A / B) though each eye draws the source with its own camera (reflections slid faster than the head);
+   the 1 m point moved with the eyes' offset and the head's translation (`from_camera`, the shift not mirrored); both
+   eyes took the view vector from the game camera (`eye_position`: c52 per eye, reflections get their depth). Matt
+   (2026-10-17) on a new state `BCUS98103_2_10`: *"the distant fog is different when you look up and down ... the
+   far area with sun shafts is a lot lighter for no reason"*: the river turned flat light grey looking up. Not fog
+   (a per-eye fix of the lighting pass's height fog changed nothing measurable and was dropped): the river's water
+   program shared the 16-word fingerprint the fork caches shader control bits by with another program, took its bits
+   (no fragment rows) and kept the game's lookup, which looking up read the mirror render's empty part. Bits now
+   decided every time for profiles with fragment_camera_rows. Simulator pitch 0 / 30: river teal both. Matt also
+   noticed reflections can show grey where the mirrored geometry is not rendered (the mirror render's empty part):
+   expected to be gone with this; recheck.
+   **Fixed 2026-10-17 (fork `e67de068d`, Matt: "looks good"):** state `BCUS98103_1_9`, *"a lot of the scenery in the
+   middle of the screen judder and move over time"*: scaled scenery took last frame's projection while the culling
+   widening changed it every frame the head moved; profile `scaled_camera_blocks` solves it from each block.
    **Open, Matt (2026-10-16):** *"I've made a new save state for uncharted where the framerate is in the 30s. We need to
    get this to at least 45."* (State `BCUS98103_1_3`, saved 21:15; also `BCUS98103_1_4`, saved 21:22, Matt: "another
    performance issue one".) Not investigated yet.

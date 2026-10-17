@@ -348,3 +348,19 @@ which pass the orthogonality test. Fix: a rigid measurement is taken only if its
 frame's dominant projection's; others are only counted, and a frame with none at the dominant aspect makes the most
 counted off-aspect one dominant. After: 1 hole pixel at pose 0, 0 at yaw +-20 / +-40 / 90 / 180, pitch +-10 / +-15,
 roll 15 (`g17test.sh` in the session scratchpad: load, `simpose.py`, RTDUMP of the three targets, `holes2.py`).
+
+## Water reflections finished, judder, the grey river (2026-10-17 evening)
+
+- The reflection pass (vp `292d56e8bfecaf63`, fp `59c0ac681f999e51`) reads a mirror render `c31e0000` (the scene drawn
+  with the camera mirrored in the water, before the pass; RTDUMP `prog=292d56e8bfecaf63` dumps it as read: the
+  end-of-frame dump shows the target's later reuse, a downsampled scene plus 72 light-shaft quads). Its lookup point is
+  c65 (mirrored camera) + the reflected view ray (view vector from c52, the camera position); rows c69 / c73 / c72
+  carry the mirror. Profile: rows + `from_camera` + `eye_position: 52`. Offline lookup check tools: `rk2.py`, `rk4.py`
+  (session scratchpad), from FROWLOG rows and dumps.
+- The river in `2_10` uses the same vertex program; a fallback water fp `ac6c346ebb880b87` (no mirror read) draws too.
+  The beige river looking up was the water program missing RSX_SHADER_CONTROL_VR_FRAG_ROWS (fingerprint-cached
+  control bits, fork `2b591ed79`).
+- Scaled scenery judder (`1_9`): ~740 non-rigid camera draws a frame, error vs their own projection 0 still, up to
+  0.7 % in a gentle sway; `scaled_camera_blocks` (197 of 198 solved per frame).
+- Lighting pass `9fe5ec00ef1c6d6f` (vp `fc15ec0752d20290`): height fog from depth x (NDC x, NDC y, 1) and c13 (the
+  up vector in that space: (A c13.x, B c13.y, c13.z) is unit). A per-eye remap changed brightness by 0.1 / 47: dropped.
