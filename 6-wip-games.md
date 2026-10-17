@@ -871,8 +871,15 @@ Notes: `profiles/BLUS30300-notes.md`. Evidence: `evidence/splitsecond/`.
 ## God of War III (BCUS98111)
 
 **Open, Matt (2026-10-17, headset):** *"God of war 3 frame rate is terrible. Its too low in the first fight when you start
-the game, and also has really bad hitches causing 1% lows to be even worse."* (The first fight after a new game.) Not
-investigated yet.
+the game, and also has really bad hitches causing 1% lows to be even worse."* (The first fight after a new game.)
+**Hitches fixed 2026-10-17 (fork `35a2def44`, profile):** a ~100 ms frame every second in VR (none flat): the profile's
+`image_pool_mb: 12000` let the temporary image pool reach its 1,024-image count limit about once a second, then the
+trim halved it in one frame end (~500 images destroyed). Dropped from the profile. Simulator, `vrtest_gow3_gaia2`, scale
+500 (his), uncapped, head wander, two A/B pairs: seconds with a >60 ms frame 35/35 -> 2-3/35, median 1% low 9.7 ->
+20-21, average ~41 either way. Tried and reverted: a gradual trim keeping the pool (14-20 FPS: ~1,000 big images
+resident starve the GPU); `zcull_all_visible` (no gain: 40-40.4 vs 41.7-43.7). Remaining: ~40 FPS average while
+looking around at scale 500, below his Frame Rate 45. RSX thread profile: 16 % waiting on queued frames
+(advance_queued_frames, the GPU behind), 11 % creating temporary images for ~300 shadow-map copies a frame.
 
 **Matt's headset report (2026-10-15 afternoon), open, in his words:** *"God of War 3 is terrible. The menu screens are
 doubled and flicker, the game is in a slanted window not full screen which tilts with my head."* So in the headset:
