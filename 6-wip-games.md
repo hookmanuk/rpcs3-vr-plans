@@ -1345,7 +1345,7 @@ everywhere the gfx are missing too."* Not investigated yet.
    unchanged against their 10-09 shots. Headset check: the slab behind Nathan.
    Head Aim Speed: Matt (2026-10-16) *"When its at 150% nathan turns 50% faster, but the head movement isn't 50% faster,
    so the reticule shifts off center. It should also turn the camera faster too."* **Fixed (fork `e6abe5b35`, head-aim
-   branch only; openxr has no head aim):** the view held still against all of the camera's turn; now against 1 / speed of
+   branch; merged into openxr 2026-10-17):** the view held still against all of the camera's turn; now against 1 / speed of
    it, so the view turns with the camera by the rest and the aim stays where the head looks. Matt: *"much better."*
    **Open, Matt (2026-10-17):** *"when aiming can you isolate the aim reticule and push it deep into the scene, maybe
    10m?"* Not investigated yet.
