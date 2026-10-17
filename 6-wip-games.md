@@ -1358,6 +1358,9 @@ everywhere the gfx are missing too."* Not investigated yet.
    their clip-to-texture mapping). After: no sheen, reflections of Sully, the flowers and Nathan in place at yaw -20 / 0
    / +20, the same in both eyes where both see the reflected object (screen-space reflections only show what that eye
    drew: Sully, off the left eye's image at yaw +20, reflects in the right eye only). Headset check: walk to the river
+   **Open again, Matt (2026-10-17, headset):** *"the river reflections are better but still wrong, moving my head up and
+   down slightly massively changes whats reflected"* (`evidence/uncharted/water-reflection-head-up-matt-2026-10-17.png`,
+   `-head-down-`; state `BCUS98103_1_6` or `_1_7`, saved 13:50 / 13:51). Not investigated yet.
    and turn the head.
    **Open, Matt (2026-10-16):** *"I've made a new save state for uncharted where the framerate is in the 30s. We need to
    get this to at least 45."* (State `BCUS98103_1_3`, saved 21:15; also `BCUS98103_1_4`, saved 21:22, Matt: "another
@@ -1385,6 +1388,9 @@ everywhere the gfx are missing too."* Not investigated yet.
    the clear-value pixels `grey-holes-normal-buffer-2026-10-17.png`). Rock-depth fit unchanged (0 outliers). Matt:
    "Don't move the camera" and his settings (Vertical / Horizontal View 60 / 80, scale 460) were the reproduction
    advice; the holes reproduce at any settings. Headset check: the state, no movement, then walking around.
+   **Open again, Matt (2026-10-17, headset):** *"the specific grey objects have been fixed, but others still exist. I took
+   a new snapshot showing them in the same room"* (`evidence/uncharted/grey-holes-remaining-matt-2026-10-17.png`: white /
+   grey edges and bars on the scaffolding in the dark hall; state `BCUS98103_1_6` or `_1_7`). Not investigated yet.
    Candidates: the sun shadow mask's depth remap (`fc15ec0752d20290`) built from one frame's eye transform while the
    depth / scene it reads were drawn with another (frame generation, or the remap matrix taken from the previous scene
    draw), feedback textures shifted by the head rotation since their frame (`vr_shift_texture_params`), or the
