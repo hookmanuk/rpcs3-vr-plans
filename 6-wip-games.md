@@ -880,6 +880,10 @@ trim halved it in one frame end (~500 images destroyed). Dropped from the profil
 resident starve the GPU); `zcull_all_visible` (no gain: 40-40.4 vs 41.7-43.7). Remaining: ~40 FPS average while
 looking around at scale 500, below his Frame Rate 45. RSX thread profile: 16 % waiting on queued frames
 (advance_queued_frames, the GPU behind), 11 % creating temporary images for ~300 shadow-map copies a frame.
+**Frame rate (fork `2df1474b5`, profile `boosted_targets` 1408x1408 depth-only at 0.4):** the shadow map rendered at the
+Resolution Scale (7040x7040 at 500 %) with its ~300 part-copies; at 0.4 (100 % x 200 %): uncapped head wander, two A/B
+pairs, average 41 -> 52-53, slowest second 35 -> 42-45, median 1% low 20 -> 28. At his Frame Rate 45: average 43.6,
+slowest second 41.5, worst 1% low 23, 5 % late. Shadows alike in matched shots; headset check pending.
 
 **Matt's headset report (2026-10-15 afternoon), open, in his words:** *"God of War 3 is terrible. The menu screens are
 doubled and flicker, the game is in a slanted window not full screen which tilts with my head."* So in the headset:
