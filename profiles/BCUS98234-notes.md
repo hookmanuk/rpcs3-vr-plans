@@ -39,10 +39,11 @@ first, draws 0-10).
   dark vignette, drawn in the game's view only; in the headset it was a red-framed box in the middle of the view.
   Hidden by default (`hidden_draws`). Flat, it also darkens the whole picture, so the headset view is brighter.
   Only the opening mission has it (to check in later missions).
-- **The gun may follow the head**: in pose shots it stays at a similar place while the world moves, but the game's
-  idle sway makes the shots not comparable. Measure from a frozen frame (both eyes' dumps at two poses).
-- 15 scene draws rejected by `require_camera_aspect` (scaled objects of `da77b819` / `d7fbe4bc` with B/A 0.2-2.9):
-  they stay on the game camera, so they may slide with the head.
+- ~~The gun may follow the head~~: no. Depth dumps of the scene target one second apart at yaw 0 and +20: the gun
+  and the soldier ahead both shift ~240 px; the gun stays in the world (`evidence/killzone3/gun-depth-yaw0-yaw20-2026-10-17.png`).
+- 15 scene draws rejected by `require_camera_aspect` (scaled objects of `da77b819` / `d7fbe4bc` with B/A 0.2-2.9)
+  stay on the game camera. Without `require_camera_aspect` a long dark rod shoots across the view from the gun (the
+  stray camera-block data the generator reported), so it stays; check the rejected objects for sliding.
 - The orange helmet HUD markings: check they stay in place.
 - A normal mission (no helmet) as a second test scene; menus, cutscenes; generator-listed depth-reading passes
   (`2ebaa6edf0af1fbe`, `33817714ee3afbca`, `57673392487219d3`, `7c189ac31f3a74b9`, `cbfd222185dfe6fc`,
