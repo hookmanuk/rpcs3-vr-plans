@@ -1385,6 +1385,14 @@ everywhere the gfx are missing too."* Not investigated yet.
    river fix alone: "its all identical" (that build lacked the fog rule). Matt also
    noticed reflections can show grey where the mirrored geometry is not rendered (the mirror render's empty part):
    expected to be gone with this; recheck.
+   **Open, Matt (2026-10-17, headset):** *"Grey flickering of tree leaves still happening, I made a new game state for
+   it"* (state `BCUS98103_2_11`; his shots: flat grey-lavender leaf clusters near the top of the view, left top,
+   centre top, centre left top; *"It's quite rare, maybe you'll need 5-10 secs to see it"*, *"10 seconds of every
+   frame"*). Not reproduced on the simulator (scale 400, Frame Rate 45): a per-frame read-back of both eyes' normal
+   and depth buffers (dev RPCS3_VR_HOLEWATCH, not committed: `edit_holewatch.py`) counted at most 8 clear-value pixels
+   in 1155 frames of head wander (yaw 15, pitch 8, roll 4, 4 cm) and 1457 frames of sway. Ruled out there: pose
+   updates splitting a frame (all at flips, full frames), projection pin-table misses (0), shadow coverage capped to
+   the game's (no grey leaves). Matt is checking further.
    **Fixed 2026-10-17 (fork `e67de068d`, Matt: "looks good"):** state `BCUS98103_1_9`, *"a lot of the scenery in the
    middle of the screen judder and move over time"*: scaled scenery took last frame's projection while the culling
    widening changed it every frame the head moved; profile `scaled_camera_blocks` solves it from each block.
