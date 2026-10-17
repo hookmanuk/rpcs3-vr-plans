@@ -1392,7 +1392,16 @@ everywhere the gfx are missing too."* Not investigated yet.
    and depth buffers (dev RPCS3_VR_HOLEWATCH, not committed: `edit_holewatch.py`) counted at most 8 clear-value pixels
    in 1155 frames of head wander (yaw 15, pitch 8, roll 4, 4 cm) and 1457 frames of sway. Ruled out there: pose
    updates splitting a frame (all at flips, full frames), projection pin-table misses (0), shadow coverage capped to
-   the game's (no grey leaves). Matt is checking further.
+   the game's (no grey leaves). Matt (more detail): *"both eyes, head still and moving, always in the tree tops,
+   single frame"*. His crop: a flat grey-brown silhouette where sky should show between leaves (sky missing for one
+   frame, not a normal-buffer hole). A per-frame scene-colour watcher (top 45 %, one-frame jumps, dumps) over 70 s on the
+   simulator caught only leaf motion. Next idea: occlusion queries (Disable ZCull Occlusion Queries is off; the profile
+   has late readbacks).
+   **Open, Matt (2026-10-17):** *"I also found another bug, made a new save state, if you rotate the right stick the
+   rock in front warps and disappears!"* (state `BCUS98103_2_12`; his shots show Nate crouched by rocks, the second
+   with a rock gone and sky in the gap). Loaded on the simulator the state opens with Sully walking up to the camera
+   and Nate standing; turning the camera with the right stick there showed no warp, VR or game view, scaled_camera_blocks
+   on or off.
    **Fixed 2026-10-17 (fork `e67de068d`, Matt: "looks good"):** state `BCUS98103_1_9`, *"a lot of the scenery in the
    middle of the screen judder and move over time"*: scaled scenery took last frame's projection while the culling
    widening changed it every frame the head moved; profile `scaled_camera_blocks` solves it from each block.
