@@ -321,3 +321,16 @@ the rest 0.6 to 3.6 (scaled instances), 185 of them unevenly (x/w not the camera
 moved the eye by half the baseline times the x row's length, i.e. times the object's scale. Profile now
 `baseline_per_w`, and the probe's per-w offset takes the projection's x scale cached from the last rigid block instead of
 the draw's x/w ratio (which an uneven scale breaks). Generator updated to choose `baseline_per_w` for this pattern.
+
+## Water reflections (2026-10-17, fork `aad83d8ec`)
+
+Matt: reflections in the jungle river change wrongly with head turns. At yaw +20 the left eye's water had a bright grey
+sheen the right eye lacked (water brightness L/R 1.41-1.70 in `c16d0000` dumps). Shadow fit, the water's forward pass
+(`c9bf672b...`, cube-map reflection from c[20]) and the camera-position slot all left it; hiding vertex program
+`292d56e8bfecaf63` (fragment `59c0ac681f999e51`, blended into `c16d0000`, samples ripple normal maps 0-3, `c31e0000` at
+unit 12, `c07d0000` and `c16d0000`) made both eyes equal. Its shader: the reflected point r4 projected with fragment
+constants 69 (u w), 73 (v w), 72 (w) and `TEX2D(12, (u, v))` into the half-resolution scene, a screen-space reflection
+with the game's camera matrix. `c31e0000` cannot go to the game camera (the half-res scene also feeds the composite and
+the bloom chain), so the rows are remapped per eye (`fragment_camera_rows`): the game's rows were not exactly S x the
+draw's camera block (translation off, likely another frame's or the half-res camera), so the eye transform T, d is taken
+from the camera block and applied as S T S^-1 F + S d.

@@ -1321,7 +1321,16 @@ Calm (short extras) not tried.
    it, so the view turns with the camera by the rest and the aim stays where the head looks. Matt: *"much better."*
    **Open, Matt (2026-10-16):** *"if you walk forward in the jungle you'll see water in front of you. Reflections in the
    water are broken, turning your head changes the reflections incorrectly."* (State `BCUS98103_1_2`, walk forward to
-   the water.) Not investigated yet.
+   the water.)
+   **Fixed 2026-10-17 (fork `aad83d8ec`, openxr `ae9340f02`; simulator):** the reflection pass (`292d56e8bfecaf63` /
+   `59c0ac681f999e51`, blended into the scene; hiding it made the eyes' water equal: brightness ratio 1.41 -> 1.01)
+   projects the reflected ray into the half-resolution scene `c31e0000` with a matrix in fragment constants 69 / 73 / 72
+   made with the game's camera, while VR draws `c31e0000` per eye: lookups in the wrong place, a bright grey sheen in one
+   eye at yaw +20. New profile key `fragment_camera_rows` remaps those rows per eye (the eye transform applied through
+   their clip-to-texture mapping). After: no sheen, reflections of Sully, the flowers and Nathan in place at yaw -20 / 0
+   / +20, the same in both eyes where both see the reflected object (screen-space reflections only show what that eye
+   drew: Sully, off the left eye's image at yaw +20, reflects in the right eye only). Headset check: walk to the river
+   and turn the head.
    **Open, Matt (2026-10-16):** *"I've made a new save state for uncharted where the framerate is in the 30s. We need to
    get this to at least 45."* (State `BCUS98103_1_3`, saved 21:15; also `BCUS98103_1_4`, saved 21:22, Matt: "another
    performance issue one".) Not investigated yet.
