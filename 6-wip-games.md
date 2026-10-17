@@ -1375,11 +1375,14 @@ everywhere the gfx are missing too."* Not investigated yet.
    the 1 m point moved with the eyes' offset and the head's translation (`from_camera`, the shift not mirrored); both
    eyes took the view vector from the game camera (`eye_position`: c52 per eye, reflections get their depth). Matt
    (2026-10-17) on a new state `BCUS98103_2_10`: *"the distant fog is different when you look up and down ... the
-   far area with sun shafts is a lot lighter for no reason"*: the river turned flat light grey looking up. Not fog
-   (a per-eye fix of the lighting pass's height fog changed nothing measurable and was dropped): the river's water
-   program shared the 16-word fingerprint the fork caches shader control bits by with another program, took its bits
-   (no fragment rows) and kept the game's lookup, which looking up read the mirror render's empty part. Bits now
-   decided every time for profiles with fragment_camera_rows. Simulator pitch 0 / 30: river teal both. Matt also
+   far area with sun shafts is a lot lighter for no reason"*. Two faults. The river turned flat light grey looking up:
+   its water program shared the 16-word fingerprint the fork caches shader control bits by with another program, took
+   its bits (no fragment rows) and kept the game's lookup, which looking up read the mirror render's empty part (fork
+   `2b591ed79`, bits decided every time for profiles with fragment_camera_rows). The far haze: the lighting pass's
+   height fog (fp `9fe5ec00ef1c6d6f`, c5 / c13) used game NDC rays and the game's up vector for the eye's pixels; per
+   eye now (fork `3030335b5`, rule form `ray` / `view_vector`). Far haze mean, pitch 0 / 30 / 45 / 60: 42.3 / 45.1 /
+   48.2 / 48.2 before, 43.8 / 44.5 / 45.0 / 44.7 after; the river teal at both pitches. Matt (2026-10-17) after the
+   river fix alone: "its all identical" (that build lacked the fog rule). Matt also
    noticed reflections can show grey where the mirrored geometry is not rendered (the mirror render's empty part):
    expected to be gone with this; recheck.
    **Fixed 2026-10-17 (fork `e67de068d`, Matt: "looks good"):** state `BCUS98103_1_9`, *"a lot of the scenery in the

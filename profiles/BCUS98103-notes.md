@@ -363,4 +363,7 @@ roll 15 (`g17test.sh` in the session scratchpad: load, `simpose.py`, RTDUMP of t
 - Scaled scenery judder (`1_9`): ~740 non-rigid camera draws a frame, error vs their own projection 0 still, up to
   0.7 % in a gentle sway; `scaled_camera_blocks` (197 of 198 solved per frame).
 - Lighting pass `9fe5ec00ef1c6d6f` (vp `fc15ec0752d20290`): height fog from depth x (NDC x, NDC y, 1) and c13 (the
-  up vector in that space: (A c13.x, B c13.y, c13.z) is unit). A per-eye remap changed brightness by 0.1 / 47: dropped.
+  up vector in that space: (A c13.x, B c13.y, c13.z) is unit). Per eye (rule `ray: 5, view_vector: 13`, fork
+  `3030335b5`): the far haze no longer brightens looking up. A first test showed no change only because the pass's
+  shader lacked the control bit (the fingerprint fault above); measure the far region aligned across pitches
+  (`farcmp2.py`), not whole-image means.
