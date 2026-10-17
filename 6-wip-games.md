@@ -588,6 +588,15 @@ Notes: `profiles/BCUS98116-notes.md`. Evidence: `evidence/killzone2/`. Fork d12f
   90; RSX thread 15.5 ms/frame, so still RSX-bound below 72.
 - **Files:** `vr-non-working/vr_profiles/BCUS98116.json` (moved out of `bin/` for vr7), untracked copy in `bin/`.
 
+## Killzone 3 (BCUS98234, disc 01.00)
+
+**Started 2026-10-17; frame rate passes.** Flat 120.0 FPS at vblank 240 (RSX 8.2 ms); stereo on the simulator, 300%,
+DLSS off: **113 FPS** walking (1% low 64). Community *Disable MLAA* patch on. Generated profile (`c[0]`, linked
+`c[25]`, HUD `c[8]`, metres). The opening mission's Helghast helmet visor (a screen-space refraction box in the
+middle of the headset view) is hidden in VR. Open: whether the first-person gun follows the head (it has its own
+camera at the origin), 15 scaled draws on the game camera, the helmet HUD markings, a normal mission. Notes:
+`profiles/BCUS98234-notes.md`, savestate `bin/savestates/BCUS98234/kz3_helghan_base`.
+
 ## Gran Turismo 5 (BCUS98114, XL Edition, US; disc 01.00 since 2026-10-03, was v02.11)
 
 **VR 45 game speed (Matt, headset, 2026-10-13: "GT5 doesnt work at 45fps", slow motion, audio stutter; then with a 90 Hz vblank "now it runs too quickly. Compare it to a run at 60fps"): fixed 2026-10-14 (fork 5e10624bf, profile `vblank_steps`), Matt to check in the headset.** GT5 steps its race once per vblank: the physics by the frame-time word, plus a race tick of a fixed 1/60 s (`0x28fd18`: tick count x 1/60). The new key keeps a 60 Hz vblank below 60 FPS (the limiter holds 45), writes 1/60 to the frame-time words and skips the measured-rate fallback. Measured on the simulator with memory dumps of `gt5_busy_race_2_17` (object speeds per wall second against a 60 FPS run; a 60-vs-60 control agrees at 1.00 for ~5,500 objects): 45 now 1.00x (5,197 of 6,263 objects, tick clock 1.00); before 0.75x at a 45 Hz vblank and 1.5-2x at a 90 Hz vblank. Frame generation (90 -> 45) unchanged: a generated pair on 225 of 451 headset frames, none repeated. Audio not checked (Null audio).
