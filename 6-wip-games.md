@@ -1396,12 +1396,15 @@ everywhere the gfx are missing too."* Not investigated yet.
    advice; the holes reproduce at any settings. Headset check: the state, no movement, then walking around.
    **Open again, Matt (2026-10-17, headset):** *"the specific grey objects have been fixed, but others still exist. I took
    a new snapshot showing them in the same room"* (`evidence/uncharted/grey-holes-remaining-matt-2026-10-17.png`: white /
-   grey edges and bars on the scaffolding in the dark hall; state `BCUS98103_1_7`, saved 13:51). Not investigated yet.
-   Candidates: the sun shadow mask's depth remap (`fc15ec0752d20290`) built from one frame's eye transform while the
-   depth / scene it reads were drawn with another (frame generation, or the remap matrix taken from the previous scene
-   draw), feedback textures shifted by the head rotation since their frame (`vr_shift_texture_params`), or the
-   late-readback path. Reproduce with `simpose.py` stepping the yaw every frame (a continuous sweep) and capture
-   mid-sweep, comparing against a still at the same pose.
+   grey edges and bars on the scaffolding in the dark hall; state `BCUS98103_1_7`, saved 13:51).
+   **Fixed 2026-10-17 (fork `891ec5536`, openxr; simulator; regression not run, Matt checks):** the scaffolding beams are
+   blocks stretched along view axes that pass the rigid test, so their scales were taken as the projection (A 0.27, B
+   0.60 or 0.64); each beam's depth pass and EQUAL normal pass then got different projections depending on the draw
+   before, and whole beams kept the normal buffer's clear value. A per-draw transform log showed 30 groups of identical
+   input matrices with different outputs (only A, B and the clip rows differing). Now a measurement whose aspect (B / A)
+   is more than 1 % off last frame's dominant projection is only counted (and moves the dominant if a whole frame has
+   none at it). Hole pixels (normal at clear value over geometry, both eyes, no movement): 50523 -> 1 at pose 0 and 0
+   at yaw -20 / +20 / -40 / +40 / 90 / 180, pitch -10 / +10 / -15 / +15, roll 15.
 
 Triaged 2026-09-30 with no profile made. Native 30. The flat ceiling at vblank 180 on the boat is only
 42-46, with every SPU thread at 100%, so it is SPU/PPU-bound and 90 is not reachable. Evidence:

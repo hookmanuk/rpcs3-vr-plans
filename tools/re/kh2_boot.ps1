@@ -7,7 +7,7 @@ $w = "$env:TEMP\rpcs3-vrprofile"
 $log = 'F:\rpsc3\source\rpcs3\bin\log\RPCS3.log'
 $grep = 'C:\Program Files\Git\usr\bin\grep.exe'
 function K($s, $t) { Set-Content "$w\KEYS.tmp" $s -NoNewline; Move-Item -Force "$w\KEYS.tmp" "$w\KEYS"; Start-Sleep $t }
-if ($Headset) { $env:XR_RUNTIME_JSON = 'F:\rpsc3\source\OpenXR-Simulator\bin\openxr_simulator.json' }
+if ($Headset) { $env:XR_RUNTIME_JSON = 'F:\rpsc3\source\OpenXR-Simulator\bin\openxr_simulator.json'; $env:XRFG_DISABLE_OFXR_BRIDGE = '1' }
 $a = @{ Game = 'F:/rpsc3/games/Kingdom Hearts - HD 2.5 ReMIX (USA) (En,Fr,Es).iso' }
 if (-not $Headset) { $a.NoHeadset = $true }
 if ($Probe) { $a.Probe = $Probe }

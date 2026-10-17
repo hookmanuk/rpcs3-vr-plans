@@ -334,3 +334,17 @@ with the game's camera matrix. `c31e0000` cannot go to the game camera (the half
 the bloom chain), so the rows are remapped per eye (`fragment_camera_rows`): the game's rows were not exactly S x the
 draw's camera block (translation off, likely another frame's or the half-res camera), so the eye transform T, d is taken
 from the camera block and applied as S T S^-1 F + S d.
+
+## Whole grey beams (2026-10-17, fork `891ec5536`)
+
+Matt's state `BCUS98103_1_7` (dark hall, scaffolding) still had whole beams grey after the projection snapping: 50523
+hole pixels (`holes2.py`: normal `c07d0000` at its clear value 90,194,86,57 over depth `c0f50000` between 0 and
+0xfffff0). A temporary per-draw log (eye, program, hash of the game's block and of the eye block, A, B) found 30 groups
+where the same input matrix gave different outputs, only A, B and clip rows 0 / 1 differing: the depth pass
+(`2fe8ebfb47d877be`) at A 0.2704 B 0.6045 and the normal pass (`f187605790940c88`, `8d089e5d4e908075`) at B 0.636, or
+the other way round. Both are the beams' own blocks (non-rigid in the draw, so the cached projection was whatever the
+previous rigid measurement left), and the measurements themselves came from beam blocks stretched along view axes,
+which pass the orthogonality test. Fix: a rigid measurement is taken only if its aspect B / A is within 1 % of last
+frame's dominant projection's; others are only counted, and a frame with none at the dominant aspect makes the most
+counted off-aspect one dominant. After: 1 hole pixel at pose 0, 0 at yaw +-20 / +-40 / 90 / 180, pitch +-10 / +-15,
+roll 15 (`g17test.sh` in the session scratchpad: load, `simpose.py`, RTDUMP of the three targets, `holes2.py`).
