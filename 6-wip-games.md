@@ -1363,7 +1363,9 @@ everywhere the gfx are missing too."* Not investigated yet.
    branch; merged into openxr 2026-10-17):** the view held still against all of the camera's turn; now against 1 / speed of
    it, so the view turns with the camera by the rest and the aim stays where the head looks. Matt: *"much better."*
    **Open, Matt (2026-10-17):** *"when aiming can you isolate the aim reticule and push it deep into the scene, maybe
-   10m?"* Not investigated yet.
+   10m?"* **Done 2026-10-17 (fork `910c5502d`, simulator):** the reticle (program `ae47d5452ce87794`, 32x32 texture at unit 1)
+   is placed at 10 m by a `screen_space.scaled_draws` rule with the new `depth` / `texture_unit` options; the rest of the HUD
+   stays at his HUD depth (4 m). Parallax 0.0032 per eye vs 0.0080. Headset check pending.
    **Open, Matt (2026-10-16):** *"if you walk forward in the jungle you'll see water in front of you. Reflections in the
    water are broken, turning your head changes the reflections incorrectly."* (State `BCUS98103_1_2`, walk forward to
    the water.)
