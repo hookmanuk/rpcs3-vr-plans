@@ -494,11 +494,11 @@ this in the headset: 100% is the profile's scale, and WipEout's native scale is 
 WipEout's half-resolution pass gets 0.75x.
 
 **Frame rate** (added 2026-09-25) comes from game frames per second of play against the vblank rate.
-A game drawing every second vblank (ICO: 30 at 60 Hz) gets `vblanks_per_frame: 2`. The measured rate is
-written as both `max_fps` and `default_fps`, so the Frame Rate setting never offers more than the game was
-seen doing. Raising `max_fps` (or `0`, no maximum) needs the game clock checked against real time at a
-faster vblank, as for WipEout and Pure. A game that ran slow while sampled logs "uneven" and may get too
-low a rate.
+A game drawing every second vblank (ICO: 30 at 60 Hz) gets `vblanks_per_frame: 2`. Since 2026-10-17 the measured rate is
+only logged: **work-in-progress profiles carry no `max_fps` / `default_fps`** (Matt: the Frame Rate setting stays free;
+only released profiles keep theirs). A rate measured at a raised vblank is often just where the RSX thread ran out
+(Midnight Club: 80 at vblank 240, written as a cap and as 3 vblanks per frame). Check `vblanks_per_frame` at a vblank the
+game holds (120: a frame every 2nd vblank = 60). A game that ran slow while sampled logs "uneven".
 
 **Scene coverage and HUD passes** (added 2026-09-25, after Demon's Souls). The generator records per draw
 whether it depth-tests and whether it samples ordinary textures or colour render targets. Camera coverage
@@ -535,8 +535,7 @@ masks). Tested (`evidence/generator/2026-10-05/`): regenerating Dragon Age: Orig
 - `camera_block_cache` / `culling_scale_f32`: 2000 or more draws in the captured frame.
 Each needs a look in the headset or a measurement before it goes in the profile.
 
-**Frame-locked games.** The generator writes the measured rate as `max_fps`. Check real-time speed before
-raising it: run at a faster Vblank Rate and compare an in-game timer with wall time. A frame-locked game can
+**Frame-locked games.** The generator logs the measured rate (no `max_fps` any more). Check real-time speed: run at a faster Vblank Rate and compare an in-game timer with wall time. A frame-locked game can
 still reach the headset rate with a game patch plus the profile's frame-timing fields (Ridge Racer 7, 2026-09-26;
 method in `profiles/BCAS20001-notes.md`):
 
