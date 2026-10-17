@@ -1450,6 +1450,12 @@ vertex copies 5 %): no single cost to cut.
    eager submits 9 -> 17 a frame), a flat profile of ordinary per-draw work. Tried, no gain, reverted: culling lead_s 0
    (worse), camera_block_cache with head aim (the head moves every frame, no hits), eager-submit fence polling every
    16th draw (the 7 % the sampler charged to it was blocked time). Still below 45 while looking around.
+   Matt: *"Originally draw more was 10fps faster... what happened?"* All-visible removed the waits but the game then drew
+   what its queries cull: +15-20 % draws (4437 -> 5122 straight, 5521 -> 6644 turned), no gain turned. **Profile
+   `zcull_no_wait` (fork `0581cde7e`, replaces all-visible here):** answered queries give their real count, unanswered
+   ones count as visible, never a wait. Fixed poses uncapped: straight 38.0 off / 43.9 all-visible / 47.9 no-wait, turned
+   36.5 / 36.4 / 38.9; draws as with off. Head wander, two A/B pairs: 43.1 / 43.7 vs 38.9 (all-visible), RSX 22.8 vs
+   25.4 ms. Leaf flicker: a hidden answer is always the GPU's own (as Precise); headset check pending.
    **Fixed 2026-10-17 (fork `e67de068d`, Matt: "looks good"):** state `BCUS98103_1_9`, *"a lot of the scenery in the
    middle of the screen judder and move over time"*: scaled scenery took last frame's projection while the culling
    widening changed it every frame the head moved; profile `scaled_camera_blocks` solves it from each block.
