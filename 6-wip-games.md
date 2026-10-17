@@ -1348,7 +1348,7 @@ everywhere the gfx are missing too."* Not investigated yet.
    branch only; openxr has no head aim):** the view held still against all of the camera's turn; now against 1 / speed of
    it, so the view turns with the camera by the rest and the aim stays where the head looks. Matt: *"much better."*
    **Open, Matt (2026-10-17):** *"when aiming can you isolate the aim reticule and push it deep into the scene, maybe
-   10m?"* (the reticle sits in the HUD box today). Not investigated yet.
+   10m?"* Not investigated yet.
    **Open, Matt (2026-10-16):** *"if you walk forward in the jungle you'll see water in front of you. Reflections in the
    water are broken, turning your head changes the reflections incorrectly."* (State `BCUS98103_1_2`, walk forward to
    the water.)
