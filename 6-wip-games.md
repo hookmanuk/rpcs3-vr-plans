@@ -596,6 +596,12 @@ DLSS off: **113 FPS** walking (1% low 64). Community *Disable MLAA* patch on. Ge
 middle of the headset view) is hidden in VR. Open: whether the first-person gun follows the head (it has its own
 camera at the origin), 15 scaled draws on the game camera, the helmet HUD markings, a normal mission. Notes:
 `profiles/BCUS98234-notes.md`, savestate `bin/savestates/BCUS98234/kz3_helghan_base`.
+**HUD markings fixed 2026-10-17 (forks `829836c10`, `13a5661ad`, profile; simulator, Matt's state `BCUS98234_1_0`):** the
+orange helmet markings and the X / O prompts were head-locked (pixel-identical at every pose with HUD Fixed In Front):
+they project with an orthographic block at c[0..3], not the HUD block c[8]. `hud_block_programs` (block 0) for
+`fc0faa8afccec49a`, `fc3a0dc2f098a81e`, `2f64bc78ffd6add1`, `ec90e4351617ca1b` with `hud_skips_passes` (the latter two
+also draw the full-screen visor composite, which samples the scene and is skipped): all HUD in the world-fixed box at
+straight / yaw +-20 / pitch 10 / roll 15. Still open: a mission without the helmet, menus and cutscenes.
 
 ## Gran Turismo 5 (BCUS98114, XL Edition, US; disc 01.00 since 2026-10-03, was v02.11)
 
