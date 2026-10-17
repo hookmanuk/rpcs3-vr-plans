@@ -1330,7 +1330,24 @@ Calm (short extras) not tried.
    patches. Different models will flicker to gray as you move around, this is an issue everywhere, work out how to
    texture correctly."* (State `BCUS98103_1_5`, saved 21:30.) Matt's headset shot: `evidence/uncharted/grey-textures-matt-2026-10-16.png` ; the grey parts, cropped by Matt:
    `grey-textures-crop1-matt-2026-10-16.png` (a flat panel crossed by a diagonal beam, left of the arch) and
-   `grey-textures-crop2-matt-2026-10-16.png` (a tall narrow piece on the right), both untextured flat grey. Not investigated yet.
+   `grey-textures-crop2-matt-2026-10-16.png` (a tall narrow piece on the right), both untextured flat grey.
+   **Fixed 2026-10-17 (fork `62e1044ef`, openxr `a8e4f4831`; simulator; regression subset of 12 states: frame rates as before, pictures normal, `evidence/vrtest/2026-10-17-1039`):** not textures. The grey
+   pixels hold the normal buffer's clear value (`c07d0000` = BGRA 90,194,86,57, the same as the hidden-area corner):
+   nothing wrote a normal there, and lighting shades the clear value flat grey. Uncharted draws every object twice: a
+   depth pass, then the normal pass with depth EQUAL (no alpha test). Flat: 0 holes; VR: ~1200 per eye (the hanging
+   piece right of the arch, thin lines), the same in every run; ZCULL settings change nothing; EQUAL->LEQUAL (probe dev
+   0x100) removes a quarter; probe off (`render=0`): 0. Skipping the probe's head rotation or headset-FOV remap: 0
+   (eye offset: no effect). A per-draw log showed identical input matrices (273 of 324 normal-pass draws match a
+   depth-pass matrix bit for bit) leaving with different outputs, differing only in the cached projection scale A/B
+   (2 ulp): a non-rigid block (an object scaled unevenly, ~40 % of draws) took whatever the previous rigid draw
+   measured, each object's matrix gives the scale with different last bits, and the frame mixes two projections 0.5 %
+   apart, so an object's two draws were remapped with different numbers and failed EQUAL in patches. Now each frame's
+   projections are snapped to their first measurement (within 2e-4) and a non-rigid block takes last frame's dominant
+   projection when its last measurement is in that camera's family (2 %): holes 10 / 0 (still and with the head turned
+   20 / 10 degrees), the hanging piece textured (`evidence/uncharted/grey-holes-before-after-2026-10-17.png`, map of
+   the clear-value pixels `grey-holes-normal-buffer-2026-10-17.png`). Rock-depth fit unchanged (0 outliers). Matt:
+   "Don't move the camera" and his settings (Vertical / Horizontal View 60 / 80, scale 460) were the reproduction
+   advice; the holes reproduce at any settings. Headset check: the state, no movement, then walking around.
    Candidates: the sun shadow mask's depth remap (`fc15ec0752d20290`) built from one frame's eye transform while the
    depth / scene it reads were drawn with another (frame generation, or the remap matrix taken from the previous scene
    draw), feedback textures shifted by the head rotation since their frame (`vr_shift_texture_params`), or the
