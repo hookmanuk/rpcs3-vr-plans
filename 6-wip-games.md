@@ -1217,7 +1217,16 @@ patch, frame-rate table and how the culling was found: `profiles/BLUS30442-notes
 *2 - In the distance there are black horizontal lines on the road, this looks the same issue as Sonic had with culling
 in the distance*
 *3 - At the bottom of the screen the road is missing and instead you get smeared gfx everywhere. This smearing happens
-everywhere the gfx are missing too."* Not investigated yet.
+everywhere the gfx are missing too."*
+**(1) Fixed 2026-10-17 (fork `4ed3dd06f`, profile; simulator):** the game's own view has tyres on the wheels; in VR
+the tyres stood off the car on the road, differently per eye. The tyre program `56716dc89eb5da0` uses camera block c[8]
+(its shader's c[4..7] are compacted slots) with the tyre's squash/scale folded in, so `require_rigid_camera` rejected it
+and it kept the game camera. `nonrigid_camera_blocks: [8]` + `scaled_camera_blocks`: tyres on the wheels in both eyes
+(paused `1_0`, driving `mc_freeroam`); free-roam drive 60.9 vs 62.0 FPS (noise). Found by hiding programs in groups
+(probe `hide=a+b+...`) and bisecting.
+(2), (3): not reproduced in `1_0` (paused on the motorway; looking down 15 / 30 degrees the road reaches the bottom, no
+black lines). His shot is while driving past a roadside crash cushion, drawn black with a smear; needs a driving state
+at that spot. Frame rate: `zcull_all_visible` no gain here (73-75 either way, driving 1_0 uncapped at 440).
 
 ## Uncharted: Drake's Fortune (BCUS98103, update 01.10)
 
