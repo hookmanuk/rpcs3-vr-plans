@@ -343,6 +343,7 @@ pass mark** for fully compatible.
 | Dynasty Warriors 6 Empires | BLUS30306 | `vr-non-working/` + untracked `bin/` copy | no: frame-locked, profile at 60 (180 flat possible) | 120, but frame-locked: plays at 60 | not played | 90 FPS needs a logic-step patch |
 | Puppeteer | BCUS98227 | `vr-non-working/` + untracked `bin/` copy | yes (profile frame time, Vblank 180 = 90 FPS, real-time) | 90 (2026-10-02; 72 before) | **barely works**: graphics trails, very dark, world far away and small; the head-locked intro light fixed 2026-10-01 evening | stage small in the headset view; SPU post skipped in VR |
 | Jak and Daxter Collection | BCUS98281 | `vr-non-working/` + untracked `bin/` copies (profiles, patch) | **Jak II yes** (fork patch *Frame rate follows VR (Jak II)*, 2026-10-04); Jak 1 no: steps a fixed 1/60 per frame, capped at 60 (a ratio fix broke it); Jak 3 no (74-85 flat in Spargus) | **Jak II 72 Hz** at real-time speed (90 averages 86), 2026-10-04; Jak 1 60 (cap); Jak 3 57 FPS at 72 | **Jak 1**: HUD boxed, speed fixed (capped at 60, reprojected) and stereo depth fixed 2026-10-01 late, simulator-checked; to recheck in the headset | Jak 1 at the headset rate; Jak II HUD in the headset |
+| Midnight Club: Los Angeles Complete Edition | BLUS30442 | `vr-non-working/` + untracked `bin/` copy (profile, fork culling patch) | yes (community Enable Deltatime) | **below 72**: 60.8 FPS driving in town with full culling, 69.8 with the game's own (2026-10-17) | not played | RSX thread (~3000 draws a frame) |
 | Anarchy Reigns | BLUS30632 | `vr-non-working/` + untracked `bin/` copies (profile, patch) | yes (fork patch, real-time verified) | 90 (Training only) | **parked**: splash/intro head-locked, HUD culled by depth; bad performance and graphics issues in gameplay | campaign unchecked; HUD timers 3x |
 | Killzone 2 | BCUS98116 | `vr-non-working/` + untracked `bin/` copy | yes (real time; default 45: two vblanks a frame) | **72 Hz** (carrier walk, 72.0 / 0% late, 2026-10-13; 90 reaches 86: the game's PPU/SPU work; SPU Block Size Mega +2-3) | not played | eyes per-eye since 2026-10-13 (the SPU post layer, motion blur/DOF/sun haze made from the left eye only, is hidden in VR: `hidden_draws`); combat and HUD unchecked |
 | Gran Turismo 5 | BCUS98114 | `vr-non-working/` + untracked `bin/` copy | yes (profile frame step; patch *Pre-race at full frame rate*) | **90 Hz in races** (400% stereo, simulator, 2026-10-05: race start 83-90, tree-lined track and grid 90 locked) | headset ~40 FPS on 2026-10-01 (old build): recheck | race start dips to 77-86 for a few seconds (RSX-thread bound); black arc at the top of the view on Rome (sky dome); menu cards and mirror fixed on the simulator 2026-10-05 (headset recheck) |
@@ -1175,6 +1176,17 @@ game's own render/SPU job pipeline, about 88-95 in the intro and 120 in menus: s
 **FFX-2** (launcher 3rd entry): its opening movie (cellSail) stalls black at a raised Vblank (plays at 60, then
 in-engine battle at 30 FPS); same engine and pipeline as FFX, not pursued further. FFX-2 Last Mission and Eternal
 Calm (short extras) not tried.
+
+## Midnight Club: Los Angeles Complete Edition (BLUS30442, disc 01.06)
+
+**Stopped at step 1 (2026-10-17): stereo under 72 FPS.** Free roam in Hollywood while driving, 300%, DLSS off, on the
+simulator: **60.8 FPS** (1% low 49, RSX thread 16.5 ms) with the culling the headset needs, 69.8 with the game's own
+culling (control, same drive). Flat runs 85-98 at vblank 240 (RSX-thread bound, ~10.5 ms). Multithreaded RSX does
+not help; Vertical / Horizontal View 60 / 80 gives 63. With the community *Enable Deltatime* and *Disable Motion
+Blur* patches (enabled in `patch_config.yml`) and the fork's new *Wider view (VR culling)* 1.2 patch plus a generated
+profile (`camera_block_cache` added), the picture is complete and stereo-correct at every head pose checked. Profile,
+patch, frame-rate table and how the culling was found: `profiles/BLUS30442-notes.md`. Savestate
+`bin/savestates/BLUS30442/mc_freeroam`. Next if picked up: cut the RSX thread's draws (LOD / draw distance, traffic).
 
 ## Uncharted: Drake's Fortune (BCUS98103, update 01.10)
 
