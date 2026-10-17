@@ -1196,6 +1196,13 @@ Blur* patches (enabled in `patch_config.yml`) and the fork's new *Wider view (VR
 profile (`camera_block_cache` added), the picture is complete and stereo-correct at every head pose checked. Profile,
 patch, frame-rate table and how the culling was found: `profiles/BLUS30442-notes.md`. Savestate
 `bin/savestates/BLUS30442/mc_freeroam`. Next if picked up: cut the RSX thread's draws (LOD / draw distance, traffic).
+**Open, Matt (2026-10-17, headset, state `BLUS30442_1_0`, saved 13:35; screenshot
+`evidence/midnightclub/matt-errors-2026-10-17.png`):** *"you'll see multiple errors:*
+*1 - The wheels on the car are too wide, this changes as you drive.*
+*2 - In the distance there are black horizontal lines on the road, this looks the same issue as Sonic had with culling
+in the distance*
+*3 - At the bottom of the screen the road is missing and instead you get smeared gfx everywhere. This smearing happens
+everywhere the gfx are missing too."* Not investigated yet.
 
 ## Uncharted: Drake's Fortune (BCUS98103, update 01.10)
 
