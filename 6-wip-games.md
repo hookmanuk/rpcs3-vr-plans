@@ -1401,7 +1401,17 @@ everywhere the gfx are missing too."* Not investigated yet.
    rock in front warps and disappears!"* (state `BCUS98103_2_12`; his shots show Nate crouched by rocks, the second
    with a rock gone and sky in the gap). Loaded on the simulator the state opens with Sully walking up to the camera
    and Nate standing; turning the camera with the right stick there showed no warp, VR or game view, scaled_camera_blocks
-   on or off.
+   on or off. Matt: *"this is the same rock. Its entirely reproducible"* (small right-stick turns from the view after the
+   opening walk). **Fixed 2026-10-17 (fork `3f466cf8b`):** the scaled-block projection solve accepted wrong solutions
+   for rocks scaled along tilted axes; solutions more than 3 % off the camera's are refused. Simulator, 30 ms taps: no gap.
+   Leaf flicker: Matt: *"disabling z cull occlusion queries ... nearly everything goes that grey"*, *"I changed z cull
+   accuracy to Precise and now the grey flicker is pretty much all gone"* (his custom config now has Accurate ZCULL
+   stats true).
+   **Open, Matt (2026-10-17):** *"I did make a new save state, where the framerate is really low, we need to get it up
+   to 45"* (state `BCUS98103_2_13`). Simulator, scale 460 (his), uncapped (vblank 240), still: Precise ZCull 42-44 FPS,
+   1% low 35-37, RSX thread busy ~23 ms/frame with no waits, 22.6 % of it in VKGSRender::get_occlusion_query_result
+   (waiting for GPU query results); Approximate ZCull 45-48 FPS, 1% low 34-36, RSX thread ~21 ms with 5 ms FIFO-empty
+   (then the game side limits). At his Frame Rate 45 with Precise: 42-45, 1% low 34-39.
    **Fixed 2026-10-17 (fork `e67de068d`, Matt: "looks good"):** state `BCUS98103_1_9`, *"a lot of the scenery in the
    middle of the screen judder and move over time"*: scaled scenery took last frame's projection while the culling
    widening changed it every frame the head moved; profile `scaled_camera_blocks` solves it from each block.
