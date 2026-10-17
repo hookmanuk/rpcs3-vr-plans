@@ -870,6 +870,10 @@ Notes: `profiles/BLUS30300-notes.md`. Evidence: `evidence/splitsecond/`.
 
 ## God of War III (BCUS98111)
 
+**Open, Matt (2026-10-17, headset):** *"God of war 3 frame rate is terrible. Its too low in the first fight when you start
+the game, and also has really bad hitches causing 1% lows to be even worse."* (The first fight after a new game.) Not
+investigated yet.
+
 **Matt's headset report (2026-10-15 afternoon), open, in his words:** *"God of War 3 is terrible. The menu screens are
 doubled and flicker, the game is in a slanted window not full screen which tilts with my head."* So in the headset:
 (1) menus doubled and flickering; (2) gameplay shown in a slanted window, not full screen, that tilts with the head
