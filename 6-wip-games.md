@@ -1412,6 +1412,13 @@ everywhere the gfx are missing too."* Not investigated yet.
    1% low 35-37, RSX thread busy ~23 ms/frame with no waits, 22.6 % of it in VKGSRender::get_occlusion_query_result
    (waiting for GPU query results); Approximate ZCull 45-48 FPS, 1% low 34-36, RSX thread ~21 ms with 5 ms FIFO-empty
    (then the game side limits). At his Frame Rate 45 with Precise: 42-45, 1% low 34-39.
+   Matt: *"Keep precise. Optimise that."* / *"What about just drawing everything?"* **Profile `zcull_all_visible` (fork
+   `1d70b3fca`):** every pixel-count report answered 0xffff at once. Still view: 50-53 FPS, 1% low 42-46 (was 42-44 /
+   35-37). Head wander (simwander.py: yaw 15, pitch 8, 4 cm), uncapped, two A/B pairs: average 39.1 / 39.2 on vs 38.6 off,
+   worst 1% low 23 vs 15; the RSX thread is ~19 ms/frame still but ~25 ms in the views the wander reaches (more draws:
+   eager submits 9 -> 17 a frame), a flat profile of ordinary per-draw work. Tried, no gain, reverted: culling lead_s 0
+   (worse), camera_block_cache with head aim (the head moves every frame, no hits), eager-submit fence polling every
+   16th draw (the 7 % the sampler charged to it was blocked time). Still below 45 while looking around.
    **Fixed 2026-10-17 (fork `e67de068d`, Matt: "looks good"):** state `BCUS98103_1_9`, *"a lot of the scenery in the
    middle of the screen judder and move over time"*: scaled scenery took last frame's projection while the culling
    widening changed it every frame the head moved; profile `scaled_camera_blocks` solves it from each block.
