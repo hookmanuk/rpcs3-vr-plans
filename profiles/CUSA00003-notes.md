@@ -30,6 +30,9 @@ copies openxr_loader.dll). Test root `H:\dcport-play` (data/, user/, scripts bel
 - **Motion blur**: blurs head turns (sharpness 4.70 still, 2.63 swaying +-15 deg at 1 Hz); the community patch
   "Disable motion blur and depth of field" (enableMotionBlur = false at eboot 0xa109f3) brings it to 5.08; anti-aliasing
   unchanged (the TAA compute 0xfdd72cf1 no longer runs; frame poses come from the G-buffer constants instead).
+- **Lens dust** (a screen-space overlay) off for VR: eboot 0xa10dcd `movzx eax, al` -> `31 c0 90` after reading
+  `lensdust` (same settings table, image +0x610xxx: fieldOfViewScale, enableMotionBlur, enableWaterDroplets at
+  0xa10a92, ssao, enableSSR, ...). Water droplets left on (may be the in-world windscreen rain; check in a rain event).
 - Menus without 3D: no split, the whole frame on a flat 16:9 screen 2.5 m ahead. Menus with 3D flyovers: stereo.
 - Desktop window: the left eye with the HUD. F8 or a SteamVR seated reset recentres.
 
@@ -44,7 +47,7 @@ copies openxr_loader.dll). Test root `H:\dcport-play` (data/, user/, scripts bel
 
 GPU 50-58% (RTX 5090) at 110 FPS uncapped: CPU-bound (the GPU command thread). The ~1% over-period frames and the
 50-85 ms hitch every ~10 s are the same with stereo off and flat: the port's own. Prep workers (BB_PREP_WORKERS=4) did
-not help (109-113 uncapped).
+not help (109-113 uncapped); BB_FRAMES_AHEAD=2 neither (over a period 1.2-1.3%).
 
 ## Tools (H:\dcport-play)
 
