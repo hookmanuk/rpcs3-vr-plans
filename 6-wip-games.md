@@ -450,7 +450,10 @@ Details and tools: `profiles/CUSA00003-notes.md`.
 - Simulator, racing behind the pack, 2880x2880 eyes: 90 Hz: 90.0 FPS, 1% low 77-81, over a period 1.1-1.7%, late
   0.0-0.1%; uncapped 111-124 FPS (flat 113-126). GPU 50-58%: CPU-bound; the 1% slow frames and a 50-85 ms hitch
   every ~10 s happen flat too (the port).
-- Open: Matt's headset test; day/rain events (water droplets, lens dust); the port's hitches.
+- Matt 2026-10-18: "You should implement proper multiview rather than distant scenery having no depth." Done: both eyes
+  rendered with Vulkan multiview (default in the launcher). Racing at 90 Hz: 90.0 FPS, 1% low 81-83, over a period
+  0.8-1.2%; busy start grid 9% over a period (reprojection 4%), uncapped 110-113 FPS.
+- Open: Matt's headset test; day/rain events (water droplets); the port's hitches and slow 1% (both modes).
 
 ## Dragon's Dogma: Dark Arisen (BLUS31155 v01.02)
 

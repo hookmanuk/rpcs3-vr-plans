@@ -7,6 +7,33 @@ vr_fixes, vr_dev), one-line `// VR` hooks in vk_platform, vk_instance, vk_presen
 vk_temporal_upscaler.h, CMakeLists (shaders). Build: `bash H:/dcport-play/build.sh` (MSYS2 CLANG64; kills bb-probe,
 copies openxr_loader.dll). Test root `H:\dcport-play` (data/, user/, scripts below). Play: `H:\dcport-play\Driveclub VR.cmd`.
 
+## True stereo: multiview (default since 2026-10-18; BB_VR_STEREO=mv)
+
+Matt: "You should implement proper multiview rather than distant scenery having no depth." Both eyes are rendered
+(fork a4e0688, 069d8c7). The depth reprojection below stays as the fallback (no BB_VR_STEREO).
+
+- Main-view images (2D, 1 sample, the render size or a power-of-two fraction, mip chains included) get a second array
+  layer (`vr_multiview.cpp` BackingLayers); layer 0 stays the guest's. A pass whose attachments all have 2 layers draws
+  with view mask 0b11 through a multiview twin of its pipeline (made at pipeline creation, spec constant 200 = true).
+  A pass that mixes 1- and 2-layer targets draws mono (logged): the G-buffer's scene colour has a 12-level mip chain,
+  so mip chains must be stereo.
+- Eye offset: the vertex epilogue (hardware VS: vertex or tessellation evaluation; geometry shaders before each
+  EmitVertex) adds vr_shift[view] = +-P00 x ipd/2 to clip x when w != 1, only in twins. Exact for a sideways eye;
+  full-screen passes (w = 1) stay put. Detecting camera draws by constants failed: world draws carry a premultiplied
+  matrix, only full-screen passes bind the 512-byte camera buffer.
+- Shaders (`emit_spirv_vr.cpp`): plain 2D images become 2D arrays, every sample/fetch/storage/atomic takes layer =
+  gl_ViewIndex (graphics) or push vr_eye (compute); 1-layer images clamp to layer 0. Compute that writes a 2-layer
+  storage image runs again with vr_eye = 1 (buffer-only compute once: particles do not advance twice).
+- Texture cache copies (CopyImage/CopyMip/CopyDepthStencil) carry layer 1 (the aliases of one memory range at 1 and 12
+  levels are kept coherent by copies: without this the right eye was unlit). Per-mip barriers cover both layers.
+- Overscan 0.08 tan each side (BB_VR_OVERSCAN): the shift uncovers each eye's outer edge. Pipeline cache: <serial>_mv.
+- Measured: disparity scenery 0, gauges 84 px, lower cockpit 153 px (crossed); the right eye's lighting, mirror and
+  gauges match the left. Racing at 90 Hz: 90.0 FPS, 1% low 81-83, over a period 0.8-1.2%, late 0-0.1% (as
+  reprojection). Busy start grid: uncapped 110-113 FPS (reprojection 113-116), GPU busy 6.0 ms/frame (4.3); at 90 Hz
+  9% over a period (4%); at 2160x2160 4.7%. BB_FRAMES_AHEAD=2 no help. Validation clean of multiview errors.
+- Not handled: compute that writes buffers once from eye 0 (tile light lists?) serves both eyes; uploads into
+  2-layer images reach layer 0 only (none seen in races).
+
 ## How it works
 
 - **Head tracking**: hook at `Scene::SetCamera` (image +0x5e7a20, SysV: rsi = 4 KB camera description; world 4x4
