@@ -437,6 +437,21 @@ gets the jitter (logged with `RPCS3_DLSS_DEBUG`), and no colour pass on the scen
 compares jittered against unjittered depth is not found (the blocky edges suggest a low-resolution pass upsampled
 against depth). Earlier MotorStorm fix: depth-only passes jittered through the viewport (`dlss_jitter_viewport`).
 
+## DRIVECLUB (PS4 CUSA00003 EU disc 1.28, DCport + dcport-vr, not RPCS3)
+
+Matt: "work on adding VR functionality to it ... we should do the same as RPCS3 did, and write our code into new code
+files that just hook from the old"; "run comparisons on screenshots between flat and VR ... we need it to run at 90fps
+4k per eye in VR". Fork `H:\dcport-runtime` branch `vr` (stages 1-4 + fixes, aeb1196); play `H:\dcport-play\Driveclub VR.cmd`.
+Details and tools: `profiles/CUSA00003-notes.md`.
+
+- Head tracking, stereo from one render plus depth, the HUD on its own layer (composite equals the flat frame),
+  exact per-frame poses, 2880x2880 per eye (Matt's panel 1:1, the pixel count of 4K), motion blur off (it blurred
+  head turns), 16:9 flat screen for menus, desktop mirror, F8 recentre.
+- Simulator, racing behind the pack, 2880x2880 eyes: 90 Hz: 90.0 FPS, 1% low 77-81, over a period 1.1-1.7%, late
+  0.0-0.1%; uncapped 111-124 FPS (flat 113-126). GPU 50-58%: CPU-bound; the 1% slow frames and a 50-85 ms hitch
+  every ~10 s happen flat too (the port).
+- Open: Matt's headset test; day/rain events (water droplets, lens dust); the port's hitches.
+
 ## Dragon's Dogma: Dark Arisen (BLUS31155 v01.02)
 
 Notes: `profiles/BLUS31155-notes.md`. Evidence: `evidence/ddda/`. Profile `BLUS31155.json`, patch file
