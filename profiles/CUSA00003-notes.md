@@ -118,8 +118,20 @@ DLSS Off/DLAA/Quality/Balanced/Performance); VR is opt-in (BB_VR=1), flat play n
 | 2880 | off | 119 | 88 | 5.9% |
 | 2880 | DLAA | 113 | 86 | 6.6% |
 
-The headset thread shows ~80-88 new frames whatever the game makes: it took publications whose GPU work was not done,
-and its copies (then the compositor) waited for it. Fix: only finished publications (BB_VR_WAIT_FRAMES=1 the old way).
+The headset thread showed ~80-88 new frames whatever the game made. What was measured (2026-10-19, simulator):
+- Showing only finished publications, newest of the last three (BB_VR_WAIT_FRAMES=1 the old way): 2880 over a period
+  6.0% -> 3.6%. Taking only the newest (not the last three) collapsed to 20 new frames (the newest is never done).
+- Cap: one game flip per headset frame (a token set by each xrWaitFrame), adaptive (on at >= 112% of the headset's
+  rate for 2 s, off below 95%; BB_VR_CAP=0 never). 2880: 90.0 new frames, 0.0% over a period, 0.0% late. A fixed
+  period cap instead quantised to the 240 Hz present loop (12.5 ms: 80 FPS) and oscillated. Capping when the game
+  cannot hold the rate is worse (4320 Quality capped: 12.7% over).
+- Still open at 4320: xrWaitFrame-to-submit is fine except "record" (RecordEyes, a few vkCmd calls) stalling up to
+  ~10-11 ms a few times a second (log: "headset loop ms", "show parts ms"). Not thread priority (TIME_CRITICAL: no
+  change, reverted), not queue priority (0.1-1.0: no change, reverted), not implicit layers (loader ~implicit~: no
+  change). 4320 Performance: ~82 new frames, 3-10% over a period (run to run).
+- Eyes now copied straight into the swapchain images in multiview (was scene -> intermediate -> swapchain).
+- One OpenXR Simulator crash inside its own xrEndFrame (D3D12 CommandAllocator::Reset) in ~40 runs.
+- DLSS upscaling: the game's view of the lit scene swaps red and blue; the redirect view takes its swizzle.
 
 ## Tools (H:\dcport-play)
 

@@ -455,11 +455,15 @@ Details and tools: `profiles/CUSA00003-notes.md`.
   0.8-1.2%; busy start grid 9% over a period (reprojection 4%), uncapped 110-113 FPS.
 - Open: Matt's headset test; day/rain events (water droplets); the port's hitches and slow 1% (both modes).
 - 2026-10-18/19: ported to the recomp (Matt: "this version seems better than the other port"), Matt's fork
-  hookmanuk/driveclub-recomp branch `vr`, play `H:\driveclub-recompeleaser-dev\DriveClub.exe` (VR card: eye size
+  hookmanuk/driveclub-recomp branch `vr`, play `H:\driveclub-recomp
+eleaser-dev\DriveClub.exe` (VR card: eye size
   2160-4320, VR DLSS). Matt: "this build is good" (2880-4320, readbacks off). Then asked for optimisations, DLSS, and an
   automatic recentre at each race start. DLSS per eye works (on the lit scene before bloom: the motion blur patch
   removes the game's TAA); auto recentre on a >100 m camera jump. 4320 per eye: 73 FPS native, game 99-112 with DLSS
-  Quality-Performance but the headset loop showed only ~80 (fix being measured). Notes: CUSA00003-notes.md "recomp".
+  Quality-Performance but the headset loop showed only ~80. Headset pacing (finished frames, one flip per headset
+  frame while the game has room): 2880 per eye 90.0 new frames, 0.0% over a period. Committed b169788 (fork, pushed),
+  staged in releaser-dev 2026-10-19 ~04:00 for Matt. Open: 4320 headset-loop stalls in command recording (~10 ms),
+  readbacks (precise fix), Matt's headset test of DLSS. Notes: CUSA00003-notes.md "recomp".
 
 ## Dragon's Dogma: Dark Arisen (BLUS31155 v01.02)
 
