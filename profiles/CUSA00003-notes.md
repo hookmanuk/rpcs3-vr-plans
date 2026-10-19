@@ -165,8 +165,13 @@ lost device in ~37 readbacks-off boots (an earlier build at 4320, compute a6cfe0
 - Eye stack eye_diff.py (grid, three crops): no gross difference before or after; the bodywork matches, edges
   differ by parallax and aliasing (AA off).
 - Test copy gotcha: the launcher runs `runtime\DriveClubGame.exe`; copy builds there (not the folder root).
-- Open: with DLSS on, one-layer passes 192x68 / 384x136 / 2048x1024 (fmt 43) / 2048x2048 (fmt 91) sample a
-  two-layer image. Probably a game texture that matches the output-size family by size; not checked.
+- DLSS-only one-layer passes (192x68, 384x136, 2048x1024 fmt 43, 2048x2048 fmt 91, 768x512 mirror scene): they read
+  game textures (512/256/128/64/32 square) that the bloom rule made two-layer: DLSS Quality renders 1920, bloom 512,
+  and its halvings are texture sizes. Uploads filled layer 0 only, so the right eye could sample unfilled memory.
+  Fixed fdfd71b: the bloom is one image with mips (768x768 levels 10 at 2880, fmt 97 R16G16B16A16F and 122
+  B10G11R11), so only that exact size and those formats; Runtime::UploadImage fills both layers of a two-layer image
+  (Multiview::StereoUploads). Left: a 512x512 fmt 97 game texture (0x510bc90000) still matches at DLSS Quality, read
+  by one mono pass (layer 0, correct). The dev log now names the pass's vertex shader and the two-layer images it reads.
 
 ## Tools (H:\dcport-play)
 

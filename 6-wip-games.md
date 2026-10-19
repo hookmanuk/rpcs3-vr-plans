@@ -469,8 +469,9 @@ eleaser-dev\DriveClub.exe` (VR card: eye size
   chain (768x768 at 2880) and a half-size 4x MSAA pass (1440x1440; the lights' glows shrink without it). Both now
   stereo, 82921e0, staged in release\vr-dev. Race benchmark 2880: 89.3 headset fps (was 89.1). Skipping the MSAA
   pass at 4320 gained nothing (78.3 vs 79.7, noise). Reflections themselves are consistent per eye (screen-space,
-  rebuilt from each eye's depth). Open: Matt's headset recheck; with DLSS on, small one-layer passes (192x68,
-  384x136, 2048x1024, 2048x2048) still sample a two-layer image (not yet identified).
+  rebuilt from each eye's depth). Those DLSS-only one-layer passes were game textures the bloom rule caught by size
+  (DLSS Quality: bloom 512, halvings 256/128/64/32) with an unfilled right-eye layer: fixed fdfd71b (exact bloom size
+  and formats; uploads fill both layers), staged. DLSS Quality race 88.3 headset fps. Open: Matt's headset recheck.
 
 ## Dragon's Dogma: Dark Arisen (BLUS31155 v01.02)
 
