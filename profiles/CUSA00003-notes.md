@@ -218,6 +218,24 @@ lost device in ~37 readbacks-off boots (an earlier build at 4320, compute a6cfe0
   and per-eye passes reading one-layer renders, BB_VR_LOG_SCREEN_PARAMS=1, BB_DUMP_SHADERS=1 (dumps at compile:
   move the cache aside), shaders decompile with spirv-cross.
 
+### Headlit car sides (2026-10-19 night, 7b29b1c)
+
+- Symptom (Matt): behind a car at night with our headlights on it, its side looks different per eye (livery hidden
+  in one eye). Not reproducible on the grid (random grid order); traced on Matt's paused game with live triggers.
+- TSHOT dumps are taken when the vertex shader changes: a dump named after shader X holds the draws before X.
+- Reflections: vs 0x4fcf9162 + fs 0x788bb287 adds the lit scene at the hit coordinates of a two-channel buffer
+  (0x5031250000): it mirrors whatever lighting each eye has. Sprites/quads vs 0x3528cba (fs 0xe40b5f55 a 256x256
+  texture, fs 0x809dd808 depth only) were not it.
+- Our headlights: vs 0xf719615a with fs 0xd80f041b (shadow map 1024x1024) or 0x7b2b16ed; depth bounds on, no
+  stencil. Light buffer 224 B (vs buffer 0 = fs buffer 1): 12-15 cone, 24-34 light matrix M (columns per v
+  component), 40-42 light - camera, 44-46 light-space origin, 48-51 projection, 54 shadow. Camera 512 B. The pixel
+  shader's view depth is negative like the ray's z: light vector = C40 - v, light space = C44 + M v.
+- Fix: eye translation in the shader recompiler (Vr::ScanScreenParams: v = the 3-vector the position matrix
+  multiplies; e from the matrix rows; outputs with a v-dependent division evaluated again with v - e) plus per-eye
+  light buffer copies (Rasterizer::BindEyeLightConstants; C40 - e, C44 + M e) in two-eye passes. Shader cache _mv4.
+- Triggers added: SKIP (hex shader hashes, live; empty clears), EYELIGHTS (0/1/2), FSIMG <vs> (pixel shader
+  images, buffers, depth/stencil state), TSHOT writes _R, _D, _DR files. grid.sh: X via the pad file.
+
 ## Tools (H:\dcport-play)
 
 - `torace.sh FPS [env]`: start on the simulator, keys to the first race. `bench.sh LABEL [env]`: race, throttle via

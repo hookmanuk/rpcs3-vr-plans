@@ -499,6 +499,15 @@ eleaser-dev\DriveClub.exe` (VR card: eye size
   at them". Not replicated yet (the pack is gone from the grid; throttle only hits a wall). An eye translation for
   view-dependent vertex outputs (scratchpad eye_translation.patch) left the headlight pool unchanged at 8x eye
   separation: the headlights are not the light volumes; reverted.
+  Then traced on Matt's paused frames with live switches (SKIP, EYELIGHTS): the reflection pass (fs 0x788bb287)
+  only mirrored the lit scene; skipping our headlights' spot light (vs 0xf719615a, fs 0xd80f041b with its shadow
+  map) made both eyes match. Its shadow test flipped per eye on the car side the beam grazes: each eye's point was
+  rebuilt from the centre camera's ray and constants. Fixed 7b29b1c: the eye translation (57 vertex shaders) plus
+  the light's constants per eye. A first version had the constants' sign backwards (left eye greyer; Matt: "the
+  middle one looks correct" = rays only); sign fixed, left/right agree (ratio 1.02 as rays only; wrong sign 0.95).
+  Matt: "commit the one you think is most right, then I'll race with it". Open: his race check.
+  Test flow now: grid.sh drives to the grid with X through the pad file (attract video, CONTROLS, Start Event on
+  the flyover; ~20 s, no keyboard). Matt: "even the 2d video can be skipped".
 
 ## Dragon's Dogma: Dark Arisen (BLUS31155 v01.02)
 
