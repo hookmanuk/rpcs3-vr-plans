@@ -130,6 +130,11 @@ The headset thread showed ~80-88 new frames whatever the game made. What was mea
   change, reverted), not queue priority (0.1-1.0: no change, reverted), not implicit layers (loader ~implicit~: no
   change). 4320 Performance: ~82 new frames, 3-10% over a period (run to run).
 - Eyes now copied straight into the swapchain images in multiview (was scene -> intermediate -> swapchain).
+- The ~10 ms stall lands in whichever Vulkan call the headset makes first: recording (fresh), submit (commands
+  recorded once and reused), or xrEndFrame (copies done right after the previous xrEndFrame): moved, not removed;
+  both attempts reverted. It is gone at 2880 with the cap (GPU headroom): GPU back-pressure (a full GPU makes every
+  submission wait), not a lock of ours. At 4320 the cure is headroom: DLSS Performance or a smaller eye size.
+- Nsight Systems with DLSS on: the game died at startup after "DLSS: ready" (not seen without the profiler).
 - One OpenXR Simulator crash inside its own xrEndFrame (D3D12 CommandAllocator::Reset) in ~40 runs.
 - DLSS upscaling: the game's view of the lit scene swaps red and blue; the redirect view takes its swizzle.
 
