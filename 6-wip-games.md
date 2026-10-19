@@ -464,6 +464,13 @@ eleaser-dev\DriveClub.exe` (VR card: eye size
   frame while the game has room): 2880 per eye 90.0 new frames, 0.0% over a period. Committed b169788 (fork, pushed),
   staged in releaser-dev 2026-10-19 ~04:00 for Matt. Open: 4320 headset-loop stalls in command recording (~10 ms),
   readbacks (precise fix), Matt's headset test of DLSS. Notes: CUSA00003-notes.md "recomp".
+- Matt 2026-10-19: "The last time I checked in the headset, other cars look different in each eye. It might possibly
+  be reflections causing it?" Found two passes drawn for the left eye only (the right eye reused them): the bloom
+  chain (768x768 at 2880) and a half-size 4x MSAA pass (1440x1440; the lights' glows shrink without it). Both now
+  stereo, 82921e0, staged in release\vr-dev. Race benchmark 2880: 89.3 headset fps (was 89.1). Skipping the MSAA
+  pass at 4320 gained nothing (78.3 vs 79.7, noise). Reflections themselves are consistent per eye (screen-space,
+  rebuilt from each eye's depth). Open: Matt's headset recheck; with DLSS on, small one-layer passes (192x68,
+  384x136, 2048x1024, 2048x2048) still sample a two-layer image (not yet identified).
 
 ## Dragon's Dogma: Dark Arisen (BLUS31155 v01.02)
 

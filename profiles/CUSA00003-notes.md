@@ -151,6 +151,23 @@ lost device in ~37 readbacks-off boots (an earlier build at 4320, compute a6cfe0
 - One OpenXR Simulator crash inside its own xrEndFrame (D3D12 CommandAllocator::Reset) in ~40 runs.
 - DLSS upscaling: the game's view of the lit scene swaps red and blue; the redirect view takes its swizzle.
 
+### Per-eye differences (2026-10-19, 82921e0)
+
+- Matt: other cars looked different in each eye. Dev log `BB_VR_MONO_COMPUTE=1` prints every compute ("reads both
+  eyes, writes one-layer images only") and draw ("a one-layer pass samples both eyes' images") that runs for the
+  left eye only while reading the stereo scene.
+- Bloom: 4/15 of the render size (2880 -> 768) and its halvings, within a pixel. Added to the two-layer family.
+- Half-size 4x MSAA pass: colour fmt 97 + depth fmt 126, 1440x1440 at 2880 (960 with DLSS Quality). BackingLayers
+  excluded multisampled images; now allowed, and ResolveImage resolves both layers (Multiview::ResolveLayers).
+  The images are created at 4 samples (SetBackingSamples' ms<->1x copy, layer 0 only, is not used for them).
+  Skipping its draws (temporary switch, removed): the headlight halos shrink; 4320 race 78.3 vs 79.7 fps (no gain).
+- Left mono, fine: 0xffd5ce3 (32x32 exposure), 0xc56053b9 / 0x59b8e960 (512x512 reflection cubemap mips).
+- Eye stack eye_diff.py (grid, three crops): no gross difference before or after; the bodywork matches, edges
+  differ by parallax and aliasing (AA off).
+- Test copy gotcha: the launcher runs `runtime\DriveClubGame.exe`; copy builds there (not the folder root).
+- Open: with DLSS on, one-layer passes 192x68 / 384x136 / 2048x1024 (fmt 43) / 2048x2048 (fmt 91) sample a
+  two-layer image. Probably a game texture that matches the output-size family by size; not checked.
+
 ## Tools (H:\dcport-play)
 
 - `torace.sh FPS [env]`: start on the simulator, keys to the first race. `bench.sh LABEL [env]`: race, throttle via
