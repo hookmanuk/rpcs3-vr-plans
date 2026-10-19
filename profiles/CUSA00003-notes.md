@@ -173,6 +173,31 @@ lost device in ~37 readbacks-off boots (an earlier build at 4320, compute a6cfe0
   (Multiview::StereoUploads). Left: a 512x512 fmt 97 game texture (0x510bc90000) still matches at DLSS Quality, read
   by one mono pass (layer 0, correct). The dev log now names the pass's vertex shader and the two-layer images it reads.
 
+### Afternoon 2026-10-19: blackout, culling, per-eye lighting (68bd57c, 0bb36a0, 5854b87)
+
+- Blackout at dawn (about 45 s into the first race, after the tunnel and the hairpin; HUD intact, until a restart):
+  VR runs BB_READBACKS=0 and the CPU never saw the tiny GPU writes at 0x30004040f0... Relaxed readbacks fixed it but
+  cost 10-17%. buffer_cache/small_writeback.cpp: written bindings up to 1 KB copied at each submit and written into
+  guest memory when the GPU has passed them (~27 ranges, 6 KB a frame; no cost). BB_READBACK_SMALL=0 off.
+- Culling: Camera::Set (+0x72d9e0, rdi camera, rsi world = identity, rdx a block: projection, near/far +0x40/+0x48,
+  six view-space planes at +0x60, outward normals, inside n.p+d <= 0: near, left, right, bottom, top, far). The
+  player camera's planes are replaced by the headset's tangents turned with the head (rotation only: the head's
+  position is metres off in the menus). The game's FOV constant (image +0x12efac4 = 0.5, the "FOV fix" patch's
+  0x16efac4) widens culling but cuts draws 30% (its detail selection): dropped. BB_VR_CULL_HEAD=0 off.
+- Per-eye lighting: computes 0x409b1cc4 (1 MB) and 0x7ceec0f3 (256 KB) build the forward pass's light data from
+  depth (fmt 100) and normals (fmt 91); the forward pass vs 0xbe79b5f2 writes the lit scene for both eyes. Guest
+  storage buffers are now two-element descriptor arrays in VR shaders (EyeBuffers at the start of main: element =
+  view index / vr_eye); bindings give the right eye's copy for per-eye buffers; those computes run per eye
+  (BB_VR_EYE_COMPUTES=hex,...); barriers around the right eye's dispatch. Shader cache suffix _mv2.
+- BB_VR_AUDIT=1: ONE EYE (a pass run once from per-eye inputs) and BOTH EYES READ LEFT lines, data followed through
+  passes (images and buffers). Left after the fix: 0xc6edad8b's 0x300 block (shadow map, scene copy) read by
+  vs 0x145f0d43, exposure (32x32, 0x832138ea, 0xeea18ba7), 0x5bc75fd9's 4 bytes: shared on purpose.
+- Test harness lessons: the OpenXR simulator walks its head with W/A/S/D while the game is in front (race10 held W:
+  benchmarks before this were rendered from a drifting eye; a stuck W from a killed script made every run look
+  broken). race10 throttles through BB_PAD_FILE (r2) now; scripts release keys on exit. Dev tools: BB_VR_CAM_FILE
+  (camera position for drivebot.py), WATCH "addr len x" (execution breakpoint with caller), BB_VR_LOOKLOG,
+  TSHOT accepts B10G11R11. The game's look-around angle lives as a parameter (degrees, -35 right) the cockpit reads.
+
 ## Tools (H:\dcport-play)
 
 - `torace.sh FPS [env]`: start on the simulator, keys to the first race. `bench.sh LABEL [env]`: race, throttle via

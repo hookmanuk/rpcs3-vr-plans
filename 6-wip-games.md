@@ -472,6 +472,17 @@ eleaser-dev\DriveClub.exe` (VR card: eye size
   rebuilt from each eye's depth). Those DLSS-only one-layer passes were game textures the bloom rule caught by size
   (DLSS Quality: bloom 512, halvings 256/128/64/32) with an unfilled right-eye layer: fixed fdfd71b (exact bloom size
   and formats; uploads fill both layers), staged. DLSS Quality race 88.3 headset fps. Open: Matt's headset recheck.
+- Matt 2026-10-19 afternoon: "after half a lap on the opening race the entire screen goes dark apart from the HUD"
+  (after the tunnel and the hairpin; restart fixes it): readbacks off kept the CPU from the game's tiny GPU writes;
+  fixed 68bd57c (small GPU writes written back each submit, no cost). "Looking sideways at a car culls parts of the
+  car" (our own passenger door too): the game culls with its forward camera, +-46 degrees; fixed 0bb36a0 (the culling
+  planes in Camera::Set's block turned with the head, headset FOV; detail unchanged). Matt confirmed the door fixed.
+  "Start on the grid, then turn the head right, the right eye gets a black shadow over the warning triangle sign" and
+  the silver car different per eye: the tiled lighting's light data (computes 0x409b1cc4, 0x7ceec0f3) built from
+  the left eye only; fixed 5854b87 (per-eye buffers: guest storage buffers are eye arrays in VR shaders, those
+  computes run per eye; about 2%: 3200 race 84.5-84.8 vs 86.4 headset fps). Matt: "Do a thorough audit of all
+  passes": BB_VR_AUDIT=1 follows left-eye-only data through every pass; what remains is shared on purpose (exposure,
+  a 0x300 block from the shadow map). Staged in release\vr-dev. Open: Matt's check of the silver car.
 
 ## Dragon's Dogma: Dark Arisen (BLUS31155 v01.02)
 
