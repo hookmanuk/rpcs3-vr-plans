@@ -518,6 +518,14 @@ eleaser-dev\DriveClub.exe` (VR card: eye size
   the crowd. Matt: "How can we get back to a fully working game for now?" Precise readbacks are now the VR default
   (845afd0); "DriveClub fast (readbacks off).cmd" keeps the old mode. 3200 per eye race start: 76 game / 72
   headset FPS (readbacks off 94 / 88). Open: a cheaper way to give the game its GPU results.
+- Launcher (2026-10-19 night): VR card first; "Experimental options" shows VR EXPERIMENTAL (VR DLSS, sharpness,
+  "VR fast mode" = readbacks off) below it, off = not applied; frame rate/resolution and anti-aliasing only with VR
+  Off; sizes 1080 and 1600 added (game ~75 FPS at every size: CPU-bound). README: VR section (OpenXR, 45/60 FPS,
+  OFXR, Camera Shake Off). Release 0.2.4-vr1.0 (Matt: "pull the commits from the source repo for 0.2.4"): upstream
+  OverkillLabs3/driveclub-recomp v0.2.4 merged (94e17f4), packaging/package-vr.sh, tag v0.2.4-vr1.0 pushed, zip
+  release/driveclub-recomp-0.2.4-vr1.0-win64.zip (129 MB) for Matt to publish. Out-of-box: extracted zip boots VR
+  3200 to the grid on the simulator (warm 72.7 game / 90 headset FPS), DLAA via the bundled bridge (59.6).
+  Stashed, not released: BB_READBACK_PARTIAL (protect only whole pages; unmeasured).
 
 ## Dragon's Dogma: Dark Arisen (BLUS31155 v01.02)
 
