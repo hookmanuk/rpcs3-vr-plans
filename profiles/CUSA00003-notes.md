@@ -145,6 +145,9 @@ The headset thread showed ~80-88 new frames whatever the game made. What was mea
 | 3200 | Quality (2128) | 87.7 | 85.8 | 0.8% |
 | 3840 | Balanced (2256) | 87.4 | 84.9 | 1.1% |
 | 4320 | Performance (2160) | 84.6 | 83.5 | 3.3% |
+
+Stability with readbacks off: 16 of 16 boots of b169788 at 3200 clean (no lost device, no crash); over the night one
+lost device in ~37 readbacks-off boots (an earlier build at 4320, compute a6cfe095 reading 0xa000).
 - One OpenXR Simulator crash inside its own xrEndFrame (D3D12 CommandAllocator::Reset) in ~40 runs.
 - DLSS upscaling: the game's view of the lit scene swaps red and blue; the redirect view takes its swizzle.
 
