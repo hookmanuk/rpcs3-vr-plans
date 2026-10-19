@@ -508,6 +508,16 @@ eleaser-dev\DriveClub.exe` (VR card: eye size
   Matt: "commit the one you think is most right, then I'll race with it". Open: his race check.
   Test flow now: grid.sh drives to the grid with X through the pad file (attract video, CONTROLS, Start Event on
   the flyover; ~20 s, no keyboard). Matt: "even the 2d video can be skipped".
+- Matt 2026-10-19 late: "rear view lights are now very flickery" and "my car bonnet has massive shadow noise":
+  the eye translation on 36 ordinary geometry shaders (their clip position for the pixel shader); fixed f02c850
+  (only shaders passing view rays on: the light volumes and four with view vectors). Matt: "everything is good
+  now apart from the rain". Rain: "the raindrops on the front windscreen ... flicker on or off for multiple frames
+  at once ... its vr only"; "with the readbacks cmd on" they are perfect; also "the people are standing in midair
+  to the right ... with the readbacks cmd on they stand on snow". Live toggle bisect on Matt's game: threaded
+  recording + constant ring off fixed the drops (-10%), not the crowd; small-write copy-back up to 8 KB did not fix
+  the crowd. Matt: "How can we get back to a fully working game for now?" Precise readbacks are now the VR default
+  (845afd0); "DriveClub fast (readbacks off).cmd" keeps the old mode. 3200 per eye race start: 76 game / 72
+  headset FPS (readbacks off 94 / 88). Open: a cheaper way to give the game its GPU results.
 
 ## Dragon's Dogma: Dark Arisen (BLUS31155 v01.02)
 

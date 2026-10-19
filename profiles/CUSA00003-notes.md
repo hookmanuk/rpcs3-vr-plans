@@ -236,6 +236,18 @@ lost device in ~37 readbacks-off boots (an earlier build at 4320, compute a6cfe0
 - Triggers added: SKIP (hex shader hashes, live; empty clears), EYELIGHTS (0/1/2), FSIMG <vs> (pixel shader
   images, buffers, depth/stencil state), TSHOT writes _R, _D, _DR files. grid.sh: X via the pad file.
 
+### Readbacks (2026-10-19 late, 845afd0)
+
+- VR ran BB_READBACKS=0 (4320: 65 -> 80 FPS). The game reads GPU results it needs: crowd placement (people in
+  mid-air on the stands right of the grid), windscreen drop sprites (vs 0x44606ffd: 594 quads, one draw per
+  window, vertex alpha per drop; on/off for frames, VR only), and the dawn blackout (small_writeback.cpp).
+- Precise readback CPU reads (BB_READBACK_LOG=1): ~12 pages, 8-byte reads, mostly CPU data sharing pages with
+  GPU writes; GPU-written ranges read: 1 KB ones (covered), 0x30004861c0 +8 KB, 0x3000430060 +1.25 KB. Copy-back
+  up to 8 KB (BB_READBACK_SMALL_MAX=8, 3 MB/s) did not fix the crowd; unlimited is 1.4-1.9 GB/s.
+- Toggles (data/user/toggles.txt, live; the launcher rewrites it at start): ThreadedRecording (16) +
+  ConstantRing (1<<36) off fixed the drops only (game 93 -> 83 FPS). Relaxed readbacks (1): crowd floats, 78 FPS.
+- Now precise by default: 3200 per eye race start 76 game / 72 headset FPS vs 94 / 88 off.
+
 ## Tools (H:\dcport-play)
 
 - `torace.sh FPS [env]`: start on the simulator, keys to the first race. `bench.sh LABEL [env]`: race, throttle via
