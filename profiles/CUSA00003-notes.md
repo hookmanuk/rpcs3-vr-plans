@@ -76,6 +76,51 @@ GPU 50-58% (RTX 5090) at 110 FPS uncapped: CPU-bound (the GPU command thread). T
 50-85 ms hitch every ~10 s are the same with stereo off and flat: the port's own. Prep workers (BB_PREP_WORKERS=4) did
 not help (109-113 uncapped); BB_FRAMES_AHEAD=2 neither (over a period 1.2-1.3%).
 
+## The recomp port (H:\driveclub-recomp, branch vr, 2026-10-18/19)
+
+Matt's fork hookmanuk/driveclub-recomp (OverkillLabs3/driveclub-recomp 0.2.3, the same bbport/shadPS4 lineage as
+DCport); the dcport-vr commits went across as one 3-way patch (14 small conflicts). Build: `bash build.sh` in MSYS2
+CLANG64 (clang 23 needed gpu/libcxx_compat.h forced in and -Wno-error=unused-but-set-global); the DLSS bridge with VS
+2026 (`cmake -G "Visual Studio 18 2026"`, DLSS_SDK_ROOT=F:/rpsc3/source/DLSS); `packaging/stage-vr.sh` lays out
+release/vr-dev (Matt plays there; STAGE_OUT=release/vr-test for tests). Launcher: VR card (eye size 2160-4320, VR
+DLSS Off/DLAA/Quality/Balanced/Performance); VR is opt-in (BB_VR=1), flat play never starts OpenXR.
+
+### Findings
+
+- **GPU quarantine**: after a lost device the recomp writes data/user/gpu_quarantine.txt and skips those compute
+  shaders on every later launch (a6cfe095, lighting): broken picture, inflated FPS. Tests run BB_QUARANTINE=0.
+- **Readbacks**: ~1.5 per frame CPU reads of pages the GPU wrote (0x3000404000, 0x3000420000 SystemShared,
+  0x4004c0f000): the game keeps CPU objects (a flag at +0xa5, a vtable) in the same 4 KB pages as small GPU writes
+  (4-16 bytes at 0x30004040f0.., 0x3000420560). Precise readbacks wait for the GPU each time (533 ms/s of fault time at
+  4320). VR runs BB_READBACKS=0. Open: a precise fix (tiny GPU writes not marking the page, written back after the
+  GPU finishes).
+- **No TAA in VR**: the motion blur / DOF patch also takes out the game's TAA (one shader): no anti-aliasing in VR
+  unless DLSS. DriveAA's hook (the TAA dispatch) never fires; vr_dlss.cpp runs DLSS on the lit scene (written by the
+  lighting combine 0x2c918c06, R11G11B10F) at the first bloom draw (vs 0xb834cdf9), armed once per frame by the main
+  view's camera constants. 0xcc8ecafb is the refraction copy's mip chain, not an AA pass.
+- **Camera constants** (G-buffer VS, 512 bytes): 0-15 camera-relative view-projection (row vectors), 16-31 view
+  rotation, 32-47 its inverse, 48-63 projection (reversed infinite, near 0.02 in races), 64-79 inverse VP,
+  80-95 inverse projection, 96-97 target size (the mirror's is 384x136), 108-110 world position. Two identical copies a
+  frame. Motion: inverse(VPcur) * translate(poscur - posprev) * VPprev, per eye with the eye's clip shift taken out.
+- **Auto recentre**: stereo again after >= 2 s of flat screen (boot), and a main-camera jump > 100 m in one frame
+  (race start, restart, menus).
+- Scripted tests hold W from the end of the countdown (keys_safe.ps1: keys only while the game is in front).
+
+### Clean frame rates (simulator, 2026-10-19, first event, throttle held, readbacks off, no quarantine)
+
+| Eye | VR DLSS | game flips (uncapped) | new frames on the headset | headset over a period |
+|---|---|---|---|---|
+| 4320 | off | 79 | 73 | 9.7% |
+| 4320 | DLAA | 73 | 65 | 7.3% |
+| 4320 | Quality (2880) | 99 | 80 | 6.9% |
+| 4320 | Balanced (2544) | 108 | 81 | 6.8% |
+| 4320 | Performance (2160) | 112 | 82 | 5.9% |
+| 2880 | off | 119 | 88 | 5.9% |
+| 2880 | DLAA | 113 | 86 | 6.6% |
+
+The headset thread shows ~80-88 new frames whatever the game makes: it took publications whose GPU work was not done,
+and its copies (then the compositor) waited for it. Fix: only finished publications (BB_VR_WAIT_FRAMES=1 the old way).
+
 ## Tools (H:\dcport-play)
 
 - `torace.sh FPS [env]`: start on the simulator, keys to the first race. `bench.sh LABEL [env]`: race, throttle via
