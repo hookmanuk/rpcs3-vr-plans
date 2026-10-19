@@ -135,6 +135,16 @@ The headset thread showed ~80-88 new frames whatever the game made. What was mea
   both attempts reverted. It is gone at 2880 with the cap (GPU headroom): GPU back-pressure (a full GPU makes every
   submission wait), not a lock of ours. At 4320 the cure is headroom: DLSS Performance or a smaller eye size.
 - Nsight Systems with DLSS on: the game died at startup after "DLSS: ready" (not seen without the profiler).
+
+### Final build b169788 (simulator, 90 Hz, throttle held, readbacks off, adaptive cap)
+
+| Eye | VR DLSS | new frames on the headset | game flips | over a period |
+|---|---|---|---|---|
+| 2880 | off | 90.0 | 90.0 | 0.0% |
+| 3200 | off | 89.7 | 89.8 | 0.3% |
+| 3200 | Quality (2128) | 87.7 | 85.8 | 0.8% |
+| 3840 | Balanced (2256) | 87.4 | 84.9 | 1.1% |
+| 4320 | Performance (2160) | 84.6 | 83.5 | 3.3% |
 - One OpenXR Simulator crash inside its own xrEndFrame (D3D12 CommandAllocator::Reset) in ~40 runs.
 - DLSS upscaling: the game's view of the lit scene swaps red and blue; the redirect view takes its swizzle.
 
