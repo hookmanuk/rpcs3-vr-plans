@@ -483,6 +483,22 @@ eleaser-dev\DriveClub.exe` (VR card: eye size
   computes run per eye; about 2%: 3200 race 84.5-84.8 vs 86.4 headset fps). Matt: "Do a thorough audit of all
   passes": BB_VR_AUDIT=1 follows left-eye-only data through every pass; what remains is shared on purpose (exposure,
   a 0x300 block from the shadow map). Staged in release\vr-dev. Open: Matt's check of the silver car.
+- Matt 2026-10-19 evening: "the audi circles have red accents misaligned differently in each eye" and "the fire on
+  the right side is completely different per eye" (also dust from other cars). The fire was the right eye's copy of
+  a per-eye buffer left unseeded (Matt bisected old builds: 54a5fb9/82921e0/0bb36a0 fine); fixed f317055. Other
+  fixes on the way: 0ece1e7 (only 0x409b1cc4 per eye), 3fe2ebf (MSAA depth copy for both layers), 980646e (glow
+  chain per eye; the audit covers image copies). Vents: the light volumes passed clip x / w to find their G-buffer
+  pixel before the eye's shift; fixed d1ce29f (those outputs move with the eye). Matt: "the vents now work".
+  Rain (it starts ~150 s into the first race): "raindrops outside the car doesnt exist, and rain drops on the car
+  windshield flicker in and out of existence". The windscreen drops (vs 0x44606ffd) are drawn after the composite
+  and went into the flat HUD layer (left eye's drops, on the A-pillar in the right eye): 5218f68. They still
+  flickered in both eyes: in some frames vs 0xdc8e480a comes first and the scene copy was taken there; a51746f,
+  staged. The falling precipitation outside matched a flat run in the simulator (snow at night on this track).
+  Open: "the paint on other cars is still inconsistent per eye ... Usually thats either differences per eye or
+  incorrect depth"; Matt: "It might be to do with the car headlights... when I'm behind them shining my headlights
+  at them". Not replicated yet (the pack is gone from the grid; throttle only hits a wall). An eye translation for
+  view-dependent vertex outputs (scratchpad eye_translation.patch) left the headlight pool unchanged at 8x eye
+  separation: the headlights are not the light volumes; reverted.
 
 ## Dragon's Dogma: Dark Arisen (BLUS31155 v01.02)
 

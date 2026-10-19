@@ -198,6 +198,26 @@ lost device in ~37 readbacks-off boots (an earlier build at 4320, compute a6cfe0
   (camera position for drivebot.py), WATCH "addr len x" (execution breakpoint with caller), BB_VR_LOOKLOG,
   TSHOT accepts B10G11R11. The game's look-around angle lives as a parameter (degrees, -35 right) the cockpit reads.
 
+### Evening 2026-10-19: fire, vents, rain (0ece1e7..a51746f)
+
+- f317055: the right eye's copy of a per-eye buffer is seeded from the original before each per-eye dispatch (the
+  compute only writes part of it: the fire and dust differed per eye).
+- d1ce29f: deferred light volumes (vs f719615a with cookie and shadow map, 34f93d62, f8440925, 1fbbf338,
+  b0adf65b) pass clip x / w to the pixel shader as the G-buffer coordinate, computed before the eye's clip shift:
+  each eye lit the G-buffer shift / w away (~100 px at cockpit distance). Vertex outputs that are pos.x / pos.w
+  (times a constant, plus one; found in the IR) now get scale * shift / w (Vr::ScanScreenParams). Shader cache _mv3.
+  Their view ray (p / z) is still the centre's: position error e * (d / z_volume - 1). A full eye translation
+  (v - e with M e = (-shift, 0, *, 0) solved from the matrix rows, view-dependent outputs evaluated again; 57
+  shaders) is in the scratchpad as eye_translation.patch: no visible change to the headlights at 8x separation
+  (BB_VR_WORLD_SCALE=8), not committed.
+- Rain on the first event starts ~150 s after the start. The compositor copies the scene before the first HUD draw
+  into the display buffer; vs 0x44606ffd (windscreen drops and wiper streaks, w = 1) and vs 0xdc8e480a
+  (perspective, some frames) are scene overlays drawn after the composite 0x8d52ab95; HUD: 8b76f6cd (minimap),
+  53b0217e, b0295518. 5218f68, a51746f. BB_VR_LOG_DISPLAY_SEQ=1 logs each display-buffer draw sequence (* = copy).
+- Dev: BB_VR_TSHOT_LAYER=1 (TSHOT dumps the right eye's layer), audit flags one-eye draws with the player camera
+  and per-eye passes reading one-layer renders, BB_VR_LOG_SCREEN_PARAMS=1, BB_DUMP_SHADERS=1 (dumps at compile:
+  move the cache aside), shaders decompile with spirv-cross.
+
 ## Tools (H:\dcport-play)
 
 - `torace.sh FPS [env]`: start on the simulator, keys to the first race. `bench.sh LABEL [env]`: race, throttle via
