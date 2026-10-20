@@ -573,9 +573,12 @@ Details and tools: `profiles/CUSA00003-notes.md`.
   Matt's tests at the always-there spot: small ranges not fast = no grass; only one page exact (0x400220f000) = no
   grass, 72 FPS, 1% low 60 (as without); 0x300042f000 exact as well = 50 FPS (each read waits for the GPU). A watch
   showed a 4-byte GPU flag (0/1) at 0x400220ff50, read by game +0x758a2d once a slot's label from two frames back
-  has passed; as a fast range it arrived a submit or more late. Fixed d94aa03: that page exact by default (logged as
-  "small range ... exact"); same address in every run so far. Staged in release\vr-dev. Open: other tracks (does
-  the address hold), Matt's check of the normal exe.
+  has passed. d94aa03 made that page exact by default, but at 3584 per eye the flag lives elsewhere (0x4006e3ab50)
+  and exact there cost 72 -> 58-62 FPS (2950 own-byte faults per 30 s, each waiting for the GPU); reverted 3b30934.
+  Not fixes (not committed): copying small writes back as soon as the GPU finishes, keeping them out of page uploads
+  (the GPU is more than two frames behind at times). Matt: "is there not a better way to fix this?" Fixed 8fc6409:
+  the clump shader is not drawn in VR (the roadside grass is another shader; BB_VR_GRASS_CLUMPS=1 draws them).
+  Matt: "its great now"; 3584: 72 FPS, 1% low 50-58, late 0-0.6%. Staged in release\vr-dev.
 
 ## Dragon's Dogma: Dark Arisen (BLUS31155 v01.02)
 
