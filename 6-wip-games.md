@@ -455,14 +455,13 @@ Details and tools: `profiles/CUSA00003-notes.md`.
   0.8-1.2%; busy start grid 9% over a period (reprojection 4%), uncapped 110-113 FPS.
 - Open: Matt's headset test; day/rain events (water droplets); the port's hitches and slow 1% (both modes).
 - 2026-10-18/19: ported to the recomp (Matt: "this version seems better than the other port"), Matt's fork
-  hookmanuk/driveclub-recomp branch `vr`, play `H:\driveclub-recomp
-eleaser-dev\DriveClub.exe` (VR card: eye size
+  hookmanuk/driveclub-recomp branch `vr`, play `H:\driveclub-recomp\release\vr-dev\DriveClub.exe` (VR card: eye size
   2160-4320, VR DLSS). Matt: "this build is good" (2880-4320, readbacks off). Then asked for optimisations, DLSS, and an
   automatic recentre at each race start. DLSS per eye works (on the lit scene before bloom: the motion blur patch
   removes the game's TAA); auto recentre on a >100 m camera jump. 4320 per eye: 73 FPS native, game 99-112 with DLSS
   Quality-Performance but the headset loop showed only ~80. Headset pacing (finished frames, one flip per headset
   frame while the game has room): 2880 per eye 90.0 new frames, 0.0% over a period. Committed b169788 (fork, pushed),
-  staged in releaser-dev 2026-10-19 ~04:00 for Matt. Open: 4320 headset-loop stalls in command recording (~10 ms),
+  staged in release\vr-dev 2026-10-19 ~04:00 for Matt. Open: 4320 headset-loop stalls in command recording (~10 ms),
   readbacks (precise fix), Matt's headset test of DLSS. Notes: CUSA00003-notes.md "recomp".
 - Matt 2026-10-19: "The last time I checked in the headset, other cars look different in each eye. It might possibly
   be reflections causing it?" Found two passes drawn for the left eye only (the right eye reused them): the bloom
@@ -547,25 +546,36 @@ eleaser-dev\DriveClub.exe` (VR card: eye size
     before the race (GPU 100% busy, a thread waiting for a tick; not understood). Also seen, unrelated to the pipe:
     a hang right after "_init_env returned" (flat, pipe off) and a startup crash in openxr_simulator.dll/D3D12.
   - No gain, reverted: lock-free EyeBufferInfo (129.4 vs 129.5), separate catch-all pipe-read entries (fewer drains,
-    same FPS). Staged in releaser-dev (game 0f2447e + launcher 2a7a74f, VR mask), backups in outrdev_backup_*.
+    same FPS). Staged in release\vr-dev (game 0f2447e + launcher 2a7a74f, VR mask), backups in out\vrdev_backup_*.
     1080 per eye now ~138 headset / ~142 game FPS (simulator); GPU ~52%, stage B ~84% busy: the next limit.
 - Matt 2026-10-20: "In last nights build SteamVR always says locked 90fps, even when it's clearly dropping frames. We
   should see those dropped frames in SteamVR." The headset loop resubmitted the last frame on the runtime's clock.
   c5c0dc6: after xrWaitFrame it waits (up to 100 ms) for the game's frame, so slow frames are late for SteamVR
   (BB_VR_REPEAT=1: old loop). Simulator 90 Hz, 4320: headset 90 (repeats) -> ~82 = game, 4.4% late; 1080: 90, 0% late.
-  Uncapped 1080 150 game / 149 headset. Staged in releaser-dev (backup outrdev_backup_0f2447e_game.exe).
+  Uncapped 1080 150 game / 149 headset. Staged in release\vr-dev (backup out\vrdev_backup_0f2447e_game.exe).
   Also: upstream PR #77 (steering wheels) merged into branch wheel-support (9c4a356), not into vr yet.
 - Grid lows per eye size (simulator uncapped, warm cache): 1080 117 avg / 110 worst second, 3200 108 / 102,
   3584 97 / 90, 3840 90 / 82, 4320 77 / 69. Matt: "investigate and fix those hitches" (63-72 ms, first pass): shader
   and pipeline compiles (156 in one second) because the VR pipeline cache was per eye size (_mv5_<size>) for a shader
   patch that replaces nothing in this port. 262884a: one cache (_mv6) for all sizes, the fullest _mv5 cache renamed
   into it on first start; Windows "Stall:" reports (BB_FRAME_STATS). Warm 1080 races: no frame over 40 ms in 4 x 60 s,
-  worst 18-31 ms. Staged in releaser-dev (backup outrdev_backup_c5c0dc6_game.exe).
+  worst 18-31 ms. Staged in release\vr-dev (backup out\vrdev_backup_c5c0dc6_game.exe).
 - Matt 2026-10-20 (vr-dev 262884a, 2880 + DLSS Quality): "on first load there were loads of graphics errors: lots of
   missing geometry, raindrops and wheelspin dust are broken again"; after closing and reopening "its all fine now".
   Only the very first run after the update (cache migrated to _mv6 by hand before it); the two logs show no fault,
   quarantine or difference. Open: check the first run of the next release build. Suspects if it returns: the readback
   hybrid's per-run page learning, the pipe_reads drains (6d1291c).
+- Matt 2026-10-20 (vr-dev, 3200): "these grass patches are literally floating in mid air mid track, they are
+  incorrectly positioned" (different places each run, also mid-track; vs 0xb8b4c1cb, an instanced clump mesh, not the
+  roadside grass). Gone with the readback hybrid off. Meanwhile the shared pipeline cache (262884a) misplaced slabs
+  and made lights multicoloured; Matt: "if shared cache is the issue lets dump that change": reverted 2570227
+  (per-size caches again). Hybrid switches d1335e5 (BB_HYBRID_SMALL=0, BB_HYBRID_LEARN=0, BB_HYBRID_EXACT=<pages>),
+  Matt's tests at the always-there spot: small ranges not fast = no grass; only one page exact (0x400220f000) = no
+  grass, 72 FPS, 1% low 60 (as without); 0x300042f000 exact as well = 50 FPS (each read waits for the GPU). A watch
+  showed a 4-byte GPU flag (0/1) at 0x400220ff50, read by game +0x758a2d once a slot's label from two frames back
+  has passed; as a fast range it arrived a submit or more late. Fixed d94aa03: that page exact by default (logged as
+  "small range ... exact"); same address in every run so far. Staged in release\vr-dev. Open: other tracks (does
+  the address hold), Matt's check of the normal exe.
 
 ## Dragon's Dogma: Dark Arisen (BLUS31155 v01.02)
 
