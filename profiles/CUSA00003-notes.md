@@ -267,6 +267,11 @@ lost device in ~37 readbacks-off boots (an earlier build at 4320, compute a6cfe0
   still open with the pipe on in flat. Record/chunk ownership checks (scratchpad record_check.patch,
   chunk_check.patch) found no overlapping recording.
 - At 1080 with 6d1291c: stage A still waits ~29% (ConstRam drains ~8k/s remain), stage B busy ~84%, GPU ~52%.
+- Root cause of the race-load crashes (0f2447e): ProcessCommands checked num_commands, drained, then looped; a guest
+  thread's SendCommand (OffloadReadback -> RecordReadback, then a flush) landed between check and loop and ran on
+  stage A without a drain. Found with a per-chunk op log (scratchpad edit_chunk_log.py + switch stacks: every
+  Push/Allocate with offset, thread and site; RtlCaptureStackBackTrace when the writing thread changes; abort with
+  the log when a command's vtable is outside the executable). Caught within 1-6 VR boots at 1080 with BB_PROFILE=1.
 - Ideas not done: exact ranges for ordered tasks (WriteData/EOP/DMA) instead of all memory (tried keeping
   catch-all entries separate: drains 8.8k -> 6.9k/s, FPS unchanged).
 

@@ -539,9 +539,16 @@ eleaser-dev\DriveClub.exe` (VR card: eye size
     vanished; probably also the rare race-load crash with garbage vertex formats). 1080 126.2 -> 137.9, 3200 113.0
     -> 118.4 (GPU-bound at 93-95%). Grid shots match (mean difference 0.05).
   - Total at 1080 per eye: ~108 -> ~138 headset FPS (+28%); 3200: ~87 -> ~118.
-  - Stability: VR 1080 15/15 boots clean after 6d1291c; before it ~1 race-load crash per ~50 VR boots.
+  - Race-load crashes found and fixed, 0f2447e: Liverpool::ProcessCommands drained the pipe only if commands were
+    queued when it started; an offloaded readback sent by a guest thread in between recorded on the GPU command
+    thread beside stage B, into the same chunk (a chunk log caught both threads writing the same offsets). Precise
+    readbacks send these often. After: VR 1080 29/29 boots, flat 4K with the pipe 16/16 race loads.
+  - Flat keeps upstream's mask (pipe off): with the pipe flat 4K is 117 -> 140 FPS, but 2 of ~28 flat boots hung
+    before the race (GPU 100% busy, a thread waiting for a tick; not understood). Also seen, unrelated to the pipe:
+    a hang right after "_init_env returned" (flat, pipe off) and a startup crash in openxr_simulator.dll/D3D12.
   - No gain, reverted: lock-free EyeBufferInfo (129.4 vs 129.5), separate catch-all pipe-read entries (fewer drains,
-    same FPS). Staged in releaser-dev (game 6d1291c + launcher with the VR mask), backups in outrdev_backup_*.
+    same FPS). Staged in releaser-dev (game 0f2447e + launcher 2a7a74f, VR mask), backups in outrdev_backup_*.
+    1080 per eye now ~138 headset / ~142 game FPS (simulator); GPU ~52%, stage B ~84% busy: the next limit.
 
 ## Dragon's Dogma: Dark Arisen (BLUS31155 v01.02)
 
