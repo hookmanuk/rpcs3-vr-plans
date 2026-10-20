@@ -584,6 +584,15 @@ Details and tools: `profiles/CUSA00003-notes.md`.
   Then upstream main (to 5317c47: benchmark mode, wheel FFB gain fix, frame pacing with minimum spacing, launcher
   layout) merged into vr, f776f99: the VR flip gate kept in the new pacing, the VR card top left in the new column
   search, wheel tools staged. Matt: "all looks good, push". Pushed.
+- Matt 2026-10-20 evening (vr-dev = the merge f776f99, 3200): "Keep clicking x through till you get to the 3d car
+  screen, you will see one of the angles of the car has different reflections or light per eye. Then keep clicking x
+  until you get to the race, now the race just quits every time (this worked first time, but now crashes every time).
+  Once you get into the race, you'll see floating grass all over the place, way worse than the first race we fixed.
+  We need a proper fix for this as its multiple different textures all over the place. v1.0 doesn't have this bug.
+  Then when in the race, if you quit to the main menu the whole game crashes too." Logs: faults at game +0x8825a0 /
+  +0x88260b (+0x883c70 at 16:33) reading garbage pointers from 0x30004255d0-0x300042e800; none in the vr1.1 runs.
+  Also seen: a user's crash (their eboot is a DLC-merged mod; upstream's always-on red zone patch overwrites its code
+  at +0x1551ac0), not ours.
 
 ## Dragon's Dogma: Dark Arisen (BLUS31155 v01.02)
 
