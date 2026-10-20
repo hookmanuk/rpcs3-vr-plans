@@ -555,6 +555,12 @@ eleaser-dev\DriveClub.exe` (VR card: eye size
   (BB_VR_REPEAT=1: old loop). Simulator 90 Hz, 4320: headset 90 (repeats) -> ~82 = game, 4.4% late; 1080: 90, 0% late.
   Uncapped 1080 150 game / 149 headset. Staged in releaser-dev (backup outrdev_backup_0f2447e_game.exe).
   Also: upstream PR #77 (steering wheels) merged into branch wheel-support (9c4a356), not into vr yet.
+- Grid lows per eye size (simulator uncapped, warm cache): 1080 117 avg / 110 worst second, 3200 108 / 102,
+  3584 97 / 90, 3840 90 / 82, 4320 77 / 69. Matt: "investigate and fix those hitches" (63-72 ms, first pass): shader
+  and pipeline compiles (156 in one second) because the VR pipeline cache was per eye size (_mv5_<size>) for a shader
+  patch that replaces nothing in this port. 262884a: one cache (_mv6) for all sizes, the fullest _mv5 cache renamed
+  into it on first start; Windows "Stall:" reports (BB_FRAME_STATS). Warm 1080 races: no frame over 40 ms in 4 x 60 s,
+  worst 18-31 ms. Staged in releaser-dev (backup outrdev_backup_c5c0dc6_game.exe).
 
 ## Dragon's Dogma: Dark Arisen (BLUS31155 v01.02)
 
