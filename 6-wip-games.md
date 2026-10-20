@@ -526,6 +526,22 @@ eleaser-dev\DriveClub.exe` (VR card: eye size
   release/driveclub-recomp-0.2.4-vr1.0-win64.zip (129 MB) for Matt to publish. Out-of-box: extracted zip boots VR
   3200 to the grid on the simulator (warm 72.7 game / 90 headset FPS), DLAA via the bundled bridge (59.6).
   Stashed, not released: BB_READBACK_PARTIAL (protect only whole pages; unmeasured).
+- Performance night 2026-10-20 (Matt: "get the FPS as high as possible in VR ... there may well be flatscreen
+  improvements"). Matt plays 1080x1080 per eye: CPU-bound there (GPU ~48%). All numbers simulator, uncapped 240 Hz,
+  DLSS off, race start, alternating A/B, headset FPS:
+  - 3e3b4c7 readback hybrid (precise readbacks without most of their cost): 3200 86.6 -> ~102.5; flat 4K 111 -> 115.
+  - 0944c4f the renderer's two-thread draw path on in VR (launcher mask 552960): 1080 108 -> 126, 3200 101.5 -> 115.
+    Flat stays off (upstream's mask): flat 4K 119 -> 129 with it, but 1 crash + 1 hang in 10 flat boots after
+    6d1291c (driver crash in a recorded endRendering at race load; a GPU wait that never ends).
+  - 6d1291c constant dumps (DumpConstRam, ~80k/s) drained the pipe every time (stage A waited 38%): now only when a
+    packet in flight reads the dumped memory; the fetch shader's vertex buffer sharps travel in the packet (stage B
+    read them from guest memory, where the next draw's table may already be: without the drain the scenery and crowd
+    vanished; probably also the rare race-load crash with garbage vertex formats). 1080 126.2 -> 137.9, 3200 113.0
+    -> 118.4 (GPU-bound at 93-95%). Grid shots match (mean difference 0.05).
+  - Total at 1080 per eye: ~108 -> ~138 headset FPS (+28%); 3200: ~87 -> ~118.
+  - Stability: VR 1080 15/15 boots clean after 6d1291c; before it ~1 race-load crash per ~50 VR boots.
+  - No gain, reverted: lock-free EyeBufferInfo (129.4 vs 129.5), separate catch-all pipe-read entries (fewer drains,
+    same FPS). Staged in releaser-dev (game 6d1291c + launcher with the VR mask), backups in outrdev_backup_*.
 
 ## Dragon's Dogma: Dark Arisen (BLUS31155 v01.02)
 

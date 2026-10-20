@@ -248,6 +248,28 @@ lost device in ~37 readbacks-off boots (an earlier build at 4320, compute a6cfe0
   ConstantRing (1<<36) off fixed the drops only (game 93 -> 83 FPS). Relaxed readbacks (1): crowd floats, 78 FPS.
 - Now precise by default: 3200 per eye race start 76 game / 72 headset FPS vs 94 / 88 off.
 
+### Performance (2026-10-20 night)
+
+- Bench tools (scratchpad): bench_toggles.sh LABEL MASK [env] (SIZE env, toggles written live after the grid,
+  10 x 1 s flips + headset + nvidia-smi busy), pipe_crash.sh (flat 4K boots, mask set before the race loads),
+  vr_stress.sh, crowd_check.sh (grid shots, head to the stand). Stage A wait sites: BB_FRAME_STATS "stage A waits"
+  and "Draw pipe: ... drains/s that waited, stage A waited %, stage B busy %" lines.
+- Draw pipe (toggle bit 37, upstream's launcher keeps it off): the GPU command thread (stage A) posts draws to the
+  draw recording thread (stage B). Stage A drained it on every DumpConstRam (CE, ~650 per frame): 38% of stage A's
+  time. 6d1291c: pipe_reads.h tracks what stage B reads straight from guest memory per packet (non-ring buffers,
+  vertex/index buffers; all memory for tasks, special and indirect packets); dumps drain only on overlap.
+  BB_PIPE_READS=0 restores the drain. Shader::Info::UdMemoryCopy: the fetch shader's V#s copied by stage A, used by
+  ReadUdReg on stage B (ReadUdReg dereferences user-data pointers into guest memory; the snapshots only covered
+  user data and flattened tables).
+- Crash analysis: crash dumps now include referenced memory (0944c4f, probe.c); lldb from MSYS2 clang64 opens them
+  (`target create exe --core dmp`, `memory read`). VR race-load crashes: recorder thread in RecordChunk::Execute ->
+  vkCmdSetVertexInputEXT with corrupted attribute descriptions. Flat: endRendering in the driver (null + 0x130),
+  still open with the pipe on in flat. Record/chunk ownership checks (scratchpad record_check.patch,
+  chunk_check.patch) found no overlapping recording.
+- At 1080 with 6d1291c: stage A still waits ~29% (ConstRam drains ~8k/s remain), stage B busy ~84%, GPU ~52%.
+- Ideas not done: exact ranges for ordered tasks (WriteData/EOP/DMA) instead of all memory (tried keeping
+  catch-all entries separate: drains 8.8k -> 6.9k/s, FPS unchanged).
+
 ## Tools (H:\dcport-play)
 
 - `torace.sh FPS [env]`: start on the simulator, keys to the first race. `bench.sh LABEL [env]`: race, throttle via
