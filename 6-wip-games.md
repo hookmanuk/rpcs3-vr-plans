@@ -549,6 +549,12 @@ eleaser-dev\DriveClub.exe` (VR card: eye size
   - No gain, reverted: lock-free EyeBufferInfo (129.4 vs 129.5), separate catch-all pipe-read entries (fewer drains,
     same FPS). Staged in releaser-dev (game 0f2447e + launcher 2a7a74f, VR mask), backups in outrdev_backup_*.
     1080 per eye now ~138 headset / ~142 game FPS (simulator); GPU ~52%, stage B ~84% busy: the next limit.
+- Matt 2026-10-20: "In last nights build SteamVR always says locked 90fps, even when it's clearly dropping frames. We
+  should see those dropped frames in SteamVR." The headset loop resubmitted the last frame on the runtime's clock.
+  c5c0dc6: after xrWaitFrame it waits (up to 100 ms) for the game's frame, so slow frames are late for SteamVR
+  (BB_VR_REPEAT=1: old loop). Simulator 90 Hz, 4320: headset 90 (repeats) -> ~82 = game, 4.4% late; 1080: 90, 0% late.
+  Uncapped 1080 150 game / 149 headset. Staged in releaser-dev (backup outrdev_backup_0f2447e_game.exe).
+  Also: upstream PR #77 (steering wheels) merged into branch wheel-support (9c4a356), not into vr yet.
 
 ## Dragon's Dogma: Dark Arisen (BLUS31155 v01.02)
 
