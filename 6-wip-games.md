@@ -579,6 +579,11 @@ Details and tools: `profiles/CUSA00003-notes.md`.
   (the GPU is more than two frames behind at times). Matt: "is there not a better way to fix this?" Fixed 8fc6409:
   the clump shader is not drawn in VR (the roadside grass is another shader; BB_VR_GRASS_CLUMPS=1 draws them).
   Matt: "its great now"; 3584: 72 FPS, 1% low 50-58, late 0-0.6%. Staged in release\vr-dev.
+- Release 0.2.4-vr1.1 (Matt: "lets make a vr1.1 release"): tag v0.2.4-vr1.1 (8fc6409), zip
+  release/driveclub-recomp-0.2.4-vr1.1-win64.zip (same 160 files as vr1.0), release notes URL given; Matt publishes.
+  Then upstream main (to 5317c47: benchmark mode, wheel FFB gain fix, frame pacing with minimum spacing, launcher
+  layout) merged into vr, f776f99: the VR flip gate kept in the new pacing, the VR card top left in the new column
+  search, wheel tools staged. Matt: "all looks good, push". Pushed.
 
 ## Dragon's Dogma: Dark Arisen (BLUS31155 v01.02)
 
