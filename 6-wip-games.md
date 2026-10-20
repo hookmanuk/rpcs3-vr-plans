@@ -561,6 +561,11 @@ eleaser-dev\DriveClub.exe` (VR card: eye size
   patch that replaces nothing in this port. 262884a: one cache (_mv6) for all sizes, the fullest _mv5 cache renamed
   into it on first start; Windows "Stall:" reports (BB_FRAME_STATS). Warm 1080 races: no frame over 40 ms in 4 x 60 s,
   worst 18-31 ms. Staged in releaser-dev (backup outrdev_backup_c5c0dc6_game.exe).
+- Matt 2026-10-20 (vr-dev 262884a, 2880 + DLSS Quality): "on first load there were loads of graphics errors: lots of
+  missing geometry, raindrops and wheelspin dust are broken again"; after closing and reopening "its all fine now".
+  Only the very first run after the update (cache migrated to _mv6 by hand before it); the two logs show no fault,
+  quarantine or difference. Open: check the first run of the next release build. Suspects if it returns: the readback
+  hybrid's per-run page learning, the pipe_reads drains (6d1291c).
 
 ## Dragon's Dogma: Dark Arisen (BLUS31155 v01.02)
 
