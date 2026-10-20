@@ -593,6 +593,24 @@ Details and tools: `profiles/CUSA00003-notes.md`.
   +0x88260b (+0x883c70 at 16:33) reading garbage pointers from 0x30004255d0-0x300042e800; none in the vr1.1 runs.
   Also seen: a user's crash (their eboot is a DLC-merged mod; upstream's always-on red zone patch overwrites its code
   at +0x1551ac0), not ours.
+- Causes (2026-10-20 night, bisected with v1.0/vr1.1 exes, Matt watching; the launcher rewrites toggles.txt at launch,
+  so "draw thread off" runs in VR folders were really on until toggles were rewritten after launch):
+  - Readback hybrid (3e3b4c7): floating grass + crash on race load/quit with or without the draw thread. Proven with a
+    copy-back check: on fast pages the game itself writes bytes inside GPU-written ranges (e.g. 0x3000404130 +4,
+    0x3000404170 +4, written by both game and GPU every frame, likely counters) and the per-submit copy-back puts the
+    GPU's copy over them (300 clobbers before the crash); the crash is game +0x8825a0 walking a vector whose begin
+    pointer was zeroed (object 0x3000436470, a fast page). Labels are written when work is recorded, so fast pages are
+    also read stale (grass flag 0x400220ff50).
+  - Two-thread draw path (on in VR since 0944c4f): flickering exploded/flat polygons in menus, flyover and race, rate
+    scales with readbacks (readbacks off: clean; constant ring off: fewer). Not found yet; it is also slower with
+    precise readbacks (3200: 53-63 vs 63-77 FPS). Burst detector: scratchpad burst.py (flicker = frame unlike both
+    neighbours and +-2): bad 9-16 per run, draw thread off 0.
+  - f8e1d5e (local, staged in vr-dev): both off (v1.0's setup), clumps drawn again. Matt: no corruption, no grass,
+    quitting works. 3200 race start 68.7-70.0 FPS vs 85-90 before.
+  - Tried, not kept (patches in the session scratchpad): stepping own-byte accesses (trap flag, page opened for one
+    instruction): exact but ~165k accesses/s over ~2000 game instructions = 20 FPS; learning fast pages from stepped
+    accesses: 82-85 FPS, no grass, but crashed in the menus/second race (the clobbers above). Honest labels (written
+    when the GPU finishes) clash with sceGnmSubmitDone/work_retired (would serialise CPU and GPU each frame).
 
 ## Dragon's Dogma: Dark Arisen (BLUS31155 v01.02)
 
