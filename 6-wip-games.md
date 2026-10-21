@@ -692,6 +692,18 @@ Details and tools: `profiles/CUSA00003-notes.md`.
     read waits 350 -> 120 ms/s, FPS +0.5: the game thread is not the limit), a lock-free gate before the per-eye
     buffer lookup (87.6 vs 87.3), draw thread with readbacks off (90-91 vs 94.5-95.4: slower even then). Page
     protection: ~1% of the command thread. Benchmark drift over the night: the same build 84.7-91.
+  - Stream copies (BB_BUFFER_STATS): ~1 million read-only guest buffer copies a second into the stream buffer, ~79% the
+    same address and size as an earlier copy in the frame. Reusing them with no safety (test only) gave 91.1-91.6 vs
+    87.4-87.8; a safe version (epochs bumped by every packet that may write memory, per-64 KB-block counters for
+    constant RAM dumps, DMA and labels, same tick and ring lap; ~68% reused) measured 89.6 vs 90.2 over five pairs:
+    reverted (patch: scratchpad stream_reuse.h.attempt). WAIT_REG_MEM must stay a full invalidation.
+  - Boot crashes, 3 in ~100 boots tonight, all at 3-4 s in back-to-back benchmark runs (the previous game killed 2 s
+    before): twice in libwinpthread pthread_mutex_trylock (no dump), once (06:43, logs/crash_205725734.dmp) a call
+    from Scheduler::SubmitExecution through on_submit (the Rasterizer's submit callback) whose object's vtable
+    pointer had been overwritten with a nearby read-only address (it pointed at the callable's typeinfo name, so
+    slot 2 was the typeinfo of a RecordChunk DrawRecord command). Different victims each time: heap corruption early
+    in boot, cause not found. Not seen in 40 boots of a separate loop; whether a killed previous run leaves a bad
+    file behind is untested. The mutex guard (042661c) did not catch it (no "not a live mutex" lines).
 
 ## Dragon's Dogma: Dark Arisen (BLUS31155 v01.02)
 
