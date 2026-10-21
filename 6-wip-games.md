@@ -771,6 +771,14 @@ Details and tools: `profiles/CUSA00003-notes.md`.
     Fix under test (quick.exe): shadow merge kept, learning back to 64 own-byte steps with no 4 s minimum
     (BB_HYBRID_LEARN_STEPS/MS), GDS-copy target pages exact for good (MarkGdsCopyTarget: the clump flag on every
     track, so the clumps should not float anywhere with it).
+    Result (4ea7226, staged in vr-dev 1d4af84a): race benchmark 65.4-65.8 avg / 40-43 1% low (the best measured
+    today; the merge build cannot run it and crashes on race load with its hybrid, 3 of 3, game +0x8825a0 = the
+    vr1.1 clobber), grid 59-70, driving 47-56, waits 250-380 ms/s; 3-race soak 0 faults, 0 flickers; pack runs no
+    clumps, no flat frames. Still short of vr1.1 driving (63-67, draw thread on). With the draw thread on today's
+    code is slower (benchmark 54.6, grid 45-50) and still corrupts (k_draw frame 2): stage A's idle is 3-11% with
+    it on against the merge's 29%, so the draw-thread path carries extra work since the merge; the sampler no
+    longer catches the command thread (only bb:VkRecorder) so it is not profiled yet. Per-eye scene constants hook
+    (0efed68) A/B: bind resources 22.0 vs 22.6% - not it. BB_PHASES=1 itself costs ~15 FPS: compare only like runs.
 
 ## Dragon's Dogma: Dark Arisen (BLUS31155 v01.02)
 
