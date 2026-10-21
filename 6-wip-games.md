@@ -803,6 +803,29 @@ Details and tools: `profiles/CUSA00003-notes.md`.
     faults 0 flickers, pack run clean. Staged in vr-dev (5aa57472). Matt: 6 FPS is too much; a free fix needs the
     GPU to use its own count (indirect draw or a vertex-shader clamp against the GDS counter): needs the draw ->
     counter mapping (game +0x758a2d builds the visible list from the bits), not done.
+  - Where the exact pages' 6 FPS went (TEMP counters in the fault handler): the polls themselves were cheap once
+    served from the small-writeback staging (~60/s); the cost was ~160 write faults/s and ~140 reads/s on those
+    pages, each a 512 KB window readback with a GPU wait: the exact-page stepping budget (one readback every 64
+    own-byte steps, readback_hybrid.h ExactStepBudget) on pages the game hammers (~8k own accesses/s, 150-200k/s
+    with the budget readback off: 31 FPS). So an exact counter page can never be cheap; the fix had to be elsewhere.
+  - The mechanism (BB_GDS_TRACE, command order): each GDS counter copy on the graphics queue (`dma gds 4 ->
+    0x4002d0f680 +4`) is followed by an EVENT_WRITE_EOP into the ring slot itself (`eop 0x4002d0f690 = 0xe`: the
+    count at +0, a sequence label at +0x10); the game checks the label, then reads the count. Fences were written
+    at decode time, before the GPU ran the copy, so the label said done while the count was a frame or more old.
+    The other four GDS copies a frame (two on the graphics queue, two on the compute queue, to fixed slots
+    0x3000404xxx) have frame fences elsewhere (value 1, far from the copy) that the game spins on at once.
+  - e37c6fd (`gds_fence.cpp`): the copy's bytes also go into host-visible staging; a worker waits for the submission
+    on the timeline semaphore, writes the count into guest memory (unconditionally, and into the fast page's shadow:
+    the merge kept the game's reset zero over the GPU's count and the cabin vanished for a frame), then writes the
+    fence and raises its interrupt. Only fences written into a copy's own record (within 64 bytes after it) are
+    deferred: deferring every fence after a GDS copy serialised the game with the GPU (50.7 avg; the machinery alone
+    with no fence deferred is 71.6, i.e. free). The counter bytes are late outputs (`t_late_writer`), the pages are
+    learned fast as in vr1.1, nothing protected or waited on. Race benchmark 74.2 / 72.9 avg, 45.5 / 44.3 1% low
+    (exact offset-0 pages 70.3, stale 74.0); Matt's grid flow: grid 68.1 (61.7), driving 56.2 / 51.7 1% low, 0 flat
+    frames, no grass in the sky past the bridge; AI lap 78.9 avg, clean frames. Switches: BB_GDS_FENCE=0 off, =2
+    all fences, =3 none deferred; BB_GDS_FENCE_LOG=1; BB_HYBRID_GDS_EXACT=1 the exact pages. Staged in vr-dev
+    (40e28550d984). Still open: the grid is CPU-bound on the GPU command thread (~4,200 draws, 21 ms CPU frame on
+    Matt's machine), untouched by this.
 
 ## Dragon's Dogma: Dark Arisen (BLUS31155 v01.02)
 
