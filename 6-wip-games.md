@@ -741,6 +741,22 @@ Details and tools: `profiles/CUSA00003-notes.md`.
     Matt's DLSS (render 2128) the scene is already below that: VRS would add ~nothing there; at native 3200 at best
     ~+6 FPS (to the 90 Hz cap) and better lows, for a shading-rate attachment in every scene pass (multiview) and
     coarse-shading artefacts that DLSS then reconstructs. Not worth building; DLSS's render scale does the same job.
+- 2026-10-21 late morning, Matt tested: "worse than when we left it yesterday: grass in the sky just past the bridge,
+  performance terrible on the grid, high CPU". He was right and the night's numbers were the wrong test: the
+  benchmark and the x_flow race had no other cars near (x_flow held R2 15 s after the lights, the pack was gone).
+  With the 7-car pack (gridfps.sh: Matt's flow, R2 from the lights, eye dumps every 2 s, skygrass.py counts grass-
+  green pixels in the sky band of frame 2): ~4000 draws a frame (2600 in the time trial), the GPU command thread
+  0% idle, grid 57-62 FPS and 45-52 driving on every build from f8e1d5e to the staged one: the readback work gained
+  nothing there (waits 110 vs 790 ms/s, but the thread is saturated by draws). Rear-view mirror scene: 501 of the
+  4073 draws (the launcher's mirror row turns it off).
+  - Floating grass reproduced (staged build, ~1 run in 3, frame 2: 503 grass pixels, tufts in the sky; f8e1d5e 0).
+    Cause: a design hole in the hybrid's step learning, not one change: a page is learned fast after 2048 own-byte
+    accesses with no GPU-byte read, a race with the game; the grass flag's page 0x400220f000 went exact in one run
+    only because the flag was read after 1 own-byte access (BB_READBACK_CLASSIFY). Other learned pages carry 2 KB
+    GPU-written halves (0x4007e39000, 0x40087fc000...). The late outputs looked clean in 2 of 2 runs but are not
+    separable at 1-in-3. Fix for now (46e4dd7, staged 0123beae): hybrid off by default (BB_READBACK_HYBRID=1 opts in), precise readbacks
+    as in f8e1d5e; 2 pack runs clean, grid 57-59. GDS-copy pages never fast (scratchpad gds_exact_edit.py) is
+    written but not enough on its own (the 2 KB pages).
 
 ## Dragon's Dogma: Dark Arisen (BLUS31155 v01.02)
 
