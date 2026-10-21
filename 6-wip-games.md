@@ -661,6 +661,29 @@ Details and tools: `profiles/CUSA00003-notes.md`.
     quits, 0 faults, 0 flickers in every burst; exposure on the race sheets as before; car-screen eyes still match.
     Exact-page step budget (64) swept 64/256/1024/4096: noise, kept. The race now settles 86-88 FPS, the readbacks-off
     ceiling (~89, GPU bound) is about reached.
+  - Benchmark harness: the upstream benchmark mode (BB_BENCHMARK, AI drives) on the simulator in VR (scratchpad
+    vrbench2.sh, Tamil Nadu, Ferrari 458, 30 s, EYE= override); the first run after a settings change reads ~74.7
+    and runs land in a slow mode (~74-78) now and then, so A/Bs use medians of five alternating pairs. On it the
+    readbacks-off ceiling is ~96 (not ~89), staged 83.5; 2560 per eye gives 92-94, so most of the cost does not
+    scale with resolution. Draw thread on: 60-62 vs 85-87 off (stays off). BB_FRAMES_AHEAD 1 vs 2: same.
+  - 904bbc0 (staged, 52653409) readbacks unmark page by page: a GPU write anywhere in a 512 KB readback window kept
+    the whole window GPU modified and returned every copied range, so the game's next access to an untouched page
+    (0x3000428a78/b20/bc8, ~45/s) read back again, twice, then downloaded the arena; and ranges on pages the GPU
+    writes every frame (GDS copies) were returned forever. Per-page write counters (GPU_SEQ_PAGES 1), pages
+    written since the copy stay marked, no returns with one recording thread (a later write marks its own).
+    Benchmark medians 88.9 vs 84.4 (4 of 5 pairs). Soak: 5 races, 0 faults, 0 flickers; car eyes match. Exact-page
+    step budget 64 vs unlimited: 86.7 vs 86.9, kept.
+  - A rare boot crash (2 of ~45 boots tonight, also once on 2026-10-20 01:12, before tonight's work): access
+    violation in libwinpthread pthread_mutex_trylock (+0x3643), right as the game starts (log ends after _init_env),
+    no Fault line. Guest mutex locks go through trylock first (src/runtime_mutex.c); the handle held a pointer to
+    something that is not a live mutex.
+    042661c (staged with 904bbc0): guest mutexes carry a live tag; a handle without it gets EINVAL and is logged
+    ("not a live mutex"). 40 boots since: 0 crashes, 0 such lines (not reproduced, so unconfirmed); benchmark 90.3 vs
+    89.8 (no cost); 4-race soak 0 faults, 0 flickers.
+  - Tried and reverted: late outputs on every page of a range (0x2f6a12bc's 256 KB table read in its middle pages):
+    3 of 5 benchmark runs fell to 11 FPS with ~1 s frames (every access of the game's copy of the table stepped).
+  - Left: GDS counter copies (DMA from GDS, the grass flag among them) read right after the GPU writes them: true
+    waits, must stay exact. Staged build: benchmark ~89-90 vs the ~96 readbacks-off ceiling.
 
 ## Dragon's Dogma: Dark Arisen (BLUS31155 v01.02)
 
