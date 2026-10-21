@@ -711,6 +711,25 @@ Details and tools: `profiles/CUSA00003-notes.md`.
     write watchpoint on that word in every thread (scratchpad bb_watch.cpp.attempt, BB_WATCH=1, self-tested) saw
     nothing in 120 boots, and none crashed: either the sweeper's suspends change the timing or chance (~4 in ~300
     boots overall). Next: run the watch loop longer, or watch another victim.
+  - Boot crash found (bc33dfc): the watch loop caught it on its next run: the write came from guest code, the
+    game's own libc (first linked module +0x24d52): right after pthread_mutex_init it runs
+    `mov rax,[r14]; or dword [rax+0x20], 0x100` (libthr's m_flags |= PMUTEX_FLAG_PRIVATE). The runtime's mutex
+    object was 8 bytes (src/runtime_mutex.c), so bit 8 of the next heap block was set: the submit callback's vtable
+    pointer (+0x100, the execute crash) or another mutex's handle (the trylock crash). Mutex, condition variable and
+    attribute objects are now PS4-sized (0x100 / 0x40, zeroed past the host object); a boot logged the game's write
+    landing inside the object.
+  - Memory (Matt asked, 2026-10-21 morning): private bytes grow steadily in VR, race (R2 held) 20 min 9.16 -> 9.44 GB,
+    menu 15 min 8.09 -> 8.31 GB (working set linear); fitted ~13 MB/min in VR, ~6 MB/min flat (race 15 min). Both
+    grow; VR about twice. Not found yet (not the per-eye buffers: one; the staging pool trims).
+  - VR DLSS (Matt: "looks bad next to UE4's"): the model is fine (preset 0 = the DLSS 310.9 default: K for
+    DLAA/Quality/Balanced, M Performance, L Ultra Performance; SDK headers in F:/rpsc3/source/DLSS). The inputs were
+    not: camera-only motion vectors from depth, no car mask in VR, no object motion. 2a99904: the stencil car mask in
+    VR (as frame generation's). aaad2bf: upstream's object motion (vk_object_motion.h, per-draw clip position
+    history) runs in VR with DLSS for the cars (G-buffer draws writing stencil 0x82; positions before the eye shift;
+    a layer per eye; history once a frame); ~150 car draws a frame, ~99% matched; ~1 FPS (88.9 vs 89.9, DLSS on).
+    Staged in vr-dev (b2d2f639) for Matt; stills cannot show the blur, the headset judges. BB_VR_OBJECT_MOTION=0 /
+    BB_VR_DLSS_CAR_MASK=0 turn them off. Test harness: scratchpad dlss_grid.sh (benchmark Race mode, 7 AI cars, eye
+    dumps after the start), dlss_mask.sh.
 
 ## Dragon's Dogma: Dark Arisen (BLUS31155 v01.02)
 
