@@ -792,6 +792,17 @@ Details and tools: `profiles/CUSA00003-notes.md`.
     stays off; the draw-thread path's extra latency per readback (stage B drains the pipe before the copy) is the
     thing to fix if it is ever to pay. Soak of 9eb5a1f: 4 race loads with quits, 0 faults, 0 flickers, no clumps,
     no flat frames. Staged in vr-dev (a78104ac).
+  - Matt tested 9eb5a1f: floating clumps of other vegetation types one corner in (the grass clump skip covers one
+    shader); on the grid at GO fpsVR shows CPU frametime 21.4 ms with one core at 95% (the GPU command thread),
+    GPU 72%: CPU-bound on one thread at ~4200 draws. The simulator does not reproduce his clumps (lap dumps on
+    9eb5a1f clean), so the fix goes by the mechanism: the vegetation bits come from GDS copies, exact = a readback
+    wait per poll. b3c2705: GDS pages exact again + a submit right after each GDS copy (67.9; 65.6 without the
+    submit; 74.0 stale). ~250 counter polls/s, ~60% before the GPU is done, so "serve old + skip that frame's
+    vegetation" would blink most frames. 6daf6a4: only GDS offset 0 copies exact (the visibility bits), offset 4
+    served late as vr1.1 did: 70.3 avg / 46.6 1% / 43.3 0.1% (best lows); BB_FRAMES_AHEAD=0 69.5. Soak 2 races 0
+    faults 0 flickers, pack run clean. Staged in vr-dev (5aa57472). Matt: 6 FPS is too much; a free fix needs the
+    GPU to use its own count (indirect draw or a vertex-shader clamp against the GDS counter): needs the draw ->
+    counter mapping (game +0x758a2d builds the visible list from the bits), not done.
 
 ## Dragon's Dogma: Dark Arisen (BLUS31155 v01.02)
 
