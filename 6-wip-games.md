@@ -913,8 +913,10 @@ Details and tools: `profiles/CUSA00003-notes.md`.
   - Staged in vr-dev: game f1fe55e (28acf07d3387) and the launcher c2e4554 (bfbacb7b4bfc, mask 552960: draw thread
     on; the previous launcher is out\vrdev_backup_launcher_c2e4554_prev.exe). Local commits on vr since Matt's last
     test: 77bf0ae, c2e4554, f1fe55e.
-  - Still open: the grey tag squares above cars, the car-selection eye comparison on f1fe55e (running), Matt's
-    grid number with the draw thread.
+  - Car selection on f1fe55e with the draw thread (the Mercedes A 45 on the red pad, main menu + 8 presses of X,
+    STOP_MARK=vehicle_select_background in x_flow): three EYES dumps, both eyes the same car, paint, lighting and
+    scene (mean L/R difference 16-20 = the stereo parallax of an orbiting camera; a menu dump with no car was 0-5).
+  - Still open: the grey tag squares above cars, Matt's grid number with the draw thread.
 
 ## Dragon's Dogma: Dark Arisen (BLUS31155 v01.02)
 
