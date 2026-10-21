@@ -644,6 +644,10 @@ Details and tools: `profiles/CUSA00003-notes.md`.
     every race. Staged build: 8 race loads in a row with quits, 0 faults, 0 flickers in every race; 0efed68 (the
     scene-constants check rules bindings out by size first, staged): 4 more races, 0 faults, 0 flickers, car eyes
     still matching. Exact-page one-page readbacks on the third queue: reads 240-440/s, no FPS gain, reverted.
+  - 02:30 profile of the staged build in the race: the busiest thread (bb:VkRecorder) uses 11-18% of a core, the
+    game's submit thread mostly waits on the GPU semaphore (readbacks), so no CPU thread limits it. Eager submit
+    interval (BB_FLUSH_DRAWS, default 384) swept 64/128/384/384: settled 76.6-82.4 FPS, all within noise, 384 kept.
+    Staged build settles at 76-82 FPS at 3200 (the 72 minimum held); the ~89 ceiling needs the readback waits gone.
 
 ## Dragon's Dogma: Dark Arisen (BLUS31155 v01.02)
 
