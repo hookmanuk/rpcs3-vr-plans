@@ -899,7 +899,22 @@ Details and tools: `profiles/CUSA00003-notes.md`.
     37-41 vs 44); Matt's flow in vr-dev under SteamVR, on: grid 66.4 / 66.0, driving 47.6-53.6; off: 54.4 / 64.8,
     47.6-52.8. Marginal in the simulator, but it is the lever for his one-core-at-96% grid: launcher mask 552960
     (draw thread on) staged for him to judge.
-  - Still open: the grey tag squares above cars, the car-selection eye comparison on 77bf0ae, Matt's grid number.
+  - Draw thread soaks then lost the device in the fourth race (2 of 3), once an assertion in the staging pool in the
+    menus. BB_MEM_LOG=1 (new: heaps and the staging pool's large caches every 5 s): with the draw thread on the
+    HostCached held entries grew 4,855 -> 203,500 (50 GB) over three race loads, host heap 3 -> 31 GB; off, 100-300
+    entries, host ~1 GB flat. Cause: with the draw thread EOP fences take RunEventWriteEop's recorder-fence branch,
+    which never called DeferGdsFence, so the GDS copies' staging (a held 256 KB entry each, 7 a frame) was never
+    freed and the ring labels were not honest either. f1fe55e: every branch asks; the worker signals through
+    BbCopy::AfterCopies in the recorder-fence and asynchronous branches. After: held entries under 40, host heap
+    ~1 GB flat, ~430 fences a 5 s deferred, 3-race soak 0 faults 0 flickers, 4800 frames clean at every old clump
+    moment, and the race benchmark with the draw thread 80.1 / 80.2 avg (73-74 before, 71.5 off). One boot of ~30
+    with the draw thread on sat at the intro video (dw17; the 2026-10-20 note has 2 of ~28 flat boots hanging
+    before the race): an 8-boot loop after it, 0 hangs; a rate of about 1 in 40 if it is real.
+  - Staged in vr-dev: game f1fe55e (28acf07d3387) and the launcher c2e4554 (bfbacb7b4bfc, mask 552960: draw thread
+    on; the previous launcher is out\vrdev_backup_launcher_c2e4554_prev.exe). Local commits on vr since Matt's last
+    test: 77bf0ae, c2e4554, f1fe55e.
+  - Still open: the grey tag squares above cars, the car-selection eye comparison on f1fe55e (running), Matt's
+    grid number with the draw thread.
 
 ## Dragon's Dogma: Dark Arisen (BLUS31155 v01.02)
 
