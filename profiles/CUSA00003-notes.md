@@ -287,9 +287,27 @@ lost device in ~37 readbacks-off boots (an earlier build at 4320, compute a6cfe0
   BB_VR_HASHES (compute sizes), BB_VR_FINDCAM, BB_DMEM_MB=10056 (resolution patches). Simulator: SIMXR_HZ.
 - The simulator's settings.json window_height got saved as 11 once (window shrank): restore 551.
 
+## Readback hybrid: what it may and may not do (2026-10-21, see 6-wip-games.md for the day's record)
+
+- A page the hybrid learns "fast" (unprotected) must never carry GPU-written bytes the game reads back the same
+  frame. Driveclub's hot CPU pages share 4 KB pages with the heads and tails of its GPU-written cluster lists; a
+  fast page gave the game those bytes a frame late or never, and the clusters they index floated in the sky.
+  `LargePartFast` (da46791) makes such a page exact for good; in practice no page learns fast then, and the hybrid
+  runs at precise-readback speed (66-67 benchmark FPS at 3200, same 1% lows as the fast-page build's 74).
+- GDS counters: the ring slot's EOP label is written after the GPU's copy (gds_fence.cpp, e37c6fd), free; the four
+  fixed-slot copies a frame keep decode-time fences (deferring them serialises the game with the GPU: 50 FPS).
+- Evidence rule learned the hard way: eye dumps (EYES) force a GPU sync and hide timing bugs; judge with mirror-window
+  grabs (`grabwin.py`, no sync) at a loaded GPU (EYE=4800), same race moments side by side at native resolution.
+
 ## Open
 
 - 1% low under 90 (frames over a period ~1-1.7%) and the periodic 50-85 ms hitch: the port's CPU side, not VR.
+- The grid is CPU-bound on the GPU command thread (fpsVR 22 ms CPU frame, one core at 96%, GPU 71%, 54 FPS in
+  Matt's headset at the lights). ~4,200 draws a frame (two eyes); profile: memcpy ~16% (stream uploads per bind),
+  kernel lock waits ~11% (hybrid mutexes per bind vs guest faults), BindBuffers 4%, barrier tracking ~3%.
+- A flat grey quad above each opponent car where the driver tag should be; also in flat mode, so the recomp's tag
+  rendering, not VR. Not investigated.
+- Car-selection eye comparison on da46791 not re-done (earlier builds matched).
 - Not yet tested in Matt's headset. Other events (day, rain: water droplets and lens dust are screen-space effects
   that may need turning off like motion blur, settings at the same table as enableMotionBlur: enableWaterDroplets,
   lensdust), photo mode, garage.
