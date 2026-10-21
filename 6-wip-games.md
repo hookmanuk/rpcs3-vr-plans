@@ -639,6 +639,11 @@ Details and tools: `profiles/CUSA00003-notes.md`.
     ms/s of waits vs 430-470), 2 MB readback windows (535-554 ms/s, 75-78 FPS). Remaining costs: ~120 GPU-data reads a
     second (~0.45 s of game-thread waits a second; readbacks off would give ~89 FPS, the GPU-bound ceiling) and the GPU
     command thread, busy all the time (bind resources 11%, emit 8%, pipeline lookup 7% of wall time).
+  - Later: the multi-race harness quit too early after a reload (pausing in the intro flyover restarts the race
+    instead, so "NOT loaded" was a restart, not a hang): multirace3.sh skips the intro first and grabs 100 frames in
+    every race. Staged build: 8 race loads in a row with quits, 0 faults, 0 flickers in every race; 0efed68 (the
+    scene-constants check rules bindings out by size first, staged): 4 more races, 0 faults, 0 flickers, car eyes
+    still matching. Exact-page one-page readbacks on the third queue: reads 240-440/s, no FPS gain, reverted.
 
 ## Dragon's Dogma: Dark Arisen (BLUS31155 v01.02)
 
