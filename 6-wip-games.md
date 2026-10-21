@@ -757,6 +757,20 @@ Details and tools: `profiles/CUSA00003-notes.md`.
     separable at 1-in-3. Fix for now (46e4dd7, staged 0123beae): hybrid off by default (BB_READBACK_HYBRID=1 opts in), precise readbacks
     as in f8e1d5e; 2 pack runs clean, grid 57-59. GDS-copy pages never fast (scratchpad gds_exact_edit.py) is
     written but not enough on its own (the 2 KB pages).
+  - Why vr1.1 was quick (Matt: "compare to the vr1.1 release code, that was quick"), one harness (gridfps, 7-car
+    pack, draw thread on): vr1.1 as shipped grid 64.4 / 1% 18.9, drive 67.5 / 37.6; the merge f776f99 (first hybrid
+    3e3b4c7 on by default) grid 55-66, drive 61-72, GPU thread 26-29% idle, readback waits 530-580 ms/s; f8e1d5e
+    (hybrid off) grid 50, idle 5.5%, waits 1250; every night build with the hybrid forced off 1140-1600 ms/s. So
+    vr1.1's speed = the first hybrid's quick learning (fast after 32 faults). The night's hybrid (7d5bd6d) steps
+    every access for 4 s before trusting a page: 157k trap-flag steps in 5 s on 0x3000445000 (31k exceptions/s on
+    the game thread, protection changes stalling the GPU threads): no faster than off on the grid (60 vs 58-60),
+    draw thread on with it: 46-48 driving. The clump skip (8fc6409, vr1.1) was reverted by f8e1d5e; restored
+    (BB_VR_GRASS_CLUMPS=1 draws them) - not the speed difference on its own (clump build, draw on: 50-52).
+    Draw-thread corruption captured on today's code (k_draw frame 2: the cabin as giant flat polygons, 5.5% edge
+    pixels vs 15-37% normal; scratchpad flatdet.py counts such frames).
+    Fix under test (quick.exe): shadow merge kept, learning back to 64 own-byte steps with no 4 s minimum
+    (BB_HYBRID_LEARN_STEPS/MS), GDS-copy target pages exact for good (MarkGdsCopyTarget: the clump flag on every
+    track, so the clumps should not float anywhere with it).
 
 ## Dragon's Dogma: Dark Arisen (BLUS31155 v01.02)
 
