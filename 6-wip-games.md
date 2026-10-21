@@ -704,6 +704,13 @@ Details and tools: `profiles/CUSA00003-notes.md`.
     slot 2 was the typeinfo of a RecordChunk DrawRecord command). Different victims each time: heap corruption early
     in boot, cause not found. Not seen in 40 boots of a separate loop; whether a killed previous run leaves a bad
     file behind is untested. The mutex guard (042661c) did not catch it (no "not a live mutex" lines).
+    Since: a boot loop as the benchmark runs (vrbootloop.sh) reproduced it once in 80 boots, the same victim (the
+    submit callback). In both dumps of it the callable's vtable pointer is exactly 0x100 too high (exe+0x5f7a98 ->
+    0x5f7b98; 0x5f8a98 -> 0x5f8b98 in the other build): one bit (or byte 1 incremented) set by a stray write; a
+    mutex handle pushed 0x100 off fits the libwinpthread crashes (trylock calls through +0x18 of it). A hardware
+    write watchpoint on that word in every thread (scratchpad bb_watch.cpp.attempt, BB_WATCH=1, self-tested) saw
+    nothing in 120 boots, and none crashed: either the sweeper's suspends change the timing or chance (~4 in ~300
+    boots overall). Next: run the watch loop longer, or watch another victim.
 
 ## Dragon's Dogma: Dark Arisen (BLUS31155 v01.02)
 
