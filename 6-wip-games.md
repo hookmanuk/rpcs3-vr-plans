@@ -779,6 +779,19 @@ Details and tools: `profiles/CUSA00003-notes.md`.
     it on against the merge's 29%, so the draw-thread path carries extra work since the merge; the sampler no
     longer catches the command thread (only bb:VkRecorder) so it is not profiled yet. Per-eye scene constants hook
     (0efed68) A/B: bind resources 22.0 vs 22.6% - not it. BB_PHASES=1 itself costs ~15 FPS: compare only like runs.
+  - Matt: "grass and quit race crashes are now fixed, a reasonable start": tagged 1.1-fixes-slow (4ea7226, local).
+  - Draw thread, continued. vr1.1 with the draw thread off: grid 58.4, drive 46.1 (same as today's code off), so
+    vr1.1's lead was all the draw thread. Merge frame pacing (Matt's hint): BB_PACE_CREDIT=200 (the old rule),
+    BB_FRAMES_AHEAD=0/2 with the draw thread on: 51-53 all, control 51.2 - not it. The cause: readback waits. With
+    the draw thread on each wait also waits for the draws queued in the pipe (313 -> 763 ms/s), and 4ea7226 kept
+    the GDS counter pages exact, so the game waited on them every frame; vr1.1 served them a frame late (fast after
+    32 faults) with the clumps not drawn. 9eb5a1f: GDS pages fast again by default (BB_HYBRID_GDS_EXACT=1 opts in).
+    Result, draw thread OFF: race benchmark 74.0 avg / 42.2 1% / 38.9 0.1% (was 65.8), Matt's grid 61-67 / 1%
+    25-36, driving 53-63 / 36-48, waits 105-170 ms/s: vr1.1's level (64 / 63-67) without the draw thread. With the
+    draw thread on: benchmark 53.5, grid 63.7, drive 52.6, waits 621: still slower than off on this code, so it
+    stays off; the draw-thread path's extra latency per readback (stage B drains the pipe before the copy) is the
+    thing to fix if it is ever to pay. Soak of 9eb5a1f: 4 race loads with quits, 0 faults, 0 flickers, no clumps,
+    no flat frames. Staged in vr-dev (a78104ac).
 
 ## Dragon's Dogma: Dark Arisen (BLUS31155 v01.02)
 
