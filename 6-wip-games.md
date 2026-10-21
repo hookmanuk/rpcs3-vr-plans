@@ -855,8 +855,35 @@ Details and tools: `profiles/CUSA00003-notes.md`.
   - **Grey/black square above each opponent car** (Matt, 2026-10-21, also in the benchmark race): a flat grey quad
     where the driver tag (`osd_target_info`?) should be. Present with the hybrid on, off, and in flat mode (no VR
     patch), so it is the recomp's rendering of that tag, not the VR or readback path. Not investigated yet.
-  - Still open: the grid is CPU-bound on the GPU command thread (fpsVR 22 ms CPU frame, one core at 96%, GPU 71%);
-    the car-selection eye comparison on da46791 (run stopped when Matt took the build to test).
+  - Matt tested da46791: clumps gone, "very slow still, CPU performance is terrible". Chasing the CPU with the
+    sampler (BB_PROFILE=1) cost an evening: the GPU command thread showed 830-970 ms/s of CPU with half its samples
+    in NtWaitForAlertByThreadId (a lock wait) - the sampler suspends the thread every ms, which wakes a blocked
+    wait each time and charges it CPU; the thread was mostly waiting. The frame stats (BB_FRAME_STATS=1, no
+    sampler) were right: the command thread never idle, and the game thread 300 ms/s in readback waits (read
+    faults 100-260/s): the pages the game hammers that also take small GPU results (the GDS counter page
+    0x3000404000: 10,000 of 25,000 accesses in a minute, BB_READBACK_LOG) were exact, every 64th access a window
+    readback with a GPU wait.
+  - Small writes fast again, safely (bde072f .. 01263c9): the old BB_HYBRID_SMALL=1 left a small range unguarded
+    on any page while only fast pages got copy-backs - a non-fast page read bytes that never arrived: the vr1.1
+    clobber crash came back once (0x300041a0d0, vtable of 6, Matt's flow under SteamVR). Now a small write
+    promotes its page to fast with the guest's bytes as the shadow (PromoteForSmallWrite) unless the page is
+    pinned (a list head's) or has other GPU bytes pending; `pinned` is separate from the learned `exact`; the
+    small limit is 2 KB because the 1280-byte list at 0x3000445170 is a list head on the hammered page (25,000
+    faults/s pinned); its bytes are current in time because the pending small writes are staged into the ring
+    copy's submission and the fence worker writes them back, as the GPU's bytes, before the ring's label (2 KB
+    alone brought the clumps back). Judged clean at 4800 at every old clump moment (dw13). Benchmark 71.6 / 71.3,
+    1% low 44.0 / 44.1 (74 with the clumps, 67 before this); read faults 300 -> 9 ms/s; Matt's flow in vr-dev
+    under SteamVR x5 0 faults; two 4-race soaks 0 faults, 0 flickers; grid flow in the simulator 62-64 on the
+    grid, 49-54 driving. Staged in vr-dev (b65eeae1330b).
+  - The EYES eye dumps lie at the lights: a "vanished cabin" frame (the interior missing, the gf4/sf8grid frame 2)
+    appeared in half the grid runs 6 s after R2 whatever the build (fences at decode, merge or not); mirror-window
+    grabs every 0.3 s through READY/GO/driving show the interior in all 47 frames. The dump's mid-frame sync at
+    the GO transition captures a partial frame. flatdet.py over EYES dumps is not evidence either.
+  - Under SteamVR (headset idle on the desk, `STEAMVR=1` in x_flow/gridfps/vrbench2: no XR_RUNTIME_JSON) the game
+    runs 47-53 FPS at 72 Hz in Matt's flow; his own session was 60-70. The simulator's and SteamVR's numbers are
+    not comparable; judge his FPS from his logs.
+  - Still open: the GPU command thread itself (never idle at ~4,000 draws/frame: the draw thread or per-draw
+    cost), the grey tag squares above cars, the car-selection eye comparison on 01263c9.
 
 ## Dragon's Dogma: Dark Arisen (BLUS31155 v01.02)
 
