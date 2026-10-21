@@ -833,8 +833,11 @@ Details and tools: `profiles/CUSA00003-notes.md`.
     count, and the EYES dumps force a GPU sync, which hides timing bugs. Replaced by `grabwin.py` / `densegrab.sh`
     (DPI-aware grabs of the game's mirror window every 0.4 s, no sync) and judging the same race moments by eye at
     native resolution; the blob detector (`skyblob.py`) calls eucalyptus crowns floating and is not evidence.
-  - Reproduced at will with the GPU loaded (EYE=4800 in the benchmark race, mirror grabs): clumps at 13 s and 37 s
-    of the race every run. Same moments, same load, by eye: hybrid off (BB_READBACK_HYBRID=0) clean; no learned
+  - Reproduced at will with "EYE=4800" in the benchmark race (mirror grabs): clumps at 13 s and 37 s of the race
+    every run. Correction (2026-10-21 late): no "VR 4800x4800 per eye" patch exists, so those runs had the VR
+    patch line removed and ran FLAT at 1920x1080, 60 Hz (the launcher's "VR headset (OpenXR)=Off"; hence the
+    59.7 FPS averages). Every "4800" / "dw*" comparison below is flat mode, which reproduces the clumps where the
+    3200 VR laps did not; the fixes were then verified in VR by the 3200 benchmark, grid flow and soaks. Same moments, same load, by eye: hybrid off (BB_READBACK_HYBRID=0) clean; no learned
     fast pages (BB_HYBRID_STEP_LEARN=0) clean; late outputs off (BB_HYBRID_LATE=0) still clumps; the GDS fences
     (e37c6fd) are not involved either way. So the clumps are the hybrid's fast pages, in every build since vr1.1:
     a page learned fast (unprotected) on the game's own data also holds the head or tail of a GPU-written list
