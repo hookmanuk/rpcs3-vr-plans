@@ -826,6 +826,37 @@ Details and tools: `profiles/CUSA00003-notes.md`.
     all fences, =3 none deferred; BB_GDS_FENCE_LOG=1; BB_HYBRID_GDS_EXACT=1 the exact pages. Staged in vr-dev
     (40e28550d984). Still open: the grid is CPU-bound on the GPU command thread (~4,200 draws, 21 ms CPU frame on
     Matt's machine), untouched by this.
+  - Matt tested e37c6fd: clumps exactly as before, one corner in, driving normally (not after a fast view change),
+    and fpsVR on the grid: 54 FPS, CPU frametime 22 ms with one core at 96%, GPU 71% / 1.6 ms, reprojection 62%.
+    He also caught a clump in a simulator run of mine (the benchmark's AI race on the desktop mirror). My claim
+    that the simulator never showed them was wrong: it rested on eight eye dumps per lap and a sky-band pixel
+    count, and the EYES dumps force a GPU sync, which hides timing bugs. Replaced by `grabwin.py` / `densegrab.sh`
+    (DPI-aware grabs of the game's mirror window every 0.4 s, no sync) and judging the same race moments by eye at
+    native resolution; the blob detector (`skyblob.py`) calls eucalyptus crowns floating and is not evidence.
+  - Reproduced at will with the GPU loaded (EYE=4800 in the benchmark race, mirror grabs): clumps at 13 s and 37 s
+    of the race every run. Same moments, same load, by eye: hybrid off (BB_READBACK_HYBRID=0) clean; no learned
+    fast pages (BB_HYBRID_STEP_LEARN=0) clean; late outputs off (BB_HYBRID_LATE=0) still clumps; the GDS fences
+    (e37c6fd) are not involved either way. So the clumps are the hybrid's fast pages, in every build since vr1.1:
+    a page learned fast (unprotected) on the game's own data also holds the head or tail of a GPU-written list
+    larger than the 1 KB small-write limit (small_writeback.cpp notes only the partial first/last pages of such a
+    write, copied back at the end of the frame; middle pages that are fast get nothing), and the game read those
+    bytes a frame late or never, so the clusters they index came from the wrong slot. The counters were never the
+    problem (the exact-counter builds could not fix it; 6daf6a4 was staged on a wrong theory).
+  - da46791 (`readback_hybrid.h LargePartFast`, memory_tracker.h): the first/last page's part of a large GPU write
+    is never fast, and its page is exact for good from the first such write. Demoting only pages that were already
+    fast was one read too late (frame #34 still had two clumps: new list heads keep landing on freshly learned
+    pages). Since the game's hot pages are the ones hosting these heads, no page learns fast in practice and the
+    hybrid runs at precise-readback speed: benchmark 66.8 / 67.0 avg, 47.4 / 46.0 1% low at 3200 (74.2 / 45.5
+    before, same lows; hybrid off 66.1); 4800 59.6 / 48.7. Judged clean at native resolution at every moment the
+    old build floated clumps (#28-#36, #72-#74, #92-#100 of the same race). Matt's grid flow: grid 62.5 / 30.1 1%
+    low, driving 48.9 / 44.5, 0 flat frames; soak 5 race loads with quits, 0 faults, 0 flickers. Staged in vr-dev
+    (31791f971f24). The fast-page idea cannot be made both correct and fast for this game: its whole gain came from
+    exactly the pages that host list heads.
+  - **Grey/black square above each opponent car** (Matt, 2026-10-21, also in the benchmark race): a flat grey quad
+    where the driver tag (`osd_target_info`?) should be. Present with the hybrid on, off, and in flat mode (no VR
+    patch), so it is the recomp's rendering of that tag, not the VR or readback path. Not investigated yet.
+  - Still open: the grid is CPU-bound on the GPU command thread (fpsVR 22 ms CPU frame, one core at 96%, GPU 71%);
+    the car-selection eye comparison on da46791 (run stopped when Matt took the build to test).
 
 ## Dragon's Dogma: Dark Arisen (BLUS31155 v01.02)
 
