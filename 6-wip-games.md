@@ -730,6 +730,17 @@ Details and tools: `profiles/CUSA00003-notes.md`.
     Staged in vr-dev (b2d2f639) for Matt; stills cannot show the blur, the headset judges. BB_VR_OBJECT_MOTION=0 /
     BB_VR_DLSS_CAR_MASK=0 turn them off. Test harness: scratchpad dlss_grid.sh (benchmark Race mode, 7 AI cars, eye
     dumps after the start), dlss_mask.sh.
+  - Memory leak found and fixed (509c4f2, staged in vr-dev f17ba9cf): walking the process heap by block size, all the
+    growth was 944-byte blocks, ~350 a second: coroutine frames of Liverpool::ProcessCompute<true> (resume pointer
+    zero, destroy pointer ProcessCompute<true>.destroy). Nested indirect-buffer tasks (graphics, constant engine,
+    compute) ran to final_suspend and were never destroyed; only top-level submissions were. Same code in upstream
+    main (theirs). After: VR race 10 min, private bytes 9.13-9.28 GB with no trend (was +13 MB/min); 3-race soak clean.
+  - VRS (Matt: half the screen at 100%, half at 20%): ~60% of the pixel work, no better than rendering fewer pixels.
+    Benchmark, DLSS off, two rounds: 3200 85.1 avg / 44.6 1% low; 2560 (64% of the pixels) 91.4 / 58.4; 2160 (46%)
+    91.2 / 61.0: beyond 2560 the average is at the simulator's 90 Hz display (paced), only the lows improve. With
+    Matt's DLSS (render 2128) the scene is already below that: VRS would add ~nothing there; at native 3200 at best
+    ~+6 FPS (to the 90 Hz cap) and better lows, for a shading-rate attachment in every scene pass (multiview) and
+    coarse-shading artefacts that DLSS then reconstructs. Not worth building; DLSS's render scale does the same job.
 
 ## Dragon's Dogma: Dark Arisen (BLUS31155 v01.02)
 
