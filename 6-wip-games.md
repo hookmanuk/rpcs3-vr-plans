@@ -882,8 +882,24 @@ Details and tools: `profiles/CUSA00003-notes.md`.
   - Under SteamVR (headset idle on the desk, `STEAMVR=1` in x_flow/gridfps/vrbench2: no XR_RUNTIME_JSON) the game
     runs 47-53 FPS at 72 Hz in Matt's flow; his own session was 60-70. The simulator's and SteamVR's numbers are
     not comparable; judge his FPS from his logs.
-  - Still open: the GPU command thread itself (never idle at ~4,000 draws/frame: the draw thread or per-draw
-    cost), the grey tag squares above cars, the car-selection eye comparison on 01263c9.
+  - Matt (evening): "fix the command thread then". Draw thread (TOG 552960) on 01263c9: benchmark 78.8 / 77.3 but
+    the flat-polygon corruption as always; Matt caught it on my desktop run in the track fly-over before the start
+    ("flashing black overlay sections": the exploded grey polygons and streaks, fb2/fb3 mirror grabs). The staged
+    build (draw thread off) is clean through the fly-over (fboff).
+  - Root cause found with an amplifier: BB_PIPE_MAX_BYTES=65536 (stage A at most 64 KB ahead of stage B) makes
+    every fly-over corrupt. At that bound: readbacks off clean; precise readbacks (hybrid off) corrupt; no pipe reads
+    corrupt; readbacks finished on the drained GPU thread (BB_FINISH_ON_GPU=1) clean twice. The race: RecordReadback
+    drains stage B and takes the window's write sequence; stage A then queues draws that rewrite buffers in the
+    window, which stage B marks only when it records them; a readback finishing in between sees the sequence
+    unchanged, unmarks the window and writes its older bytes to guest memory, and the next upload puts them over the
+    GPU's rewritten vertex buffer. 77bf0ae: NotePendingGpuWrite (stage A, every buffer a queued draw writes) bumps
+    the tracker's write sequence at once (RegionManager::BumpGpuWriteSeq). Fly-over clean twice at the 64 KB bound;
+    4800 race frames clean at every old clump moment; 3-race flicker soak 0; interleaved benchmark fix vs none
+    73.3 / 73.9 vs 72.9 / 73.5 (free). Draw thread on vs off on this build: benchmark 73.8 / 72.0 vs 71.5 (lows
+    37-41 vs 44); Matt's flow in vr-dev under SteamVR, on: grid 66.4 / 66.0, driving 47.6-53.6; off: 54.4 / 64.8,
+    47.6-52.8. Marginal in the simulator, but it is the lever for his one-core-at-96% grid: launcher mask 552960
+    (draw thread on) staged for him to judge.
+  - Still open: the grey tag squares above cars, the car-selection eye comparison on 77bf0ae, Matt's grid number.
 
 ## Dragon's Dogma: Dark Arisen (BLUS31155 v01.02)
 
