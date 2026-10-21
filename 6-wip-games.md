@@ -611,6 +611,27 @@ Details and tools: `profiles/CUSA00003-notes.md`.
     instruction): exact but ~165k accesses/s over ~2000 game instructions = 20 FPS; learning fast pages from stepped
     accesses: 82-85 FPS, no grass, but crashed in the menus/second race (the clobbers above). Honest labels (written
     when the GPU finishes) clash with sceGnmSubmitDone/work_retired (would serialise CPU and GPU each frame).
+- Overnight 2026-10-21 (Matt: "keep working on this all night": no crashes across races, no corruption, both eyes
+  the same on the car screen, performance), all local commits on vr, staged in releaser-dev, not pushed:
+  - 7d5bd6d readback hybrid on again, exact: an access to only the game's own bytes on a GPU-written page runs with
+    the page open for one instruction (trap flag, size decoded with Zydis), no readback; a read of GPU bytes reads
+    back and makes the page exact; pages are made fast only after 2048 stepped own-byte accesses over 4 s (every
+    access is seen), and fast pages merge both writers through a shadow (copy-backs and readbacks write only bytes the
+    GPU changed and the game did not; uploads send only GPU bytes the game changed): the counters both sides write
+    (0x3000404130 +4 etc.) no longer clobber. Tamil Nadu 3200: 4-, 5- and 3-load race cycles with quits, no fault;
+    82-85 FPS steady (precise alone ~69, the first hybrid ~84 but crashing); no floating grass; 0 flickers.
+  - Honest labels tried and dropped: without a flush per label the game deadlocks, with it 17.6 FPS (the game waits
+    on labels mid-frame).
+  - 6496bf8 car screen eyes: with BB_VR_WORLD_SCALE=0 the eyes were bit for bit equal, so shading missed the eye
+    offset. The scene constants (1936 bytes) hold the sun's shadow matrix (dwords 72-87 and 196-211, camera-relative
+    to shadow space); fragment stages in two-eye passes now get a per-eye copy with the translation moved by M e (as
+    the spot lights' 44-46). Before: right eye's brake caliper lit and dark blotches on the bumper; after: both eyes
+    the same (the flat game has the caliper dark, like the left eye before). BB_VR_EYE_SHADOW=0 off.
+  - Dev tools added: SKIP takes compute shaders, DRAWLOG lists dispatches, BB_VR_AUDIT_ADDR=<hex>,
+    BB_VR_EYE_LIGHTS_LOG=1, BB_CAPTURE_TRIGGER/BB_CAPTURE_DIR frame capture (existing) found the scene block.
+  - Test harness (session scratchpad): steps.sh/steps_dump.sh (one X at a time, captures/eye dumps per step; the car
+    screens are steps 9-11), multirace2.sh (counts race loads by the world file opening, not osd_speedometer which
+    logs once), burst.py (resizes the simulator window if it was shrunk to zero height).
 
 ## Dragon's Dogma: Dark Arisen (BLUS31155 v01.02)
 
