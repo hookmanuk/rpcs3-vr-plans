@@ -648,6 +648,19 @@ Details and tools: `profiles/CUSA00003-notes.md`.
     game's submit thread mostly waits on the GPU semaphore (readbacks), so no CPU thread limits it. Eager submit
     interval (BB_FLUSH_DRAWS, default 384) swept 64/128/384/384: settled 76.6-82.4 FPS, all within noise, 384 kept.
     Staged build settles at 76-82 FPS at 3200 (the 72 minimum held); the ~89 ceiling needs the readback waits gone.
+  - 243d98d (staged in vr-dev, 0769c3c6) late outputs: the readbacks traced (BB_READBACK_LOG with the faulting code,
+    the covering GPU write and the values read): most were 5 shaders' small results the game steers by - 0xeea18ba7
+    the scene luminance (auto exposure, two smooth floats), 0xf558c2c1 two probe positions, 0x832138ea/0x89ea5c34
+    (always zero) and 0x2f6a12bc (0-1 values) - read every frame or two, each a wait for the newest GPU work; the
+    rest are GDS counter copies (DMA from GDS, incl. the grass flag) that stay exact. Late bytes count as the game's
+    own (stepped, no readback) and are copied back when the GPU finishes them (small_writeback, a late flag); other
+    GPU bytes on the page stay exact, another writer over them makes them exact again. (Making whole pages fast
+    failed: the luminance page holds a GDS copy, and 1000 demotions made it slower.) Ignoring the outputs entirely
+    gave 84 vs 79.5, so this is near the cap. A/B, five alternating pairs at 3200: settled +1.9 to +3.0 FPS (e.g.
+    86.3 vs 84.0, 85.9 vs 82.9), 1% low and late frames better, readbacks about halved. Soak: 4 + 3 race loads with
+    quits, 0 faults, 0 flickers in every burst; exposure on the race sheets as before; car-screen eyes still match.
+    Exact-page step budget (64) swept 64/256/1024/4096: noise, kept. The race now settles 86-88 FPS, the readbacks-off
+    ceiling (~89, GPU bound) is about reached.
 
 ## Dragon's Dogma: Dark Arisen (BLUS31155 v01.02)
 
