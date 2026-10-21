@@ -919,7 +919,12 @@ Details and tools: `profiles/CUSA00003-notes.md`.
   - Car selection on f1fe55e with the draw thread (the Mercedes A 45 on the red pad, main menu + 8 presses of X,
     STOP_MARK=vehicle_select_background in x_flow): three EYES dumps, both eyes the same car, paint, lighting and
     scene (mean L/R difference 16-20 = the stereo parallax of an orbiting camera; a menu dump with no car was 0-5).
-  - Still open: the grey tag squares above cars, Matt's grid number with the draw thread.
+  - Matt (22:00): "leave the grey squares alone, that's a flat issue, not ours" (the skip bisect eliminated
+    0xaa6f089a, 0xdfe9f301, 0x4acfff32; the square is lit and fogged like geometry, so it is a G-buffer draw,
+    probably a name-tag quad whose text never renders; dropped). The EYES/mirror grabs now use PrintWindow
+    (PW_RENDERFULLCONTENT, grabwin.py), so a window in front no longer ends up in them.
+  - Staged for Matt at 22:05: game f1fe55e + launcher c2e4554 (draw thread on). Open: his grid FPS and CPU
+    frametime with the draw thread, and his verdict on the fly-over and several races.
 
 ## Dragon's Dogma: Dark Arisen (BLUS31155 v01.02)
 
