@@ -684,6 +684,14 @@ Details and tools: `profiles/CUSA00003-notes.md`.
     3 of 5 benchmark runs fell to 11 FPS with ~1 s frames (every access of the game's copy of the table stepped).
   - Left: GDS counter copies (DMA from GDS, the grass flag among them) read right after the GPU writes them: true
     waits, must stay exact. Staged build: benchmark ~89-90 vs the ~96 readbacks-off ceiling.
+  - Where the rest goes (benchmark, BB_FRAME_STATS/BB_PHASES/BB_PROFILE): the GPU command processor thread
+    (shadPS4:GpuCommandProcessor) uses 8-9 s of CPU per 10 s, never idle, ~2600 draws and ~21k buffer bindings a
+    frame (bind resources 22%, emit and bind 16%, pipeline lookup 13% with timers on; the sampler's self samples are
+    flat, memcpy/backing copies ~15%, lock waits ~9%); the GPU is ~90% busy (10.6 ms of 11.7). Readbacks on vs off
+    with the phase timers on differ by only 3.5%. Tried, no gain, reverted: GDS offset-4 copies late (game-thread
+    read waits 350 -> 120 ms/s, FPS +0.5: the game thread is not the limit), a lock-free gate before the per-eye
+    buffer lookup (87.6 vs 87.3), draw thread with readbacks off (90-91 vs 94.5-95.4: slower even then). Page
+    protection: ~1% of the command thread. Benchmark drift over the night: the same build 84.7-91.
 
 ## Dragon's Dogma: Dark Arisen (BLUS31155 v01.02)
 
