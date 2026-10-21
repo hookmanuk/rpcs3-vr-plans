@@ -632,6 +632,13 @@ Details and tools: `profiles/CUSA00003-notes.md`.
   - Test harness (session scratchpad): steps.sh/steps_dump.sh (one X at a time, captures/eye dumps per step; the car
     screens are steps 9-11), multirace2.sh (counts race loads by the world file opening, not osd_speedometer which
     logs once), burst.py (resizes the simulator window if it was shrunk to zero height).
+  - Final check of the staged build (4d938e2, be4465b5 in vr-dev): four more race loads with quits, no fault (16 race
+    loads across tonight's merge-based builds, none faulted); 0 flickers; no floating grass; 77-82 FPS at 3200.
+  - Performance tried and reverted (no gain): a third queue of the graphics family for readback copies (waits the
+    same: the data read was written in the newest work), one-page readbacks on it (1 ms each but 4x as many: 510-540
+    ms/s of waits vs 430-470), 2 MB readback windows (535-554 ms/s, 75-78 FPS). Remaining costs: ~120 GPU-data reads a
+    second (~0.45 s of game-thread waits a second; readbacks off would give ~89 FPS, the GPU-bound ceiling) and the GPU
+    command thread, busy all the time (bind resources 11%, emit 8%, pipeline lookup 7% of wall time).
 
 ## Dragon's Dogma: Dark Arisen (BLUS31155 v01.02)
 
