@@ -1039,6 +1039,20 @@ Details and tools: `profiles/CUSA00003-notes.md`.
     up to 1 GB of texture uploads), then the game at exactly 100 ms a frame 4.9-8.8 s and 25.2-27.4 s (70 frames
     over 50 ms; flat-screen frames in the VR stats then: a throttled transition screen, not the race). Identical on
     b25f0dd (the build before tonight), so the game's own pacing. Racing: worst frame 22 ms, none over 50 ms.
+  - Frame pacing (41d1c0f, staged in vr-dev ~11:45, exe md5 1a4b87b5cc38): at 2560 uncapped the frame times are
+    bimodal, 7-9 ms and a group at 12-14 ms (14% of frames over 11.1 ms at 108 FPS); at 1600 that group is gone (1.6%),
+    and a per-frame GPU profile showed the slow frames are GPU idle between submissions (the game reads GPU results
+    mid-frame, the GPU drains, then a whole guest submission was recorded before any of it was submitted). Eager submit
+    (stage B submits once the GPU has run dry and 256+ draws wait; BB_EAGER_SUBMIT) and graphics waits on fences the
+    draw thread deferred to the Vulkan recorder met in stream order (they waited 7-10 ms for the recorder about twice a
+    second; BB_DEFERRED_FENCE_WAITS=0). Frame logs, 2560 uncapped: over 11.1 ms 14.3% -> 9.5%, over 13.9 ms 3.4% ->
+    1.1%, p90 12.2 -> 11.0 ms, 107.7 -> 111.2 FPS (eager alone 10.9% / 1.3%; the fence change alone nothing).
+    Checks: fly-by frame logs x2 and race logs 0 flashes, 6 races 0 faults, car-screen eyes unchanged.
+  - Measured and dropped (no gain): the label poll's every-1024th view read made time-based (each was a 3-9 ms
+    download, ~2/s, but the 1% low did not move); the exact-page step budgets (1024 pinned is the best point: 0 or 8192
+    lose 3-7 FPS and halve the 1% low, 64/256 lose 3-6); readbacks are 3-5 ms of GPU queue each (the arena is not host
+    visible: the sparse buffer's memory types exclude the ReBAR type), waiting only for the window's last writer would
+    save ~2 ms each but needs a second-queue copy. Nsight Systems' Vulkan layer crashes the game at start (null call).
 
 ## Dragon's Dogma: Dark Arisen (BLUS31155 v01.02)
 
