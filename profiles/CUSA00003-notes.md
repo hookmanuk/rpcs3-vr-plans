@@ -299,6 +299,17 @@ lost device in ~37 readbacks-off boots (an earlier build at 4320, compute a6cfe0
 - Evidence rule learned the hard way: eye dumps (EYES) force a GPU sync and hide timing bugs; judge with mirror-window
   grabs (`grabwin.py`, no sync) at a loaded GPU (EYE=4800), same race moments side by side at native resolution.
 
+## Single-frame flashes and the draw thread (2026-10-22, 9037616; record in 6-wip-games.md)
+
+- Find them with the frame log: dev key FRAMELOG (frame count; BB_FRAMELOG_SIZE for bigger thumbnails) writes the
+  left eye of every shown frame to %TEMP%\dcvr\framelog.raw; flana.py (session scratchpad) flags frames unlike both
+  neighbours and prints the run's duration. Screen grabs and EYES dumps miss them or sync them away.
+- Cause: per-thread batches of small guest copies. A submission or fence waited only for its own thread's batch;
+  copies the draw recording thread had queued could run after the GPU read their staging. Fixed in BbCopy (every
+  thread's batch is started by a wait). Any new per-thread deferred work needs the same care.
+- A zero only counts at full speed: configurations that keep CollectRingBindings from running (constant ring off)
+  slow stage A to 21-26 FPS through its unpruned pending-write list, and slow runs hid the flashes.
+
 ## Open
 
 - 1% low under 90 (frames over a period ~1-1.7%) and the periodic 50-85 ms hitch: the port's CPU side, not VR.

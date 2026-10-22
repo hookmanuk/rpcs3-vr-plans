@@ -925,6 +925,43 @@ Details and tools: `profiles/CUSA00003-notes.md`.
     (PW_RENDERFULLCONTENT, grabwin.py), so a window in front no longer ends up in them.
   - Staged for Matt at 22:05: game f1fe55e + launcher c2e4554 (draw thread on). Open: his grid FPS and CPU
     frametime with the draw thread, and his verdict on the fly-over and several races.
+  - Matt (2026-10-21 evening, on f1fe55e): "performance is much much better and graphics errors are rare" - tagged
+    v0.2.4-vr1.2-rc1 (local). His bugs: (1) a never-run render size with no shader cache corrupts almost everything;
+    (2) DLSS very high CPU at any size (maybe only under SteamVR); (3) "intermittent corruption of grey or black
+    frame flashes, usually seen on the flyby start, you'll need to log every frame to see it".
+  - (1) 44fed85: with the draw thread a new pipeline compiled on stage A while stage B still recorded with the old
+    state (red polygons, red sky at EYE=1600 with the cache folder removed); PipelineCache::before_compile drains the
+    recording thread first (BB_COMPILE_DRAIN=0 to compare). Cold runs clean, warm A/B no cost.
+  - (2) b25f0dd: the ~140 motion vertex shaders (DLSS object motion) baked this session's buffer addresses into their
+    SPIR-V, so every DLSS session compiled them again (CPU, 200 ms frames, 13-25 FPS 1% lows). They are cached with
+    placeholder addresses now (MotionVectors::PatchAddresses at module creation); WarmUp runs after the motion
+    buffers exist. From the second run 11-13 compiles (was 140); DLSS 68.6 avg / 49.3 1% low (was 50-65 / 13-25),
+    off 80.2 / 52.5.
+  - (3) New dev key FRAMELOG (1db4097): a thumbnail of the left eye of every frame the headset shows, no GPU sync;
+    framelog.sh + flana.py flag a frame unlike both its neighbours. Draw thread on: 2-4 flashed frames per 22 s
+    fly-by; off: 0. Amplifier BB_HYBRID_SMALL=0: 36-60. The flashes are single frames of exploded geometry (trees,
+    walls stretched into streaks toward the camera, the rest of the scene right) or a flat brown/grey frame.
+  - Cause (9037616): small guest copies (BbCopy::QueueCopy, the staging of the uploads a draw needs) go into the
+    calling thread's batch, and a wait for copies (WaitAsync at a submission, AfterCopies for a fence) started only
+    the caller's. Stage B queues the copies of what it records; stage A submits after draining it (readbacks, waits),
+    so copies left in stage B's batch ran after the GPU had read their staging. The batches are registered now and a
+    wait starts every thread's. Proof: the launcher mask without 524288 (small copies in order on the recorder
+    thread) 0 and 0; stage B flushing its batch when the pipe empties 0 x4, and 38 with that switched off on the same
+    build. Final (registry): 0 flashed frames in 7 frame logs (3 default, 4 amplified), every run at full speed.
+    VR benchmark, 4 interleaved pairs: 91.1 vs 92.1 avg, 54.8 vs 54.9 1% low (within the runs' spread).
+  - Lesson for anyone bisecting with the ring: every "ring off fixes it" result (TOG bit 36, BB_RING_MAX=0, a hash
+    slice that matches nothing) ran at 21-26 FPS instead of 55: CollectRingBindings is what prunes stage A's
+    pending-write list, and without it NotePendingGpuWrite crawls over an ever longer list. Check each run's
+    duration (flana prints it) before trusting a zero. The constant ring itself was innocent (ring copies equal guest
+    memory at bind in ~6M checks, no ring overwrite with a lap-aware verifier). Turning the ring off is a large
+    slowdown for that reason (not fixed: nothing turns it off).
+  - Failed attempts, reverted: shadow and guest updated under one lock (copy-backs vs uploads), per-eye constant
+    binders reading the ring copy, a full barrier after every dispatch, render-state/texture-set memo off, fault
+    window/hot pages off, a drain before command buffers that queued writes overlap (never happened), stream copies
+    avoiding unread GPU bytes (never happened), stage A's own batch flushed at commit (always empty).
+  - Staged in vr-dev 2026-10-22 ~03:30: game 1db4097 (96cffd39059f; previous exe in the session scratchpad), launcher
+    unchanged (c2e4554, mask 552960). Soak: no faults in ~25 sessions today (benchmarks, frame logs, a multi-race run
+    that loaded one race and ran 9 minutes). Open: Matt's verdict on the fly-by and his DLSS CPU under SteamVR.
 
 ## Dragon's Dogma: Dark Arisen (BLUS31155 v01.02)
 
