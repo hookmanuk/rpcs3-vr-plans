@@ -1069,6 +1069,10 @@ Details and tools: `profiles/CUSA00003-notes.md`.
     (only the buffer tracker sets read watchers, no images): 95 FPS, 47% slow - such a page has nothing to download, so
     the async readback never unmarks it and every access stays stepped; reverted. The eager threshold re-swept after
     these changes: 256 still best (64: 3.9-4.5%, 1024: 5.7%). Async compute WaitRegMem with the pending-fence check:
+    [eyes] Car-screen eyes (full-size dumps, subpix.py in the session scratchpad): per 32x32 block, best parallax shift
+    refined to 0.25 px and +-1 px vertically: residual median 3.3-3.5 against 2.3 for one eye compared with itself half
+    a pixel off (resampling alone); the 25 of 3450 blocks over 15 are all tree foliage (near leaves and sky through
+    them in one block), and the tree crops side by side have the same shape, coverage, colour and brightness.
     no gain, reverted. SteamVR runs at ~12:50 were paced at 72 Hz (headset idle): not usable for frame rates.
 
 ## Dragon's Dogma: Dark Arisen (BLUS31155 v01.02)
