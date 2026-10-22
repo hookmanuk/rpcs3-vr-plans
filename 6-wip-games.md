@@ -986,6 +986,11 @@ Details and tools: `profiles/CUSA00003-notes.md`.
     - Staged in vr-dev ~07:00: game 00a50ae (c1332980de1b; previous exes in the session scratchpad), launcher
       unchanged (c2e4554, 552960). vrbench2.sh EYE= now rewrites any per-eye size (it only matched 3200: earlier
       "EYE" benchmarks ran at the save's size).
+    - DLSS CPU under SteamVR on the final build (dlssprobe.sh, per-thread cycles, threadcpu.py; Windows' tick-sampled
+      thread times read 0.1-0.8 cores and misled): DLSS on 4.30 cores, off 4.54; the busiest threads are the same
+      (stage A, stage B, the Vulkan recorder, a game thread, ~1 core each). The extra CPU Matt saw was b25f0dd's
+      motion-shader recompiles. DLSS lowers FPS at 2560 per eye (77.3 vs 88.3 under SteamVR): the game is CPU-bound
+      (stage A), DLSS only adds GPU work - leave it off at this size.
 
 ## Dragon's Dogma: Dark Arisen (BLUS31155 v01.02)
 
