@@ -1075,6 +1075,19 @@ Details and tools: `profiles/CUSA00003-notes.md`.
     them in one block), and the tree crops side by side have the same shape, coverage, colour and brightness.
   - Matt tested 8821dce (2026-10-22): "this is brilliant, great work". Tagged v0.2.4-vr1.2-rc2; the vr branch and
     both rc tags pushed to origin (hookmanuk/driveclub-recomp) the same day.
+  - VR DLSS (Matt: "3200 DLSS quality mode is still terrible", fpsVR CPU frame 23 ms, GPU 65%; DLSS off holds 72 with
+    20% GPU headroom). Measure with his flow to the real race and its first 10 s (race10m.sh in the session
+    scratchpad, his launcher.ini, STEAMVR=1), not the time-trial benchmark. Two causes, both only with DLSS:
+    1. 19ec4e2: the label poll's every-1024th view read hit ~70 times a second with DLSS (the labels move to another
+       page): 142 read faults/s, 592 ms/s; now only after 250 ms unmet (BB_LABEL_VIEW_MS).
+    2. 3ee98d5: the object motion image (DLSS's motion vectors) was recreated after scheduler.Finish() at every
+       switch between the scene's G-buffer passes (render size, two layers) and the rear-view mirror's (768x512):
+       a fifth of the GPU command thread. Kept per size now. Race start 3200 DLSS Quality, SteamVR 72 Hz: 55-64 ->
+       72.0 FPS every second. Staged in vr-dev (exe md5 5c24247c71d3).
+    Test-copy trap: release/vr-test had an older launcher (2026-10-20) that writes the draw-thread-off toggle mask,
+    so x_flow runs there (which do not rewrite toggles after launch) ran without the draw thread; vr-dev's launcher
+    copied over (old one kept in the scratchpad). Uncapped 3200 time trial with the label fix: off 89.9, Quality
+    93.5, Performance 99.6 FPS (DLSS's own upscale and sharpening at 3200 per eye are the rest).
     no gain, reverted. SteamVR runs at ~12:50 were paced at 72 Hz (headset idle): not usable for frame rates.
 
 ## Dragon's Dogma: Dark Arisen (BLUS31155 v01.02)
