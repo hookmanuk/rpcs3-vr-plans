@@ -1098,6 +1098,14 @@ Details and tools: `profiles/CUSA00003-notes.md`.
   extracted zip, only the game folders set and VR 3200 picked, prepared and went straight into the opening race in
   stereo at 3200: 90 FPS on the simulator's 90 Hz, 0 faults. README's VR performance line ("45 or 60 FPS") left as
   is for Matt to decide. Matt publishes.
+- 4320 per eye (Matt: "get that as close to playable as possible"), his race start (race10m.sh, his settings, uncapped):
+  DLSS off 58-64 FPS, DLSS Quality (2880 -> 4320) 53-65 (the upscale costs what it saves), 3584 ~78.5. GPU busy
+  97% (nvidia-smi) through the race; the simulator's rate (240/90/72 Hz) changes nothing. ~70% of the 4320 frame
+  scales with pixels, but not with fragment shading: forced 2x2 and 4x4 VRS on every pipeline (BB_VRS_TEST, the
+  multiview twins need the rate state chained ahead of their rendering info) gave 62-64 and 62-68 against 62-63,
+  with the 4x4 blocks visible in an EYES dump. Not worth building foveated VRS; reverted. The largest labelled pass
+  is the HUD (vs 53b0217e, 4320x4320, 2 a frame, ~0.76 ms). Next suspects: memory traffic (G-buffer targets, clears,
+  our VR copies) and render-size compute, and GPU time outside the game's scheduler (the presenter).
     no gain, reverted. SteamVR runs at ~12:50 were paced at 72 Hz (headset idle): not usable for frame rates.
 
 ## Dragon's Dogma: Dark Arisen (BLUS31155 v01.02)
