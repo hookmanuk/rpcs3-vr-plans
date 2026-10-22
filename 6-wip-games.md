@@ -1004,6 +1004,21 @@ Details and tools: `profiles/CUSA00003-notes.md`.
       each of 9 before), 30 new pictures/s throughout (remaining dips are slow shots in the source). Not the
       texture cache (memo/fast-path toggles, hot pages, fault window, deferred uploads: no change).
     - Staged in vr-dev: game a688edd (exe from 1180bef + the hook).
+  - Matt: "double the amount of sharpness applied in DLSS" - 2726c50: BB_VR_DLSS_SHARPNESS doubled; above 1 the change
+    RCAS makes at its strongest is scaled (vr_sharpen.comp), not clamped to the neighbourhood (that clamp removed
+    the sharpening: offline on an unsharpened eye, RCAS max 20.8, clamped 14.1, unclamped 31.8 mean |laplacian|).
+    Car screen 2560: none 8.5, old 100% 11.1-12.0, new 100% 15.3. Matt's vr-dev has vr_experimental=0: DLSS and
+    its sharpening apply once he turns the experimental section on.
+  - Performance (c455aa4, +18%): sampled the GPU command thread (sampprof.py, profA.sh: the stage A thread found by
+    its liverpool.cpp frames; BB_PROFILE's sampler picks threads by tick-sampled time and missed it). A quarter of
+    its time was the async compute queue's WaitRegMem: every 32nd poll read the label through the guest view, the
+    page held other GPU data, so each was a fault, a synchronous download and a GPU wait. Now only labels whose own
+    bytes are unread GPU writes go through the view (and every 1024th poll). Benchmark 2560 uncapped (needs
+    SIMXR_HZ=240; without it the simulator holds the game near 90): 113.0/113.5/112.7 vs 95.7/95.7, 1% low equal.
+    SteamVR soak 9 races in one session, 0 faults, racing 91-99 FPS (83-88 before), memory flat 8.7-9.3 GB; frame
+    logs 0 flashes (fly-by, amplified, driving); intro 0 flash-backs; car eyes equal. Draining in the compute wait
+    instead: 82 FPS, reverted.
+  - Staged in vr-dev ~09:20: game c455aa4 (exe md5 73669008192d), launcher unchanged.
 
 ## Dragon's Dogma: Dark Arisen (BLUS31155 v01.02)
 
