@@ -320,6 +320,18 @@ lost device in ~37 readbacks-off boots (an earlier build at 4320, compute a6cfe0
 - Stage A is the CPU bottleneck in VR (BB_FRAME_STATS "idle" ~1%); its "stage A waits" line names the drain sites.
   Benchmark uncapped at Matt's size: `EYE=2560 vrbench2.sh TAG EXE` (runs at 240 Hz); interleave A/B pairs.
 
+## VR DLSS placement (2026-10-22, ca366a3; record in 6-wip-games.md)
+
+- Frame order after the lighting (frame capture, BB_CAPTURE_TRIGGER/DIR): 2c918c06 lighting writes the lit scene
+  (0x500bf60000) -> transparents -> 788bb287/cc8ecafb/63b26ca4 (read the velocity target; not identified) -> DLSS at the bloom's
+  first draw (vs b834cdf9) -> 0d240764 bloom downsample (768x640) -> 9eff1777 composite copy into a render-size
+  target (0x5021d20000) -> bloom blurs -> display pass (3200) -> HUD.
+- Anything upscaled must sit after the last render-size copy, or it is resampled down and up again: hence
+  BB_DLSS_AT=composite. The redirect (DriveAA::Redirects) only covers UV reads of one image; check every reader's
+  target size (a TEMP log in BindTextures did it; keep getenv out of that loop, it cost 60 FPS).
+- Judge DLSS by zoomed crops of static detail (dashboard digits at y 0.555 x 0.497 of the left eye, zoom.py), not by
+  Laplacian energy.
+
 ## Open
 
 - 1% low under 90 (frames over a period ~1-1.7%) and the periodic 50-85 ms hitch: the port's CPU side, not VR.

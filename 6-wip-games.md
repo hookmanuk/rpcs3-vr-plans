@@ -1108,6 +1108,32 @@ Details and tools: `profiles/CUSA00003-notes.md`.
   our VR copies) and render-size compute, and GPU time outside the game's scheduler (the presenter).
     no gain, reverted. SteamVR runs at ~12:50 were paced at 72 Hz (headset idle): not usable for frame rates.
 
+- DLSS blur (Matt 2026-10-22: "DLSS just doesn't look good. It's very blurry", others say the same; "do all the
+  changes you can ... behind flags"). Race start, 3200 per eye, static grid, EYES dumps compared by zoomed crops (the
+  Laplacian detail number counts aliasing and doubling as detail and misled: it scored the broken picture higher).
+  - Cause found: VR DLSS runs on the lit scene (at the bloom's first draw, vs b834cdf9) and the upscaled 3200 result
+    replaces later reads of it. The next reader is the game's composite copy (ps 9eff1777, a 4-index quad into a
+    2128 B10G11R11 target), which the display pass then scales to 3200: DLSS's output went 3200 -> 2128 -> 3200.
+    Dashboard digits came out smeared and doubled, worse than the game's own bilinear upscale of 2128. DLSS itself
+    was fine: DLAA (no resampling after it) matches the 4320 supersampled reference on the dashboard.
+  - Fix, flag BB_DLSS_AT=composite: DLSS on the composite instead (at the draw after 9eff1777's), so the display
+    pass reads the 3200 result 1:1. Dashboard clean, "1/2" on the fuel gauge legible; same frame rate (~81 FPS
+    uncapped at Quality, against ~81 without), 0 resets in 200 evaluations, no skips.
+  - BB_DLSS_JITTER_PER_FRAME=1: DriveAA::NextFrame runs for every draw into the display buffer (composite + HUD), so
+    the jitter moved on by the draw count each frame: logged 9 of the 18 phases, x never negative. One step per
+    anti-aliasing pass with the flag (all 18 logged). No visible change on the grid by itself; kept for testing.
+  - BB_DLSS_MIP_BIAS_EXTRA=-1 (added to log2(render/output), DLAA too) and BB_DLSS_MIP_BIAS_PASSES=all (every
+    scene-depth pass, not just the G-buffer): more road texture detail with the composite fix.
+  - Ruled out: jitter sign (+,+ best of four; the geometry moves with the jitter, measured -0.19,-0.82 px against
+    -0.25,-0.85 between two dumped inputs), DLSS resets (none), our motion vectors (zero vectors were worse; the
+    head pose is in the camera matrices the vectors use), a stale redirect read by the pass before DLSS (no
+    change, removed). TEMP diagnostics (redirect log, DLSS input/output dumps) removed; a getenv per texture
+    binding in one of them had cut the game to 18 FPS, so FPS figures from 19:50-20:08 runs are not valid.
+  - Committed ca366a3 on vr (not pushed). Staged in release/vr-dev (exe = vr-test's tested one; launcher from the
+    0.2.5-vr1.2 release; old exe/launcher/ini in release/backup-vr-dev-20261022) with "DLSS test 0 - as before",
+    "1 - composite" and "2 - all fixes" .bat files. For Matt to judge in his headset at Quality and Performance; if
+    good, make composite the default (and probably the jitter step).
+
 ## Dragon's Dogma: Dark Arisen (BLUS31155 v01.02)
 
 Notes: `profiles/BLUS31155-notes.md`. Evidence: `evidence/ddda/`. Profile `BLUS31155.json`, patch file
