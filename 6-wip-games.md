@@ -1019,6 +1019,17 @@ Details and tools: `profiles/CUSA00003-notes.md`.
     logs 0 flashes (fly-by, amplified, driving); intro 0 flash-backs; car eyes equal. Draining in the compute wait
     instead: 82 FPS, reverted.
   - Staged in vr-dev ~09:20: game c455aa4 (exe md5 73669008192d), launcher unchanged.
+  - Checks on c455aa4: car screen eyes at full resolution with parallax removed per 32x32 block (best horizontal shift
+    each): upper half (car, scenery, sky) median difference 0, 95th percentile 9.5 (edges); the near ground needs
+    shifts of ~111 px, residual median 2.9 / p95 4.9 with a +-200 px search - the raw mean of ~13 is stereo
+    parallax of the close cobbles. Full race (60 s, AI driving) frame log: 0 flashes, one frame a second reviewed by
+    eye, all normal.
+  - Where the time goes now (2560 per eye, uncapped, 113 FPS): GPU 83-93% busy at 2767 MHz (nvidia-smi); CPU threads
+    stage A ~0.9 core but idle ~10% waiting for submissions, the game's main thread ~0.9 core of which ~half is a
+    spin on sceKernelGetProcessTime (time-based waiting, not work), stage B ~20% idle, the Vulkan recorder ~70%
+    spinning for work. A 1000 Hz game vblank (BB_VR_GAME_HZ=1000) changes nothing (112.5-112.7 vs 112.8-113.1).
+    GPU profile: the labelled passes 4.5 ms/frame, the largest 0.22 ms; the rest is compute and the VR/simulator
+    presentation. No single lever left at this size; Matt's headset (90 Hz) is reached with margin (91-99 racing).
 
 ## Dragon's Dogma: Dark Arisen (BLUS31155 v01.02)
 
