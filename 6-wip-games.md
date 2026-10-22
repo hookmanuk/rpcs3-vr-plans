@@ -1065,7 +1065,10 @@ Details and tools: `profiles/CUSA00003-notes.md`.
     flag (sun through trees on the cockpit; 8 such before), 6 races 0 faults, car eyes unchanged.
   - Left: ~8 reads/s of page 0x3000446000 still read back synchronously ("no GPU bytes" by the hybrid's count but the
     page still protected; stepping them measured ~1 point, 2.5-3.5% vs 3.7-4.2%, not worth the risk: DownloadMemory and
-    image-protected pages would need in-flight marking first). Async compute WaitRegMem with the pending-fence check:
+    image-protected pages would need in-flight marking first). Tried anyway with in-flight marking in CollectDownloads
+    (only the buffer tracker sets read watchers, no images): 95 FPS, 47% slow - such a page has nothing to download, so
+    the async readback never unmarks it and every access stays stepped; reverted. The eager threshold re-swept after
+    these changes: 256 still best (64: 3.9-4.5%, 1024: 5.7%). Async compute WaitRegMem with the pending-fence check:
     no gain, reverted. SteamVR runs at ~12:50 were paced at 72 Hz (headset idle): not usable for frame rates.
 
 ## Dragon's Dogma: Dark Arisen (BLUS31155 v01.02)
