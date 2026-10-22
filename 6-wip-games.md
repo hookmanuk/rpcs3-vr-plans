@@ -1035,6 +1035,10 @@ Details and tools: `profiles/CUSA00003-notes.md`.
     the cockpit darkening for one frame under tree-trunk shadows; the draw thread off flags the same moments (7),
     so it is the track. At 1600 per eye the benchmark is 134.6 (CPU-bound there), 113 at 2560 (GPU-bound). Race
     load stalls: 40-80 ms frames in the first ~4.5 s with 100-570 MB texture uploads (streaming at the start).
+  - Matt's flow with BB_FRAME_STATS (loadprof.sh): after the race world loads, 4 load frames of 60-125 ms (0-0.4 s,
+    up to 1 GB of texture uploads), then the game at exactly 100 ms a frame 4.9-8.8 s and 25.2-27.4 s (70 frames
+    over 50 ms; flat-screen frames in the VR stats then: a throttled transition screen, not the race). Identical on
+    b25f0dd (the build before tonight), so the game's own pacing. Racing: worst frame 22 ms, none over 50 ms.
 
 ## Dragon's Dogma: Dark Arisen (BLUS31155 v01.02)
 
