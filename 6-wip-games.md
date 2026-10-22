@@ -1073,8 +1073,8 @@ Details and tools: `profiles/CUSA00003-notes.md`.
     refined to 0.25 px and +-1 px vertically: residual median 3.3-3.5 against 2.3 for one eye compared with itself half
     a pixel off (resampling alone); the 25 of 3450 blocks over 15 are all tree foliage (near leaves and sky through
     them in one block), and the tree crops side by side have the same shape, coverage, colour and brightness.
-  - Matt tested 8821dce (2026-10-22): "this is brilliant, great work". Tagged v0.2.4-vr1.2-rc2 (local, like rc1; the
-    vr branch is 39 commits ahead of origin, not pushed).
+  - Matt tested 8821dce (2026-10-22): "this is brilliant, great work". Tagged v0.2.4-vr1.2-rc2; the vr branch and
+    both rc tags pushed to origin (hookmanuk/driveclub-recomp) the same day.
     no gain, reverted. SteamVR runs at ~12:50 were paced at 72 Hz (headset idle): not usable for frame rates.
 
 ## Dragon's Dogma: Dark Arisen (BLUS31155 v01.02)
