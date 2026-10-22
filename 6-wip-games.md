@@ -1053,6 +1053,20 @@ Details and tools: `profiles/CUSA00003-notes.md`.
     lose 3-7 FPS and halve the 1% low, 64/256 lose 3-6); readbacks are 3-5 ms of GPU queue each (the arena is not host
     visible: the sparse buffer's memory types exclude the ReBAR type), waiting only for the window's last writer would
     save ~2 ms each but needs a second-queue copy. Nsight Systems' Vulkan layer crashes the game at start (null call).
+  - Readback syncs (8821dce, staged in vr-dev ~12:40, exe md5 3027ae0945c5): with readbacks off (BB_READBACKS=0, for
+    measuring only) just 0.5% of frames were over 11.1 ms against 9%: the guest threads' readback waits (each one the
+    whole GPU queue, 3-5 ms, then the GPU idle behind the stalled game) were most of the slow frames. Two changes: the
+    exact-page step budget's readback (it only opens the page) starts without waiting and a worker finishes it
+    (BufferCache::ReadbackAsync, BB_ASYNC_BUDGET_READBACK=0 off); and bytes a recorded readback carries count as GPU
+    bytes until it lands (readback_hybrid.h g_inflight, BB_HYBRID_INFLIGHT=0 off) - before, every access to a page
+    with a readback in flight waited for it, so the async readback was waited for by the next access anyway.
+    Frame logs 2560 uncapped: over 11.1 ms 9.0% -> 3.7%, 112.5 -> 114.7 FPS, benchmark p99 17.4 -> 15.5 ms, 1% low
+    54 -> 58. Checks: race contact sheet clean (nothing floating), fly-by / India / Chile 0 flags, Japan evening 1 weak
+    flag (sun through trees on the cockpit; 8 such before), 6 races 0 faults, car eyes unchanged.
+  - Left: ~8 reads/s of page 0x3000446000 still read back synchronously ("no GPU bytes" by the hybrid's count but the
+    page still protected; stepping them measured ~1 point, 2.5-3.5% vs 3.7-4.2%, not worth the risk: DownloadMemory and
+    image-protected pages would need in-flight marking first). Async compute WaitRegMem with the pending-fence check:
+    no gain, reverted. SteamVR runs at ~12:50 were paced at 72 Hz (headset idle): not usable for frame rates.
 
 ## Dragon's Dogma: Dark Arisen (BLUS31155 v01.02)
 
