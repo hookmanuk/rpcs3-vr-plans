@@ -1088,6 +1088,16 @@ Details and tools: `profiles/CUSA00003-notes.md`.
     so x_flow runs there (which do not rewrite toggles after launch) ran without the draw thread; vr-dev's launcher
     copied over (old one kept in the scratchpad). Uncapped 3200 time trial with the label fix: off 89.9, Quality
     93.5, Performance 99.6 FPS (DLSS's own upscale and sharpening at 3200 per eye are the rest).
+  - Then: DLSS jitter checked (fine: ~1500 scene draws a frame get the jitter DLSS is given, every frame), DLSS model
+    row (BB_DLSS_PRESET; 310.9 defaults K for DLAA/Q/B, M Perf, L Ultra Perf), the game TAA tried (motion blur patch
+    left out: Matt "doesn't look great and costs ms") and removed, VR fast mode removed from the launcher, RCAS
+    replaced by LumaSharpen on the final picture (vr_luma_sharpen.comp, BB_VR_SHARPEN=strength[,limit]; launcher
+    steps 0.8/1.3/2.0/3.0/5.0, limit 0.07; Matt: "this looks better").
+- Release 0.2.5-vr1.2 (Matt: "lets make a 0.2.5-vr1.2 release"): tag v0.2.5-vr1.2 (577bccc) and vr pushed, zip
+  release/driveclub-recomp-0.2.5-vr1.2-win64.zip (162 files, 134 MB: vr1.1's plus WheelSetup/FfbTest). Out-of-box:
+  extracted zip, only the game folders set and VR 3200 picked, prepared and went straight into the opening race in
+  stereo at 3200: 90 FPS on the simulator's 90 Hz, 0 faults. README's VR performance line ("45 or 60 FPS") left as
+  is for Matt to decide. Matt publishes.
     no gain, reverted. SteamVR runs at ~12:50 were paced at 72 Hz (headset idle): not usable for frame rates.
 
 ## Dragon's Dogma: Dark Arisen (BLUS31155 v01.02)
