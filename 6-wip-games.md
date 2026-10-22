@@ -1030,6 +1030,11 @@ Details and tools: `profiles/CUSA00003-notes.md`.
     spinning for work. A 1000 Hz game vblank (BB_VR_GAME_HZ=1000) changes nothing (112.5-112.7 vs 112.8-113.1).
     GPU profile: the labelled passes 4.5 ms/frame, the largest 0.22 ms; the rest is compute and the VR/simulator
     presentation. No single lever left at this size; Matt's headset (90 Hz) is reached with margin (91-99 racing).
+  - More corruption coverage on c455aa4 (benchmark races with frame logs, 20 s each, AI driving): Norway night,
+    UK stormy heavy rain, Chile noon - 0 flagged; Japan evening 8 weak flags (scores 14-17, flashes were 50-130):
+    the cockpit darkening for one frame under tree-trunk shadows; the draw thread off flags the same moments (7),
+    so it is the track. At 1600 per eye the benchmark is 134.6 (CPU-bound there), 113 at 2560 (GPU-bound). Race
+    load stalls: 40-80 ms frames in the first ~4.5 s with 100-570 MB texture uploads (streaming at the start).
 
 ## Dragon's Dogma: Dark Arisen (BLUS31155 v01.02)
 
