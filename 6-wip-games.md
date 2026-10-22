@@ -991,6 +991,19 @@ Details and tools: `profiles/CUSA00003-notes.md`.
       (stage A, stage B, the Vulkan recorder, a game thread, ~1 core each). The extra CPU Matt saw was b25f0dd's
       motion-shader recompiles. DLSS lowers FPS at 2560 per eye (77.3 vs 88.3 under SteamVR): the game is CPU-bound
       (stage A), DLSS only adds GPU work - leave it off at this size.
+  - Matt (morning 2026-10-22): "The intro plays with repeated frames ... skipped back say half a second". Frame log
+    of the flat screen (a688edd: FRAMELOG takes menus and videos too; introlog.sh boots with no input, the log from
+    the first frame), the source video dumped (dc_attract_video_30fps_11, H.264 High, 30 fps, 5 frame buffers) and
+    every shown frame matched to its source frame (vidmatch.py; scenecheck.py counts flashes to an earlier shot,
+    reliable; the per-frame back/skip counts are noise in slow shots). Two causes, 1180bef:
+    - Startup: the game polled video slowly while loading; one frame a call left it 2-3 s behind the audio clock,
+      then the backlog played at up to 72 frames/s. Late frames are dropped now (lag <= ~100 ms).
+    - Flashes: a buffer the game let go of was refilled at once, before the draw thread (behind the game) read it -
+      a frame five ahead on screen (cockpit -> next shot -> cockpit at source frame 173, every run; 0 with the draw
+      thread off). Returned buffers wait 70 ms (BB_AVPLAYER_REUSE_MS). SteamVR: 0 flash-backs in 4 runs (1-2 in
+      each of 9 before), 30 new pictures/s throughout (remaining dips are slow shots in the source). Not the
+      texture cache (memo/fast-path toggles, hot pages, fault window, deferred uploads: no change).
+    - Staged in vr-dev: game a688edd (exe from 1180bef + the hook).
 
 ## Dragon's Dogma: Dark Arisen (BLUS31155 v01.02)
 
