@@ -310,6 +310,16 @@ lost device in ~37 readbacks-off boots (an earlier build at 4320, compute a6cfe0
 - A zero only counts at full speed: configurations that keep CollectRingBindings from running (constant ring off)
   slow stage A to 21-26 FPS through its unpruned pending-write list, and slow runs hid the flashes.
 
+## Crash and performance tools (2026-10-22)
+
+- A process that vanishes without a Fault line: Windows Application log event 1000 names the module and offset
+  (ntdll RtlAcquireSRWLockExclusive = a lock on freed memory). BB_NTDLL_FAULTS=1 (probe) reports ntdll access
+  violations with BB_CRASH_DIR dumps; scratchpad unwind.py DUMP unwinds a dump's thread with .pdata and symbolises
+  with llvm-symbolizer (the exe has DWARF); stacks.py PID for a live (hung) process. hangloop2.sh N EXE: N short
+  benchmark boots, keeps the log of any that does not reach the race.
+- Stage A is the CPU bottleneck in VR (BB_FRAME_STATS "idle" ~1%); its "stage A waits" line names the drain sites.
+  Benchmark uncapped at Matt's size: `EYE=2560 vrbench2.sh TAG EXE` (runs at 240 Hz); interleave A/B pairs.
+
 ## Open
 
 - 1% low under 90 (frames over a period ~1-1.7%) and the periodic 50-85 ms hitch: the port's CPU side, not VR.

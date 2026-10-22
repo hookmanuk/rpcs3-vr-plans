@@ -962,6 +962,30 @@ Details and tools: `profiles/CUSA00003-notes.md`.
   - Staged in vr-dev 2026-10-22 ~03:30: game 1db4097 (96cffd39059f; previous exe in the session scratchpad), launcher
     unchanged (c2e4554, mask 552960). Soak: no faults in ~25 sessions today (benchmarks, frame logs, a multi-race run
     that loaded one race and ran 9 minutes). Open: Matt's verdict on the fly-by and his DLSS CPU under SteamVR.
+  - Overnight 2026-10-22 (Matt asleep: races without crashes, no corruption, eyes equal at the car, performance):
+    - Multi-race: soaks on 9037616-1db4097, simulator 3 races, SteamVR 5 races, 0 faults (multirace2.sh: every
+      other restart misses the menu, a harness limit). Car screen: both eyes the same car, paint, light and shadow
+      (L/R difference 13 = parallax on the near cobbles), checked again on the final build.
+    - Silent crash at the intro video, 1 boot in 20-60 (older than tonight: 1 in 60 on b25f0dd; WER: access
+      violation in ntdll RtlAcquireSRWLockExclusive+0x10, no Fault line). New probe switch BB_NTDLL_FAULTS=1
+      (00a50ae) reported it with a dump; unwound with a .pdata unwinder (scratchpad unwind.py; dumpstack.py and
+      stacks.py for live processes): sceAvPlayerGetStreamInfo on a player sceAvPlayerClose had deleted. c4e3065:
+      player handles reference counted, a closed handle refused. 80 boots, 0 failures (hangloop2.sh). The intro
+      is skipped at once in benchmark mode; skipping it by hand should hit the same window.
+    - The copy-batch registry no longer uses a thread_local destructor (d36b240: batches on the heap, never freed).
+    - Performance (88d0b2d): stage A (the GPU command thread) is the bottleneck (idle 1%) and waited 12-13% of its
+      time for stage B before constant dumps: every task (fence, WriteData, DMA), indirect and special packet
+      counted as reading all memory, and that entry, merged into the ranges, never expired. Tasks now pass what
+      they touch, indirect draws their inputs and arguments, special packets nothing (images only), the "anything"
+      entry expires, ranges are boxed per 64 GB region. Waits 18,000 -> 9,900/s; VR benchmark at 2560 per eye
+      (Matt's size), uncapped (the benchmark runs at 240 Hz): 95.7 vs 91.0 avg FPS, 3 interleaved pairs, 1% low
+      equal. Tried and dropped: deferred stream copies (87.8/89.6 vs 90.7), prepared resources + draw preparation
+      on (no change), the launcher mask stays 552960.
+    - Final build checks: frame logs 0 flashes (default and amplified, 3000 frames incl. the start), car eyes
+      equal, SteamVR soak 6 races in one session (18 min) 0 faults, racing 85-100 FPS.
+    - Staged in vr-dev ~07:00: game 00a50ae (c1332980de1b; previous exes in the session scratchpad), launcher
+      unchanged (c2e4554, 552960). vrbench2.sh EYE= now rewrites any per-eye size (it only matched 3200: earlier
+      "EYE" benchmarks ran at the save's size).
 
 ## Dragon's Dogma: Dark Arisen (BLUS31155 v01.02)
 
