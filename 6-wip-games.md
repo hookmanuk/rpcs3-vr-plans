@@ -1133,6 +1133,12 @@ Details and tools: `profiles/CUSA00003-notes.md`.
     0.2.5-vr1.2 release; old exe/launcher/ini in release/backup-vr-dev-20261022) with "DLSS test 0 - as before",
     "1 - composite" and "2 - all fixes" .bat files. For Matt to judge in his headset at Quality and Performance; if
     good, make composite the default (and probably the jitter step).
+  - 2026-10-23, Matt: "Can't you fix the problem?": all four made the VR defaults (c2e6a4e; composite only once the
+    game has drawn 9eff1777, else the lit scene as before). Race start 3200: Quality dashboard matches the
+    supersampled reference, Performance and DLAA clean, ~80 FPS uncapped in all; the old path (BB_DLSS_AT=lit
+    BB_DLSS_JITTER_PER_FRAME=0 BB_DLSS_MIP_BIAS_EXTRA=0 BB_DLSS_MIP_BIAS_PASSES=gbuffer) still blurry. One old-path
+    run stalled at 5.6 FPS after 3 s (no fault); its repeat and the default repeat ran normally. Staged in vr-dev
+    (plain DriveClub.exe = fixed; "DLSS old (blurry) for comparison.bat"). Not yet seen in Matt's headset.
 
 ## Dragon's Dogma: Dark Arisen (BLUS31155 v01.02)
 
