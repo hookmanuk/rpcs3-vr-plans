@@ -47,5 +47,17 @@ them 3-way; hunks that mixed in Driveclub's other work were reverted and redone 
    scene-resolution proxies and the temporal upscaler (`vk_scene_resolution`, `vk_temporal_upscaler`) in stereo or off.
 3. Stage 3: camera hooks per game (view/projection setters; the camera constants the G-buffer reads).
 4. Stage 4: the HUD on its own layer (where each game's HUD starts drawing into the display buffer).
-5. Launcher: a VR card (eye size, as Driveclub's), and the auto-update (RELEASES_API = Supermedo/uncharted_pc) must not
-   replace a VR build with a flat release.
+5. Stage 2 must make the render size follow BB_VR_EYE_RES (the launcher row exists; the games render 1920x1080 fixed).
+
+## Launcher (95ed363, 2026-10-23)
+
+- Display page, first card "VR": "Play in a VR headset (OpenXR)" (setting `vr`): `BB_VR=1`, `BB_FRAME_GEN=off`
+  (`vr_environment`). Checked: flat env has no BB_VR and keeps its frame generation; screenshot of the page fine.
+- Updates: `RELEASES_API` = hookmanuk/uncharted_pc's release list; `vr_release` takes the newest non-draft,
+  non-prerelease tag containing `-vr`. VERSION `0.3.6-vr0.1`; tags `v<base>-vr<n>` compare by their digits
+  (v0.3.6-vr1.0 > 0.3.6-vr0.1). No VR release exists yet: the check reports "no VR release yet".
+- package.sh: `openxr_loader.dll` into `bin/` beside bb-probe.exe (`OPENXR_LOADER`, default RPCS3's copy).
+- Matt 2026-10-23 "Add VR resolutions too": "Resolution per eye" row (`vr_eye_size`, 1080/1600/2160/2560/2880/3200/
+  3584/3840/4320, default 2880) -> `BB_VR_EYE_RES` (vr_multiview's cache suffix reads it already). No effect until
+  stage 2: the flat screen shows the games' 1920x1080 display buffer.
+- Settings are shared with a flat install (APPDATA/uncharted-launcher); the flat launcher ignores `vr`.

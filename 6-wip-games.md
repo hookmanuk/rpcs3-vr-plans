@@ -1170,6 +1170,9 @@ Details and tools: `profiles/CUSA00003-notes.md`.
   and vr pushed; zip release/driveclub-recomp-0.2.5-vr1.3-win64.zip (164 files, same list as vr1.2; no NGX import in
   the game exe). Out-of-box from the extracted zip, only the game folders set: VR 3200 into the opening race at 90
   FPS (simulator 90 Hz), and with DLSS Quality 2128 -> 3200 at 89.7, 0 faults. Matt publishes.
+- After vr1.3 (2026-10-23, pushed to origin/vr the same evening): TV gamma on by default after Matt's headset A/B
+  ("this is good"; 3276b04 A/B on F11, d1a0ee6 default on, BB_VR_TV_GAMMA=0 off), F9/F10 (flat AA keys) ignored in VR
+  (ff03ea9: F10's FSR left the jitter running in VR). Staged in releaser-dev at ff03ea9.
 
 ## Uncharted: The Nathan Drake Collection (PS4, Uncharted PC port + VR fork, not RPCS3)
 
@@ -1188,7 +1191,10 @@ my disc, I'll let you know when its done."
   2026-10-23.
 - 2026-10-23: stage 1 code in (fork 5613b65, local, not pushed): the Driveclub VR layer ported, Driveclub-specific
   parts emptied (no camera hooks, no render size: the game will show on the flat screen in the headset). Builds; not
-  run (no game files yet). Open: Matt's dump; launcher VR card and its auto-update (Supermedo's releases).
+  run (no game files yet). Open: Matt's dump.
+- 2026-10-23: launcher VR card (BB_VR=1, frame generation off), updates only from hookmanuk/uncharted_pc releases
+  tagged -vr (version 0.3.6-vr0.1), openxr_loader.dll in package.sh (fork 95ed363, local). Matt: "Add VR resolutions
+  too": resolution per eye row (1080-4320, default 2880, BB_VR_EYE_RES), used once stage 2 renders in 3D.
 - Details: `profiles/uncharted-ndc-notes.md` (renamed to the title ID once the dump is in).
 
 ## Dragon's Dogma: Dark Arisen (BLUS31155 v01.02)
