@@ -1160,6 +1160,10 @@ Details and tools: `profiles/CUSA00003-notes.md`.
   readbacks and fault emulation trust the byte map, marked on the recording thread after a guest access may be let
   through; 946fbce turns both off in VR (BB_READBACK_EARLY=1 / BB_FAULT_EMULATE=1 for on). No FPS cost (92.5/87.9 vs
   90.3/90.0). Staged in vr-dev; Matt to check the corners (not reproduced here).
+  Matt: "still loads of clumps, and performance is still a bit worse off the grid. revert all merge changes again."
+  vr-dev back to the pre-merge build (c2e6a4e) and the 0.2.5-vr1.2 launcher; the merge with all fixes is kept on
+  vr-merge-0.3.0 (946fbce), its build in release/merge-0.3.0-build. Open for a next try: the clusters' cause (not
+  the early readbacks / fault emulation), and the off-grid frame rate (the race start alone hid it).
 
 ## Dragon's Dogma: Dark Arisen (BLUS31155 v01.02)
 
