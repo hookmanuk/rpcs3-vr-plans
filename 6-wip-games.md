@@ -1164,6 +1164,12 @@ Details and tools: `profiles/CUSA00003-notes.md`.
   vr-dev back to the pre-merge build (c2e6a4e) and the 0.2.5-vr1.2 launcher; the merge with all fixes is kept on
   vr-merge-0.3.0 (946fbce), its build in release/merge-0.3.0-build. Open for a next try: the clusters' cause (not
   the early readbacks / fault emulation), and the off-grid frame rate (the race start alone hid it).
+- Release 0.2.5-vr1.3 (Matt 2026-10-23: "a new release 0.2.5-vr1.3 with the dlss fix"): vr1.2 + the DLSS placement /
+  jitter / mip bias fixes (c2e6a4e) + the launcher's VR DLSS, model and sharpening rows moved into the VR card with the
+  experimental toggle gone (ec83100; an ini saved with it off keeps DLSS and sharpening off once). Tag v0.2.5-vr1.3
+  and vr pushed; zip release/driveclub-recomp-0.2.5-vr1.3-win64.zip (164 files, same list as vr1.2; no NGX import in
+  the game exe). Out-of-box from the extracted zip, only the game folders set: VR 3200 into the opening race at 90
+  FPS (simulator 90 Hz), and with DLSS Quality 2128 -> 3200 at 89.7, 0 faults. Matt publishes.
 
 ## Dragon's Dogma: Dark Arisen (BLUS31155 v01.02)
 
