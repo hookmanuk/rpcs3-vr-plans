@@ -1140,6 +1140,16 @@ Details and tools: `profiles/CUSA00003-notes.md`.
     run stalled at 5.6 FPS after 3 s (no fault); its repeat and the default repeat ran normally. Staged in vr-dev
     (plain DriveClub.exe = fixed; "DLSS old (blurry) for comparison.bat"). Not yet seen in Matt's headset.
 
+- Upstream 0.3.0 merged (Matt 2026-10-23; a0089b1 + c4c20a6 on vr, not pushed). Kept ours where upstream fixed the same
+  thing its own way (label polls, constant-dump drains, readback hybrid with upstream's byte map); upstream's
+  PointerRead replaces our fetch-table copies; DriveAA takes upstream's flat upscale-at-composite while VR keeps
+  vr_dlss.cpp, now with upstream's jitter scaled by render / output (Matt: shadow flicker on VR DLSS). Upstream's
+  render size from BB_AA_SCALE (2136) overrode the VR render patch (2128): ~70 FPS at 3200 Quality, skipped in VR
+  (back to ~80). Launcher: Detail tab / HDR / frame cap / two-thread next to VR; in VR the HDR card, Fullscreen,
+  Dynamic resolution, Motion blur, Lens dust and the blur patch row hide (Matt: "features not relevant for VR
+  hidden"). Upstream's less pop-in (BB_CULL_SCALE 0.25) is on in VR: ~600 more draws, 3200 Quality 85 -> 80 FPS
+  with it (BB_CULL_SCALE=1 BB_CULL_SCALE_SHADOW=1 for the game's). Staged in vr-dev (backup-vr-dev-20261023).
+
 ## Dragon's Dogma: Dark Arisen (BLUS31155 v01.02)
 
 Notes: `profiles/BLUS31155-notes.md`. Evidence: `evidence/ddda/`. Profile `BLUS31155.json`, patch file
