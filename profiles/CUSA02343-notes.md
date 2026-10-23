@@ -95,3 +95,38 @@ Matt: "Just get 1 working properly first." (U2/U3 untouched.)
   (Driveclub's default, on) applies to the eyes: flat Uncharted has none. Render size 1920x1080 for a ~square FOV
   (non-square pixels); BB_RENDER_RES for a square per-eye size untried. HUD size and distance to tune. Roll check.
   Matt's headset test.
+
+## Matt's first headset test and the night after (2026-10-23/24)
+
+Matt: "The fps needs tying to the refresh rate of the HMD. There is a lot of judder whilst turning my head. The
+resolution needs to be changeable. DLSS needs to work in VR. The VR app is called Driveclub VR, it should be Uncharted
+VR. This all needs optimising as much as possible. Once all that is done implement uncharted 2 & 3." Then: "keep going
+all night, dont ask anything."
+
+- Name: the OpenXR application is "Uncharted VR" (55ca3e7).
+- Judder: the layer took the camera hook's latest pose while the frame shown was rendered ~6 frames earlier. Frame
+  tags (55ca3e7): the hook adds k * 2e-5 (k = 1..63) to the view's near plane (+0x298); the shaders get half of it, and
+  the velocity pass's float 9 (z = c9 / (depth - c8): -(n/2) f / (f - n/2)) is read where the port reads those
+  constants (CameraMotion::OnVelocityConstants, a one-line hook): 1771 of 1800 frames find their pose. Reading the
+  constants from guest memory at OnDraw gave later frames' data (ring reuse): use the prepared draw's copy.
+- Pacing: launcher VR runs the game unpaced (BB_VBLANK_HZ=240); the adaptive cap holds one flip per headset frame from
+  103% of the headset rate (was 112%), released below 93%.
+- Resolution (41e4126, scripts/vr_resolution.py, run.py): loader patches (BBPATCH2) checked against eboot.elf:
+  display configuration initialisers (+0x3c4d60/+0x3c5050/+0x3c5300, config +0xd5c2fc: fields +0x08 (the render size:
+  without it the picture is mis-scaled), +0x18, +0x24, +0x38 sizes, +0x20/+0x2c aspects, +0x30 2560x1216, +0x40
+  240x270 scaled); render target heaps (arena table +0x971d10.., 32-byte entries id/context/size/align: 0x84 at
+  +0x9721d8 140 MB, 0x85 at +0x9721f8 497 MB) grown with the pixel count; the GPU context (+0x9713f8, 2988 MB,
+  kAllocAppGpu: the game checks its arenas add up) and the system context (movabs +0xcb, 4.5 GB) grown by the same,
+  in whole 2 MB (asserts at +0x36a430 / +0x36a8c3); BB_DMEM_MB raised. Limits: the GPU context must stay below 4 GB
+  ("GPU Mem" arena size kept in 32 bits: 5028 MB became 932 MB); the spare arena 0xe (209 MB) must stay (context 7's
+  arenas, 320 MB, are carved from it). 2560 runs, 2880 is short of render target memory: run.py clamps to 2560.
+  The boot-time language screen is garbled at square sizes (a 1920x1080 video into a square buffer?); menus after it
+  are fine. HUD and menus lay themselves out for the square canvas.
+- DLSS (c886997): DLAA per eye (vr_upscale.h: the upscaler's views on the eye's layer, a DLSS feature per eye via
+  bridge ABI 3 from the Driveclub fork, the result back into the layer); only DLSS in stereo. The scene detection's
+  1920x1080 became Fixes::NativeSize. Bridge built with VS 2026: cmake -G "Visual Studio 18 2026" -A x64
+  -DDLSS_SDK_ROOT=F:/rpsc3/source/DLSS -DVULKAN_INCLUDE=<out/vkinclude>; DLLs copied beside out/bb-probe.exe.
+  Upscaling above the native size would need the port's scene proxies in stereo (not done).
+- Frame rates (simulator, "Ambushed" checkpoint): 90 Hz, 2160 / 2400 / 2560 per eye: 90.0 FPS, 1% low 83-85, 0%
+  late; 2160 + DLSS 90.0, 1% low 79. Uncapped 2160: 168-172 FPS (DLSS 140-145), 1% low 93-99; GPU 95% busy at 142 FPS
+  (RTX 5090): GPU-bound uncapped.

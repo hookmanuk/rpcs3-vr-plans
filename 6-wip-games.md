@@ -1199,6 +1199,11 @@ my disc, I'll let you know when its done."
   Uncharted 1 plays in stereo with head tracking (fork 64f62b4, local): camera hook, multiview, HUD layer. Simulator
   2880x2880: 90 Hz 90.0 FPS, 1% low 83-85, 0% late; uncapped 158-175 (flat 218). Open: a one-off right-eye light
   artifact, TV gamma default, square per-eye render size, HUD size, roll check, Matt's headset test.
+- Matt's headset test 2026-10-23 (verbatim in the notes): judder, frame rate not tied to the HMD, fixed
+  resolution, no DLSS, named "Driveclub VR"; then U2 and U3. Night of 2026-10-23/24: frame tags (each frame shown
+  with its rendered pose), headset pacing, eye size 1440-2560 (game render size patched; 2880 out of render target
+  memory), DLSS DLAA per eye, "Uncharted VR" (fork 55ca3e7..c886997). Simulator 2160 + DLSS: 90.0 FPS at 90 Hz,
+  uncapped 140-145.
 - Details: `profiles/CUSA02343-notes.md`.
 
 ## Dragon's Dogma: Dark Arisen (BLUS31155 v01.02)
