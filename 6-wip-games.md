@@ -1171,6 +1171,26 @@ Details and tools: `profiles/CUSA00003-notes.md`.
   the game exe). Out-of-box from the extracted zip, only the game folders set: VR 3200 into the opening race at 90
   FPS (simulator 90 Hz), and with DLSS Quality 2128 -> 3200 at 89.7, 0 faults. Matt publishes.
 
+## Uncharted: The Nathan Drake Collection (PS4, Uncharted PC port + VR fork, not RPCS3)
+
+Matt 2026-10-23: "Can you pull this repo and start work on a VR fork on a new vr branch, based on the full-release
+branch on the H:\ drive https://github.com/hookmanuk/uncharted_pc/tree/full-release. I will extract my game later from
+my disc, I'll let you know when its done."
+
+- Repo `H:\uncharted_pc` (hookmanuk/uncharted_pc, Supermedo's port: the PS4 code natively, the bbport/shadPS4 renderer
+  of the Driveclub recomp), branch `vr` from `full-release` 290ced0. Three games in one port (U1 eboot.bin, U2
+  big2-ps4_Shipping.elf, U3 big3-ps4_Shipping.elf): camera hooks and HUD detection per game.
+- Plan: bring the Driveclub recomp's VR layer across (renderer_vulkan/vr/, emit_spirv_vr, one-line `// VR` hooks):
+  stage 1 OpenXR + the game on a flat screen, stage 2 multiview stereo, stage 3 head tracking through each game's
+  camera, stage 4 the HUD on its own layer. Stages 3-4 need Matt's dump (title ID and version still unknown).
+- Build: `env -u VULKAN_SDK bash build.sh` (MSYS2 CLANG64; 1 min clean). The machine's VULKAN_SDK (1.4.341, RPCS3's)
+  lacks VK_VALVE_shader_mixed_float_dot_product, which the port uses; MSYS2's headers are 1.4.363. Flat build OK
+  2026-10-23.
+- 2026-10-23: stage 1 code in (fork 5613b65, local, not pushed): the Driveclub VR layer ported, Driveclub-specific
+  parts emptied (no camera hooks, no render size: the game will show on the flat screen in the headset). Builds; not
+  run (no game files yet). Open: Matt's dump; launcher VR card and its auto-update (Supermedo's releases).
+- Details: `profiles/uncharted-ndc-notes.md` (renamed to the title ID once the dump is in).
+
 ## Dragon's Dogma: Dark Arisen (BLUS31155 v01.02)
 
 Notes: `profiles/BLUS31155-notes.md`. Evidence: `evidence/ddda/`. Profile `BLUS31155.json`, patch file
