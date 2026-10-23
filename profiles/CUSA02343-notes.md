@@ -2,7 +2,7 @@
 
 Not RPCS3: Supermedo's Uncharted PC port (hookmanuk/uncharted_pc, the PS4 code natively, the bbport/shadPS4 Vulkan
 renderer, the same lineage as the Driveclub recomp). Fork `H:\uncharted_pc`, branch `vr` from `full-release` 290ced0.
-Title ID and version: from Matt's disc dump (pending, 2026-10-23); rename this file to `<TITLE_ID>-notes.md` then.
+Matt's disc dump: `H:\ROMs\uncharted\CUSA02343` (EP9000-CUSA02343_00-UNCHARTEDTRILOGY, EU disc, APP_VER 01.00).
 Three games in one port: U1 `eboot.bin`, U2 `big2-ps4_Shipping.elf`, U3 `big3-ps4_Shipping.elf` (camera hooks, HUD
 detection and render sizes per game).
 
@@ -61,3 +61,37 @@ them 3-way; hunks that mixed in Driveclub's other work were reverted and redone 
   3584/3840/4320, default 2880) -> `BB_VR_EYE_RES` (vr_multiview's cache suffix reads it already). No effect until
   stage 2: the flat screen shows the games' 1920x1080 display buffer.
 - Settings are shared with a flat install (APPDATA/uncharted-launcher); the flat launcher ignores `vr`.
+
+## Uncharted 1 in stereo (64f62b4, 2026-10-23)
+
+Matt: "Just get 1 working properly first." (U2/U3 untouched.)
+
+- Test route (tools/drive.py, pad file): a test save in `out/try/user` (backed up in the session scratchpad; restored
+  before each run) at the "Ambushed" checkpoint: language, Press, Start Drake's Fortune, Press, Continue, OK (Friend
+  Stats), ~100 s from boot. The enemies kill Drake after ~30-60 s: check in the first seconds; the moment the load
+  lands on varies between runs. Skipping the opening movie by pad (Options, down, down, cross) drops presses.
+- Camera: the render camera object is image +0xa86b30 (position, quaternion, FOV 75 deg at +0x20; its view at +0x30:
+  camera-to-world input +0x250..+0x280, aspect +0x290, x scale +0x294, near 0.24 +0x298, far 5000 +0x29c; outputs
+  +0x10 camera to world, +0x50 view, +0x90 projection (P00 -1.3032: x mirrored), +0xd0 view-projection). The views'
+  projection update is +0x2c8dd0 (calls the matrix builder +0x2c9070); the camera update calls it at +0xa7178.
+  Found: projection values from the velocity pass (ps 0xf4b18264: camera-relative constants, c1 = -1.3032, 2.3168)
+  -> memory scan -> the image's data -> write watch -> the builder -> xrefs (tools/vr). The image moves between runs
+  (0x0af00000, 0x0ab00000, 0x0b900000): the hook finds it by its bytes.
+- Hook: head x camera on the input (axes C = diag(-1, 1, -1)), the headset's FOV as symmetric aspect / x scale.
+  Simulator: yaw +-20 and pitch 10 turn the rendered view the right way (roll not checked yet).
+- Stereo: multiview (BB_VR_STEREO=mv) with the render size 1920x1080 for the two-layer images; the stereo capture takes
+  the scene at the second display-buffer draw (vs 0xf585649d composites, the HUD follows: vs 0xfadcd6fe), the depth from
+  single-target draws (U1 has no multi-target G-buffer). The display buffer is RGBA (VkFormat 43): the eye and HUD
+  swapchains are made RGBA (red and blue were swapped).
+- The port's temporal upscaler must be off in VR (BB_UPSCALER=off; the launcher does it): with it the presenter's
+  upscaled path skips the HUD capture, and it works on one eye with jitter. The HUD layer shows (1.4 m wide, 1.1 m).
+- Frame rates (simulator, 2880x2880 eyes, the checkpoint, upscaler and DLSS off): flat uncapped 218 FPS, p99 8.7 ms
+  (1% low ~115); VR flat screen uncapped 215, 1% low 107; VR stereo at 90 Hz 90.0 FPS, 1% low 83-85, 0-0.44% over a
+  period, 0% late; stereo uncapped 158-175 FPS, 1% low 95-100.
+- Audit (BB_VR_AUDIT=1): the 2048x2048 shadow map one layer (fine), the 32x32 / 16x16 luminance chain left eye only,
+  compute 0xaec539f0 writes a 0x870 buffer from the left eye that 0x8d3c1baa / 0x38d8bf05 read for both eyes.
+- Open: once the right eye showed blocky orange light streaks on the burning cabin that the left eye lacked; not
+  reproduced in later loads (different moments). Needs a deterministic scene (a checkpoint without enemies). TV gamma
+  (Driveclub's default, on) applies to the eyes: flat Uncharted has none. Render size 1920x1080 for a ~square FOV
+  (non-square pixels); BB_RENDER_RES for a square per-eye size untried. HUD size and distance to tune. Roll check.
+  Matt's headset test.

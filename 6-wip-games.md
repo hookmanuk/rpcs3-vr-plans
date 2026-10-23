@@ -1195,7 +1195,11 @@ my disc, I'll let you know when its done."
 - 2026-10-23: launcher VR card (BB_VR=1, frame generation off), updates only from hookmanuk/uncharted_pc releases
   tagged -vr (version 0.3.6-vr0.1), openxr_loader.dll in package.sh (fork 95ed363, local). Matt: "Add VR resolutions
   too": resolution per eye row (1080-4320, default 2880, BB_VR_EYE_RES), used once stage 2 renders in 3D.
-- Details: `profiles/uncharted-ndc-notes.md` (renamed to the title ID once the dump is in).
+- 2026-10-23: dump in, `H:\ROMs\uncharted\CUSA02343` (EU disc 01.00). Matt: "Just get 1 working properly first."
+  Uncharted 1 plays in stereo with head tracking (fork 64f62b4, local): camera hook, multiview, HUD layer. Simulator
+  2880x2880: 90 Hz 90.0 FPS, 1% low 83-85, 0% late; uncapped 158-175 (flat 218). Open: a one-off right-eye light
+  artifact, TV gamma default, square per-eye render size, HUD size, roll check, Matt's headset test.
+- Details: `profiles/CUSA02343-notes.md`.
 
 ## Dragon's Dogma: Dark Arisen (BLUS31155 v01.02)
 
