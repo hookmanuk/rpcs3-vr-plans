@@ -1149,6 +1149,11 @@ Details and tools: `profiles/CUSA00003-notes.md`.
   Dynamic resolution, Motion blur, Lens dust and the blur patch row hide (Matt: "features not relevant for VR
   hidden"). Upstream's less pop-in (BB_CULL_SCALE 0.25) is on in VR: ~600 more draws, 3200 Quality 85 -> 80 FPS
   with it (BB_CULL_SCALE=1 BB_CULL_SCALE_SHADOW=1 for the game's). Staged in vr-dev (backup-vr-dev-20261023).
+  Matt: "not good... floating trees are back, and performance is worse": vr reset to c2e6a4e, the merge kept on
+  vr-merge-0.3.0 (tag merge-0.3.0-attempt1, build in release/merge-0.3.0-build). Alternating runs, 3200 DLSS
+  Performance: pre-merge 82.6/81.0, merged 82.9/82.6, merged with the game's pop-in limits 90.0/93.6. c372cac makes
+  the game's limits the VR default (Performance 89.8, Quality 86.2, 0 late); staged in vr-dev for Matt (floating
+  trees not re-checked; Matt: performance first).
 
 ## Dragon's Dogma: Dark Arisen (BLUS31155 v01.02)
 
