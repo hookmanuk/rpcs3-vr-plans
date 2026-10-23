@@ -1154,6 +1154,12 @@ Details and tools: `profiles/CUSA00003-notes.md`.
   Performance: pre-merge 82.6/81.0, merged 82.9/82.6, merged with the game's pop-in limits 90.0/93.6. c372cac makes
   the game's limits the VR default (Performance 89.8, Quality 86.2, 0 late); staged in vr-dev for Matt (floating
   trees not re-checked; Matt: performance first).
+  Matt: "performance is ok now, but the clumps are still there... around the 3rd corner and 4th corner... in different
+  places every time you load" (tree clusters floating in the sky; EYES dump of his session in the scratchpad,
+  matt_clumps.png). His log: "early readback copies at submission end: on" (arena not host visible). 0.3.0's early
+  readbacks and fault emulation trust the byte map, marked on the recording thread after a guest access may be let
+  through; 946fbce turns both off in VR (BB_READBACK_EARLY=1 / BB_FAULT_EMULATE=1 for on). No FPS cost (92.5/87.9 vs
+  90.3/90.0). Staged in vr-dev; Matt to check the corners (not reproduced here).
 
 ## Dragon's Dogma: Dark Arisen (BLUS31155 v01.02)
 
