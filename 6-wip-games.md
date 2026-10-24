@@ -2027,6 +2027,22 @@ Frame rate, free-roam drive at 440 uncapped: 61-62 FPS. Tried, no gain: the 640x
 shadow map) at 0.4 (59-60). RSX thread profile while driving is flat per-draw work (run_FIFO 7 %, emit_geometry 7 %,
 vertex copies 5 %): no single cost to cut.
 
+## Midnight Club: Los Angeles Complete Edition (Xbox 360 545407F8, recomp: hookmanuk/mcla-recomp, not RPCS3)
+
+Matt (2026-10-24): "we have another game to convert to VR. H:\ROMs\midnightclub contains my own ripped iso. I have
+forked this pc recomp - https://github.com/hookmanuk/mcla-recomp Can you download to H, get it working in 2d. Then
+apply all the learnings from driveclub and uncharted to this VR port. Do not stop until everything works perfectly in
+matching VR with no gfx errors and 90fps."
+- 2026-10-24: `H:\mcla-recomp` (fork of holdmysocks/mcla-recomp, ReXGlue SDK v0.10.0 = Xenia's GPU). The heavy
+  folders (`third_party`, `game`, `out`, `tools`) are junctions to `C:\mcla-data` (H: had 12 GB free). Built with
+  `scripts/make_pc.ps1` under VS 2022 Build Tools' vcvars64 (the project's own Clang 20; Ninja from VS 2022). Plays
+  flat: title, career start, free roam. VR plan: the Vulkan backend (multiview via the SPIR-V translator, as
+  Driveclub/Uncharted); D3D12's translator emits DXBC (no view instancing).
+- Frame rate, free roam (parked by the first garage, uncapped, DLSS n/a): Vulkan 65 -> 77-79 FPS with the SDK's
+  submissions on their own thread (SDK branch `vr` 737a794); D3D12 88-90. The game thread waits ~50% on the GPU
+  thread (the swap throttle); GPU 57-75% busy at 720p, mostly fixed per-frame cost (2x2 resolution scale: 64 FPS).
+  90 FPS in stereo needs the GPU thread and the GPU's fixed cost cut. Details: `profiles/545407F8-notes.md`.
+
 ## Uncharted: Drake's Fortune (BCUS98103, update 01.10)
 
 **Matt's headset report (2026-10-15 afternoon, build `faf4a5bce` on `openxr`), open, in his words:**
