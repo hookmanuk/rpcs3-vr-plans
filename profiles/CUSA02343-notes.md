@@ -130,3 +130,42 @@ all night, dont ask anything."
 - Frame rates (simulator, "Ambushed" checkpoint): 90 Hz, 2160 / 2400 / 2560 per eye: 90.0 FPS, 1% low 83-85, 0%
   late; 2160 + DLSS 90.0, 1% low 79. Uncapped 2160: 168-172 FPS (DLSS 140-145), 1% low 93-99; GPU 95% busy at 142 FPS
   (RTX 5090): GPU-bound uncapped.
+
+## Uncharted 2 and 3, pacing, movies (2026-10-24, overnight)
+
+- Uncharted 2 (big2-ps4_Shipping.elf, e3eecb8 / f97d48f): U1's view with fields 0x40 lower (input +0x210, aspect / x
+  scale / near / far +0x250), built at image +0x3e2c50; the render views are per-frame copies from the call returning
+  to +0x61194f (shadow cascades too: those have x scale 0 or near >= 1, skipped). The shaders get the near plane as it
+  is (U1: half). Frames without a HUD (the train) are captured at the flip (CaptureAtFlip). Eye sizes: the same
+  configuration initialisers at +0x5525da/+0x5528c8/+0x552b7e, arenas 0x84/0x85 at +0xe6bd30/+0xe6bd50, GPU context
+  +0xe6af50 (2988 MB). The camera's image search no longer gives up after 3600 frames (U2's boot flips hundreds a
+  second unpaced: the hook was never installed in one run).
+- Uncharted 3 (big3-ps4_Shipping.elf, 8cc211c): U2's builder at +0x80a2f0 (tools/vr/view_find.py: vblendps of the
+  position with three vandps rows before it), the render views from the call at +0x5b153a (tools/vr/callers.py; the
+  same code around it as U2's +0x61194a). Tables in the RELRO segment: arenas 0x84 140 MB at +0x13aad20, 0x85 561 MB
+  at +0x13aad40, spare 0xe; GPU context 3052 MB at +0x13a9f00 (1042 MB below the 4 GB limit: 2560 per eye is at the
+  limit and runs). 1800 of 1800 frames find their rendered pose (shader near = the view's).
+- Pacing (8cc211c): a flip held for the headset waited for the next 240 Hz vblank tick (0-4.2 ms after the headset's
+  frame began). The vblank thread now wakes on the headset's frame while capped (Vr::WaitForHeadsetFrame, one call in
+  videoout/driver.cpp; BB_VR_TOKEN_WAKE=0 is the old way). U2 + DLSS 2160 at 90 Hz, A/B: frames over a period 10-14%
+  -> 3.6-4.7%, 1% low 75-77 -> 79-80, late 0% both.
+- Movies (50b0153): the collection plays its movies (all prerendered cutscenes, the intros, U1's language screen)
+  through compute 0xc85d9816 (NV12 to the display buffer). The game builds its luma/chroma descriptors from the
+  display configuration: at a square eye size 2160x2160 pitch 2176 with the chroma at luma + 2176*2160, while the
+  decoder writes 1920x1080 at pitch 1920, the chroma at + 1920*1088, in 4 MB buffers (green stripes). The decoder notes
+  each frame's layout (Vr::Fixes::NoteMovieFrame, one call in videodec2_impl.cpp); at the dispatch the pair (R8 then
+  R8G8 right after it, in a decoder buffer) gets the decoded layout (Fixes::FixMovieImages). The shader copies texels,
+  so the movie fills the display buffer's top left: the headset shows that region on the screen at 16:9 (not stereo).
+- U3's fight prompts (6179eb3): after its HUD U3 copies the display buffer out and back (0x6bda / 0x74a15). That
+  second run of display draws was captured again at the flip, with the first layer still cleared for the HUD: the
+  left eye black whenever a HUD showed. One capture per frame now.
+- U3 test save: scratchpad savedata_backup3 (a new game's autosave: Continue goes to the pub fight, "Press [] to
+  attack", the scene holds). Route: wait 50, cross x5 6 s apart.
+- Frame rates (simulator, DLSS off unless named):
+  - U2 train 2160: 90 Hz 90.0 FPS, 1% low 84-85, over a period 0-0.2%; DLSS 90.0, 1% low 79-80, 2.4-4.7% over.
+    Uncapped: 193-195 (1% low 96-100); DLSS 152 (1% low 91-94).
+  - U3 pub 2160: 90 Hz 90.0 FPS, 1% low 83, 0.4-0.7% over; uncapped 162-164 (1% low 88); DLSS uncapped 166 (1% low
+    96-98). 2560 + DLSS at 90 Hz: 90.0, 1% low 76-78, 8-12% over.
+- Open: U3's main menu (a 3D desert) renders in stereo with a flat yellow lower half; U3 + DLSS stopped presenting
+  once near a frame-dump screenshot (not again in a rerun); U1 one-off right-eye light artifact; TV gamma default; HUD
+  size; head-pose checks (yaw/pitch/roll) for U2 and U3.

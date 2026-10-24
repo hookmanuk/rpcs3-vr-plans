@@ -1204,6 +1204,10 @@ my disc, I'll let you know when its done."
   with its rendered pose), headset pacing, eye size 1440-2560 (game render size patched; 2880 out of render target
   memory), DLSS DLAA per eye, "Uncharted VR" (fork 55ca3e7..c886997). Simulator 2160 + DLSS: 90.0 FPS at 90 Hz,
   uncapped 140-145.
+- 2026-10-24 (overnight): Uncharted 2 and 3 in stereo with head tracking and eye sizes; the headset paces held
+  flips at its own frame (U2 + DLSS frames over a period 13% -> 4%); movies fixed at square eye sizes and shown on a
+  16:9 screen; U3 fight-prompt left eye fixed (fork e3eecb8..6179eb3, local). Simulator 2160 at 90 Hz: U2 1% low 84,
+  U3 83; uncapped U2 194, U3 163 (DLSS 152 / 166). Open: U3 menu's yellow floor in stereo, head-pose checks on U2/U3.
 - Details: `profiles/CUSA02343-notes.md`.
 
 ## Dragon's Dogma: Dark Arisen (BLUS31155 v01.02)
