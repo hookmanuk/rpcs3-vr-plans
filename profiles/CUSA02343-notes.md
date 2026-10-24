@@ -176,6 +176,16 @@ all night, dont ask anything."
   is identity like gameplay's), so it is head-tracked; the flat yellow lower half is ground below the game's 16:9
   frame that the headset's taller view uncovers (cosmetic, menus only). A second view passes the filter in both menu
   and gameplay (x scale 1.0, near 0.1, far 100) and is head-tracked too; nothing wrong seen from it.
+- TV gamma off by default (66f8012): Driveclub's 2.4/2.2 power made the eyes darker than the flat game (the port's
+  presenter has none); now the eye matches the flat frame (U2 train: mean 104.3 vs 104.4). BB_VR_TV_GAMMA=2.4 on.
+- run.py (dc286ca): eye-size tables by executable name (a game dumped alone as eboot.bin), BB_DMEM_MB recomputed per
+  game after a loadexec switch. Checked: run.py boots U3 in VR with 48 patches.
+- 2880 per eye: U3 also runs out of render target memory (HeapArena::Allocate: out of memory); the 2560 clamp stays.
+  The limit is the GPU context's 4 GB ("GPU Mem" allocator object built at U1 +0x36e758; its size is set at run time).
+  Context 3 is exactly its arenas (U3: 0x17, 0x83 254 MB, 0x84/0x85 render targets, 0x86 1260 MB, 0x87 368, 0x88 256,
+  spare 0xe 209): lending 0x86 (likely the loading heap) to the render targets is untested and risky.
+- Soak: U3 2560 + DLSS at 90 Hz, 49 reports (~8 min): 90.0 FPS, 1% low 82-84, 0.1-0.6% over a period; no hang.
+- U1's chapter-intro movie on the screen follows the poses as a fixed screen (yaw/pitch/roll).
 - Head poses (simpose.py: 0, yaw +-20, pitch 10, roll 15): U2 train and U3 pub follow the head; U3's prompt stays in
   its world-fixed box, whole.
 - Open: U3's main menu (a 3D desert) renders in stereo with a flat yellow lower half; U3 + DLSS stopped presenting
