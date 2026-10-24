@@ -1207,7 +1207,10 @@ my disc, I'll let you know when its done."
 - 2026-10-24 (overnight): Uncharted 2 and 3 in stereo with head tracking and eye sizes; the headset paces held
   flips at its own frame (U2 + DLSS frames over a period 13% -> 4%); movies fixed at square eye sizes and shown on a
   16:9 screen; U3 fight-prompt left eye fixed (fork e3eecb8..6179eb3, local). Simulator 2160 at 90 Hz: U2 1% low 84,
-  U3 83; uncapped U2 194, U3 163 (DLSS 152 / 166). Open: U3 menu's yellow floor in stereo, head-pose checks on U2/U3.
+  U3 83; uncapped U2 194, U3 163 (DLSS 152 / 166). Then: the game runs one frame ahead of the headset (2560 + DLSS
+  at 90 Hz, all three: 0-2% over a period, 1% low 80-85), TV gamma off (eyes match the flat game), run.py per-game
+  tables (fork ..66f8012). Head poses checked on U2/U3. Open: U3 menu's yellow floor (cosmetic), eye size above 2560
+  (4 GB GPU context), HUD size/distance (headset), U1 one-off light artifact. Needs Matt's headset test.
 - Details: `profiles/CUSA02343-notes.md`.
 
 ## Dragon's Dogma: Dark Arisen (BLUS31155 v01.02)
