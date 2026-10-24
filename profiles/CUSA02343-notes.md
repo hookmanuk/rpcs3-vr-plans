@@ -133,7 +133,7 @@ all night, dont ask anything."
 
 ## Uncharted 2 and 3, pacing, movies (2026-10-24, overnight)
 
-- Uncharted 2 (big2-ps4_Shipping.elf, e3eecb8 / f97d48f): U1's view with fields 0x40 lower (input +0x210, aspect / x
+- Uncharted 2 (big2-ps4_Shipping.elf, e3eecb8 / c671380): U1's view with fields 0x40 lower (input +0x210, aspect / x
   scale / near / far +0x250), built at image +0x3e2c50; the render views are per-frame copies from the call returning
   to +0x61194f (shadow cascades too: those have x scale 0 or near >= 1, skipped). The shaders get the near plane as it
   is (U1: half). Frames without a HUD (the train) are captured at the flip (CaptureAtFlip). Eye sizes: the same
