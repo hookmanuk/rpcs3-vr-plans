@@ -166,6 +166,18 @@ all night, dont ask anything."
     Uncapped: 193-195 (1% low 96-100); DLSS 152 (1% low 91-94).
   - U3 pub 2160: 90 Hz 90.0 FPS, 1% low 83, 0.4-0.7% over; uncapped 162-164 (1% low 88); DLSS uncapped 166 (1% low
     96-98). 2560 + DLSS at 90 Hz: 90.0, 1% low 76-78, 8-12% over.
+- Run-ahead (2c5f96b): the game renders one frame ahead of the headset (two flips banked while capped; the headset
+  shows the newest finished frame, so it no longer waits up to 2.8 ms for the GPU). 2560 + DLSS at 90 Hz, A/B x2 on
+  U3: frames over a period 5.8-8.4% -> 0-0.7%, 1% low 76-80 -> 82-84; U2 0-0.7% (1% low 84-85), U1 0-2% (80-85).
+  1800 of 1800 frames keep their rendered pose. BB_VR_AHEAD=0: the old way.
+- U3 at 2560 (heaps at the 4 GB context limit) runs; uncapped 167 (DLSS 139), the same as 2160 without DLSS: the
+  game's CPU side bounds it.
+- U3's menu desert: the menu uses the gameplay view (x scale 1.303, near 0.24, far 5000; with BB_VR_HEAD=0 its input
+  is identity like gameplay's), so it is head-tracked; the flat yellow lower half is ground below the game's 16:9
+  frame that the headset's taller view uncovers (cosmetic, menus only). A second view passes the filter in both menu
+  and gameplay (x scale 1.0, near 0.1, far 100) and is head-tracked too; nothing wrong seen from it.
+- Head poses (simpose.py: 0, yaw +-20, pitch 10, roll 15): U2 train and U3 pub follow the head; U3's prompt stays in
+  its world-fixed box, whole.
 - Open: U3's main menu (a 3D desert) renders in stereo with a flat yellow lower half; U3 + DLSS stopped presenting
   once near a frame-dump screenshot (not again in a rerun); U1 one-off right-eye light artifact; TV gamma default; HUD
   size; head-pose checks (yaw/pitch/roll) for U2 and U3.
