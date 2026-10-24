@@ -1212,10 +1212,11 @@ my disc, I'll let you know when its done."
   tables (fork ..66f8012). Head poses checked on U2/U3. Open: U3 menu's yellow floor (cosmetic), eye size above 2560
   (4 GB GPU context), HUD size/distance (headset), U1 one-off light artifact. Needs Matt's headset test.
 - 2026-10-24: GitHub fork replaced (Matt's call): `hookmanuk/uncharted_pc` deleted and re-forked from
-  `drakolordx7/uncharted_pc` (default branch `community`). Pushed back: `vr` (a06e234, still based on full-release
-  290ced0), the old fork's 11 branches as `hookmanuk-old/*`, its 6 tags; hashes checked against the backups
-  (`H:/backups/uncharted_pc-hookmanuk-mirror.git`, `H:/backups/uncharted_pc-local-all.bundle`, copy in
-  `F:/rpsc3/backups`). Moving `vr` onto `community` is not done: to plan with Matt (29 full-release commits not in
+  `drakolordx7/uncharted_pc` (default branch `community`). Pushed: `vr` (a06e234, still based on full-release
+  290ced0). The old fork's 11 branches and 6 tags were only GitHub's copies of Umar-Qayyum-dev's (same commits):
+  not on the new fork; kept locally (`H:/backups/uncharted_pc-hookmanuk-mirror.git`,
+  `F:/rpsc3/backups/uncharted_pc-hookmanuk-old-fork.bundle`); the local repo in `uncharted_pc-local-all.bundle`
+  (H:/backups and F:/rpsc3/backups). Moving `vr` onto `community` is not done: to plan with Matt (29 full-release commits not in
   community, its BB_GAME_RES and movie scaling overlap the VR eye size and movie fix, bb-probe takes one --patches
   file).
 - Details: `profiles/CUSA02343-notes.md`.
