@@ -2042,6 +2042,21 @@ matching VR with no gfx errors and 90fps."
   submissions on their own thread (SDK branch `vr` 737a794); D3D12 88-90. The game thread waits ~50% on the GPU
   thread (the swap throttle); GPU 57-75% busy at 720p, mostly fixed per-frame cost (2x2 resolution scale: 64 FPS).
   90 FPS in stereo needs the GPU thread and the GPU's fixed cost cut. Details: `profiles/545407F8-notes.md`.
+- 2026-10-24 VR (all on the OpenXR Simulator, Quest 3 profile, free roam by the first garage, DLSS n/a):
+  - Head-tracked camera works: the game's main camera (grcViewport, set at 0x82312D3C on the update thread, drawn
+    from the render thread a frame later) turns and moves with the head; the frame shows as a projection layer at
+    its pose. Fitting simulator shots against the straight-ahead view recovers yaw 19.5/-20.5, pitch 9.5, roll 15.0
+    for 20/-20/10/15 (NCC 0.993-0.996): world-locked, the right sign and field of view.
+  - Stereo works: each submission's commands replay for the right eye on twins of every device-local resource
+    (render targets, EDRAM, shared memory, resolved textures) with a clip-space eye shift for perspective geometry.
+    Parallax checked (horizon 0 px, car 8-11 px, ground 17-24 px, HUD 0), both eyes clean.
+  - Frame rate, stereo: 27 -> 40 (uploads in resizable-BAR memory) -> 59 (shared memory uploads hoisted to the
+    submission's prologue: no render pass split per upload) -> 62-64 (descriptor twins only where needed).
+    Mono VR 77. The GPU-emulation thread is the limit now (13 ms mono, 15-16 ms stereo a frame). The game's own
+    switches in stereo: shadows off 91, MSAA off 75, full-screen blur off 65 (look changes; not taken yet).
+  - Open: the GPU thread's cost (write-watch VirtualProtect ~9%, descriptor updates ~8%, upload copies ~5%),
+    the HUD on its own layer (it draws at zero parallax now), render size for the headset (1280x720 stretched over
+    ~108x108 degrees), the shadows' cost.
 
 ## Uncharted: Drake's Fortune (BCUS98103, update 01.10)
 
