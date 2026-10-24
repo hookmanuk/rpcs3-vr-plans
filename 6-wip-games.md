@@ -1222,6 +1222,9 @@ my disc, I'll let you know when its done."
 - 2026-10-24: branch `community-vr` (local): the VR work on drakolordx7's community build; eye sizes up to 5120 x 5120
   (64-bit arena sizes and reservations, screenshot arena grown). Simulator 90 Hz: 2160 + DLSS 90 FPS in all three;
   5120: U3 74.6, U2 68.6, U1 ~64 (RTX 5090). Not pushed yet; `vr` to be deleted once it is (Matt).
+- 2026-10-24: Driveclub pacing (output rate = render rate, cap holds), menus on the screen, every frame tagged; object
+  motion blur off in VR (head turns smeared characters), shadows per eye (Matt to check), movies letterboxed and menus
+  round on the square screen, mirror colours (fork 1df5081).
 - Details: `profiles/CUSA02343-notes.md`.
 
 ## Dragon's Dogma: Dark Arisen (BLUS31155 v01.02)

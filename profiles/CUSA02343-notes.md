@@ -218,3 +218,28 @@ commits cherry-picked (not a merge: that would bring full-release's history), th
   64 in gameplay. All three correct in both eyes at 5120; movies on the screen. run.py at 5120 with a cheat: 63
   writes (62 + 1), BB_GAME_RES ignored in VR.
 - Launcher eye sizes 1440-5120 (2160 recommended); run.py clamps to 5120.
+
+## Pacing, menus, tags, blur, shadows, movies (community-vr, 2026-10-24)
+
+- Pacing as Driveclub's (recomp c5c0dc6): the output rate is the game's; the adaptive cap from the headset's refresh
+  rate (XR_FB_display_refresh_rate, else the shortest predicted period: SteamVR doubles it when the app is late); one
+  flip per headset frame also without a frame limit (fork 9e56486, 0ef27c5). Matt: "much better".
+- 2D menus on the flat screen again: the flip capture needs a 3D frame with a scene depth (c989aa6). Frame tags read
+  from the near plane (-c9 / c8 of the velocity pass), ten times wider steps: every frame finds its pose (8da3b95).
+- Fork 1df5081:
+  - Object motion blur (Display > Motion Blur, default "Object") smeared characters along head turns (Matt: "the
+    characters all blur to the left of them, until I stop"; gone with the menu's Off). The setting: two bytes of a
+    settings block (+0x1ba object, +0x1b9 camera; the options' getter U1 +0x135100), found by toggling it in the menu
+    and diffing memory; the renderer's one check (U1 +0x4db75f, U2 +0x6674af, U3 +0x614b4f) becomes a jmp in VR
+    (vr_resolution.py, by pattern). Eye dumps with a 20-degree head sway: characters sharp.
+  - Shadows differed between the eyes (Matt: a far bigger shadow on a crate in the left eye): the cascaded shadow
+    resolve (ps 0x7c219ffb, full screen) rebuilds points from the centre camera's ray, so each eye's points sat half
+    the eye distance off. Its cascade rows (buffer 0: 4 x 16 floats) get a per-eye copy moved by the eye's offset
+    (view x points left: the camera's axes). Sign from the axes; the 10x/30x baseline A/B could not show it (moments
+    differed): Matt to check in the headset.
+  - Menus over a movie were stretched (a round button an ellipse): movies now fitted into a square canvas in a 1080p
+    buffer (1408x1408, black bars; the game's movie buffers do not grow: 1920x1920 overran them), the screen at the
+    canvas aspect. Cutscenes letterboxed, faces right.
+  - The desktop mirror swapped red and blue (RGBA frames).
+- Test setup: session.sh now sets the launcher's VR env (multiview, vblank 240, upscaler off); earlier sessions ran
+  without multiview.
