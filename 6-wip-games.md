@@ -1211,6 +1211,13 @@ my disc, I'll let you know when its done."
   at 90 Hz, all three: 0-2% over a period, 1% low 80-85), TV gamma off (eyes match the flat game), run.py per-game
   tables (fork ..66f8012). Head poses checked on U2/U3. Open: U3 menu's yellow floor (cosmetic), eye size above 2560
   (4 GB GPU context), HUD size/distance (headset), U1 one-off light artifact. Needs Matt's headset test.
+- 2026-10-24: GitHub fork replaced (Matt's call): `hookmanuk/uncharted_pc` deleted and re-forked from
+  `drakolordx7/uncharted_pc` (default branch `community`). Pushed back: `vr` (a06e234, still based on full-release
+  290ced0), the old fork's 11 branches as `hookmanuk-old/*`, its 6 tags; hashes checked against the backups
+  (`H:/backups/uncharted_pc-hookmanuk-mirror.git`, `H:/backups/uncharted_pc-local-all.bundle`, copy in
+  `F:/rpsc3/backups`). Moving `vr` onto `community` is not done: to plan with Matt (29 full-release commits not in
+  community, its BB_GAME_RES and movie scaling overlap the VR eye size and movie fix, bb-probe takes one --patches
+  file).
 - Details: `profiles/CUSA02343-notes.md`.
 
 ## Dragon's Dogma: Dark Arisen (BLUS31155 v01.02)
