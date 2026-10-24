@@ -1219,6 +1219,9 @@ my disc, I'll let you know when its done."
   (H:/backups and F:/rpsc3/backups). Moving `vr` onto `community` is not done: to plan with Matt (29 full-release commits not in
   community, its BB_GAME_RES and movie scaling overlap the VR eye size and movie fix, bb-probe takes one --patches
   file).
+- 2026-10-24: branch `community-vr` (local): the VR work on drakolordx7's community build; eye sizes up to 5120 x 5120
+  (64-bit arena sizes and reservations, screenshot arena grown). Simulator 90 Hz: 2160 + DLSS 90 FPS in all three;
+  5120: U3 74.6, U2 68.6, U1 ~64 (RTX 5090). Not pushed yet; `vr` to be deleted once it is (Matt).
 - Details: `profiles/CUSA02343-notes.md`.
 
 ## Dragon's Dogma: Dark Arisen (BLUS31155 v01.02)

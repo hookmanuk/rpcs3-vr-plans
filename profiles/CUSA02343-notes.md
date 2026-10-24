@@ -191,3 +191,30 @@ all night, dont ask anything."
 - Open: U3's main menu (a 3D desert) renders in stereo with a flat yellow lower half; U3 + DLSS stopped presenting
   once near a frame-dump screenshot (not again in a rerun); U1 one-off right-eye light artifact; TV gamma default; HUD
   size; head-pose checks (yaw/pitch/roll) for U2 and U3.
+
+## community-vr: the VR work on drakolordx7's community build, eye sizes to 5120 (2026-10-24)
+
+Matt: "create a community-vr branch from the community code, then merge your vr work on top of it and fix it", "this
+needs to work at resolutions up to 5kx5k". Branch `community-vr` (local, from `origin/community` 8e84018): the 16 VR
+commits cherry-picked (not a merge: that would bring full-release's history), then:
+- Community overlaps: its BB_GAME_RES patches the same display configuration as the VR eye size, so VR clears it
+  (launcher vr_environment, run.py before game_res). Its scene-pass size comes from Vr::Fixes::RenderSize (the eye
+  size, else BB_GAME_RES, else 1920x1080). Its decoder scales movies only with BB_GAME_RES, so the VR movie fix still
+  applies. bb-probe takes one --patches file: run.py vr_patches() joins the eye size's patches to the cheats'.
+  The shader cache keeps the stereo suffix on both of community's cache paths.
+- Eye sizes past 2560 (all in scripts/vr_resolution.py, found by bytes, checked per game):
+  - HeapArena::Init keeps a 64-bit size (the owner's +0xc8 = arena +0x78 when its low half matches).
+  - The "screenshoot buffer" arena (table id 0x80, 128 MB in the CPU context) holds three full-size RGBA buffers:
+    grown with the eye size (and context 2, and the 4.5 GB system total). 0x81 is the arena before it.
+  - Arena reservations past 4 GB: the reservation's four overloads (mov esi, r12d), the owner's virtual Allocate
+    (mov ebx, esi) and HeapArena::Allocate (mov r15d, esi) cut sizes to 32 bits: a 4161 MB render target heap took
+    65 MB of the GPU arena and the texture allocator began inside it ("Views into vram allocator not supported
+    yet"). All three keep 64 bits; HeapArena::Allocate takes the upper half only for 1..15 (4-64 GB), as other
+    callers may leave anything there.
+  - Measured (tools/vr/arena_scan.py, U3 3840): heap 0x85 high water 2292 MB of 4071, 0x84 400 MB of 1016: the
+    heaps' pixel-count growth (x1.02) is about twice what the game uses; kept (headroom).
+- Results (simulator, RTX 5090, 90 Hz, DLSS off unless named): 2160 + DLSS: U1 90 (1% low 79-81), U2 90 (82), U3 90
+  (80-81). U3 3840 90 (1% low 79-80); 4480 90 (1% low 41, 10% late); 5120 74.6 (1% low 38); U2 5120 68.6; U1 5120
+  64 in gameplay. All three correct in both eyes at 5120; movies on the screen. run.py at 5120 with a cheat: 63
+  writes (62 + 1), BB_GAME_RES ignored in VR.
+- Launcher eye sizes 1440-5120 (2160 recommended); run.py clamps to 5120.
