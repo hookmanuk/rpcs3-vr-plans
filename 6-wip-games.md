@@ -2100,8 +2100,17 @@ matching VR with no gfx errors and 90fps."
     over the bytes a draw asks for, not the whole 4 KB page (116-119 parked; title flyover 85-100 -> 105-120).
     Mono is 115-118 parked, so stereo now costs little. Driving uncapped: mostly 100-130; dense stretches (crowded
     street, Hollywood Blvd) were 58-70, now 74-90. The game's MSAA off would add ~24% (looks change; not taken).
-  - Open: a hang seen 3 times in ~15 runs since these changes (the GPU thread stops logging, the process stays
-    alive, no driver reset); being caught with a hang-triggered profile. Dense-street dips below 90.
+  - Morning 2026-10-25: the hang found and fixed. Out-of-process stacks (`stackdump.py`, dbghelp) and a stall log:
+    every game fence unsignalled, the GPU idle (4%, 65 W), no semaphore waits in the game's submissions, the
+    headset's queue done. Cause: the desktop window's presents (the window behind the headset's) now and then
+    stalled the graphics queue for good. No presents: 0 hangs in 30 runs against ~1 in 6. A semaphore-free acquire
+    still hung; the window on a queue of its own lost the device; both reverted. In VR the desktop window is no
+    longer drawn (`--vr_desktop_mirror=true` brings it back, with that risk).
+  - Guest constants as dynamic uniform buffers in VR (the set rewritten only when a pool page changes): parked
+    113.5-118 -> 121-123 FPS (interleaved A/B), pictures unchanged.
+  - MSAA (Matt asked): still on (game default). Now costs 0-0.7 ms a frame parked (yaw 90: no difference within
+    noise; yaw 270: 118.9 -> 128.9 FPS off); before the GPU-thread cuts it was ~1.9 ms (98 -> 121). Kept on.
+  - Open: dense-street dips (74-90 uncapped in some drives).
 
 ## Uncharted: Drake's Fortune (BCUS98103, update 01.10)
 
