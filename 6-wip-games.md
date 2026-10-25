@@ -2074,6 +2074,16 @@ matching VR with no gfx errors and 90fps."
     row/column the scaled targets leave unwritten.
   - Open: driving frame rate to a steady 90; the desktop window shows only the HUD while split; menus (unposed: the
     flat screen) not checked in the headset view.
+  - Later 2026-10-25: which draws differ per eye (perspective by RAGE's world-view-projection c8-c11; render targets
+    and resolved pages tracked): shadow cascades and the minimap the same in both eyes, half the right-eye
+    descriptor twins. Type-0 register packets through the bulk path: parked 88 -> 93. Pacing moved to VdSwap on a
+    high-resolution timer and always on: the old cap (headset token at the frame timer) serialised the threads
+    (71 FPS capped where 109 ran uncapped). Driving now holds 88-90 most of the route (headset 87-89, 1% low
+    63-72); a dense stretch of town still drops to 58-76. mcla_fps is forced to 0 in VR (default 30 would cap it).
+  - The simulator shows projection layers as submitted (ignores their declared FOV/pose) but draws quads at the
+    true eye views, so with the symmetric union frustum the HUD quad sits off between the eyes in simulator shots.
+    A real compositor reprojects the projection views; per-eye asymmetric frusta would break the game's
+    screen-space work (it assumes its symmetric projection), so the union frustum stays.
 
 ## Uncharted: Drake's Fortune (BCUS98103, update 01.10)
 
