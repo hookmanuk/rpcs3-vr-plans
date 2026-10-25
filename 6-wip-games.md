@@ -2118,7 +2118,15 @@ matching VR with no gfx errors and 90fps."
   - In the headset's terms (capped at 90 Hz, three ~100 s drives through town): headset 90.0 FPS in nearly every
     10 s window (88.4-89.8 in a few), late frames 0-0.44%, 1% low 71-81. Before today's work: headset 80-86, late
     3-10%, 1% low 40-60.
-  - Open: 1% lows (GPU-bound dense moments); MSAA off would be the next lever if Matt wants it.
+  - Afternoon 2026-10-25: validation clean apart from 4 end-query errors while loading (transfer usage added to
+    render targets and the guest output; the headset's copy waits for the guest output's release barrier). The
+    SDK's VR work is exported to the game repo as `patches/rexglue-vr.patch` (26 commits on mcla-base; applies
+    clean); `make_pc.ps1` applies it and fetches the Khronos OpenXR loader 1.1.63 (the same DLL as RPCS3's
+    releases); `--vr=true` alone picks Vulkan. README has a VR section. Game repo `vr` branch 6860124, SDK `vr`
+    fd10f97; nothing pushed (Matt's call).
+  - Menus checked on the simulator: the title and main menu are posed frames (the flyover camera), head-tracked;
+    unposed frames go to a fixed 3 m screen 2.5 m ahead. HUD at yaw -20 stays put.
+  - Open: 1% lows (GPU-bound dense moments); MSAA off would be the next lever if Matt wants it; a headset check.
 
 ## Uncharted: Drake's Fortune (BCUS98103, update 01.10)
 
