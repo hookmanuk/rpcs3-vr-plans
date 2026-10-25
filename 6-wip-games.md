@@ -2165,6 +2165,10 @@ matching VR with no gfx errors and 90fps."
     eye (Quality), straight into the headset's screen (swapchain at the output size, HUD at the render size; frames
     without DLSS scaled up linearly). Parked 125 FPS uncapped (DLAA 132), driving 122-126, worst 9-11.5 ms; head
     poses fit (NCC 0.98), HUD whole; validation clean; without the DLLs it falls back to the render size, MSAA on.
+  - Correction: the headset line's 1% low was the submit-interval jitter of our headset thread (xrWaitFrame is paced
+    exactly, p99 11.13 ms; our work after it varies by up to ~2 ms), not the simulator. The stats now also give the
+    displayed frames (SDK, display times of submitted frames): capped drive, displayed 1% low 89.7-89.8 FPS, 0 of
+    900 display slots skipped in every gameplay window (1-2 only while loading / leaving the drive).
 
 ## Uncharted: Drake's Fortune (BCUS98103, update 01.10)
 
