@@ -2110,7 +2110,15 @@ matching VR with no gfx errors and 90fps."
     113.5-118 -> 121-123 FPS (interleaved A/B), pictures unchanged.
   - MSAA (Matt asked): still on (game default). Now costs 0-0.7 ms a frame parked (yaw 90: no difference within
     noise; yaw 270: 118.9 -> 128.9 FPS off); before the GPU-thread cuts it was ~1.9 ms (98 -> 121). Kept on.
-  - Open: dense-street dips (74-90 uncapped in some drives).
+  - Midday 2026-10-25: float constants copied in runs (+3%, parked 124-127 uncapped). Tried, no gain, reverted:
+    inline bit scans, a hot-page bitmap, skipping the right eye's eye-independent draws (+2% at 2x2). Who limits:
+    parked, the game thread and the GPU thread together (out-of-process stacks: GPU thread running 90%, game 85%);
+    dense-street dips (79-90 uncapped), the GPU (the GPU thread waits on its fences, GPU 96-97% busy). GPU-bound
+    costs (2x2, parked): MSAA ~1.5 ms a frame (81-83 -> 92-94 FPS off), shadows ~2.5 ms (-> 103); not taken (looks).
+  - In the headset's terms (capped at 90 Hz, three ~100 s drives through town): headset 90.0 FPS in nearly every
+    10 s window (88.4-89.8 in a few), late frames 0-0.44%, 1% low 71-81. Before today's work: headset 80-86, late
+    3-10%, 1% low 40-60.
+  - Open: 1% lows (GPU-bound dense moments); MSAA off would be the next lever if Matt wants it.
 
 ## Uncharted: Drake's Fortune (BCUS98103, update 01.10)
 
