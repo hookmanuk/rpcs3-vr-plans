@@ -2126,7 +2126,12 @@ matching VR with no gfx errors and 90fps."
     fd10f97; nothing pushed (Matt's call).
   - Menus checked on the simulator: the title and main menu are posed frames (the flyover camera), head-tracked;
     unposed frames go to a fixed 3 m screen 2.5 m ahead. HUD at yaw -20 stays put.
-  - Open: 1% lows (GPU-bound dense moments); MSAA off would be the next lever if Matt wants it; a headset check.
+  - Verification on the final build (simulator, DLSS n/a): head turns fitted against straight ahead (rotcheck, the
+    rendered frustum): yaw -20.5 / +20.0, pitch 10.0, roll 15.0, back to -0.5 (NCC 0.98); stereo disparity 0 px at
+    the horizon, 12-13 px on the near ground; HUD panel fixed. A 6.5 min capped drive through town: headset 89.95 FPS
+    average over 39 10 s windows (one under 89.5), late 0.10%, 1% low 78.5 average (72.4 worst); the game's 2 s
+    windows 89-90 throughout; no errors, stalls or device loss in the log.
+  - Open: a headset check by Matt; 1% lows in GPU-bound dense moments (MSAA off is the next lever if he wants it).
 
 ## Uncharted: Drake's Fortune (BCUS98103, update 01.10)
 
