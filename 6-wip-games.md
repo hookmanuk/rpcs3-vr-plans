@@ -2132,6 +2132,17 @@ matching VR with no gfx errors and 90fps."
     average over 39 10 s windows (one under 89.5), late 0.10%, 1% low 78.5 average (72.4 worst); the game's 2 s
     windows 89-90 throughout; no errors, stalls or device loss in the log.
   - Open: a headset check by Matt; 1% lows in GPU-bound dense moments (MSAA off is the next lever if he wants it).
+  - Evening 2026-10-25, DLSS (Matt: "Have you added DLSS yet? It should look better than MSAA", "Driveclub is
+    probably more relevant"): Driveclub's MIT bridge (bbport_dlss.dll + nvngx_dlss.dll 310, preset K) gives DLAA per
+    eye in VR, and is now the VR default with the game's MSAA off when DLSS runs (without the DLLs MSAA stays).
+    Moving traffic carries per-object motion (the draws' own World history, written by their pixel shaders), so
+    cars leave no ghost trails (flyover A/B: dark trails behind each close car with it off, none on). DLSS history
+    resets at gaps and camera cuts. Parked, uncapped: 129-132 FPS (MSAA without DLSS 128-131; object motion ~0.5
+    FPS). Capped 90 Hz drive: headset 89.9-90.0, late 0-0.22%, 1% low 77-84. Head poses on the simulator: yaw
+    -20.5/+19.5, pitch 10.0, roll 15.0 (NCC 0.99), HUD whole and fixed. Validation clean apart from NGX's own clears
+    and the known fence threading report. SDK `vr` 75d5ece, game repo `vr` a027f5d; nothing pushed (Matt's call).
+  - Open: how the DLSS DLLs ship (README says where they come from; make_pc does not fetch them); DLSS upscaling of
+    the output (e.g. 1920x2160 an eye) not tried.
 
 ## Uncharted: Drake's Fortune (BCUS98103, update 01.10)
 
