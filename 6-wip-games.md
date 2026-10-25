@@ -2091,6 +2091,17 @@ matching VR with no gfx errors and 90fps."
   - Resolution: 2x2 (2560x1440 an eye) 78 FPS, 2x3 62: the GPU limits there (the right eye's replay doubles raster
     work). Skipping the right eye's eye-independent draws gained only 2% at 2x2, reverted. Default stays 1x2.
   - A Windows Firewall prompt for mcla.exe (network access) appeared on the desktop during a run; left for Matt.
+  - Night of 2026-10-25: `mcla.exe --vr=true` turns VR on (or `MCLA_VR=1`), with
+    the VR defaults. Everywhere measured, the GPU-emulation thread is the limit, not the GPU (nvidia-smi 60-68% busy
+    at ~200 W in the slow stretches; resolution 1x1 instead of 1x2 gains only 5%). GPU-thread cuts (SDK `vr`):
+    the twin maps owned by the GPU thread, read without the lock (drive 86 -> 92-94 uncapped); pixel-shader textures
+    pushed per draw with VK_KHR_push_descriptor, each eye its own views (no set twins: parked 98-101 -> 104-106);
+    the hot pages' clock from GetTickCount64 (QueryPerformanceCounter per request: 105-109); hot pages compared only
+    over the bytes a draw asks for, not the whole 4 KB page (116-119 parked; title flyover 85-100 -> 105-120).
+    Mono is 115-118 parked, so stereo now costs little. Driving uncapped: mostly 100-130; dense stretches (crowded
+    street, Hollywood Blvd) were 58-70, now 74-90. The game's MSAA off would add ~24% (looks change; not taken).
+  - Open: a hang seen 3 times in ~15 runs since these changes (the GPU thread stops logging, the process stays
+    alive, no driver reset); being caught with a hang-triggered profile. Dense-street dips below 90.
 
 ## Uncharted: Drake's Fortune (BCUS98103, update 01.10)
 
