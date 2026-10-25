@@ -2084,6 +2084,13 @@ matching VR with no gfx errors and 90fps."
     true eye views, so with the symmetric union frustum the HUD quad sits off between the eyes in simulator shots.
     A real compositor reprojects the projection views; per-eye asymmetric frusta would break the game's
     screen-space work (it assumes its symmetric projection), so the union frustum stays.
+  - Title-screen city flyover (a repeatable heavy scene): headset 89.4-90.1 FPS, late 0.1-0.3%, 1% low ~72 after
+    batching the eye-dependence check (its per-texture lock was 6.5% of the GPU thread).
+  - Desktop window on split frames: the left eye's scene, the middle band at 16:9 (the output holds only the HUD).
+    F8 (bind_vr_recenter) recentres; SteamVR's seated reset too (reference space change event).
+  - Resolution: 2x2 (2560x1440 an eye) 78 FPS, 2x3 62: the GPU limits there (the right eye's replay doubles raster
+    work). Skipping the right eye's eye-independent draws gained only 2% at 2x2, reverted. Default stays 1x2.
+  - A Windows Firewall prompt for mcla.exe (network access) appeared on the desktop during a run; left for Matt.
 
 ## Uncharted: Drake's Fortune (BCUS98103, update 01.10)
 
