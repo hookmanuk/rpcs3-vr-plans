@@ -2057,6 +2057,23 @@ matching VR with no gfx errors and 90fps."
   - Open: the GPU thread's cost (write-watch VirtualProtect ~9%, descriptor updates ~8%, upload copies ~5%),
     the HUD on its own layer (it draws at zero parallax now), render size for the headset (1280x720 stretched over
     ~108x108 degrees), the shadows' cost.
+- 2026-10-25 VR, simulator, stereo, DLSS n/a:
+  - Frame rate parked by the first garage: 62 -> 79 (hot pages uploaded only when changed) -> 81 (flat handle maps
+    in the twin layer) -> 98 uncapped (page state kept across frames, clear_memory_page_state off as the repo's PS5
+    port does: uploads 1.6 GB/s -> 69 MB/s). With the VR defaults (1280x1440 an eye): 89-92 uncapped, headset 90.0,
+    1% low 81.
+  - Driving (throttle out of the lot into town): 57-112 FPS in 2 s windows, headset 80-86 FPS, 1% low 40-60, late
+    3-10%. Not 90 yet: heavier frames run 11-14 ms; the adaptive cap toggles (71 capped / 111 uncapped windows).
+  - HUD on its own layer (Driveclub's way): split at the first HUD draw (UI movie vertex shaders 88F617431F7D9C9B,
+    AED972BB05F1D549) into the display target, scene copied per eye, HUD drawn over transparent black with
+    coverage alpha, a premultiplied quad 1.4 m wide 1.1 m ahead of the seat; alpha remapped 1-(1-a)^2.2 for the
+    compositor's linear-light blending (otherwise its backings look too clear). Head turns: the HUD stays put.
+  - VR defaults (game, MCLA_VR=1): draw_resolution_scale_y 2 (1280x1440 an eye, about square pixels over the
+    square field of view), motion blur and depth of field off. Resolution scale needed the scaled-resolve buffer
+    whole in stereo (sparse had no right-eye twin: black sky in the right eye) and the copies to fill the first
+    row/column the scaled targets leave unwritten.
+  - Open: driving frame rate to a steady 90; the desktop window shows only the HUD while split; menus (unposed: the
+    flat screen) not checked in the headset view.
 
 ## Uncharted: Drake's Fortune (BCUS98103, update 01.10)
 
