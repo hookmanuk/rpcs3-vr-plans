@@ -2143,6 +2143,17 @@ matching VR with no gfx errors and 90fps."
     and the known fence threading report. SDK `vr` 75d5ece, game repo `vr` a027f5d; nothing pushed (Matt's call).
   - Open: how the DLSS DLLs ship (README says where they come from; make_pc does not fetch them); DLSS upscaling of
     the output (e.g. 1920x2160 an eye) not tried.
+  - Late 2026-10-25: Vulkan validation now reports nothing at all, booting and over a whole validated drive (DLSS
+    resets included). Fixed: the GPU thread touched fences before the submission thread had submitted them; DLSS's
+    resize used vkDeviceWaitIdle on the submission thread (raced the headset thread's queue); the occlusion query was
+    ended inside a render pass and then ended twice; NGX clears DLSS's output at a reset (it needed transfer-dst).
+    SDK `vr` 1166a08, game `vr` eec3e54 (patch re-exported, applies clean); nothing pushed.
+  - The 1% lows (72-84 at 90 Hz) come from a periodic burst: every ~605 frames (frame-counted, not timed) the game
+    draws the scene with 4x MSAA and predicated tiling (3 tiles, ~3500 more draws) for ~15 frames: 12-16 ms instead
+    of ~7.7 ms, on the CPU side (the GPU thread never waits on the GPU then; replay 4.5 ms against 2.7). Those frames
+    also get no DLSS (4x depth). Not from the renderer's MSAA mode (renderer+384 stays 1), the tiling setup
+    (sub_825F4750, one call, msaa 1) or sub_822E6408 (one call): the switch is somewhere else. Next: find what sets the
+    4x surface for those frames (the D3D surface or register shadow behind RB_SURFACE_INFO).
 
 ## Uncharted: Drake's Fortune (BCUS98103, update 01.10)
 
