@@ -2154,6 +2154,17 @@ matching VR with no gfx errors and 90fps."
     also get no DLSS (4x depth). Not from the renderer's MSAA mode (renderer+384 stays 1), the tiling setup
     (sub_825F4750, one call, msaa 1) or sub_822E6408 (one call): the switch is somewhere else. Next: find what sets the
     4x surface for those frames (the D3D surface or register shadow behind RB_SURFACE_INFO).
+  - Fixed (game 717b0f2): the burst is the predicated tiling's begin, sub_8217A470, whose callers (sub_822E5ED8,
+    sub_822E5358) raise its multisample mode to 4x when renderer+373, +393 or +433 is set. A hook keeps it 1x
+    when MSAA is off. Uncapped drive: worst frames 9-11 ms in every window (the 13-15 ms ones every ~4.6 s are
+    gone), no DLSS gaps, validation clean, a 40-shot series across bursts with no odd frame. Capped: headset 90.0 in
+    every gameplay window, late 0-0.33%, 1% low 72-85. That 1% low is the 99th percentile of the headset thread's
+    own submit intervals; parked with ~40 FPS headroom it reads 80-81 (over a period ~2%): the simulator's pacing
+    floor, not the game.
+  - DLSS upscaling (SDK 2f193d0, game 1a81656): vr_dlss_output_scale, default 1.5 in VR: 1280x1440 -> 1920x2160 an
+    eye (Quality), straight into the headset's screen (swapchain at the output size, HUD at the render size; frames
+    without DLSS scaled up linearly). Parked 125 FPS uncapped (DLAA 132), driving 122-126, worst 9-11.5 ms; head
+    poses fit (NCC 0.98), HUD whole; validation clean; without the DLLs it falls back to the render size, MSAA on.
 
 ## Uncharted: Drake's Fortune (BCUS98103, update 01.10)
 
