@@ -2212,7 +2212,9 @@ matching VR with no gfx errors and 90fps."
     - Validation (final build, DLSS 2x): clean apart from 8 reports in the first DLSS evaluation, on an image NGX
       makes itself (nv.ngx.dlss.resource, first used in UNDEFINED) at the 2560x2880 output in any quality mode; 1.5x
       output validates clean. Deferring the first evaluation a frame did not change it (reverted). NVIDIA's side;
-      one frame, nothing visible.
+      one frame, nothing visible. Then: 1.75x, 1.8x and 1.85x validate clean, 1.9x does not (2432 wide): default
+      now 1.85x (2368x2664 an eye): a whole validated drive with 0 errors; uncapped driving 98.8 FPS (min 97.0),
+      capped 90.0, displayed 1% low ~89.7.
     - Note: a frame-to-frame check of the scene draws' c0-c3 / c8-c11 found them unchanged after a simulated head
       jump in gameplay, yet the rendered view does turn with the head (shots: new buildings come in, no black edge).
       The check itself was likely wrong (not settled); DLSS's camera motion from those constants is unaffected as far
