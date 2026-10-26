@@ -2194,14 +2194,21 @@ matching VR with no gfx errors and 90fps."
       reverted: the frontend camera caller 0x822C08B4 (runs in gameplay too), GPU-side camera / object back-axis
       checks (c8-c11 do not carry the head turn in gameplay: the main scene's view must come from other constants).
       Logo-only and 2D frames now go to the screen (SDK 8244917). Open: a title-state signal.
-    - [ ] "The graphics are very low resolution, we need this playable at a lot higher resolution."
+    - [x] "The graphics are very low resolution, we need this playable at a lot higher resolution." DLSS now
+      upscales 2x by default (game 3rd commit after c6a216a): 1280x1440 rendered, 2560x2880 out an eye (about his
+      panel). With SteamVR running (as he plays): driving 95.6 FPS uncapped (1.5x 105, 1.75x 101), capped 90.0,
+      displayed 1% low 89.5-89.8, no skipped slots. A native 2560x2880 render (draw scale 2x4): 44 FPS. Needs his
+      headset check (DLSS Performance mode's look); --vr_dlss_output_scale=1.75 for more headroom.
     - [x] "The HUD in game can flicker and move as you turn your head (not always)" Fixed (game c6a216a): the game
       asks for multisampling (sub_822E5B20, renderer+433/+373) for ~15 frames in every ~425; with MSAA off those
       frames' HUD went to 2x targets, the HUD split was lost and the HUD drew into the head-turning picture. The
       request is held off when MSAA is off. Needs Matt's headset check.
-    - Found on the way: the scene draws' c0-c3 / c8-c11 do not change with a head turn in gameplay (the turn reaches
-      the image through other constants), and DLSS's camera motion is built from those: head turns may give DLSS
-      wrong camera motion (smear while turning). To check.
+    - Note: a frame-to-frame check of the scene draws' c0-c3 / c8-c11 found them unchanged after a simulated head
+      jump in gameplay, yet the rendered view does turn with the head (shots: new buildings come in, no black edge).
+      The check itself was likely wrong (not settled); DLSS's camera motion from those constants is unaffected as far
+      as seen.
+    - Measurements after 15:30 2026-10-26 ran with SteamVR open (Matt's), ~20% lower than earlier ones (GPU waits
+      1.8 -> 4.2 ms): closer to his real use.
     Recorded only; no runs or fixes until Matt says go. The simulator checks above missed all four.
     Code reading so far (no runs):
     - Splash stretch: the unposed-frame quad (vr_openxr EndFrame) takes its height from the picture's pixels,
