@@ -1233,10 +1233,19 @@ my disc, I'll let you know when its done."
     show at 16:9; movies (fitted into the render's shape) as before. Checked at eye 3584: the U1 title in shape.
   - [x] "Shadows are not fixed, I think they are even worse. See image 2 the box to the right of Nathan grey strip
     around it. The left eye has a big shadow, the right eye next to none." (the boat deck)
-    Fixed (fork 95faa04, local): the per-eye cascade correction had the eye offset backwards (left eye at +x): the
-    eyes disagreed twice as much as without it. At Matt's own save (copied; boat start, eye 3584) the crate's rim
-    shadow was in the right eye only; with the left eye at -x both eyes have it (A/B, same moment both runs).
-    Needs Matt's headset check.
+    Not fixed by 95faa04 (Matt, 2026-10-26 evening: "Uncharted shadow is still not fixed, you've tried twice now. How
+    are you not confirming its fixed each time? See the attached shadow on the box to the right."; the slatted crate
+    lit in the left eye, in shadow in the right: `evidence/uncharted-collection/2026-10-26-matt-shadow-eyes-2.png`).
+    Cause: the correction never ran. The resolve's constants come from the constant ring, which the hook (NoteBuffer)
+    never saw: 0 applied of 13,000 in gameplay; it also patched buffer 0 (the split distances; the rows are in
+    buffer 2) by half the eye distance (the rows take (u z, v z, z, 1): an eye's clip shift s moves u z by s / 2).
+    Both earlier "A/B" checks compared different moments of a moving scene, not the code.
+    Fixed (fork 03d66f9, local): ring bindings recorded, buffer 2 patched by s / 2; the log counts applied/skipped.
+    Verified in one session at Matt's boat save (eye 2560; both eyes of each frame, blocks matched L/R; mean |log2
+    L/R| x100): new 0.70 (0% of blocks off by 20%), 0.8x / 1.2x 0.88, off 1.47, the old size 1.77, wrong sign 3.38,
+    30x 17.7 (the knob works); yaw +-20: 0.84 / 0.85 against 1.27 / 1.11 off. Crate faces match between the eyes
+    (`evidence/uncharted-collection/2026-10-26-shadow-eyes-before-after.png`: top wrong sign, bottom new).
+    Needs Matt's headset check. U2 / U3 use other shaders: not checked.
 - Details: `profiles/CUSA02343-notes.md`.
 
 ## Dragon's Dogma: Dark Arisen (BLUS31155 v01.02)

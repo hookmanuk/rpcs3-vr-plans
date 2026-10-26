@@ -237,9 +237,25 @@ commits cherry-picked (not a merge: that would bring full-release's history), th
     the eye distance off. Its cascade rows (buffer 0: 4 x 16 floats) get a per-eye copy moved by the eye's offset
     (view x points left: the camera's axes). Sign from the axes; the 10x/30x baseline A/B could not show it (moments
     differed): Matt to check in the headset.
+    2026-10-26: it never ran (see below, "Shadows per eye, for real").
   - Menus over a movie were stretched (a round button an ellipse): movies now fitted into a square canvas in a 1080p
     buffer (1408x1408, black bars; the game's movie buffers do not grow: 1920x1920 overran them), the screen at the
     canvas aspect. Cutscenes letterboxed, faces right.
   - The desktop mirror swapped red and blue (RGBA frames).
 - Test setup: session.sh now sets the launcher's VR env (multiview, vblank 240, upscaler off); earlier sessions ran
   without multiview.
+
+## Shadows per eye, for real (fork 03d66f9, 2026-10-26)
+
+- The shadow resolve (ps 0x7c219ffb, decompiled: spirv-cross --vulkan-semantics on the cached .spv) reads the
+  depth at its texture coordinate (u, v), makes z = c3 / (depth - c2) (buffer 1), and feeds (u z, v z, z, 1) to the
+  rows of cascade c in buffer 2 (floats c*16 + 4..15: shadow x, y, depth); buffer 0 holds the split distances
+  (floats 0, 16, 32, 48). An eye drawn with clip shift s (left +s) has u = u_centre + s / 2w, so u z = centre's + s / 2:
+  the rows' translation moves by row.x x -s / 2 (left), +s / 2 (right).
+- All three buffers are bound from the constant ring (the GPU command thread's copy): NoteRingBuffer now records them
+  (with the ring's copy, which EyeConstants copies from), EyeBufferInfo leaves ring bindings alone.
+- Test (scratchpad unc/shsweep.sh, lrroi.py, lrcmp.py): one session at Matt's boat save, SHSCALE trigger file
+  switching the correction's scale between simulator shots; both eyes of the same frame compared by 16 px blocks
+  matched along x (normalised correlation, blind to brightness), then the blocks' brightness ratio. A cross-run
+  ground truth (eye distance 0, head moved to an eye: IPD trigger) failed: the boat rocks, the camera moves between
+  shots. The log line "VR shadows per eye: applied N, skipped M" shows it ran.
