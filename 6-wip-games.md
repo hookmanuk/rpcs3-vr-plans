@@ -2174,6 +2174,12 @@ matching VR with no gfx errors and 90fps."
     fetches only the DLSS SDK v310.9.1 files it needs, builds the bridge with MSVC (vcvars64 via vswhere) and puts
     bbport_dlss.dll + nvngx_dlss.dll beside mcla.exe with both licences in licenses\. Tested from a plain PowerShell
     with the DLLs removed first: same nvngx_dlss.dll hash as the tested one, VR DLSS runs (1.5x upscale).
+  - TODO, Matt's headset report (2026-10-26), verbatim: "Many bugs with Midnight Club..."
+    - [ ] "The splash screens are stretched vertically."
+    - [ ] "The Main menu UI is tied to the head."
+    - [ ] "The graphics are very low resolution, we need this playable at a lot higher resolution."
+    - [ ] "The HUD in game can flicker and move as you turn your head (not always)"
+    Not looked into yet (recorded only). The simulator checks above missed all four: it is not the headset.
 
 ## Uncharted: Drake's Fortune (BCUS98103, update 01.10)
 
