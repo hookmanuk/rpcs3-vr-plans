@@ -2215,6 +2215,9 @@ matching VR with no gfx errors and 90fps."
       one frame, nothing visible. Then: 1.75x, 1.8x and 1.85x validate clean, 1.9x does not (2432 wide): default
       now 1.85x (2368x2664 an eye): a whole validated drive with 0 errors; uncapped driving 98.8 FPS (min 97.0),
       capped 90.0, displayed 1% low ~89.7.
+  - 2026-10-26, Matt: "Push all three". Pushed: hookmanuk/mcla-recomp `vr` (f239f42, with the SDK's VR work as
+    patches/rexglue-vr.patch at SDK 3e637e2) and hookmanuk/uncharted_pc `community-vr` (2c74747). The SDK's only
+    remote is upstream rexglue/rexglue-sdk (not Matt's): not pushed there. Headset: not tried yet.
     - Note: a frame-to-frame check of the scene draws' c0-c3 / c8-c11 found them unchanged after a simulated head
       jump in gameplay, yet the rendered view does turn with the head (shots: new buildings come in, no black edge).
       The check itself was likely wrong (not settled); DLSS's camera motion from those constants is unaffected as far
