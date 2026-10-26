@@ -2207,7 +2207,12 @@ matching VR with no gfx errors and 90fps."
     - [x] "The HUD in game can flicker and move as you turn your head (not always)" Fixed (game c6a216a): the game
       asks for multisampling (sub_822E5B20, renderer+433/+373) for ~15 frames in every ~425; with MSAA off those
       frames' HUD went to 2x targets, the HUD split was lost and the HUD drew into the head-turning picture. The
-      request is held off when MSAA is off. Needs Matt's headset check.
+      request is held off when MSAA is off. Measured: frames drawing HUD but not split, per 1200 frames of a drive:
+      0 in every gameplay window (~10,800 frames; before the fix ~15 in every ~425). Needs Matt's headset check.
+    - Validation (final build, DLSS 2x): clean apart from 8 reports in the first DLSS evaluation, on an image NGX
+      makes itself (nv.ngx.dlss.resource, first used in UNDEFINED) at the 2560x2880 output in any quality mode; 1.5x
+      output validates clean. Deferring the first evaluation a frame did not change it (reverted). NVIDIA's side;
+      one frame, nothing visible.
     - Note: a frame-to-frame check of the scene draws' c0-c3 / c8-c11 found them unchanged after a simulated head
       jump in gameplay, yet the rendered view does turn with the head (shots: new buildings come in, no black edge).
       The check itself was likely wrong (not settled); DLSS's camera motion from those constants is unaffected as far
