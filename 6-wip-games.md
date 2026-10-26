@@ -2169,6 +2169,11 @@ matching VR with no gfx errors and 90fps."
     exactly, p99 11.13 ms; our work after it varies by up to ~2 ms), not the simulator. The stats now also give the
     displayed frames (SDK, display times of submitted frames): capped drive, displayed 1% low 89.7-89.8 FPS, 0 of
     900 display slots skipped in every gameplay window (1-2 only while loading / leaving the drive).
+  - 2026-10-26, Matt: "Ship them" (the DLSS libraries); push: no preference (left local, as his earlier "not yet");
+    headset: not tried yet. Game eb84589: dlss_bridge/ (Driveclub's MIT bridge, unchanged) and a make_pc step that
+    fetches only the DLSS SDK v310.9.1 files it needs, builds the bridge with MSVC (vcvars64 via vswhere) and puts
+    bbport_dlss.dll + nvngx_dlss.dll beside mcla.exe with both licences in licenses\. Tested from a plain PowerShell
+    with the DLLs removed first: same nvngx_dlss.dll hash as the tested one, VR DLSS runs (1.5x upscale).
 
 ## Uncharted: Drake's Fortune (BCUS98103, update 01.10)
 
