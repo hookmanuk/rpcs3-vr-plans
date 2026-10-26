@@ -1225,6 +1225,11 @@ my disc, I'll let you know when its done."
 - 2026-10-24: Driveclub pacing (output rate = render rate, cap holds), menus on the screen, every frame tagged; object
   motion blur off in VR (head turns smeared characters), shadows per eye (Matt to check), movies letterboxed and menus
   round on the square screen, mirror colours (fork 1df5081).
+- TODO, Matt's headset report (2026-10-26, Uncharted 1), verbatim; screenshots in
+  `evidence/uncharted-collection/2026-10-26-matt-*.png`. Matt: "work on both these games now".
+  - [ ] "Menu aspect ratio is still wrong, see this circle A in image 1." (the title screen, "Press A to Begin")
+  - [ ] "Shadows are not fixed, I think they are even worse. See image 2 the box to the right of Nathan grey strip
+    around it. The left eye has a big shadow, the right eye next to none." (the boat deck)
 - Details: `profiles/CUSA02343-notes.md`.
 
 ## Dragon's Dogma: Dark Arisen (BLUS31155 v01.02)
