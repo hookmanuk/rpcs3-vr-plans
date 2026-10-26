@@ -2179,7 +2179,18 @@ matching VR with no gfx errors and 90fps."
     - [ ] "The Main menu UI is tied to the head."
     - [ ] "The graphics are very low resolution, we need this playable at a lot higher resolution."
     - [ ] "The HUD in game can flicker and move as you turn your head (not always)"
-    Not looked into yet (recorded only). The simulator checks above missed all four: it is not the headset.
+    Recorded only; no runs or fixes until Matt says go. The simulator checks above missed all four.
+    Code reading so far (no runs):
+    - Splash stretch: the unposed-frame quad (vr_openxr EndFrame) takes its height from the picture's pixels,
+      1440/1280 of its 3 m width (the eyes are drawn 2x tall): 3.375 m instead of 1.69 m. Fix: 3 m x hud_aspect.
+    - Menu UI on the head / HUD flicker: the HUD split (VrHudDraw) needs one of two UI vertex shaders
+      (88F617431F7D9C9B, AED972BB05F1D549) drawing to the output-wide 1x target in a posed frame. Menus are posed
+      (flyover camera); a menu UI with another shader or target is never split, so it stays in the projection layer.
+      Gameplay frames that miss the split put the HUD in the projection layer (alternating with the panel: flicker),
+      and since DLSS that picture goes through DLSS with camera motion (could smear/slide the HUD). To check: log
+      split/unsplit frames and the UI draws' shaders and targets in menus and driving.
+    - Resolution: 1280x1440 an eye rendered, DLSS out 1920x2160; Matt's panels ~2880x2880. Measure a higher draw
+      scale (e.g. 2x by 3-4x) and DLSS output near panel size; test at his simulator settings (2880 eyes, scale 400).
 
 ## Uncharted: Drake's Fortune (BCUS98103, update 01.10)
 
