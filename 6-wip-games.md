@@ -1227,9 +1227,16 @@ my disc, I'll let you know when its done."
   round on the square screen, mirror colours (fork 1df5081).
 - TODO, Matt's headset report (2026-10-26, Uncharted 1), verbatim; screenshots in
   `evidence/uncharted-collection/2026-10-26-matt-*.png`. Matt: "work on both these games now".
-  - [ ] "Menu aspect ratio is still wrong, see this circle A in image 1." (the title screen, "Press A to Begin")
-  - [ ] "Shadows are not fixed, I think they are even worse. See image 2 the box to the right of Nathan grey strip
+  - [x] "Menu aspect ratio is still wrong, see this circle A in image 1." (the title screen, "Press A to Begin")
+    Fixed (fork 2c74747, local): the flat screen took the render's shape (square at a VR eye size) for every 2D
+    frame, but the menus lay themselves out for 16:9 (his A button 27 x 44 px). Screen frames without a movie now
+    show at 16:9; movies (fitted into the render's shape) as before. Checked at eye 3584: the U1 title in shape.
+  - [x] "Shadows are not fixed, I think they are even worse. See image 2 the box to the right of Nathan grey strip
     around it. The left eye has a big shadow, the right eye next to none." (the boat deck)
+    Fixed (fork 95faa04, local): the per-eye cascade correction had the eye offset backwards (left eye at +x): the
+    eyes disagreed twice as much as without it. At Matt's own save (copied; boat start, eye 3584) the crate's rim
+    shadow was in the right eye only; with the left eye at -x both eyes have it (A/B, same moment both runs).
+    Needs Matt's headset check.
 - Details: `profiles/CUSA02343-notes.md`.
 
 ## Dragon's Dogma: Dark Arisen (BLUS31155 v01.02)
@@ -2180,10 +2187,21 @@ matching VR with no gfx errors and 90fps."
     bbport_dlss.dll + nvngx_dlss.dll beside mcla.exe with both licences in licenses\. Tested from a plain PowerShell
     with the DLLs removed first: same nvngx_dlss.dll hash as the tested one, VR DLSS runs (1.5x upscale).
   - TODO, Matt's headset report (2026-10-26), verbatim: "Many bugs with Midnight Club..."
-    - [ ] "The splash screens are stretched vertically."
-    - [ ] "The Main menu UI is tied to the head."
+    - [x] "The splash screens are stretched vertically." Fixed (SDK 8244917): the screen took its height from the
+      picture's pixels (eyes drawn 2x tall): 3.375 m for 3 m wide; now 16:9.
+    - [ ] "The Main menu UI is tied to the head." Partly: the title's "PRESS" flyover is posed (the camera hook
+      turns its camera) but its scene is drawn attached to the camera, so it turns with the head. Tried and
+      reverted: the frontend camera caller 0x822C08B4 (runs in gameplay too), GPU-side camera / object back-axis
+      checks (c8-c11 do not carry the head turn in gameplay: the main scene's view must come from other constants).
+      Logo-only and 2D frames now go to the screen (SDK 8244917). Open: a title-state signal.
     - [ ] "The graphics are very low resolution, we need this playable at a lot higher resolution."
-    - [ ] "The HUD in game can flicker and move as you turn your head (not always)"
+    - [x] "The HUD in game can flicker and move as you turn your head (not always)" Fixed (game c6a216a): the game
+      asks for multisampling (sub_822E5B20, renderer+433/+373) for ~15 frames in every ~425; with MSAA off those
+      frames' HUD went to 2x targets, the HUD split was lost and the HUD drew into the head-turning picture. The
+      request is held off when MSAA is off. Needs Matt's headset check.
+    - Found on the way: the scene draws' c0-c3 / c8-c11 do not change with a head turn in gameplay (the turn reaches
+      the image through other constants), and DLSS's camera motion is built from those: head turns may give DLSS
+      wrong camera motion (smear while turning). To check.
     Recorded only; no runs or fixes until Matt says go. The simulator checks above missed all four.
     Code reading so far (no runs):
     - Splash stretch: the unposed-frame quad (vr_openxr EndFrame) takes its height from the picture's pixels,
