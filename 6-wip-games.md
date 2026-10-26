@@ -2193,7 +2193,12 @@ matching VR with no gfx errors and 90fps."
       turns its camera) but its scene is drawn attached to the camera, so it turns with the head. Tried and
       reverted: the frontend camera caller 0x822C08B4 (runs in gameplay too), GPU-side camera / object back-axis
       checks (c8-c11 do not carry the head turn in gameplay: the main scene's view must come from other constants).
-      Logo-only and 2D frames now go to the screen (SDK 8244917). Open: a title-state signal.
+      Logo-only and 2D frames now go to the screen (SDK 8244917). Later (same day): the title's scene draws are
+      ~93% identity-world like gameplay's and use the head-turned camera, and with the HUD split switched off the
+      title flyover is world-fixed (pairs at yaw 0/25 differ by 28-30 grey levels; logo/PRESS then head-locked). With
+      the split on it is head-locked even after 3 s, and a ghost of the logo shows in the sky: the split goes wrong
+      on the title only (in gameplay it is right). The split triggers on the same no-colour HUD-shader draws in both.
+      Open: why the split misbehaves on the title (or a title signal to skip it / show the screen).
     - [x] "The graphics are very low resolution, we need this playable at a lot higher resolution." DLSS now
       upscales 2x by default (game 3rd commit after c6a216a): 1280x1440 rendered, 2560x2880 out an eye (about his
       panel). With SteamVR running (as he plays): driving 95.6 FPS uncapped (1.5x 105, 1.75x 101), capped 90.0,
