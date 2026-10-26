@@ -2189,7 +2189,7 @@ matching VR with no gfx errors and 90fps."
   - TODO, Matt's headset report (2026-10-26), verbatim: "Many bugs with Midnight Club..."
     - [x] "The splash screens are stretched vertically." Fixed (SDK 8244917): the screen took its height from the
       picture's pixels (eyes drawn 2x tall): 3.375 m for 3 m wide; now 16:9.
-    - [ ] "The Main menu UI is tied to the head." Partly: the title's "PRESS" flyover is posed (the camera hook
+    - [x] "The Main menu UI is tied to the head." Fixed (SDK, after 0f0429d): the split started at the title's first HUD draw, which writes no colour: the copy took a stale target (head-locked title, a ghost logo in the sky). It now starts at a colour-writing HUD draw; title world-fixed, logo on the HUD panel. History: the title's "PRESS" flyover is posed (the camera hook
       turns its camera) but its scene is drawn attached to the camera, so it turns with the head. Tried and
       reverted: the frontend camera caller 0x822C08B4 (runs in gameplay too), GPU-side camera / object back-axis
       checks (c8-c11 do not carry the head turn in gameplay: the main scene's view must come from other constants).
