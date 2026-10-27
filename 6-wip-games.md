@@ -2350,9 +2350,24 @@ matching VR with no gfx errors and 90fps."
         that), so [x] a guard (`vr::FitDrawResolutionScale`) lowers a scale that does not fit the free device memory
         at start, keeping its shape: "3x6 needs about 28.8 GB ..., 29.6 GB is free: using 2x4". High resolution
         for now: 2x4 + `--vr_dlss_output_scale=1.5` (3840x4320 an eye, DLSS Quality).
-      - Matt: "this whole config setup is very confusing..." His mcla.toml holds draw_resolution_scale 2x4, vr, msaa
-        off: the menu's save writes every non-default setting, command-line ones too (the save bug). Offered again:
-        a VR page in the pause menu and a save of menu changes only. Waiting on Matt.
+      - Matt: "this whole config setup is very confusing..." / "Then make the VR settings menu. It should list the
+        resolutions and the DLSS modes." / "On the settings menu you should add text warning what GPU ram will be
+        needed for the selected settings, before they are applied." [x] (game 6429a27): a VR tab in the pause menu's
+        settings: RENDER SIZE AN EYE (1280x1440 / 2560x2880 / 3840x4320, each "(NEEDS n GB OF total)", "TOO MUCH"
+        past the card less 2 GB) and DLSS (OFF, DLAA 1x, QUALITY 1.5x, BALANCED 1.72x, PERFORMANCE 2x, ULTRA
+        PERFORMANCE 3x), both NEXT START (`vr_resolution`, `vr_dlss_mode`; the command line still wins). Default
+        DLSS is now Balanced 1.72x (was 1.85x). The save writes only what the menu changed, merged into the file
+        (it wrote every non-default option). His mcla.toml cleaned (backup mcla.toml.bak-2026-10-27; `vr = true` went
+        too: launch with --vr=true). Boot check: 1280x1440, DLSS 1.72x, 124 FPS parked. The menu itself is untested
+        (Matt to check: pause, settings, VR).
+      - Matt: "We need more memory for smaller GPUs. Yes free old render targets that aren't used now." [x] (SDK
+        947af0f): render targets owning no EDRAM, unbound and idle 600 frames are freed (a GPU wait when any;
+        `MCLA_VR_PRUNE_RT=0` keeps them; the Vulkan path never called BeginFrame, so the frame count is
+        `VrNextFrame`). Freed 3-8 targets, 0.4-1.3 GB at 2x4; 3x6 now runs (peak 27.2 GB, 25.5 settled, 42 FPS)
+        where it was killed at 28.3 GB. The estimate (guard and menu) is 4.2 GB + 1.05 GB per unit of scale area.
+        Storage usage only on formats that support it (A1R5G5B5 textures gave validation errors). Most of the
+        render target memory is still targets spanning all of EDRAM (2560x8192 for 2560x2880 drawn): capping their
+        height is the next large saving.
       - Test tool fixes: `untilgamevr` waited on the minimap's cyan ring (not cyan in VR: always the 120 s timeout,
         pressing Start every 4 s); now Start until the title logo, Start, logo gone twice. Parked window 10 s (Matt:
         "Each run doesnt need to be more than 30 seconds"): a run is ~50 s with the boot.
