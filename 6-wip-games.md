@@ -2330,8 +2330,12 @@ matching VR with no gfx errors and 90fps."
         MSAA, uncapped: **66.3 -> 96.6 FPS** (89.5 with the memory still written, `MCLA_VR_DIRECT_RESOLVE=1`; the
         default, 2, leaves it unwritten where every texture at the range was written directly: a texture first
         fetched with a new key over such a range loads stale memory once). Validation clean (one boot-time warning
-        from before). Picture as before at the start (scene, HUD, minimap, gauges). Default settings (1x2, DLSS):
-        131 FPS, GPU 73% busy (the CPU side is the limit there now). Needs Matt's headset check.
+        from before). Picture as before at the start (scene, HUD, minimap, gauges). Default settings (1x2, DLSS),
+        uncapped: 120-131 FPS with 30 ms hitches and the GPU 65-73% busy, against 138.6 steady with the path off at
+        94% busy: the path cuts the GPU's time there too, which uncapped exposes a CPU-side hitch the game has at
+        high frame rates (1x2 without DLSS hitches the same with the path off: 115 FPS, 32 ms worst; this
+        morning's 1x2 run too). Capped in the headset that is headroom. SDK index of textures by page for the
+        lookup; CPU timers in the log. Needs Matt's headset check (commands given 2026-10-27 16:05).
       - Left: stencil-bit transfers (1.9 ms: the shadow pass's 4x clear surface spans all of EDRAM, every target
         transfers into it and back, stencil 8 draws at a time); the other transfers (1.6); resolves into mip levels
         (the bloom chain, 3 a frame) and spans owned by several targets (1); attachment-less boot passes drawn with
