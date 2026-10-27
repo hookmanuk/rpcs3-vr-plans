@@ -2340,6 +2340,22 @@ matching VR with no gfx errors and 90fps."
         transfers into it and back, stencil 8 draws at a time); the other transfers (1.6); resolves into mip levels
         (the bloom chain, 3 a frame) and spans owned by several targets (1); attachment-less boot passes drawn with
         the multiview pipelines (validation warning).
+      - Matt (2026-10-27): "How do I run high res? I tried x=3 and y=6 but it crashed my whole pc..." / "it didn't
+        actually crassh, it just hung everything". Cause: video memory. In stereo the scaled-resolve buffer was whole
+        (512 MB x scale area) and twinned: 18 GB at 3x6; with the rest past the RTX 5090's 32 GB the driver paged to
+        system memory (his log: 4,000 "Failed to allocate ... upload buffer memory", 5 s frames). [x] Fixed (SDK vr,
+        game e543d23): the buffer is sparse in stereo with a sparse right-eye twin bound page for page
+        (`vr::TwinSparseBinds`): 2x4 peak 16.5 GB against 24.1 whole, same frame rate (80.5 / 81.8);
+        `MCLA_VR_SPARSE_RESOLVE=0` whole. 3x6 still needs ~29 GB (killed by a watchdog at 28.3 GB; 38-44 FPS before
+        that), so [x] a guard (`vr::FitDrawResolutionScale`) lowers a scale that does not fit the free device memory
+        at start, keeping its shape: "3x6 needs about 28.8 GB ..., 29.6 GB is free: using 2x4". High resolution
+        for now: 2x4 + `--vr_dlss_output_scale=1.5` (3840x4320 an eye, DLSS Quality).
+      - Matt: "this whole config setup is very confusing..." His mcla.toml holds draw_resolution_scale 2x4, vr, msaa
+        off: the menu's save writes every non-default setting, command-line ones too (the save bug). Offered again:
+        a VR page in the pause menu and a save of menu changes only. Waiting on Matt.
+      - Test tool fixes: `untilgamevr` waited on the minimap's cyan ring (not cyan in VR: always the 120 s timeout,
+        pressing Start every 4 s); now Start until the title logo, Start, logo gone twice. Parked window 10 s (Matt:
+        "Each run doesnt need to be more than 30 seconds"): a run is ~50 s with the boot.
       - Native 2x4 without DLSS: the top row of each eye is garbage (replay too; the fill_row fix only runs when
         scaling). Not looked at yet.
 
