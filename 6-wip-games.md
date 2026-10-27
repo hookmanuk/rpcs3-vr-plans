@@ -2417,7 +2417,27 @@ matching VR with no gfx errors and 90fps."
         counter while driving: a k_8 512x512 resolve at 0329E000 read by the game as k_8_8_8_8 256x256; direct mode 2
         had left that memory unwritten, so the 8888 texture loaded garbage when made. [x] (SDK, game 2nd commit
         after eb17b8f): pages a texture loads after a direct resolve skipped them get memory writes from then on (at
-        most one bad frame per such area per session); log "STALE load". Matt to check the flashing. The save writes only what the menu changed, merged into the file
+        most one bad frame per such area per session); log "STALE load". Matt to check the flashing.
+      - Matt: "remove anything above 2x. Also recentre the HMD when the user clicks start to start the game from the
+        main menu" / "also add a headset reset to the back button when in the pause menu" / "also, when on the main
+        menu or the map start transition, turning your head moves the world too in a jerky way. can you replicate and
+        fix that? the world should feel solid and static like in gameplay. In fact even in gameplay there is slight
+        movement when turning my head. IT should be a 1:1 with my actual head movement."
+        [x] Headset sizes up to 2x. [x] Start outside gameplay (the title, front end: no HUD layer shown) recentres;
+        [x] Back in the pause menu recentres (open when the game builds the pause menu, closed at its cancel; a build
+        within 100 ms of a cancel is the rebuild after closing). Checked on the simulator: Start on the title,
+        Back in the pause menu recentre; Back in gameplay and after closing (B or Start) does not.
+        [x] Head movement (SDK 365317f, game e0295a2 + later): a simulator burst (burst_command.json: a head yaw step,
+        24 frames each with the submitted pose; yaw in radians; scratchpad mc/poseburst.sh, burstan.py) showed every
+        frame's image one frame ahead of its pose label, in gameplay and on the title. A stage trace
+        (MCLA_VR_POSE_TRACE=1, with GPU frame numbers) found it: the GPU draws a frame's scene with the camera the
+        update thread wrote (the camera hook), a frame before the render thread's SetFramePose that labelled it. Now
+        the camera hook notes the pose it applies (vr::NoteCameraPose) and the GPU thread takes it at the frame's
+        first head-tracked draw (vr::SceneDrawStarted) as the frame's pose (MCLA_VR_POSE_FROM_GPU=0 reverts). Burst
+        after: image and label change on the same frame; head sample to headset 22 ms (was 30). Also poses now
+        paired to swaps by frontbuffer address (none were dropped: the order was right). Not done: frames switching
+        between head-tracked and the flat screen in transitions (Matt's log: windows with both); the render pose
+        predicted for the frame's real display time (SteamVR corrects rotation, not position). The save writes only what the menu changed, merged into the file
         (it wrote every non-default option). His mcla.toml cleaned (backup mcla.toml.bak-2026-10-27; `vr = true` went
         too: launch with --vr=true). Boot check: 1280x1440, DLSS 1.72x, 124 FPS parked. The menu itself is untested
         (Matt to check: pause, settings, VR).
