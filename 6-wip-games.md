@@ -2437,7 +2437,16 @@ matching VR with no gfx errors and 90fps."
         after: image and label change on the same frame; head sample to headset 22 ms (was 30). Also poses now
         paired to swaps by frontbuffer address (none were dropped: the order was right). Not done: frames switching
         between head-tracked and the flat screen in transitions (Matt's log: windows with both); the render pose
-        predicted for the frame's real display time (SteamVR corrects rotation, not position). The save writes only what the menu changed, merged into the file
+        predicted for the frame's real display time (SteamVR corrects rotation, not position).
+      - Matt: "the map transition is still jerky, I think its just a low frame rate. Also turning my head on the map
+        transition to the left or right crops the map off on one side. Can you add another option to the vr menu,
+        frame rate cap, off, 1/2, 1/3. This should pace the frames out to openxr, so that I can use OFXR externally
+        for frame gen." [x] FRAME RATE CAP (`vr_frame_cap` 1/2/3, live): the game paced to 1/N of the refresh and the
+        headset loop sitting out N-1 refresh periods after each xrEndFrame (the runtime or a frame generator fills
+        them). Simulator 90 Hz: off 90 FPS submitted; 1/2: game and submissions 45.0 FPS, 900 of 1800 slots empty.
+        [x] The crop: at a low frame rate the runtime turns the last frame further and its edge shows; while frames
+        are slow (under 80% of the refresh, back at 95%) or capped, the eyes render 1.15x wider (MCLA_VR_OVERSCAN)
+        and the layer's field of view says so. Untested in the headset. The save writes only what the menu changed, merged into the file
         (it wrote every non-default option). His mcla.toml cleaned (backup mcla.toml.bak-2026-10-27; `vr = true` went
         too: launch with --vr=true). Boot check: 1280x1440, DLSS 1.72x, 124 FPS parked. The menu itself is untested
         (Matt to check: pause, settings, VR).
