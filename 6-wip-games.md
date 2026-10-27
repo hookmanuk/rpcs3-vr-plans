@@ -2364,6 +2364,15 @@ matching VR with no gfx errors and 90fps."
       (`simsweep.py`; the simulator's pose_sweep only moves its compositor layers): the speedo's edge detail at
       120-180 deg/s was -15 to -23% (smeared sideways), now as still. Poses checked too: each frame's image sits at
       the pose sent with it (within ~1 px), delivery 72/72 Hz with none late in Matt's log. Matt to check.
+      Matt: "It looks a bit clearer overall now ... However there is still definitely blurring everywhere when I turn
+      my head." / "its not the reprojections either. They are in the menu, and the game has 0 reprojections but blur."
+      [x] SDK acf62c4: the same pass's alpha (how
+      much of its half-resolution copy the composite blends in) adds min(|motion|^c252.y, c251.w) * c252.z: c252.z
+      is 0 too. Found by a turn-then-stop burst (`simstop.py`: 160 deg/s then held): the first frame at the stopped
+      pose was still soft and the next sharp (a one-frame camera-motion effect); now -5% during the turn (content)
+      instead of -20 to -25%, sharp at the stop. Checked and ruled out first: SteamVR reprojection (menus only),
+      previous-frame image blends as in Sonic / Killzone (trace: no screen copy read before it is rewritten),
+      overscan, pose mismatch. Matt to check.
     - [ ] Matt: DLSS smears on its own (separate issue, open).
       - Matt (2026-10-27): "How do I run high res? I tried x=3 and y=6 but it crashed my whole pc..." / "it didn't
         actually crassh, it just hung everything". Cause: video memory. In stereo the scaled-resolve buffer was whole
