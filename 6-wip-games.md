@@ -1243,7 +1243,8 @@ my disc, I'll let you know when its done."
     Fixed (fork 03d66f9, local): ring bindings recorded, buffer 2 patched by s / 2; the log counts applied/skipped.
     Verified in one session at Matt's boat save (eye 2560; both eyes of each frame, blocks matched L/R; mean |log2
     L/R| x100): new 0.70 (0% of blocks off by 20%), 0.8x / 1.2x 0.88, off 1.47, the old size 1.77, wrong sign 3.38,
-    30x 17.7 (the knob works); yaw +-20: 0.84 / 0.85 against 1.27 / 1.11 off. Crate faces match between the eyes
+    30x 17.7 (the knob works); head yaw +-66 degrees (my script passed 20 as radians): 0.84 / 0.85 against
+    1.27 / 1.11 off. Crate faces match between the eyes
     (`evidence/uncharted-collection/2026-10-26-shadow-eyes-before-after.png`: top wrong sign, bottom new).
     Needs Matt's headset check. U2 / U3 use other shaders: not checked.
 - Details: `profiles/CUSA02343-notes.md`.
@@ -2245,6 +2246,36 @@ matching VR with no gfx errors and 90fps."
       split/unsplit frames and the UI draws' shaders and targets in menus and driving.
     - Resolution: 1280x1440 an eye rendered, DLSS out 1920x2160; Matt's panels ~2880x2880. Measure a higher draw
       scale (e.g. 2x by 3-4x) and DLSS output near panel size; test at his simulator settings (2880 eyes, scale 400).
+  - TODO, Matt (2026-10-26 evening), verbatim: "Midnight club the HUD still flickers. Mindnight club the performance is
+    still too bad at high resolutions." / "Work all night to fix these."
+    - [x] HUD flicker. Cause (SDK 3a3db35): the split (SplitFrame) was refused when the frame's pose was not queued
+      yet, and the GPU thread runs a frame's draws as the game writes them, often before its VdSwap queues the pose.
+      Those frames were left unsplit: the HUD drawn into the head-tracked picture (moves with the head) and the HUD
+      layer not updated (flicker). The counter from c6a216a missed it (it counted frames drawing HUD, not refused
+      splits). Now an empty queue means the pose is still to come. Measured with a new log line (every 600 frames: split,
+      scene not split, refused splits, HUD draws left out), drives with the head swaying (yaw +-35, pitch +-10):
+      unsplit frames 17 -> 1 in 34 windows (the 1: the menu-to-game frame), refused splits 125 -> 1; 64-frame
+      simulator bursts at yaw 25 while driving (640 frames): no frame with the HUD twice or missing. Game repo 8a5e944
+      (patch). Needs Matt's headset check.
+    - [ ] Performance at high resolutions (simulator, no SteamVR: about 20% above his; stereo, driving, uncapped):
+      | render (draw scale) | output | FPS before | FPS now |
+      |---|---|---|---|
+      | 1280x1440 (1x2) | DLSS 1.85x 2368x2664 (default) | 117 | 120 |
+      | 1280x1440 (1x2) | DLSS 2x 2560x2880 | | 114 |
+      | 2560x1440 (2x2) | DLAA | 83.5 | 87.7 |
+      | 2560x2880 (2x4) | DLAA | 50.6 | 55.4 |
+      Where the time goes at 2x4 (19.5 ms before): the right eye's replay 8.8 ms (mono 9.2 ms: the replay re-runs
+      everything), EDRAM render target transfers ~5 ms (all dropped: 69 FPS), shadows ~3.3 ms (both eyes, off: 62),
+      DLSS ~1 ms an eye, full-screen blur nothing. Fixed (SDK 23be5e5, game 7545656): the 360 clears with D3D's
+      clear quad, in strips, often through a 4x surface over the target; the cache first copied the old contents in
+      (transfers). Those are held back over a run of clear quads and done leaving the cleared rectangle out: 2x4
+      50.6 -> 55.4; parked on/off/on in one session: differences within the on/on control; validation clean.
+      Tried, no gain, reverted: the right eye skipping draws the same in both eyes (half its draws, ~1000: shadow
+      depth; 2x4 55.2 -> 55.4, default +3%); vertex-based extents for clear quads (none); Xenia's
+      execute_unclipped_draw_vs_on_cpu_with_scissor (2x4 53.9, default 99: CPU). Not done: the copies out of the 4x
+      clear surfaces (4x -> 1x, same format) as clears: at most +6% at 2x4 (all such copies dropped: 58.7).
+      A native 2560x2880 render cannot reach 90 in this design (mono alone 9.2 ms at 2x4). Panel-size pictures at
+      90: DLSS 2x from the default render (114 uncapped here). Needs Matt's check: which setting he ran, his FPS.
 
 ## Uncharted: Drake's Fortune (BCUS98103, update 01.10)
 
