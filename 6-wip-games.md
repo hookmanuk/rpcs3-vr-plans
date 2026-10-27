@@ -2360,7 +2360,22 @@ matching VR with no gfx errors and 90fps."
         GPUs..." / "Don't call is auto. Call it what it is. MSAA(?) on non DLSS machines, DLSS balanced otherwise."
         The modes: OFF (MSAA), DLAA, QUALITY, BALANCED, PERFORMANCE, ULTRA PERFORMANCE; where DLSS cannot run the
         game already falls back (render size out, its MSAA on: tested with bbport_dlss.dll hidden, 124.8 FPS
-        parked) and the menu shows OFF (MSAA) with the DLSS modes marked NEEDS NVIDIA RTX. The save writes only what the menu changed, merged into the file
+        parked) and the menu shows OFF (MSAA) with the DLSS modes marked NEEDS NVIDIA RTX.
+        Matt: "So we are restricted to multiples of the base resolution. So how do they get applied when we set a DLSS
+        level?" Explained: the render size is the whole step; DLSS multiplies it to the headset (output = render x
+        factor), the reverse of PC (a higher "mode" is a bigger upscale at the same render cost). He chose to pick the
+        headset size directly ("2"). [x] (game 2nd commit after 0cb838f): HEADSET SIZE AN EYE: SAME AS RENDER (MSAA
+        NEXT START), SAME AS RENDER (DLAA), 1920x2160, 2240x2520 (default, 1.75x from 1280x1440), 2560x2880,
+        3200x3600, 3840x4320; each label shows its DLSS factor from the render size ("(DLSS 1.8X)", "(DLAA)" at or
+        below it, "3X MAX"); `vr_headset_size`; the upscale = headset width / render width, 1-3. Boot checks: default
+        2240x2520 (swapchain 4480x2520); 2x4 -> 3840x4320 x1.5, 61 FPS parked.
+        Matt: "Can we apply these without a restart?" [x] The headset size applies live (SDK: DLSS features re-made 16
+        frames after a size change, as CreateFeature releases the old at once; publications from before the change
+        skipped, they named the old screens: an out-of-bounds copy under validation). Tested with
+        `MCLA_VR_TEST_SCALE=frame:scale,...` (2, 1.5, 3, 1 while running: swapchain and features follow, a 50-100 ms
+        hitch each), validation clean but for the known NGX 09600 at 2x and up and the boot-time 06178. The render size
+        stays NEXT START (baked into every render target, resolved texture and shader: a GPU emulation restart). The
+        menu itself is still untested (Matt). The save writes only what the menu changed, merged into the file
         (it wrote every non-default option). His mcla.toml cleaned (backup mcla.toml.bak-2026-10-27; `vr = true` went
         too: launch with --vr=true). Boot check: 1280x1440, DLSS 1.72x, 124 FPS parked. The menu itself is untested
         (Matt to check: pause, settings, VR).
