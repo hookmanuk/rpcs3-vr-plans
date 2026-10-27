@@ -2276,8 +2276,12 @@ matching VR with no gfx errors and 90fps."
       depth; 2x4 55.2 -> 55.4, default +3%); vertex-based extents for clear quads (none); Xenia's
       execute_unclipped_draw_vs_on_cpu_with_scissor (2x4 53.9, default 99: CPU). Not done: the copies out of the 4x
       clear surfaces (4x -> 1x, same format) as clears: at most +6% at 2x4 (all such copies dropped: 58.7).
-      A native 2560x2880 render cannot reach 90 in this design (mono alone 9.2 ms at 2x4). Panel-size pictures at
-      90: DLSS 2x from the default render (114 uncapped here). Needs Matt's check: which setting he ran, his FPS.
+      A native 2560x2880 render cannot reach 90 in this design (mono alone 9.2 ms at 2x4). Pixels, not draws, set the
+      cost: 1x4 and 2x2 (the same pixel count) both 87.7 FPS; ~1.8 ms per million eye pixels (both eyes) over a fixed
+      ~4.7 ms. Every render target scales with the draw scale (shadow maps, post buffers, transfers): leaving some
+      unscaled would need per-target scales in the render target and texture caches (not done). Panel-size pictures
+      at 90: DLSS 2x from the default render (114 uncapped here). 2x4 cutout A/B in one session: on/off within the
+      on/on control. Needs Matt's check: which setting he ran, his FPS.
 
 ## Uncharted: Drake's Fortune (BCUS98103, update 01.10)
 
