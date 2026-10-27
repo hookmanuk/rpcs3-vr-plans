@@ -2330,7 +2330,8 @@ matching VR with no gfx errors and 90fps."
         MSAA, uncapped: **66.3 -> 96.6 FPS** (89.5 with the memory still written, `MCLA_VR_DIRECT_RESOLVE=1`; the
         default, 2, leaves it unwritten where every texture at the range was written directly: a texture first
         fetched with a new key over such a range loads stale memory once). Validation clean (one boot-time warning
-        from before). Picture as before at the start (scene, HUD, minimap, gauges). Needs Matt's headset check.
+        from before). Picture as before at the start (scene, HUD, minimap, gauges). Default settings (1x2, DLSS):
+        131 FPS, GPU 73% busy (the CPU side is the limit there now). Needs Matt's headset check.
       - Left: stencil-bit transfers (1.9 ms: the shadow pass's 4x clear surface spans all of EDRAM, every target
         transfers into it and back, stencil 8 draws at a time); the other transfers (1.6); resolves into mip levels
         (the bloom chain, 3 a frame) and spans owned by several targets (1); attachment-less boot passes drawn with
