@@ -2340,6 +2340,14 @@ matching VR with no gfx errors and 90fps."
         transfers into it and back, stencil 8 draws at a time); the other transfers (1.6); resolves into mip levels
         (the bloom chain, 3 a frame) and spans owned by several targets (1); attachment-less boot passes drawn with
         the multiview pipelines (validation warning).
+      - Matt (2026-10-27): "Ok, do those then" (the stencil-bit transfers, the shadow pass's clear surface). [x] SDK
+        faac6d5: a depth target records the tiles a clear quad left holding only its value; transfers into depth
+        targets from them are clears (the scene depth twice a frame: depth copy + 8 stencil draws each). A depth-only
+        clear quad with alpha test left on was refused a cutout (no pixel shader runs: now accepted). 2x4 no AA parked,
+        A/B pairs: transfers 353 -> 220 Mpx/frame an eye, **79.3 -> 83.8 FPS** (75.7 -> 81.0 with a load hitch);
+        picture as before. `MCLA_VR_CLEARED_TRANSFERS=0` off. Not convertible: the strip clears of the small 4x/2x
+        surfaces stop short of the surface pitch (256 of 280, 512 of 520 px), so the last column keeps old content.
+        Still to look at: depth -> colour transfers out of cleared tiles (one pass each, small).
       - Matt (2026-10-27): "How do I run high res? I tried x=3 and y=6 but it crashed my whole pc..." / "it didn't
         actually crassh, it just hung everything". Cause: video memory. In stereo the scaled-resolve buffer was whole
         (512 MB x scale area) and twinned: 18 GB at 3x6; with the rest past the RTX 5090's 32 GB the driver paged to
