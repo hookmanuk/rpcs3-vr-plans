@@ -2393,7 +2393,16 @@ matching VR with no gfx errors and 90fps."
         DLAA <-> DLSS sizes switch while playing; MSAA follows the headset choice at start (`MsaaOff`). Default boot:
         78.6 FPS parked; live NO AA 79.6 -> DLSS 3200x3600 65-68 -> NO AA 81.8; the first DLSS use in a session
         freezes ~1.4 s (NGX making its first feature). His mcla.toml's vr_headset_size line removed (the new
-        default). The save writes only what the menu changed, merged into the file
+        default).
+      - Matt: "This render resolution scaling is horrible logic. Is there no way to get more fine tuned resolutions
+        out of this thing?" Explained: Xenia maps each guest pixel to a whole block (EDRAM tiles, resolves, resolved
+        textures, shaders); fractional scale would be a rewrite. Offered the in-between XxY combinations and a
+        non-DLSS upscale for AMD. Matt: "yes add the inbetween sizes. Also restrict the headset sizes to render size
+        and up, lower makes no sense. dont test, I will test it." [x] (game, untested by request): render sizes 1x2
+        1280x1440, 2x3 2560x2160, 2x4 2560x2880, 3x5 3840x3600, 3x6 3840x4320 (`vr_resolution` "XxY"); headset
+        sizes RENDER (NO AA / MSAA / DLAA) then DLSS factors 1.25x to 3x of the render size, each labelled with its
+        size, up to 7680 a side (the list is made with the menu; an older saved "WxH" still maps by width).
+        Not done: a non-DLSS upscale for AMD. The save writes only what the menu changed, merged into the file
         (it wrote every non-default option). His mcla.toml cleaned (backup mcla.toml.bak-2026-10-27; `vr = true` went
         too: launch with --vr=true). Boot check: 1280x1440, DLSS 1.72x, 124 FPS parked. The menu itself is untested
         (Matt to check: pause, settings, VR).
