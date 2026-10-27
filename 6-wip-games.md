@@ -2282,6 +2282,24 @@ matching VR with no gfx errors and 90fps."
       unscaled would need per-target scales in the render target and texture caches (not done). Panel-size pictures
       at 90: DLSS 2x from the default render (114 uncapped here). 2x4 cutout A/B in one session: on/off within the
       on/on control. Needs Matt's check: which setting he ran, his FPS.
+    - Matt (2026-10-27): "Why are we always using DLSS or dlaa in midnight club? Can we optionally turn it off and
+      just set resolution normally like any other vr mod?!" / "Why is this all by command line? In the packaged
+      release is there a UI to set these things?" / "Why does this game perform so badly compared to Driveclub?" /
+      "yes you should be using multiview. You should always be using multiview for VR ports. Remember this. Do it
+      now."
+      - [x] Multiview (SDK 34b920c, game 2b36ae2): render targets a layer per eye, passes into them drawn for both
+        eyes at once (view mask 0b11); the rest (resolves, dumps, texture loads, the frame copy) still per eye on
+        twins. Driving, uncapped, simulator: default (1x2, DLSS 1.85x) 123.6 -> 139.3 FPS; native 2x4 without DLSS or
+        MSAA 61.4 -> 66.2. Validation clean (one warning the replay has too); simulator head poses (straight, yaw
+        +-20, pitch 10, roll 15) turn the scene, the HUD stays its panel; minimap and HUD as the replay's.
+        MCLA_VR_MULTIVIEW=0 keeps the replay. Needs Matt's headset check.
+      - [ ] DLSS optional in a menu: it already is by flags (--vr_dlss=false; resolution by
+        --draw_resolution_scale_x/y, whole steps of 1280x720) or in mcla.toml. Offered: a VR page in the pause menu's
+        Settings, and the draw scale from SteamVR's resolution when not set. Waiting on Matt.
+      - [ ] No release zip: mcla.exe holds recompiled game code, built locally from the user's disc (README says so).
+        Offered a one-step package (SDK prebuilt, compiler, DLLs). Waiting on Matt.
+      - Native 2x4 without DLSS: the top row of each eye is garbage (replay too; the fill_row fix only runs when
+        scaling). Not looked at yet.
 
 ## Uncharted: Drake's Fortune (BCUS98103, update 01.10)
 
