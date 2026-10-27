@@ -2293,6 +2293,10 @@ matching VR with no gfx errors and 90fps."
         MSAA 61.4 -> 66.2. Validation clean (one warning the replay has too); simulator head poses (straight, yaw
         +-20, pitch 10, roll 15) turn the scene, the HUD stays its panel; minimap and HUD as the replay's.
         MCLA_VR_MULTIVIEW=0 keeps the replay. Needs Matt's headset check.
+      - Tried, reverted: eye-independent draws (not perspective, no eye-dependent textures, into targets the same in
+        both eyes: ~54% of draws, mostly shadow depth) clipped away in the right view (MCLA_VR_LEFT_ONLY, an upper
+        bound: their right layers left stale). Off/on, warm runs: default 140.0 -> 140.8 FPS, native 2x4 no AA 65.3
+        -> 67.2 (+3%). As under the replay last night (2x4 +0.4%, default +3%): not worth one-layer passes.
       - [ ] DLSS optional in a menu: it already is by flags (--vr_dlss=false; resolution by
         --draw_resolution_scale_x/y, whole steps of 1280x720) or in mcla.toml. Offered: a VR page in the pause menu's
         Settings, and the draw scale from SteamVR's resolution when not set. Waiting on Matt.
