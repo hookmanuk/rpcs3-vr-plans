@@ -2402,7 +2402,22 @@ matching VR with no gfx errors and 90fps."
         1280x1440, 2x3 2560x2160, 2x4 2560x2880, 3x5 3840x3600, 3x6 3840x4320 (`vr_resolution` "XxY"); headset
         sizes RENDER (NO AA / MSAA / DLAA) then DLSS factors 1.25x to 3x of the render size, each labelled with its
         size, up to 7680 a side (the list is made with the menu; an older saved "WxH" still maps by width).
-        Not done: a non-DLSS upscale for AMD. The save writes only what the menu changed, merged into the file
+        Not done: a non-DLSS upscale for AMD.
+      - Matt (2026-10-27, screenshot of the VR page at 2x3, DLSS 1.5x): "5 things... 1 - the vr menu is cut off on the
+        right hand side, you cant even see the accept icon. 2 - we get flashing corruption, lke the bottom left of
+        this scene 3 - change the default res to the 10gb option 4 - remove the MSAA needs restart from the label
+        5 - in the headset size options remove the word render, on MSAA add (restart) after it." / "Look closer and
+        you'll see the right window border still exists. So it's not the whole HUD cut off." / "You're right reducing
+        the labels might fix it".
+        [x] 3, 4, 5 (game eb17b8f): default 2x3; row "HEADSET SIZE"; NO AA, MSAA (RESTART), DLAA. 1: the panel grows
+        with its widest row (label + value) past its fixed frame; the shorter rows should fit (the widest original
+        row, "SIMPLE CAR SHADOWS (NEXT START)" + "OFF", fits). Matt to check (my Start presses opened the pause menu,
+        the log built it, but the simulator shots never showed it).
+        2: not reproduced at the start spot (2x3 no AA and DLSS 1.5x, three head poses x 3). Found with a STALE-load
+        counter while driving: a k_8 512x512 resolve at 0329E000 read by the game as k_8_8_8_8 256x256; direct mode 2
+        had left that memory unwritten, so the 8888 texture loaded garbage when made. [x] (SDK, game 2nd commit
+        after eb17b8f): pages a texture loads after a direct resolve skipped them get memory writes from then on (at
+        most one bad frame per such area per session); log "STALE load". Matt to check the flashing. The save writes only what the menu changed, merged into the file
         (it wrote every non-default option). His mcla.toml cleaned (backup mcla.toml.bak-2026-10-27; `vr = true` went
         too: launch with --vr=true). Boot check: 1280x1440, DLSS 1.72x, 124 FPS parked. The menu itself is untested
         (Matt to check: pause, settings, VR).
