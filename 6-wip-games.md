@@ -2289,8 +2289,9 @@ matching VR with no gfx errors and 90fps."
       now."
       - [x] Multiview (SDK 34b920c, game 2b36ae2): render targets a layer per eye, passes into them drawn for both
         eyes at once (view mask 0b11); the rest (resolves, dumps, texture loads, the frame copy) still per eye on
-        twins. Driving, uncapped, simulator: default (1x2, DLSS 1.85x) 123.6 -> 139.3 FPS; native 2x4 without DLSS or
-        MSAA 61.4 -> 66.2. Validation clean (one warning the replay has too); simulator head poses (straight, yaw
+        twins. Uncapped, simulator: native 2x4 without DLSS or MSAA 61.4 -> 66.2 FPS driving, 63.2 -> 66.4 parked at
+        the start. (The default's "123.6 -> 139.3" was two cars stuck against buildings at different spots, not a
+        result; corrected 2026-10-27.) Validation clean (one warning the replay has too); simulator head poses (straight, yaw
         +-20, pitch 10, roll 15) turn the scene, the HUD stays its panel; minimap and HUD as the replay's.
         MCLA_VR_MULTIVIEW=0 keeps the replay. Needs Matt's headset check.
       - Tried, reverted: eye-independent draws (not perspective, no eye-dependent textures, into targets the same in
@@ -2302,6 +2303,21 @@ matching VR with no gfx errors and 90fps."
         Settings, and the draw scale from SteamVR's resolution when not set. Waiting on Matt.
       - [ ] No release zip: mcla.exe holds recompiled game code, built locally from the user's disc (README says so).
         Offered a one-step package (SDK prebuilt, compiler, DLLs). Waiting on Matt.
+      - Matt (2026-10-27): "what's the difference between flat and VR performance now? Why is it so big?" Parked at
+        the start, uncapped, one build (scratchpad mc/flatvr_park.sh; the drive script crashes the car into walls,
+        so driving numbers are unreliable). GPU ms = busy x frame time:
+        | Mode | Pixels drawn | FPS | GPU busy | GPU ms |
+        |---|---|---|---|---|
+        | flat 720p, MSAA | 0.9 M | 117.9 | 35% | 3.0 |
+        | VR mono (game on a panel) | 0.9 M | 99.0 | 33% | 3.3 |
+        | flat one 2560x2880 view, no MSAA | 7.4 M | 93.5 | 67% | 7.2 |
+        | VR stereo default (1280x1440 an eye, DLSS 1.85x) | 3.7 M | 138.9 | 94% | 6.8 |
+        | VR stereo 1280x1440, MSAA, no DLSS | 3.7 M | 124.7 | 75% | 6.0 |
+        | VR stereo native 2560x2880 an eye, no AA | 14.7 M | 66.4 | 95% | 14.3 |
+        | same, replay (MCLA_VR_MULTIVIEW=0) | 14.7 M | 63.2 | 95% | 15.0 |
+        At the same pixels per view the second eye costs what the first does (7.2 -> 14.3 ms): the cost is pixel work,
+        which multiview cannot share. Flat is CPU-bound (GPU a third busy) at 720p; VR at the default is faster than
+        flat. The gap Matt sees is 16x the pixels of 720p (native stereo), not stereo overhead.
       - Native 2x4 without DLSS: the top row of each eye is garbage (replay too; the fill_row fix only runs when
         scaling). Not looked at yet.
 
