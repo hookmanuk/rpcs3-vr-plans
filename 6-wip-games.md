@@ -2353,6 +2353,18 @@ matching VR with no gfx errors and 90fps."
         claimed all of EDRAM, so the scene's targets were transferred into the cleared surface and back. 2x4 no AA
         parked: transfers 220 -> 79 Mpx/frame an eye, **83 -> 107-108 FPS steady**; road picture identical. Pause menu
         and map not checked (scripted Start opened and closed the menu in 165 ms): Matt to check in the headset.
+        Matt: "performance is good, everything looks the same."
+    - Matt (2026-10-27): "If I turn my head left and right then the details on the screen blur, for example the speedo
+      on the dashboard. This doesn't happen in other games, so must be some kind of motion blur still active." / "It's
+      not DLSS, it happens with it off too. In fact DLSS has it's own smearing too that needs fixing, as well as this
+      issue." [x] SDK acf6b46: the camera motion blur / DOF pass (ps A6B9B6B0FA692C54, half resolution: 8 taps along
+      the motion from this and the previous frame's camera, c166.x length, c167.x blend) kept the effect's defaults
+      when mcla_motion_blur was off (the gate only nulls the handles the game sets them through; forcing motion blur
+      on changed little). Now c166.x and c167.x are 0 for that draw. Simulator, real head pose turned smoothly
+      (`simsweep.py`; the simulator's pose_sweep only moves its compositor layers): the speedo's edge detail at
+      120-180 deg/s was -15 to -23% (smeared sideways), now as still. Poses checked too: each frame's image sits at
+      the pose sent with it (within ~1 px), delivery 72/72 Hz with none late in Matt's log. Matt to check.
+    - [ ] Matt: DLSS smears on its own (separate issue, open).
       - Matt (2026-10-27): "How do I run high res? I tried x=3 and y=6 but it crashed my whole pc..." / "it didn't
         actually crassh, it just hung everything". Cause: video memory. In stereo the scaled-resolve buffer was whole
         (512 MB x scale area) and twinned: 18 GB at 3x6; with the rest past the RTX 5090's 32 GB the driver paged to
