@@ -2374,6 +2374,17 @@ matching VR with no gfx errors and 90fps."
       previous-frame image blends as in Sonic / Killzone (trace: no screen copy read before it is rewritten),
       overscan, pose mismatch. Matt to check.
     - [ ] Matt: DLSS smears on its own (separate issue, open).
+    - Matt (2026-10-27, goal): "create a release exe that can be a one click run for mcla, without using any mcla game
+      files so that we stay legal. So it needs to ask for the iso location and then make any files it needs, using
+      any bundled sdk files that it needs too." [x] Game 574ed58: `packaging/windows/package.ps1 -Version X` makes
+      `out/release/mcla-vr-X-win64.zip` (169 MB): "Midnight Club LA VR.exe" (Win32 launcher), setup/setup.ps1 +
+      extract_game.py, the project's source, the installed SDK (VR fork), LLVM's clang/lld-link/llvm-ar/llvm-rc,
+      portable CMake 3.31.6, Ninja 1.12.1, Python 3.12.8 embeddable, openxr_loader + bbport_dlss + nvngx_dlss, licences.
+      No game files or generated code (the packager checks). First run: dialog, the .iso picked, setup in a console:
+      Build Tools via winget if missing (not redistributable), extract, codegen from the user's default.xex, build,
+      bin/. Then the launcher starts bin/mcla.exe --vr=true (options passed on; --setup redoes it). Tested from a
+      fresh unzip (C:/mcla-release-test, 7 GB, for Matt to delete: removal blocked): setup ~1 min here, the game in
+      stereo on the simulator with the default settings. Rebuild the zip after the night's changes.
       - Matt (2026-10-27): "How do I run high res? I tried x=3 and y=6 but it crashed my whole pc..." / "it didn't
         actually crassh, it just hung everything". Cause: video memory. In stereo the scaled-resolve buffer was whole
         (512 MB x scale area) and twinned: 18 GB at 3x6; with the rest past the RTX 5090's 32 GB the driver paged to
