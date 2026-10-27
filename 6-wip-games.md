@@ -2446,7 +2446,13 @@ matching VR with no gfx errors and 90fps."
         them). Simulator 90 Hz: off 90 FPS submitted; 1/2: game and submissions 45.0 FPS, 900 of 1800 slots empty.
         [x] The crop: at a low frame rate the runtime turns the last frame further and its edge shows; while frames
         are slow (under 80% of the refresh, back at 95%) or capped, the eyes render 1.15x wider (MCLA_VR_OVERSCAN)
-        and the layer's field of view says so. Untested in the headset. The save writes only what the menu changed, merged into the file
+        and the layer's field of view says so. Untested in the headset.
+      - Matt: "Can you render parts at a lower pixel density? Would that work in game via VRS? Would it save much
+        performance?" / "Try a 4x4 test". `MCLA_VR_VRS_TEST=N` (SDK, development: VK_KHR_fragment_shading_rate, a
+        fixed NxN rate on every game pipeline). 2x4, no AA, parked, uncapped, steady seconds: off 77.0 / 76.9 (two
+        controls), 2x2 81.6 (+6%), 4x4 87.5 (+14%; the picture blocky: it ran). The game's own pixel shading is a small
+        part of the frame (the EDRAM transfers and resolves and depth-only shadow passes are not shaded); a lens-shaped
+        pattern (full rate in the middle) would gain a fraction of +14%. Not built. The save writes only what the menu changed, merged into the file
         (it wrote every non-default option). His mcla.toml cleaned (backup mcla.toml.bak-2026-10-27; `vr = true` went
         too: launch with --vr=true). Boot check: 1280x1440, DLSS 1.72x, 124 FPS parked. The menu itself is untested
         (Matt to check: pause, settings, VR).
