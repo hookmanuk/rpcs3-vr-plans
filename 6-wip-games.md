@@ -2375,7 +2375,25 @@ matching VR with no gfx errors and 90fps."
         `MCLA_VR_TEST_SCALE=frame:scale,...` (2, 1.5, 3, 1 while running: swapchain and features follow, a 50-100 ms
         hitch each), validation clean but for the known NGX 09600 at 2x and up and the boot-time 06178. The render size
         stays NEXT START (baked into every render target, resolved texture and shader: a GPU emulation restart). The
-        menu itself is still untested (Matt). The save writes only what the menu changed, merged into the file
+        menu itself is still untested (Matt).
+      - Matt (2026-10-27, screenshot: the VR page's values clipped): "What happened to performance? I used to be able
+        to run --draw_resolution_scale_x=2 --draw_resolution_scale_y=4 --vr_dlss_output_scale=1.5 at 72fps locked, now
+        the attached settings are really bad, below 72fps. Also see the settings page doesnt fit either." / "so youre
+        saying ... ran with no dlss? Why did it have a dlss output scale set then?!?!" Found: his 72-locked session
+        (16:15) never loaded DLSS (no bridge line in its log), so the scale was ignored and it ran 2560x2880 with no
+        anti-aliasing (mcla_msaa false then). Measured at 2x4, parked, uncapped: no AA ~81, DLAA 67.0, DLSS to
+        3200x3600 64.5, to 3840x4320 60.5 (his 16:42 session: 60.6), MSAA 56.7; today's memory changes off: 64.3 vs
+        64.5 (not the cause). My clean-up of his mcla.toml had removed log_file (his session after had no log): put
+        back. Values shortened (the value column clips past ~14-18 characters): "2560X2880 13GB", "3200X3600 1.25X".
+        Freeing idle render targets only under 3 GB free (it waits for the GPU); the 50 ms hitch I first blamed on it
+        is the load-in after free roam starts (59.5 ms with nothing freed).
+      - Matt: "yes of course, thats the best setting and should be the default!" [x] Default 2560x2880 (vr_resolution
+        2x4), headset RENDER (NO AA) (`noaa`); also RENDER (MSAA) (next start), RENDER (DLAA), DLSS sizes. DLSS is
+        loaded in VR and bypassed for NO AA / MSAA (`vr_dlss_bypass`, live: no jitter, render size out), so NO AA <->
+        DLAA <-> DLSS sizes switch while playing; MSAA follows the headset choice at start (`MsaaOff`). Default boot:
+        78.6 FPS parked; live NO AA 79.6 -> DLSS 3200x3600 65-68 -> NO AA 81.8; the first DLSS use in a session
+        freezes ~1.4 s (NGX making its first feature). His mcla.toml's vr_headset_size line removed (the new
+        default). The save writes only what the menu changed, merged into the file
         (it wrote every non-default option). His mcla.toml cleaned (backup mcla.toml.bak-2026-10-27; `vr = true` went
         too: launch with --vr=true). Boot check: 1280x1440, DLSS 1.72x, 124 FPS parked. The menu itself is untested
         (Matt to check: pause, settings, VR).
