@@ -2348,6 +2348,11 @@ matching VR with no gfx errors and 90fps."
         picture as before. `MCLA_VR_CLEARED_TRANSFERS=0` off. Not convertible: the strip clears of the small 4x/2x
         surfaces stop short of the surface pitch (256 of 280, 512 of 520 px), so the last column keeps old content.
         Still to look at: depth -> colour transfers out of cleared tiles (one pass each, small).
+      - [x] Game c776292: `execute_unclipped_draw_vs_on_cpu=true` by default in VR (the emulator's CPU vertex
+        estimate for unclipped draws with the 8192x8192 scissor, D3D's clear quads). Without it every clear quad
+        claimed all of EDRAM, so the scene's targets were transferred into the cleared surface and back. 2x4 no AA
+        parked: transfers 220 -> 79 Mpx/frame an eye, **83 -> 107-108 FPS steady**; road picture identical. Pause menu
+        and map not checked (scripted Start opened and closed the menu in 165 ms): Matt to check in the headset.
       - Matt (2026-10-27): "How do I run high res? I tried x=3 and y=6 but it crashed my whole pc..." / "it didn't
         actually crassh, it just hung everything". Cause: video memory. In stereo the scaled-resolve buffer was whole
         (512 MB x scale area) and twinned: 18 GB at 3x6; with the rest past the RTX 5090's 32 GB the driver paged to
