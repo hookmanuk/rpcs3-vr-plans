@@ -2385,6 +2385,18 @@ matching VR with no gfx errors and 90fps."
       bin/. Then the launcher starts bin/mcla.exe --vr=true (options passed on; --setup redoes it). Tested from a
       fresh unzip (C:/mcla-release-test, 7 GB, for Matt to delete: removal blocked): setup ~1 min here, the game in
       stereo on the simulator with the default settings. Rebuild the zip after the night's changes.
+    - Night 2026-10-27/28 performance (goal "Work on performance for mcla and uncharted throughout the night"), 2x4
+      no AA parked, uncapped, DLSS off, A/B pairs each: start 76.6 FPS ->
+      cleared-tile transfers as clears 83.8 -> clear quads sized from vertices 107 -> [SDK 2eeaec6] shadow atlas
+      quarters resolved directly (four 640x640 cascades into a 1280x1280 depth atlas; the atlas outdated every frame by
+      other resolves in its memory, so the frame's coverage makes it up to date) 112-115 -> [SDK 0e070a8] a texture its
+      own direct resolves write whole keeps no memory path for another resolve there 117.7-119. Now: 2x4 no AA 119,
+      Matt's 2x3 no AA 132-140, 2x3 DLSS 1.5x 96-97. Picture checked each step (shadows on/off/on in one session,
+      `%TEMP%\mcla_sub_off`). Log: "  dump <Mpx>: <why> | dest" per second. Tried, reverted: ignoring idle textures
+      (no effect: the blockers are in use); not marking pages on a texture's first load (the STALE load is a reload);
+      colour-cleared tiles (the colour clears at tile 224 stop 24 px short of the 280 px pitch). Left, an eye: two
+      full-screen stencil copies 18 Mpx x8 (1x depth <- 4x depth with real data; 1x depth <- the partial colour clear),
+      dumps 25 Mpx (pages read through another format: genuine STALE reloads), resolve copies 64 Mpx.
       - Matt (2026-10-27): "How do I run high res? I tried x=3 and y=6 but it crashed my whole pc..." / "it didn't
         actually crassh, it just hung everything". Cause: video memory. In stereo the scaled-resolve buffer was whole
         (512 MB x scale area) and twinned: 18 GB at 3x6; with the rest past the RTX 5090's 32 GB the driver paged to
