@@ -2356,7 +2356,11 @@ matching VR with no gfx errors and 90fps."
         settings: RENDER SIZE AN EYE (1280x1440 / 2560x2880 / 3840x4320, each "(NEEDS n GB OF total)", "TOO MUCH"
         past the card less 2 GB) and DLSS (OFF, DLAA 1x, QUALITY 1.5x, BALANCED 1.72x, PERFORMANCE 2x, ULTRA
         PERFORMANCE 3x), both NEXT START (`vr_resolution`, `vr_dlss_mode`; the command line still wins). Default
-        DLSS is now Balanced 1.72x (was 1.85x). The save writes only what the menu changed, merged into the file
+        DLSS is now Balanced 1.72x (was 1.85x). Matt: "You can't have DLSS as the default... Some people use AMD
+        GPUs..." / "Don't call is auto. Call it what it is. MSAA(?) on non DLSS machines, DLSS balanced otherwise."
+        The modes: OFF (MSAA), DLAA, QUALITY, BALANCED, PERFORMANCE, ULTRA PERFORMANCE; where DLSS cannot run the
+        game already falls back (render size out, its MSAA on: tested with bbport_dlss.dll hidden, 124.8 FPS
+        parked) and the menu shows OFF (MSAA) with the DLSS modes marked NEEDS NVIDIA RTX. The save writes only what the menu changed, merged into the file
         (it wrote every non-default option). His mcla.toml cleaned (backup mcla.toml.bak-2026-10-27; `vr = true` went
         too: launch with --vr=true). Boot check: 1280x1440, DLSS 1.72x, 124 FPS parked. The menu itself is untested
         (Matt to check: pause, settings, VR).
