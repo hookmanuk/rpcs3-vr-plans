@@ -1246,7 +1246,9 @@ my disc, I'll let you know when its done."
     30x 17.7 (the knob works); head yaw +-66 degrees (my script passed 20 as radians): 0.84 / 0.85 against
     1.27 / 1.11 off. Crate faces match between the eyes
     (`evidence/uncharted-collection/2026-10-26-shadow-eyes-before-after.png`: top wrong sign, bottom new).
-    Needs Matt's headset check. U2 / U3 use other shaders: not checked.
+    With DLSS at eye 2560 (his settings' kind): 0.64 / 0.72 against 1.36 off, 88-90 FPS at 90 Hz, no faults.
+    Needs Matt's headset check. U2 / U3 use other shaders: not checked (my U2 state, the train, is overcast: no sun
+    shadows to compare; U3's is indoors).
 - Details: `profiles/CUSA02343-notes.md`.
 
 ## Dragon's Dogma: Dark Arisen (BLUS31155 v01.02)
