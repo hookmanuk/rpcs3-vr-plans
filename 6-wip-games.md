@@ -2318,6 +2318,23 @@ matching VR with no gfx errors and 90fps."
         At the same pixels per view the second eye costs what the first does (7.2 -> 14.3 ms): the cost is pixel work,
         which multiview cannot share. Flat is CPU-bound (GPU a third busy) at 720p; VR at the default is faster than
         flat. The gap Matt sees is 16x the pixels of 720p (native stereo), not stereo overhead.
+      - Matt (2026-10-27): "I ask again, why is this performance so bad compared to Driveclub VR ... In Driveclub I can
+        hit 72fps at 3.8k per eye. How can we reduce the cost per pixel here?" / "What does edram transfers mean and
+        why isn't Driveclub affected?" / "There must be a more effective way of emulating this for higher
+        resolutions?" / "Ok, yes do this." Cost split at native 2560x2880 (parked, 15 ms): ~11 ms was the EDRAM
+        emulation (transfers 3.5, of which stencil bits 1.9; resolve dumps + copies 1.6; the loads of resolved
+        textures ~6, of which the copies out of one shared scratch buffer 5.2), the game's own drawing ~4
+        (`profiles/545407F8-notes.md`, "Where the native-resolution frame goes").
+      - [x] Direct resolves (SDK cdd4722, game edb1664): a compute from the render target's image into the texture's
+        image; 42 of 50 resolves a frame, the loads 48 -> 7 a frame. Parked by the start, native 2x4, no DLSS or
+        MSAA, uncapped: **66.3 -> 96.6 FPS** (89.5 with the memory still written, `MCLA_VR_DIRECT_RESOLVE=1`; the
+        default, 2, leaves it unwritten where every texture at the range was written directly: a texture first
+        fetched with a new key over such a range loads stale memory once). Validation clean (one boot-time warning
+        from before). Picture as before at the start (scene, HUD, minimap, gauges). Needs Matt's headset check.
+      - Left: stencil-bit transfers (1.9 ms: the shadow pass's 4x clear surface spans all of EDRAM, every target
+        transfers into it and back, stencil 8 draws at a time); the other transfers (1.6); resolves into mip levels
+        (the bloom chain, 3 a frame) and spans owned by several targets (1); attachment-less boot passes drawn with
+        the multiview pipelines (validation warning).
       - Native 2x4 without DLSS: the top row of each eye is garbage (replay too; the fill_row fix only runs when
         scaling). Not looked at yet.
 
