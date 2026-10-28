@@ -1253,9 +1253,12 @@ my disc, I'll let you know when its done."
   eye size 3584 (launcher settings: vr_eye_size 3584, DLSS off), the Ambushed fight, simulator: 90 Hz holds 90 FPS but
   1% low ~53, 2-10% late; at 120 Hz the ceiling is 88-108 (steady ~89). BB_GPU_PROFILE=1: 12.2 ms GPU a frame; the
   largest item is the depth (3584x3584 D32S8) copied into guest memory 4 times a frame for texel-buffer reads (compute
-  76dd224f, 746e3080 x3, 6a6422a9; vertex 0019120e, 58b25301): 1.82 ms. A per-write memo of those copies was tried and
-  reverted: depth is drawn between every read (still 4 a frame). Next lever: tile straight from the depth image into
-  the arena (no 51 MB staging copy). Then 179 tiny dispatches (cs 8f067540, 1.2-1.4 ms) and one full-res compute
+  76dd224f, 746e3080 x3, 6a6422a9; vertex 0019120e, 58b25301): 1.82 ms. [x] fcf7dd8 (local, community-vr): images keep a
+  serial of their last GPU write (the depth only when a draw writes depth or stencil: the lighting passes between the
+  reads only test it) and the copy is skipped when the address already holds that write (BB_TEXEL_SYNC_MEMO=0 off):
+  4 -> 3 copies (1.85 -> 1.40 ms), GPU 10.5-10.8 -> 10.0-10.1 ms a frame (same build, memo off/on); headset views
+  correct both ways (the game's own "shot" can capture only the HUD in stereo: use simshot). Next lever: tile straight
+  from the depth image into the arena (no 51 MB staging copy). Then 179 tiny dispatches (cs 8f067540, 1.2-1.4 ms) and one full-res compute
   (cs 43b8ee5e, 0.7-0.9 ms). The test route needs one more Cross for the offline "Friend Stats" prompt
   (scratchpad unc/u1_route2.txt).
 - Details: `profiles/CUSA02343-notes.md`.
