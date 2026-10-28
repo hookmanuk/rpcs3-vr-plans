@@ -2422,6 +2422,8 @@ matching VR with no gfx errors and 90fps."
       Cost none: parked uncapped 2x4 DLAA 95.1/96.4 old vs 95.0/94.1 new; 1x2 DLSS 1.85x 134.0/132.9 vs 136.2/134.6.
       Not ruled out: vertex-shader wind sway (no motion for it); preset is NGX's default (K on 310.9). Matt to check
       trees in the headset.
+      Release zip rebuilt with it (mcla-vr-0.1-win64.zip, 2026-10-28 09:25, SDK lib identical to the tested build);
+      the out-of-box run was not repeated for this SDK-only change.
     - Matt (2026-10-27, goal): "create a release exe that can be a one click run for mcla, without using any mcla game
       files so that we stay legal. So it needs to ask for the iso location and then make any files it needs, using
       any bundled sdk files that it needs too." [x] Game 574ed58: `packaging/windows/package.ps1 -Version X` makes
