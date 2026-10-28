@@ -2452,6 +2452,32 @@ matching VR with no gfx errors and 90fps."
       this process (TerminateProcess: the orderly quit is what hung). QUIT GAME removed. Built; not tried: scripted
       Start shows the pause camera but no menu UI on the simulator (never worked scripted). Matt to try. Not in the
       zip yet.
+    - Matt (2026-10-28): "great, mcla is a lot better today! The bushes actually rotate when you rotate your HMD. You
+      can see it from the initial drive position with the bushes ahead. turn your head to the left and all the bushes
+      rotate as well!" / "Also when you look at the dashboard speedo in the car for the first time theres lots of
+      corruption that takes a few frames to sort itself out, then it looks fine after that."
+      - [x] Bushes turn with the head. SDK abf4657 (game 6856ab4): the bushes' vertex shaders (4D181C0D99016B72,
+        AD73CDF775982D19) spread their cards along c208 = 3.87 x the camera's right (level) and c209 = 3.87 x its up
+        made level; logged in gameplay, both turned with the head's yaw (c208 direction (-0.880, -0.475) at yaw 0,
+        (-0.597, -0.802) at yaw -25). The distant tree impostors (BC7052E867A9F304, FA2574DEF5EF01F5) use c12/c13,
+        the camera's right/up. The SPIR-V translator now gives those four shaders the axes of a camera at c15
+        looking at the card's anchor (first vfetch_full of 3 floats, through c0-c3): independent of head yaw, pitch
+        and roll; the game's own when looking straight at a bush. Steep views (the minimap's camera, 7 km up) keep
+        the game's axes. Found by the shaders drawn only with DISTANT TREES on (the round trees through the
+        passenger window at the start are these "bushes"; skipping the shaders removes them). Simulator, real pose:
+        at yaw -45 (trees mid-view) fixed and original match; at -20 (trees at the edge) the original's crowns change
+        shape against -45 (the turn), the fixed ones keep it; minimap unchanged. Cost: parked uncapped 2x4 at yaw
+        -45, alternating, fixed 65.0 vs original 65.5 FPS (within run-to-run spread 64.2-67.2). MCLA_VR_BILLBOARD=0
+        restores the game's. Matt to check in the headset.
+      - [ ] Dashboard speedo corrupt for a few frames the first time it is looked at. Not reproduced on the
+        simulator (async shader compilation on as Matt runs: parked, head pitched down to the dials, and driving off
+        with it: dials clean from the first frame). Matt's mcla.log (starts mid-session 11:48:51) has five "VR
+        direct resolve: a STALE load: fmt 6 128x128" at once at 11:48:58, ~6 s into gameplay (02FB4000, 0307C000,
+        03110000, 03260000, 0x031xxxxx): small render-to-textures read from memory a direct resolve left unwritten,
+        bad until their next resolve writes memory. My runs (~390 logs) never have those (only the loading screen's
+        1280x720 at 06ACD000). Suspect the direct resolve's "own resolves write it whole" skip
+        (render_target_cache.cpp, MCLA_VR_DIRECT_OWN=0 turns it off) for small targets. Need Matt's steps before it
+        (camera view change, menu, restart?) to reproduce; not changed.
     - Matt (2026-10-27, goal): "create a release exe that can be a one click run for mcla, without using any mcla game
       files so that we stay legal. So it needs to ask for the iso location and then make any files it needs, using
       any bundled sdk files that it needs too." [x] Game 574ed58: `packaging/windows/package.ps1 -Version X` makes
