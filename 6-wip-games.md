@@ -2595,6 +2595,14 @@ matching VR with no gfx errors and 90fps."
       - [x] Culling flicker driving, game (after 712324d): counted the render thread's cameras: driving up to 100%
         unposed (an in-between camera matching none of the update thread's). Now posed with its frame's pose and
         noted for read-back: driving 0 unposed. Matt to check both.
+      Matt: "Trees are still not fixed ... This scene [title] shows loads of trees, nearly all rotating with head. ...
+      You fixed nothing here. The culling is fixed when driving, thats good."
+      He was right: 0b96ad8 never reached the visible foliage (output-wide target required; the scene's foliage goes
+      to a narrower multisampled target): a 5x test changed nothing, 1000x (after the fix) explodes the foliage.
+      [x] SDK (after 0b96ad8): selected by the headset projection, posed camera from the draw's own WVP (c12-c14 are
+      not it on the title: the first try turned the title's cards edge-on). Angle game c208 -> replacement: 0 / 20 /
+      -20 deg at head yaw 0 / 20 / -20 (title and gameplay), c209 unchanged. Constant diff yaw 0 vs 40: only c8-c11
+      and c208/c209 are head-dependent inputs of the shader. Matt to check.
     - Matt (2026-10-27, goal): "create a release exe that can be a one click run for mcla, without using any mcla game
       files so that we stay legal. So it needs to ask for the iso location and then make any files it needs, using
       any bundled sdk files that it needs too." [x] Game 574ed58: `packaging/windows/package.ps1 -Version X` makes
