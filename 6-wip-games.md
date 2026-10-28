@@ -2652,6 +2652,14 @@ matching VR with no gfx errors and 90fps."
       SteamVR, his settings, 72 Hz, steady: cap 2 36.0 FPS (1% low 33.6, displayed 1% low 36.0, 901/1801 slots
       skipped), cap 3 24.0, cap 1 72.0 unchanged. MCLA_VR_LOOP_TRACE=1 kept (per-stage ms of the headset loop).
       Lesson recorded: pacing/session changes must be tested on SteamVR, not the simulator.
+      Matt: "now its showing frames alternating with black frames" (layer-less skipped frames are black on SteamVR;
+      repeating the last picture was tried next) / "It should only submit frames at half the rate. SteamVR should see
+      36 frames delivered at 72hz. This is how all other games in RPCS3 did this and it worked perfectly."
+      [x] SDK (after a609353): the RPCS3 shape (VKOpenXR.cpp frame_thread: one headset frame per new game frame, the
+      runtime fills the missed slots). The loop waits for the game's next frame before its single
+      xrWaitFrame/Begin/End; the game's swap is paced by the timer at N periods (token only at cap 1). SteamVR, his
+      settings, 72 Hz: cap 2 36.0 FPS with SteamVR reporting a 27.78 ms period (it sees 36 Hz), 1% low 33.6, late
+      0%, no repeats; cap 3 24.0 (41.67 ms); cap 1 72.0 unchanged. Matt to check with OFXR.
     - Matt (2026-10-27, goal): "create a release exe that can be a one click run for mcla, without using any mcla game
       files so that we stay legal. So it needs to ask for the iso location and then make any files it needs, using
       any bundled sdk files that it needs too." [x] Game 574ed58: `packaging/windows/package.ps1 -Version X` makes
