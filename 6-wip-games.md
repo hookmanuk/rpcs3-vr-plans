@@ -2567,6 +2567,13 @@ matching VR with no gfx errors and 90fps."
       scene (the fixed one); 12595F4F04751082 / 97F837E987AC5888 hold constant values (likely the sun's shadow
       camera). The shader's only camera inputs after the fix are c15 (position) and the replaced axes. Asked Matt which
       bushes / where.
+      Matt (screenshots): "theres bushes right in front of you (image 1), and a tree 30 degreesish to the right (image
+      2) both still rotate. Culling is ok, its better than original, but the buildings culled appear and disappear
+      randomly when I move just a bit forwards or backwards." Skipping 4D181C0D99016B72/AD73CDF775982D19
+      (MCLA_VR_SKIP_VS, SDK dev switch) removes exactly those shrubs and trees: the fixed shader. Its replaced axes
+      match the game's at the view centre (c208 (-0.879, -0.474) vs the game's (-0.880, -0.475), c209 likewise); no
+      other camera input than c15. The simulator window (and MCLA_VR_GAME_FOV) cannot resolve the shrubs (~150x10 px).
+      Asked Matt: does MCLA_VR_BILLBOARD=0 look different to him; "move forwards or backwards" = the car or leaning?
     - Matt (2026-10-27, goal): "create a release exe that can be a one click run for mcla, without using any mcla game
       files so that we stay legal. So it needs to ask for the iso location and then make any files it needs, using
       any bundled sdk files that it needs too." [x] Game 574ed58: `packaging/windows/package.ps1 -Version X` makes
