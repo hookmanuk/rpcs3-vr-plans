@@ -2552,6 +2552,8 @@ matching VR with no gfx errors and 90fps."
       game's (its 1-2 degree pitch nod remains); seat after 2 s still (0.17 s learnt seats mid-swing: the wrong place).
       Driving: 0.16-0.21 px (two runs). Sway 1.2 s into accelerating: interior scale 1.04 (game) -> 0.98 (held).
       Matt to check.
+      Matt: "No, jitter is still there. Can you revert to the pre culling code?" Done: game c9fa6b4, vr_camera.cpp as
+      at d164254 (the first cockpit hold, before any culling change). Culling and the jitter both open.
     - Matt (2026-10-27, goal): "create a release exe that can be a one click run for mcla, without using any mcla game
       files so that we stay legal. So it needs to ask for the iso location and then make any files it needs, using
       any bundled sdk files that it needs too." [x] Game 574ed58: `packaging/windows/package.ps1 -Version X` makes
