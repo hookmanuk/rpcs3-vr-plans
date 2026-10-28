@@ -1260,7 +1260,10 @@ my disc, I'll let you know when its done."
   correct both ways (the game's own "shot" can capture only the HUD in stereo: use simshot). [x] e1c1da0 (local): the
   depth tiled straight from the image (tiling.comp FROM_IMAGE variants, BB_DEPTH_TILE_DIRECT=0 off): the 4 copies
   1.85 -> 0.39 ms a frame (GPU 11.97 -> 9.95 ms), headset view the same on/off. U1 fight now: 120 Hz uncapped 118-120
-  FPS (was 88-108); 90 Hz capped (BB_VR_CAP=1, as played) 90.0, 1% low 81-84, 0% late, <2% over a period. U2 (train) and U3 (pub) at 3584, 120 Hz, unprofiled:
+  FPS (was 88-108); 90 Hz capped (BB_VR_CAP=1, as played) 90.0, 1% low 81-84, 0% late, <2% over a period. U2 train
+  120 (was 109-113), U3 pub 120: all three at the 120 Hz cap at 3584 (uncapped runs show "late" from the game's
+  ~110-120 frames drifting against the headset's slots; capped there is none). Commits fcf7dd8, e1c1da0 are local on
+  community-vr (not pushed: Matt's call). U2 (train) and U3 (pub) at 3584, 120 Hz, unprofiled:
   U2 109-113 FPS (1% low ~55, ~20% of frames over 1.5 periods), U3 119.6 (the cap): U1's fight is the heaviest.
   Caution: BB_GPU_PROFILE's per-dispatch timestamps inflate single-group dispatches (U2/U3 skinning cs 8f067540
   250-290 a frame, U3 cs 7d7e7206 211: "2 ms" each in the profile; only 1-2% of them take a barrier, and U3 runs at
