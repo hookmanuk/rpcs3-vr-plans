@@ -1258,7 +1258,11 @@ my disc, I'll let you know when its done."
   reads only test it) and the copy is skipped when the address already holds that write (BB_TEXEL_SYNC_MEMO=0 off):
   4 -> 3 copies (1.85 -> 1.40 ms), GPU 10.5-10.8 -> 10.0-10.1 ms a frame (same build, memo off/on); headset views
   correct both ways (the game's own "shot" can capture only the HUD in stereo: use simshot). Next lever: tile straight
-  from the depth image into the arena (no 51 MB staging copy). Then 179 tiny dispatches (cs 8f067540, 1.2-1.4 ms) and one full-res compute
+  from the depth image into the arena (no 51 MB staging copy). U2 (train) and U3 (pub) at 3584, 120 Hz, unprofiled:
+  U2 109-113 FPS (1% low ~55, ~20% of frames over 1.5 periods), U3 119.6 (the cap): U1's fight is the heaviest.
+  Caution: BB_GPU_PROFILE's per-dispatch timestamps inflate single-group dispatches (U2/U3 skinning cs 8f067540
+  250-290 a frame, U3 cs 7d7e7206 211: "2 ms" each in the profile; only 1-2% of them take a barrier, and U3 runs at
+  the cap without the profiler). Then 179 tiny dispatches (cs 8f067540, 1.2-1.4 ms) and one full-res compute
   (cs 43b8ee5e, 0.7-0.9 ms). The test route needs one more Cross for the offline "Friend Stats" prompt
   (scratchpad unc/u1_route2.txt).
 - Details: `profiles/CUSA02343-notes.md`.
