@@ -2554,6 +2554,19 @@ matching VR with no gfx errors and 90fps."
       Matt to check.
       Matt: "No, jitter is still there. Can you revert to the pre culling code?" Done: game c9fa6b4, vr_camera.cpp as
       at d164254 (the first cockpit hold, before any culling change). Culling and the jitter both open.
+      Matt: "All of those have the jitter. I think maybe it was always there." (morning DLLs, COCKPIT SWAY on: same.) His
+      log: 72 Hz, 72.0 FPS, 0% late. Then: "things to fix... 1 - culling of building when I turn my head, without
+      breaking the existing cameras 2 - the bushes are still rotating when I rotate my head".
+      [x] 1, game ce1eaeb: the cause of a76361c's head-pitch feedback found: the game reads posed cameras back from its
+      viewports every frame (~7 callers incl. the director's camera); the hook recognised only its own last output per
+      source, so the render thread's (an older frame's) came back and was turned twice while the head moved. Now any of
+      the last 16 posed cameras maps back to the game's; with that, 0x822C08B4 posed per frame. The game's camera
+      stays still through head sweeps and pause/Back/resume (with and without); building whole at yaw 90; pose step and
+      sway checks clean; HUD 600/600. Matt to check.
+      [ ] 2: of 22 vertex shaders reading c208/c209 only 4D181C0D99016B72 carries the camera's level right/up in this
+      scene (the fixed one); 12595F4F04751082 / 97F837E987AC5888 hold constant values (likely the sun's shadow
+      camera). The shader's only camera inputs after the fix are c15 (position) and the replaced axes. Asked Matt which
+      bushes / where.
     - Matt (2026-10-27, goal): "create a release exe that can be a one click run for mcla, without using any mcla game
       files so that we stay legal. So it needs to ask for the iso location and then make any files it needs, using
       any bundled sdk files that it needs too." [x] Game 574ed58: `packaging/windows/package.ps1 -Version X` makes
