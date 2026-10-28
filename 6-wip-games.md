@@ -2424,7 +2424,13 @@ matching VR with no gfx errors and 90fps."
       out-of-box again from a fresh unzip (C:/mcla-release-test/v0.1c): setup.ps1 with the ISO installed bin/mcla.exe,
       then the launcher into gameplay on the simulator: stereo, 90.0 FPS (worst frame 12.3 ms), HUD split 600/600.
       Rebuilt after game 071694a (shadows-off camera, same name and size): out-of-box again (v0.1d) with
-      --mcla_shadows=false: 90.0 FPS, split 600/600, head-tracked at yaw 20. Ready for Matt to publish.
+      --mcla_shadows=false: 90.0 FPS, split 600/600, head-tracked at yaw 20.
+      [x] Pacing (SDK 0e6b149, game c5ea366): the capped swap waits for the headset's frame token (as Uncharted's flips
+      now do) instead of a timer at the refresh period, which drifted against the headset's frames. Parked, 90 Hz,
+      A/B pairs on one build, steady windows: 1% low 79.5 -> 81.4, frames over a period 2.4% -> 0.9%; 2x4 78 -> 83.6,
+      5.5% -> 0.6%; late 0 both. Waiting at the swap does not serialise the threads (the old token wait at the frame
+      timer did, 0517679). MCLA_VR_PACE_TOKEN=0: the timer. Zip rebuilt again and out-of-box tested (v0.1e): 90.0
+      FPS, 1% low 83.9, over a period 0.44%, late 0, split 600/600. Ready for Matt to publish.
     - Night 2026-10-27/28 performance (goal "Work on performance for mcla and uncharted throughout the night"), 2x4
       no AA parked, uncapped, DLSS off, A/B pairs each: start 76.6 FPS ->
       cleared-tile transfers as clears 83.8 -> clear quads sized from vertices 107 -> [SDK 2eeaec6] shadow atlas
