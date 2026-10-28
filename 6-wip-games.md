@@ -2582,6 +2582,19 @@ matching VR with no gfx errors and 90fps."
       differ by as much), 0-1 px at the same yaw. During a head sweep (DLSS on and off) the same. The bush pixel
       shader's other inputs are the sun (c16) and camera position (c15). One head pose per frame (it is sampled for
       each of the frame's 3 camera settings) tried: no change, reverted. Not found yet what he sees turning.
+      Matt (screenshots): "100% the trees are turning. Not all of them... I think its a LOD issue too ... the shadow on
+      it also rotates ... If I then drive right up to it then the front tree no longer rotates! Culling flicker - move
+      forwards or backwards means accelerate or reverse the car."
+      - [x] Trees, SDK 0b96ad8: the distant trees are the same foliage shader (skipping it removes tree and trunk); an
+        extreme test (5x offset) proved the path runs. abf4657 faced cards to the camera position in every pass: that
+        follows the head's movement (eyes move ~10 cm as the head turns; the simulator turns on the spot) and changed
+        the sun's shadow passes (c15 there is the shadow camera, whose fit follows the head-turned view). Now, on the
+        CPU, scene-pass draws get c208/c209 exactly as the game computes them from the camera without the head pose
+        (pose^T x posed rows c12-c14); other passes untouched; translator billboard code removed. Logged: yaw 0
+        replacement = game's; yaw 40 the game's turned, the replacement stayed. MCLA_VR_FOLIAGE=0 = game's.
+      - [x] Culling flicker driving, game (after 712324d): counted the render thread's cameras: driving up to 100%
+        unposed (an in-between camera matching none of the update thread's). Now posed with its frame's pose and
+        noted for read-back: driving 0 unposed. Matt to check both.
     - Matt (2026-10-27, goal): "create a release exe that can be a one click run for mcla, without using any mcla game
       files so that we stay legal. So it needs to ask for the iso location and then make any files it needs, using
       any bundled sdk files that it needs too." [x] Game 574ed58: `packaging/windows/package.ps1 -Version X` makes
