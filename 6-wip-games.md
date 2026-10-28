@@ -2705,6 +2705,12 @@ matching VR with no gfx errors and 90fps."
       his bin (rexgpu-xenos.dll, rexruntime.dll 22:38); the zip not rebuilt yet. Matt to check the race; if the
       marker is still wrong, the other-target HUD draws are the next lead (a race on the simulator needs a way to
       start one: not scripted yet).
+      Matt: "No this fixed nothing :(((" / "this is too much work for tonight. We'll leave it for now." The guard
+      reverted (SDK e5bd8c9, game patch commit): the code is the zip's again (c4ab055 + 5fa752f), the DLLs in his bin
+      put back to it. - [ ] Open: the race's missing route markers / the squashed black element. Next step: file
+      triggers in %TEMP% (no env on the launcher's game) for a VR_LOG_FRAME-style draw log of the next frame and an
+      eye shot, created from here while Matt sits in the race; or script a race start on the simulator. The only
+      race-specific signal so far: HUD-shader draws after the split into another target, 600/600 frames.
     - Matt (2026-10-27, goal): "create a release exe that can be a one click run for mcla, without using any mcla game
       files so that we stay legal. So it needs to ask for the iso location and then make any files it needs, using
       any bundled sdk files that it needs too." [x] Game 574ed58: `packaging/windows/package.ps1 -Version X` makes
