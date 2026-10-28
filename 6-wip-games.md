@@ -1270,6 +1270,14 @@ my disc, I'll let you know when its done."
   the cap without the profiler). Then 179 tiny dispatches (cs 8f067540, 1.2-1.4 ms) and one full-res compute
   (cs 43b8ee5e, 0.7-0.9 ms). The test route needs one more Cross for the offline "Friend Stats" prompt
   (scratchpad unc/u1_route2.txt).
+  - 2026-10-28, 90 Hz capped (BB_VR_CAP=1, as played), 3584, after fcf7dd8/e1c1da0: U1 90.0 (1% low 84), U2 90.0
+    (83-86), U3 90.0 (74.6), late 0% in all. The VR launcher's BB_VBLANK_HZ=240 makes the game's flips alternate 2
+    and 3 vblanks at 90 Hz (game pacing median 12.3 ms, stddev ~1.95 ms in all three; U3 30% of frames over a
+    headset period). Tried 360 Hz (a whole number of vblanks at 72/90/120): 90 Hz U3 stddev 0.28 ms, over a
+    period 0.3%, 1% low 83; U2 stddev 0.28 (headset numbers the same); U1 stddev 1.9 (late frames now a whole 2.8 ms
+    vblank), 1% low 82; 120 Hz U1 115.8 FPS, late 0.67%; but 72 Hz U3 1% low 68.8 -> 58, over a period 0 -> 14%.
+    720 Hz breaks U1 (45 FPS, flat screen). Mixed: launcher left at 240 (not committed). Better: a vblank of 4x the
+    headset's refresh, chosen at run time once the OpenXR session's rate is known (judder at 90 Hz needs Matt's eye).
 - Details: `profiles/CUSA02343-notes.md`.
 
 ## Dragon's Dogma: Dark Arisen (BLUS31155 v01.02)
