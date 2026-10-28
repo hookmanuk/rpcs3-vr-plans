@@ -1296,6 +1296,12 @@ my disc, I'll let you know when its done."
   Anything else the game draws in the centre 12% of the HUD goes far with it (none seen in U1 aiming). Not pushed
   (Matt's call); needs his headset look. The per-draw split (the reticle is one of ~22 draws of the one HUD vertex
   shader fadcd6fe) was not needed.
+  Matt: "the HUD change worked, but now in the options menu the central part of the HUD is at a further distance
+  than the rest of it! The distance change should only apply when in aiming mode" (the pause menu sits in the HUD's
+  centre). The game's main view's x scale (CAMLOG, U1 boat): 1.3032 idle, 1.3032 in the pause menu, 2.4142 with L2
+  held (the aim zoom). [x] community-vr (local, after ca4ef2c): the reticle layer only while Camera::GameXScale() >
+  BB_VR_RETICLE_XSCALE (default 1.8); otherwise the HUD stays whole on the near quad. Built 23:11, not run (Matt:
+  "when done just let me test"). U2/U3 thresholds unmeasured.
 - Details: `profiles/CUSA02343-notes.md`.
 
 ## Dragon's Dogma: Dark Arisen (BLUS31155 v01.02)
