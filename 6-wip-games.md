@@ -1257,8 +1257,10 @@ my disc, I'll let you know when its done."
   serial of their last GPU write (the depth only when a draw writes depth or stencil: the lighting passes between the
   reads only test it) and the copy is skipped when the address already holds that write (BB_TEXEL_SYNC_MEMO=0 off):
   4 -> 3 copies (1.85 -> 1.40 ms), GPU 10.5-10.8 -> 10.0-10.1 ms a frame (same build, memo off/on); headset views
-  correct both ways (the game's own "shot" can capture only the HUD in stereo: use simshot). Next lever: tile straight
-  from the depth image into the arena (no 51 MB staging copy). U2 (train) and U3 (pub) at 3584, 120 Hz, unprofiled:
+  correct both ways (the game's own "shot" can capture only the HUD in stereo: use simshot). [x] e1c1da0 (local): the
+  depth tiled straight from the image (tiling.comp FROM_IMAGE variants, BB_DEPTH_TILE_DIRECT=0 off): the 4 copies
+  1.85 -> 0.39 ms a frame (GPU 11.97 -> 9.95 ms), headset view the same on/off. U1 fight now: 120 Hz uncapped 118-120
+  FPS (was 88-108); 90 Hz capped (BB_VR_CAP=1, as played) 90.0, 1% low 81-84, 0% late, <2% over a period. U2 (train) and U3 (pub) at 3584, 120 Hz, unprofiled:
   U2 109-113 FPS (1% low ~55, ~20% of frames over 1.5 periods), U3 119.6 (the cap): U1's fight is the heaviest.
   Caution: BB_GPU_PROFILE's per-dispatch timestamps inflate single-group dispatches (U2/U3 skinning cs 8f067540
   250-290 a frame, U3 cs 7d7e7206 211: "2 ms" each in the profile; only 1-2% of them take a barrier, and U3 runs at
