@@ -2620,6 +2620,17 @@ matching VR with no gfx errors and 90fps."
       me?" [x] VR page TREE CARDS: FACE YOU (default; the translator's per-card facing, switched per draw by c208.w)
       / FIXED (the game camera's axes). Live (vr_foliage). Both checked at yaw 90 and -40 (noaa): drawn normally,
       HUD 600/600. Matt to check.
+      Matt: "ok great facing you is perfect, so lets delete the setting and always use that." Done (facing always).
+    - Matt (2026-10-28): "1/2 or 1/3 frame rate doesn't work properly. It hitches when it should be able to sustain the
+      frame rate fine" (fpsVR: 31 FPS at 72 Hz, GPU 3.3 ms, reprojection 80%) / "Try with 72hz. Neither 36fps nor 18fps
+      were hit, frame rates were lower with CPU maxing out." His log at cap 2: 1% low 24-25 of 36, late up to 9%.
+      [x] SDK (after c6dcb00's): with a cap the game's swap waited on its own timer and the headset loop slept its
+      own N-1 periods; they drifted, so headset frames came due with no new game frame. Now the swap waits for the
+      loop's token at every cap, and the loop waits the N-1 periods (one xrWaitFrame each; then to the Nth display
+      time) before the token and head pose. Simulator (SIMXR_HZ=72 sets the simulator's rate; preview_fps is only
+      the window), his settings: cap 2 36.0 FPS (1% low 34.7, 900/1800 slots skipped), cap 3 24.0 (1% low 23.1);
+      90 Hz 1x2: cap 2 44.8, cap 3 30.0 (38.7 before the per-period waits). CPU: not measured (wmic sampler gave 0;
+      the waits are a condition variable and a high-resolution timer with a 0.5 ms spin). Matt to check with OFXR.
     - Matt (2026-10-27, goal): "create a release exe that can be a one click run for mcla, without using any mcla game
       files so that we stay legal. So it needs to ask for the iso location and then make any files it needs, using
       any bundled sdk files that it needs too." [x] Game 574ed58: `packaging/windows/package.ps1 -Version X` makes
