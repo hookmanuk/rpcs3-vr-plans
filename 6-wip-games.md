@@ -2527,6 +2527,19 @@ matching VR with no gfx errors and 90fps."
       600/600, 85.3 vs 86.8 FPS at yaw 90. Ruled out first: noocclusion/noumbra/nopvs, LoadAllCityPages/nocitypaging
       (game switches, MCLA_DEV_SWITCHES). Smear: the holes were where it showed; a 0-90 degree head sweep after the fix
       has no trails. No colour clear added (not reproduced without the holes). Matt to check both in the headset.
+      Matt: "This doesn't work properly. The whole world feels like its juddering very slightly (probably due to my own
+      small head movement). Also there are flickers where the buildings are culled or not culled, as well as flickers
+      where the whole scene moves hundreds of pixels and then back." / "You could try just applying the one extra
+      camera change the culling actually looks at, instead of all 6" / "Just do them all in the correct order, if you
+      think that will keep my VR view unchanged".
+      Reverted (97fc431). Logging what it matched: only 0x822C08B4 (88/s), the render thread setting the main viewport
+      from the update thread's unposed copy before culling and drawing; it was given the newest update-thread pose (a
+      frame off the picture: judder, edge flicker, jumps). Posing the six update-thread settings (one by one, and all
+      seven with 0x8230BEA8) did not fix the building. [x] Game a76361c: 0x822C08B4 gets the posed camera of the frame
+      that viewport was built with (FramePose: matched on axes and position, the w column can be NaN, which is why a
+      first match log found nothing). Simulator: building whole at yaw 90; 9.7 degree pose step: image and submitted
+      pose change on the same frame and hold (-59 px); sway 75 +- 10 degrees, 64 frames: no frame drops the building;
+      HUD 600/600. Matt to check in the headset.
     - Matt (2026-10-27, goal): "create a release exe that can be a one click run for mcla, without using any mcla game
       files so that we stay legal. So it needs to ask for the iso location and then make any files it needs, using
       any bundled sdk files that it needs too." [x] Game 574ed58: `packaging/windows/package.ps1 -Version X` makes
