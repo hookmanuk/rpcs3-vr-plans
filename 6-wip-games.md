@@ -2603,6 +2603,19 @@ matching VR with no gfx errors and 90fps."
       not it on the title: the first try turned the title's cards edge-on). Angle game c208 -> replacement: 0 / 20 /
       -20 deg at head yaw 0 / 20 / -20 (title and gameplay), c209 unchanged. Constant diff yaw 0 vs 40: only c8-c11
       and c208/c209 are head-dependent inputs of the shader. Matt to check.
+      Matt: "Nope, zero difference. Still trees rotate everywhere with my head." (His session ran the fixed DLL:
+      verified by timestamps.) Rethought: the cards' orientation was never what he saw. The game re-renders each tree
+      impostor's PICTURE every frame (~60 entries a frame) from the camera's look direction (sub_8230BC38(entry, dir):
+      probe at head yaw 40: every entry's dir = the posed camera's back (-0.203, 0.073, -0.977) while the game's was
+      (0.474, 0.055, -0.879)); in VR that is the head's direction, so every tree's picture (and its shading) was
+      redrawn from wherever the head pointed. [x] Game 9c37dee: a direction equal to the posed back/forward is replaced by
+      the game camera's (the sun's ~1/frame shadow-picture directions left). Knob sweep (direction forced straight
+      down): the shrubs across the road became flat green patches seen from above, so the pictures come from exactly
+      this direction. Same-pose on/off stills differ little at 25-55 deg (a round shrub from another azimuth looks
+      alike in a still; it is the continuous re-render in motion he sees). Full-size eye capture tool (MCLA_VR_EYE_SHOT)
+      used throughout; the simulator window could not resolve any of this. The CPU c208/c209 override (world-fixed
+      cards) stays. Matt to check; if trees at the sides look edge-on, face the cards to the eye per card (the earlier
+      translator code, 2f04664) on top of this.
     - Matt (2026-10-27, goal): "create a release exe that can be a one click run for mcla, without using any mcla game
       files so that we stay legal. So it needs to ask for the iso location and then make any files it needs, using
       any bundled sdk files that it needs too." [x] Game 574ed58: `packaging/windows/package.ps1 -Version X` makes
