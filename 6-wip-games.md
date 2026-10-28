@@ -2643,6 +2643,15 @@ matching VR with no gfx errors and 90fps."
       [x] Reset (game, after ed3086b's patch): --reset-settings puts mcla.toml aside (mcla.toml.reset-<n>) before it
       is read; VR page RESET TO DEFAULTS (always enabled) restarts with it. Tested on a copy. His toml was set back
       to 2x4 by hand first (backup mcla.toml.bak-2026-10-28-3x5).
+      Matt: "NO. IT STILL DOESNT WORK IN STEAMVR. TEST IN STEAMVR FOR REAL LIFE." Tested on SteamVR (the active
+      runtime; no simulator): cap 2 reproduced at 9.8 FPS. A per-stage loop trace found the headset thread stuck in
+      the skip-wait after its first frame: OpenXR forbids a second xrWaitFrame before the previous frame's
+      xrBeginFrame, and SteamVR blocks that call for good; the simulator does not enforce it, which is why every
+      cap build measured perfectly there and failed in the headset. [x] SDK (after 614d274): skipped frames are
+      xrWaitFrame + xrBeginFrame + xrEndFrame with no layers (the runtime / frame gen fills them); no sleeps.
+      SteamVR, his settings, 72 Hz, steady: cap 2 36.0 FPS (1% low 33.6, displayed 1% low 36.0, 901/1801 slots
+      skipped), cap 3 24.0, cap 1 72.0 unchanged. MCLA_VR_LOOP_TRACE=1 kept (per-stage ms of the headset loop).
+      Lesson recorded: pacing/session changes must be tested on SteamVR, not the simulator.
     - Matt (2026-10-27, goal): "create a release exe that can be a one click run for mcla, without using any mcla game
       files so that we stay legal. So it needs to ask for the iso location and then make any files it needs, using
       any bundled sdk files that it needs too." [x] Game 574ed58: `packaging/windows/package.ps1 -Version X` makes
