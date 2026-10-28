@@ -2616,6 +2616,10 @@ matching VR with no gfx errors and 90fps."
       used throughout; the simulator window could not resolve any of this. The CPU c208/c209 override (world-fixed
       cards) stays. Matt to check; if trees at the sides look edge-on, face the cards to the eye per card (the earlier
       translator code, 2f04664) on top of this.
+      Matt: "ok, that works. yes the caveat isn't great though. Can you add a vr option for this method or facing
+      me?" [x] VR page TREE CARDS: FACE YOU (default; the translator's per-card facing, switched per draw by c208.w)
+      / FIXED (the game camera's axes). Live (vr_foliage). Both checked at yaw 90 and -40 (noaa): drawn normally,
+      HUD 600/600. Matt to check.
     - Matt (2026-10-27, goal): "create a release exe that can be a one click run for mcla, without using any mcla game
       files so that we stay legal. So it needs to ask for the iso location and then make any files it needs, using
       any bundled sdk files that it needs too." [x] Game 574ed58: `packaging/windows/package.ps1 -Version X` makes
