@@ -2660,6 +2660,20 @@ matching VR with no gfx errors and 90fps."
       xrWaitFrame/Begin/End; the game's swap is paced by the timer at N periods (token only at cap 1). SteamVR, his
       settings, 72 Hz: cap 2 36.0 FPS with SteamVR reporting a 27.78 ms period (it sees 36 Hz), 1% low 33.6, late
       0%, no repeats; cap 3 24.0 (41.67 ms); cap 1 72.0 unchanged. Matt to check with OFXR.
+    - Matt (2026-10-28): "everything works now! The only issue is the game still looks really low res, even at the 20GB
+      setting. Everything just looks blurry still, or pixelated. Its like the source pixels are bigger than they should
+      be." / "It looks bad with MSAA or no MSAA" / "The edges of buildings in the distance look way more stepped than
+      they should, like there's not enough pixels rendered" / "the HUD looks high res, just the game low res".
+      Sizes in his logs were right (3x5: 3840x3600 an eye rendered, swapchain 7680x3600, HUD 3840x3600; the eye shot
+      has single-pixel detail on the ground). Cause: SDK 4cc339e (2026-10-27, the frame cap) rendered the eyes 1.15x
+      wider (MCLA_VR_OVERSCAN, "for head turns") whenever the cap is above 1 or the game runs under 80% of the
+      refresh: both true in every run of his tonight ("slow frames (30 FPS at 72 Hz): rendering wider"). The runtime
+      shows the middle 87% of the picture, so each pixel covers 1.15x more of the panel in each direction (32% fewer
+      pixels on it) at every size, MSAA or not; the HUD is its own quad layer at full size, so it stayed sharp. [x] SDK
+      5fa752f (game c4ab055, patch): no overscan (MCLA_VR_OVERSCAN=1.15 for the old behaviour); the slow-frames test
+      against the capped rate (it logged 36 FPS at 72 Hz as slow). Head turns at a low frame rate may show the
+      frame's edge again (the runtime's reprojection; the reason it was added). Matt to check the sharpness in the
+      headset.
     - Matt (2026-10-27, goal): "create a release exe that can be a one click run for mcla, without using any mcla game
       files so that we stay legal. So it needs to ask for the iso location and then make any files it needs, using
       any bundled sdk files that it needs too." [x] Game 574ed58: `packaging/windows/package.ps1 -Version X` makes
