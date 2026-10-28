@@ -2574,6 +2574,14 @@ matching VR with no gfx errors and 90fps."
       match the game's at the view centre (c208 (-0.879, -0.474) vs the game's (-0.880, -0.475), c209 likewise); no
       other camera input than c15. The simulator window (and MCLA_VR_GAME_FOV) cannot resolve the shrubs (~150x10 px).
       Asked Matt: does MCLA_VR_BILLBOARD=0 look different to him; "move forwards or backwards" = the car or leaning?
+      Matt: "No, you work out how to see them. Can't you take a screenshot of the final image?" Done: SDK dev capture
+      MCLA_VR_EYE_SHOT (the picture sent to the headset, both eyes, 6400x3600 at his settings; scratchpad eyeshot.py,
+      yawshots.sh). Full-size captures of the shrubs behind the planter across the road, yaw 15-36 in 3 degree steps,
+      aligned on the planter wall: original (MCLA_VR_BILLBOARD=0), the fix, and a world-fixed-axes test all show the
+      same shrubs; relative to the wall they move <=11 px over 10 degrees in all three (perspective; buildings' parts
+      differ by as much), 0-1 px at the same yaw. During a head sweep (DLSS on and off) the same. The bush pixel
+      shader's other inputs are the sun (c16) and camera position (c15). One head pose per frame (it is sampled for
+      each of the frame's 3 camera settings) tried: no change, reverted. Not found yet what he sees turning.
     - Matt (2026-10-27, goal): "create a release exe that can be a one click run for mcla, without using any mcla game
       files so that we stay legal. So it needs to ask for the iso location and then make any files it needs, using
       any bundled sdk files that it needs too." [x] Game 574ed58: `packaging/windows/package.ps1 -Version X` makes
