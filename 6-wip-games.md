@@ -2515,6 +2515,18 @@ matching VR with no gfx errors and 90fps."
       body, pitch) is learnt when the car has stood still for 0.5 s, per car; heading kept (look left/right), only
       inside the car looking along it (not bumper, chase, look-back). Head tracking unchanged (yaw 25 / pitch -15).
       Matt to try.
+    - Matt (2026-10-28): "If we look sideways, the buildings are culled and missing walls. ... You can see this at the
+      start of driving by just looking left 90 degrees, there should be a full building there. Using the right
+      joystick to turn your head the culled items are rendered. So the code exists to cull based on direction, can you
+      implement this for the free head look from HMD too? Also when the world is culled the last drawn thing there
+      blurs over frames, theres no clear to stop that happening."
+      [x] Game (after d164254): the camera hook posed only its two callers; the game sets the same (unposed) camera into
+      its viewports from ~6 other places a frame (0x822E87EC, 0x822E893C, 0x822E8984, 0x822E8A04, 0x822FB4E8,
+      0x8233AC08; mcla_vr_camera_log), and the culling ran with those. Now a setting of the frame's unposed camera gets
+      the posed one. Simulator yaw 90: Hollywood Auto whole (was a shell with sky through it); yaw 0 unchanged, HUD
+      600/600, 85.3 vs 86.8 FPS at yaw 90. Ruled out first: noocclusion/noumbra/nopvs, LoadAllCityPages/nocitypaging
+      (game switches, MCLA_DEV_SWITCHES). Smear: the holes were where it showed; a 0-90 degree head sweep after the fix
+      has no trails. No colour clear added (not reproduced without the holes). Matt to check both in the headset.
     - Matt (2026-10-27, goal): "create a release exe that can be a one click run for mcla, without using any mcla game
       files so that we stay legal. So it needs to ask for the iso location and then make any files it needs, using
       any bundled sdk files that it needs too." [x] Game 574ed58: `packaging/windows/package.ps1 -Version X` makes
