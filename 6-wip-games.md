@@ -2540,6 +2540,18 @@ matching VR with no gfx errors and 90fps."
       first match log found nothing). Simulator: building whole at yaw 90; 9.7 degree pose step: image and submitted
       pose change on the same frame and hold (-59 px); sway 75 +- 10 degrees, 64 frames: no frame drops the building;
       HUD 600/600. Matt to check in the headset.
+      Matt: "woah this is even worse! After I reset the camera, moving my head up and down slightly moves it loads up and
+      down, and also forwards and backwards! It stops after a while, but in completely the wrong place. Also the world
+      still jitters." Reverted (ea08252): giving the render thread's viewport a posed camera most likely fed the head
+      pose back into the game's camera (the game reads cameras back from viewports). Culling still open: needs a way
+      to cull with the posed camera without the viewport keeping it (e.g. posed only around the culling, then the
+      game's camera put back), and a test with head movement after a recentre.
+      Jitter: the cockpit hold (d164254, on by default) shook the car's roof against the camera while driving (frame-to-
+      frame step 0.5-0.9 px, max 2-3 px, one 60 px jump; game 0.09-0.12). Pitch from the body (exact or filtered) or a
+      filtered place correction all shook it. [x] Game 4b964a8: only the place is taken out, exactly; rotation is the
+      game's (its 1-2 degree pitch nod remains); seat after 2 s still (0.17 s learnt seats mid-swing: the wrong place).
+      Driving: 0.16-0.21 px (two runs). Sway 1.2 s into accelerating: interior scale 1.04 (game) -> 0.98 (held).
+      Matt to check.
     - Matt (2026-10-27, goal): "create a release exe that can be a one click run for mcla, without using any mcla game
       files so that we stay legal. So it needs to ask for the iso location and then make any files it needs, using
       any bundled sdk files that it needs too." [x] Game 574ed58: `packaging/windows/package.ps1 -Version X` makes
