@@ -2631,6 +2631,18 @@ matching VR with no gfx errors and 90fps."
       the window), his settings: cap 2 36.0 FPS (1% low 34.7, 900/1800 slots skipped), cap 3 24.0 (1% low 23.1);
       90 Hz 1x2: cap 2 44.8, cap 3 30.0 (38.7 before the per-period waits). CPU: not measured (wmic sampler gave 0;
       the waits are a condition variable and a high-resolution timer with a 0.5 ms spin). Matt to check with OFXR.
+      Matt: "That didn't work for me" / "I can't even launch anymore at 3x5. I guess this is too intensive? We need
+      a way to reset to defaults". His logs: the 3x5 runs were not crashes (the c0000409 in the event log is the
+      hard-exit after "Window closing" on every close); his 2x4 cap-2 run at 20:13 ran at 9.8 FPS with the GPU idle
+      (103 ms frames, GPU 0.00 ms). Cause: the loop slept a period AND called xrWaitFrame per skipped frame; SteamVR's
+      xrWaitFrame blocks a period itself, so each skipped frame took two and the game (on the loop's token) stalled.
+      The simulator returns xrWaitFrame at once, which is why it measured well. [x] SDK ed3086b: xrWaitFrame alone
+      per skipped frame, until the display time N-1 periods on, a sleep only when the call came back early or gave
+      no new frame. Simulator 72 Hz 2x4: cap 2 36.0 (1% low 35.2), cap 3 24.0 (1% low 23.7). Untested on SteamVR:
+      Matt to check. 3x5 itself ran 45 s on the simulator (10 GB of targets).
+      [x] Reset (game, after ed3086b's patch): --reset-settings puts mcla.toml aside (mcla.toml.reset-<n>) before it
+      is read; VR page RESET TO DEFAULTS (always enabled) restarts with it. Tested on a copy. His toml was set back
+      to 2x4 by hand first (backup mcla.toml.bak-2026-10-28-3x5).
     - Matt (2026-10-27, goal): "create a release exe that can be a one click run for mcla, without using any mcla game
       files so that we stay legal. So it needs to ask for the iso location and then make any files it needs, using
       any bundled sdk files that it needs too." [x] Game 574ed58: `packaging/windows/package.ps1 -Version X` makes
