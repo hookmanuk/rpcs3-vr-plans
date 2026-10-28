@@ -2432,8 +2432,19 @@ matching VR with no gfx errors and 90fps."
       the game's own noshadows mask 0x61E0 does the same). [x] Game 1eced90: those were held to 30 a second by
       PaceUnlimitedSwap (meant for logo/loading loops): no hold within 200 ms of the frame limiter running: shadows
       off now 144 swaps a second, 71 posed frames (from 38). The game's own "noshadows" developer switch crashes at
-      load (guest access violation): not usable. Open: the alternation itself (a re-presented 2D image every other
-      swap with the phase mask cleared). Shadows
+      load (guest access violation): not usable. [x] The alternation (game 071694a): not a re-present. The update
+      thread sets the frame's camera twice, from the camera object (sub_8233AF30, return 0x8233B438) and again in the
+      sun-shadow phase (sub_823120C8, 0x82312D3C, our only pose point); with the phase gone the camera went unposed,
+      the frame failed the head-tracked FOV test and went to the headset flat (two viewports, one with a stale pose: every
+      other frame). Now posed at 0x8233B438 too; a camera the game reads back from the posed viewport (half of those
+      calls) is turned from its source, not again (first try doubled the yaw). Found with a swap stack trace (both
+      kinds of frame from the same render-thread stack, sub_82305E38 never draws again on its own) and per-bit phase
+      masks (0x60 cleared: every frame flat). Simulator: shadows off 143.7 FPS uncapped (2x4 no AA 144.5) with every
+      frame split (was 300 of 600), 90 Hz capped at the default 2x3: 88.9 head-tracked FPS, late 1.0%; yaw 20 and
+      (-20, 10, 15) shots match shadows on, which is unchanged (shot difference 0.6, noise); title flat as before.
+      Also: clearing only phase 0x20 gives 139 FPS at 2x4 (not offered). SDK c0b8d92: VULKAN_GPU_TIMING works again
+      (query resets moved out of render passes; two slots a stamp for multiview), but it costs ~60% of the frame rate.
+      Stencil bit transfers skipped (VULKAN_SKIP_STENCIL_TRANSFERS): no gain (115-118 both), not a cost. Shadows
       on unchanged (every frame split, 115-119 FPS at 2x4). Also: the CPU extent estimate (clear quads) now runs only
       for D3D's clear quad shader.
       - Matt (2026-10-27): "How do I run high res? I tried x=3 and y=6 but it crashed my whole pc..." / "it didn't
