@@ -2411,9 +2411,10 @@ matching VR with no gfx errors and 90fps."
     - [ ] Matt: DLSS smears on its own (separate issue, open). Matt (2026-10-28): "DLSS smear is most visible on
       green trees, you likely need to drive to find them." SDK 95b288b (game 2533a17): DLSS's per-draw motion matched
       a draw to last frame's draw at the same place among its key's draws (shaders, buffers, index count). Every
-      instance of one model (trees, lamps) shares a key, and trees sway (their world matrices change each frame,
-      parked: fronds and trunks move, a pillar beside them does not), so when culling changes the set drawn the
-      same place held another tree: its motion was the distance between the two. Measured on a drive past palms
+      instance of one model (trees, lamps) shares a key; when culling changes the set drawn, the same place holds
+      another instance, and if the draw moved at all its motion was the distance between the two. Parked, palms sway
+      (fronds and trunks change frame to frame, a pillar beside them does not) and ~15% of draws change world matrix
+      each frame; that the palms are among them is a guess, not checked. Measured on a drive past palms
       and hedges (route.sh, DLAA): ~5-6 draws a frame driving matched to an instance over 1 m away (1.4% of moving
       draws). Now an unmoved draw takes the depth's camera motion, else the key's draw nearest it within 5 m, else
       none. Window-size simulator bursts did not show the smear itself (no sharpness dips in either build), so this
