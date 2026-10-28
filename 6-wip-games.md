@@ -2442,6 +2442,16 @@ matching VR with no gfx errors and 90fps."
       DEFAULT (NGX's per mode, K for DLAA-Balanced on 310.9), K, J (transformer), M, L (second transformer), F, E
       (CNN); cvar vr_dlss_model, live (features made again 16 frames on). --vr_dlss_model=M reached NGX as preset 13.
       Changing it from the menu not tested (scripted menu navigation).
+      Zip rebuilt with 87b2ccc/7b546aa and out-of-box tested again (v0.1g): setup OK, runtime DLL identical to the
+      tested build, 90.0 FPS, HUD split 600/600.
+    - Matt (2026-10-28): "There's a quit game menu item in the options, but it just hangs the game. Instead can we add
+      a restart game option in the VR menu, which should become active if your new resolution is different to the
+      original resolution, or you've changed MSAA. It should quit the game and restart it." [x] Game d89375a: VR page
+      row RESTART GAME, enabled (row enabled flag) when vr_resolution or MsaaOff() differs from their values when the
+      menu was first made; pressing it saves the settings, starts the same exe with the same command line and ends
+      this process (TerminateProcess: the orderly quit is what hung). QUIT GAME removed. Built; not tried: scripted
+      Start shows the pause camera but no menu UI on the simulator (never worked scripted). Matt to try. Not in the
+      zip yet.
     - Matt (2026-10-27, goal): "create a release exe that can be a one click run for mcla, without using any mcla game
       files so that we stay legal. So it needs to ask for the iso location and then make any files it needs, using
       any bundled sdk files that it needs too." [x] Game 574ed58: `packaging/windows/package.ps1 -Version X` makes
