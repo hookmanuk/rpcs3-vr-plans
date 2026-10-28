@@ -2422,8 +2422,26 @@ matching VR with no gfx errors and 90fps."
       Cost none: parked uncapped 2x4 DLAA 95.1/96.4 old vs 95.0/94.1 new; 1x2 DLSS 1.85x 134.0/132.9 vs 136.2/134.6.
       Not ruled out: vertex-shader wind sway (no motion for it); preset is NGX's default (K on 310.9). Matt to check
       trees in the headset.
-      Release zip rebuilt with it (mcla-vr-0.1-win64.zip, 2026-10-28 09:25, SDK lib identical to the tested build);
-      the out-of-box run was not repeated for this SDK-only change.
+      Release zip rebuilt with it (2026-10-28 09:25) and out-of-box tested from a fresh unzip (v0.1f): setup built
+      bin/mcla.exe from the ISO in 56 s, launcher into gameplay on the simulator, 90.0 FPS (worst 12.4 ms), HUD
+      split 600/600, head-tracked at yaw 20.
+      Matt (2026-10-28): "That hedge you drove too earlier was where the smearing happens. It happens when you turn
+      your head left and right." The drive does not repeat (car and traffic differ per run; another frame rate drives
+      elsewhere), so the hedge could not be reached for a parked head sweep. Found instead: [x] SDK 87b2ccc (game
+      7b546aa): DLSS's depth and camera were taken at the frame's first scene resolve, which follows the game's
+      depth prepass (338 of ~1580 scene draws; skipping the draws after it leaves only fog and the minimap). So DLSS
+      had the prepass's depth (without whatever the prepass leaves out, typically alpha-tested foliage), and the
+      visible draws' own motion was stored after the compute that reads it (never used). A frame has three scene
+      resolves (after 338, 1570, 1571 draws), all with one camera; now the last with the first's camera, learnt from
+      the last frame (one compute a frame; one frame without depth at the menu-to-game change). Cost none: 2x4 DLAA
+      parked, A/B one build: MCLA_VR_DEPTH_TAKE=first 92.8/94.5, new 94.7/96.5 FPS. Gameplay at yaw 20 and the
+      title as before, HUD split 600/600. Palms at the start do not smear on a head sweep with either (sweep/still
+      sharpness 1.05 / 1.07), so the hedge result is not shown. Matt to check the hedge in the headset (A/B:
+      MCLA_VR_DEPTH_TAKE=first).
+    - Matt (2026-10-28): "Add a choice of DLSS model to the VR options too". [x] Same commits: VR page "DLSS MODEL":
+      DEFAULT (NGX's per mode, K for DLAA-Balanced on 310.9), K, J (transformer), M, L (second transformer), F, E
+      (CNN); cvar vr_dlss_model, live (features made again 16 frames on). --vr_dlss_model=M reached NGX as preset 13.
+      Changing it from the menu not tested (scripted menu navigation).
     - Matt (2026-10-27, goal): "create a release exe that can be a one click run for mcla, without using any mcla game
       files so that we stay legal. So it needs to ask for the iso location and then make any files it needs, using
       any bundled sdk files that it needs too." [x] Game 574ed58: `packaging/windows/package.ps1 -Version X` makes
