@@ -2674,6 +2674,22 @@ matching VR with no gfx errors and 90fps."
       against the capped rate (it logged 36 FPS at 72 Hz as slow). Head turns at a low frame rate may show the
       frame's edge again (the runtime's reprojection; the reason it was added). Matt to check the sharpness in the
       headset.
+      Matt: "Ok this is better." / "Speedo is still very glitchy, if you look at it and move your head, or accelerate,
+      then the rpm line keeps moving around. Run through SteamVR to replicate." SteamVR (headset on the desk, his
+      flow by pad file: Start to free roam, pause, Back, Start, RB to the cockpit; `speedo.sh`), 3x5 no AA cap 2: 20
+      full-size eye shots parked and accelerating, and the simulator (`speedosim.sh`, the same flow, the real pose
+      swept yaw +-15 and pitch +-10 at 0.3 Hz, then accelerating): in every picture sent to the runtime the needles
+      sit on their pivots and the dials stay whole (ss4_*_zoom.png); the 128x128 STALE load of his log reproduced
+      on both (02F70000 / 02EDC000, before and after the bursts) with nothing visible on the dials. Matt: "They
+      look much cleaner than what I see in the HMD" (the eye shots are before SteamVR's compositor; at cap 2 it
+      synthesises every other frame) then "It looks fine here." Closed; the dial backlight going from orange to dim
+      white ~2 s after the throttle (SteamVR and simulator alike) is not checked against the flat game.
+    - Matt (2026-10-28): "Let's just do a release as is." Zip rebuilt: `package.ps1 -Version 0.1` (run with
+      `C:\Program Files (x86)\Microsoft Visual Studio\Installer` on PATH: vcvars64 wants vswhere.exe there),
+      game c4ab055 + SDK 5fa752f (the installed SDK's rexruntime.dll 21:22), mcla-vr-0.1-win64.zip 169 MB, 21:56.
+      Out-of-box from a fresh unzip (C:/mcla-release-test/v01f, deleted after): setup.ps1 with the ISO built and
+      installed bin/mcla.exe; the launcher on the simulator at 72 Hz, defaults (2x3 no AA, cap off): free roam in
+      stereo with the HUD, 71.5 FPS, 1% low 57.5, late 0.67%. Game and SDK not pushed (Matt's call).
     - Matt (2026-10-27, goal): "create a release exe that can be a one click run for mcla, without using any mcla game
       files so that we stay legal. So it needs to ask for the iso location and then make any files it needs, using
       any bundled sdk files that it needs too." [x] Game 574ed58: `packaging/windows/package.ps1 -Version X` makes
