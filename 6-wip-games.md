@@ -2408,7 +2408,19 @@ matching VR with no gfx errors and 90fps."
       instead of -20 to -25%, sharp at the stop. Checked and ruled out first: SteamVR reprojection (menus only),
       previous-frame image blends as in Sonic / Killzone (trace: no screen copy read before it is rewritten),
       overscan, pose mismatch. Matt to check.
-    - [ ] Matt: DLSS smears on its own (separate issue, open).
+    - [ ] Matt: DLSS smears on its own (separate issue, open). Matt (2026-10-28): "DLSS smear is most visible on
+      green trees, you likely need to drive to find them." SDK 95b288b (game 2533a17): DLSS's per-draw motion matched
+      a draw to last frame's draw at the same place among its key's draws (shaders, buffers, index count). Every
+      instance of one model (trees, lamps) shares a key, and trees sway (their world matrices change each frame,
+      parked: fronds and trunks move, a pillar beside them does not), so when culling changes the set drawn the
+      same place held another tree: its motion was the distance between the two. Measured on a drive past palms
+      and hedges (route.sh, DLAA): ~5-6 draws a frame driving matched to an instance over 1 m away (1.4% of moving
+      draws). Now an unmoved draw takes the depth's camera motion, else the key's draw nearest it within 5 m, else
+      none. Window-size simulator bursts did not show the smear itself (no sharpness dips in either build), so this
+      is the measured mechanism, not a seen fix. Interior, traffic and pedestrians clean driving with DLSS 1.85x.
+      Cost none: parked uncapped 2x4 DLAA 95.1/96.4 old vs 95.0/94.1 new; 1x2 DLSS 1.85x 134.0/132.9 vs 136.2/134.6.
+      Not ruled out: vertex-shader wind sway (no motion for it); preset is NGX's default (K on 310.9). Matt to check
+      trees in the headset.
     - Matt (2026-10-27, goal): "create a release exe that can be a one click run for mcla, without using any mcla game
       files so that we stay legal. So it needs to ask for the iso location and then make any files it needs, using
       any bundled sdk files that it needs too." [x] Game 574ed58: `packaging/windows/package.ps1 -Version X` makes
