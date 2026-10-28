@@ -2690,6 +2690,21 @@ matching VR with no gfx errors and 90fps."
       Out-of-box from a fresh unzip (C:/mcla-release-test/v01f, deleted after): setup.ps1 with the ISO built and
       installed bin/mcla.exe; the launcher on the simulator at 72 Hz, defaults (2x3 no AA, cap off): free roam in
       stereo with the HUD, 71.5 FPS, 1% low 57.5, late 0.67%. Game and SDK not pushed (Matt's call).
+    - Matt (2026-10-28, from the release unzip C:/mcla-vr-0.1-win64, logs in bin/logs): "I started an actual race and I
+      think there are supposed to be HUD elements showing me where to go, but theres just a tiny squashed vertical
+      black element (to the right of the clock tower in this screenshot)" / "you won't be able to replicate it, can
+      you fix it from logs??" His mcla_002.log: no new warnings in the race (from the Warp_SharpAngle_Cinematically
+      warp at 22:30); the HUD stats change: "HUD draws after the split to another target" 0 in free roam (his first
+      minute, every run of mine), 600 of 600 frames in the race (the HUD movie shader drawing into a target other than
+      the split's: a render-to-texture, drawn normally; not acted on). The squash: the foliage-card override
+      (command_processor.cpp, vs 4D181C0D99016B72 / AD73CDF775982D19) rewrote c208/c209 for every draw of those
+      shaders in a head-tracked pass, assuming the game's level axes; a card with a vertical axis (a checkpoint
+      marker drawn with the same shader, presumably) had it flattened. [x] SDK 1a4b71f (game 4ba924c, patch): the
+      override only when the game's own c208.y and c209.y are within 0.1 k of 0 (foliage); other cards keep the game's
+      constants (no facing either). Title foliage unchanged on the simulator (2x4, yaw 0 / -30). The DLLs copied into
+      his bin (rexgpu-xenos.dll, rexruntime.dll 22:38); the zip not rebuilt yet. Matt to check the race; if the
+      marker is still wrong, the other-target HUD draws are the next lead (a race on the simulator needs a way to
+      start one: not scripted yet).
     - Matt (2026-10-27, goal): "create a release exe that can be a one click run for mcla, without using any mcla game
       files so that we stay legal. So it needs to ask for the iso location and then make any files it needs, using
       any bundled sdk files that it needs too." [x] Game 574ed58: `packaging/windows/package.ps1 -Version X` makes
