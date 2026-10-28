@@ -1284,6 +1284,18 @@ my disc, I'll let you know when its done."
     over a period 32% -> 0-0.2%; U2 90 Hz 1% low 86, stddev 0.02; U1 90 Hz stddev 1.97 -> 0.01 (1% low 84 both);
     U3 72 Hz stddev 1.95 -> 0.03 (1% low 68.8 / 67.4); U1 120 Hz 1% low 72.8 -> 96.6, late 1.11% -> 0, 17 -> 0
     frames over 1.5x. Flat play untouched (VR only), movies keep their 60 Hz path. Needs Matt's headset look.
+- Matt (2026-10-28, late): "In Uncharted the in game HUD is stretched vertically. Also the Aiming Reticule needs
+  pushing back say 10m into the scene." U1 at his boat save on the simulator (eye 1440), L2 held: the HUD layer's
+  own image (eyes dump, eye_3) shows the reticle as a tall ellipse (~22 x 36 px: 16/9) and the gun icon tall: the
+  game lays the in-game HUD out for 16:9 in the square canvas, as the menus do (2c74747), and the square HUD quad
+  stretched it. [x] ca4ef2c (community-vr, local): the HUD quad 1.4 x 0.7875 m (16:9). [x] Same commit: the reticle
+  on a quad of its own BB_VR_RETICLE_M ahead (default 10 m; 0 = off): the HUD's centre box (BB_VR_RETICLE_BOX of
+  the canvas's width and height, default 0.12) copied into a fourth swapchain and shown there at the same angular
+  size, the box cleared (transparent) in the HUD. Simulator composites with L2 held: the ring round, in both eyes
+  at the same place (|disparity| under 3 px; the ammo counter on the near HUD keeps its 7 px), ammo box in shape.
+  Anything else the game draws in the centre 12% of the HUD goes far with it (none seen in U1 aiming). Not pushed
+  (Matt's call); needs his headset look. The per-draw split (the reticle is one of ~22 draws of the one HUD vertex
+  shader fadcd6fe) was not needed.
 - Details: `profiles/CUSA02343-notes.md`.
 
 ## Dragon's Dogma: Dark Arisen (BLUS31155 v01.02)
