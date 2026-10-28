@@ -2425,7 +2425,11 @@ matching VR with no gfx errors and 90fps."
       screen (its "faster" FPS was the flat screen). [x] SDK 7c95d5e: a frame whose scene started head-tracked is
       posed (SplitFrame, OnGpuSwap); a 2D frame within two of a posed one stays off the headset. Shadows off now: the
       world head-tracked, no flicker, but only ~38 new frames a second (the game draws its scene every other swap;
-      the game's own noshadows mask 0x61E0 does the same). Open: why the game alternates with shadows off. Shadows
+      the game's own noshadows mask 0x61E0 does the same). [x] Game 1eced90: those were held to 30 a second by
+      PaceUnlimitedSwap (meant for logo/loading loops): no hold within 200 ms of the frame limiter running: shadows
+      off now 144 swaps a second, 71 posed frames (from 38). The game's own "noshadows" developer switch crashes at
+      load (guest access violation): not usable. Open: the alternation itself (a re-presented 2D image every other
+      swap with the phase mask cleared). Shadows
       on unchanged (every frame split, 115-119 FPS at 2x4). Also: the CPU extent estimate (clear quads) now runs only
       for D3D's clear quad shader.
       - Matt (2026-10-27): "How do I run high res? I tried x=3 and y=6 but it crashed my whole pc..." / "it didn't
