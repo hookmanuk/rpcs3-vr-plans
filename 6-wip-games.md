@@ -2503,6 +2503,18 @@ matching VR with no gfx errors and 90fps."
         (ps A5554D020532F984, the game's c27.x 0-0.06: barely on). The game's own developer switches have none of
         these (listed: hdr, colorexpbias, nomotionblur, nofsblur, noao, ...).
       All four on vs off in one run each: side window lum 57.7 -> 33.5, saturation 28.2 -> 16.6. Matt to try.
+    - Matt (2026-10-28): "as you accelerate and brake, the camera moves inside the car, forwards when you accelerate
+      and backwards when you brake. this cockpit camera movement should be optional, defaulted to off in options."
+      [x] Game d164254: VR page COCKPIT SWAY (vr_cockpit_sway, default off). Measured against the dashboard as drawn
+      (GPU: the scene draw nearest the camera, scale 0.04, ~1 m ahead), driving off then braking: as shipped 8.4 cm
+      and 2.1 degrees of pitch; held 0.3 cm and 0.35 degrees (simulator). How: the camera object whose update
+      (sub_822AA040) rewrites the director's camera (director + 0x1C0) is the active one; its target (+48) has the
+      body matrix at +272 (rows scaled ~2.4): the camera moves in it exactly as against the dashboard (0.476 -> 0.441
+      while the GPU saw 0.994 -> 0.960). The chassis (*(target + 28) + 16) moves under the body (camera 15 cm in it):
+      holding to it moved the interior the other way (interior 6% smaller in shots), reverted. The seat (place in the
+      body, pitch) is learnt when the car has stood still for 0.5 s, per car; heading kept (look left/right), only
+      inside the car looking along it (not bumper, chase, look-back). Head tracking unchanged (yaw 25 / pitch -15).
+      Matt to try.
     - Matt (2026-10-27, goal): "create a release exe that can be a one click run for mcla, without using any mcla game
       files so that we stay legal. So it needs to ask for the iso location and then make any files it needs, using
       any bundled sdk files that it needs too." [x] Game 574ed58: `packaging/windows/package.ps1 -Version X` makes
