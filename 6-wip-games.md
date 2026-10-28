@@ -1278,6 +1278,12 @@ my disc, I'll let you know when its done."
     vblank), 1% low 82; 120 Hz U1 115.8 FPS, late 0.67%; but 72 Hz U3 1% low 68.8 -> 58, over a period 0 -> 14%.
     720 Hz breaks U1 (45 FPS, flat screen). Mixed: launcher left at 240 (not committed). Better: a vblank of 4x the
     headset's refresh, chosen at run time once the OpenXR session's rate is known (judder at 90 Hz needs Matt's eye).
+    [x] Better still (community-vr, local, after e1c1da0): the cause is the present loop, which in VR flips only on a
+    vblank tick after the headset's frame token; now it flips as the token arrives (BB_VR_IMMEDIATE_FLIPS=0 off), at
+    any vblank rate. 240 Hz, capped, A/B on one build: U3 90 Hz stddev 1.99 -> 0.02-0.04 ms, 1% low 74.4 -> 84-86,
+    over a period 32% -> 0-0.2%; U2 90 Hz 1% low 86, stddev 0.02; U1 90 Hz stddev 1.97 -> 0.01 (1% low 84 both);
+    U3 72 Hz stddev 1.95 -> 0.03 (1% low 68.8 / 67.4); U1 120 Hz 1% low 72.8 -> 96.6, late 1.11% -> 0, 17 -> 0
+    frames over 1.5x. Flat play untouched (VR only), movies keep their 60 Hz path. Needs Matt's headset look.
 - Details: `profiles/CUSA02343-notes.md`.
 
 ## Dragon's Dogma: Dark Arisen (BLUS31155 v01.02)
