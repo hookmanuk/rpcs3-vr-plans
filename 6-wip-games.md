@@ -2478,6 +2478,31 @@ matching VR with no gfx errors and 90fps."
         1280x720 at 06ACD000). Suspect the direct resolve's "own resolves write it whole" skip
         (render_target_cache.cpp, MCLA_VR_DIRECT_OWN=0 turns it off) for small targets. Need Matt's steps before it
         (camera view change, menu, restart?) to reproduce; not changed.
+        Matt: "Start the game, open pause menu, hit select to reset the camera, change the view to cockpit view, look
+        at the Speedo. No need to drive anywhere." (RB cycles the view: cockpit, bumper, 3 chase, cockpit.) Followed
+        on the simulator (async compilation on, bursts from the first cockpit frame and from the look down): dials
+        clean, no 128x128 STALE. His log's five came in the session after RESTART GAME with RENDER SIZE 3x5 (384x640 =
+        128 x 3x5 loads); at 3x5 parked and with his flow: still not reproduced (my pipeline storage holds every
+        pipeline; his 16:19 session had "Skipping Vulkan frame presentation due to async placeholder").
+        Correction: the bush fix's "impostor" shaders BC7052E867A9F304 / FA2574DEF5EF01F5 are the sun's flare
+        sprites (drawn after the composite); removed from the fix (SDK 2f04664).
+    - Matt (2026-10-28): "The whole image has and always has looked hazy and blurry. This is probably the intention of
+      the artists, but in VR it feels bad. Are there any more post processing effects that we can make optional to
+      make the gfx look clearer like other games?"
+      [x] SDK 2f04664, game 1a3680e: DISPLAY page CAR WINDOWS (GAME / LIGHT / CLEAR), SUN GLOW, BLOOM, COLOUR GRADE
+      (all default as shipped; live). Found by the frame's draw list (VR_LOG_FRAME) and per-shader constant
+      overrides in one run (MCLA_VR_PS_CONST_FILE, time of day differs between runs). Measured on the simulator
+      against an original/original control (0.8-1.2 levels):
+      - The haze in the car is the window glass (ps F9289A8E0AD3DAE9, 7 draws, opacity c26.w = 1): faded out, the
+        side window's view mean change 14.4 levels, saturation 43.7 -> 25.2 (the orange veil); windscreen contrast
+        +12%. CAR WINDOWS scales the opacity (1 / 0.5 / 0).
+      - Sun glow (ps 10FE9CB4C0D39096, additive radial glow, c255.x): 4.5 levels looking toward the sun.
+      - Bloom (bright pass ps 347DA187A22B4B38): 0.9-1.7 levels. Colour grade (composite E5EBEFAE4D165CBA: gains
+        1.16 / 1.0 / 0.83 and 90% saturation): removes the warm cast (saturation 15.5 -> 11).
+      - Not it: the composite's blend of the half-resolution blur (already off: 0.7 vs control 0.9), distance fog
+        (ps A5554D020532F984, the game's c27.x 0-0.06: barely on). The game's own developer switches have none of
+        these (listed: hdr, colorexpbias, nomotionblur, nofsblur, noao, ...).
+      All four on vs off in one run each: side window lum 57.7 -> 33.5, saturation 28.2 -> 16.6. Matt to try.
     - Matt (2026-10-27, goal): "create a release exe that can be a one click run for mcla, without using any mcla game
       files so that we stay legal. So it needs to ask for the iso location and then make any files it needs, using
       any bundled sdk files that it needs too." [x] Game 574ed58: `packaging/windows/package.ps1 -Version X` makes
