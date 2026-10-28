@@ -1249,6 +1249,15 @@ my disc, I'll let you know when its done."
     With DLSS at eye 2560 (his settings' kind): 0.64 / 0.72 against 1.36 off, 88-90 FPS at 90 Hz, no faults.
     Needs Matt's headset check. U2 / U3 use other shaders: not checked (my U2 state, the train, is overcast: no sun
     shadows to compare; U3's is indoors).
+- Night 2026-10-28 performance (goal: "Work on performance for mcla and uncharted throughout the night"), U1 at Matt's
+  eye size 3584 (launcher settings: vr_eye_size 3584, DLSS off), the Ambushed fight, simulator: 90 Hz holds 90 FPS but
+  1% low ~53, 2-10% late; at 120 Hz the ceiling is 88-108 (steady ~89). BB_GPU_PROFILE=1: 12.2 ms GPU a frame; the
+  largest item is the depth (3584x3584 D32S8) copied into guest memory 4 times a frame for texel-buffer reads (compute
+  76dd224f, 746e3080 x3, 6a6422a9; vertex 0019120e, 58b25301): 1.82 ms. A per-write memo of those copies was tried and
+  reverted: depth is drawn between every read (still 4 a frame). Next lever: tile straight from the depth image into
+  the arena (no 51 MB staging copy). Then 179 tiny dispatches (cs 8f067540, 1.2-1.4 ms) and one full-res compute
+  (cs 43b8ee5e, 0.7-0.9 ms). The test route needs one more Cross for the offline "Friend Stats" prompt
+  (scratchpad unc/u1_route2.txt).
 - Details: `profiles/CUSA02343-notes.md`.
 
 ## Dragon's Dogma: Dark Arisen (BLUS31155 v01.02)
