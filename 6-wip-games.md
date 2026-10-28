@@ -2409,7 +2409,8 @@ matching VR with no gfx errors and 90fps."
       Final zip (2026-10-28, game 1eced90 + SDK 7c95d5e, `package.ps1 -Version 0.1`, mcla-vr-0.1-win64.zip 169 MB):
       out-of-box again from a fresh unzip (C:/mcla-release-test/v0.1c): setup.ps1 with the ISO installed bin/mcla.exe,
       then the launcher into gameplay on the simulator: stereo, 90.0 FPS (worst frame 12.3 ms), HUD split 600/600.
-      Ready for Matt to publish.
+      Rebuilt after game 071694a (shadows-off camera, same name and size): out-of-box again (v0.1d) with
+      --mcla_shadows=false: 90.0 FPS, split 600/600, head-tracked at yaw 20. Ready for Matt to publish.
     - Night 2026-10-27/28 performance (goal "Work on performance for mcla and uncharted throughout the night"), 2x4
       no AA parked, uncapped, DLSS off, A/B pairs each: start 76.6 FPS ->
       cleared-tile transfers as clears 83.8 -> clear quads sized from vertices 107 -> [SDK 2eeaec6] shadow atlas
