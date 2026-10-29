@@ -2189,6 +2189,11 @@ Details and how to run: `profiles/454107DC-notes.md`.
   of a stacked k_8_8_8_8 32x32x32 (tf2 words 80424802 05681486 7C03E01F 01280C14 00000003 00000200).
   Flat frame rate (race start, uncapped, unlocked): plume 434 FPS at 1280x720 and 2560x1440; xenos Vulkan 241 at both,
   D3D12 245 (CPU/emulation bound both).
+- [x] Highest eye size at 90 Hz (Matt's MeganeX superlight 8K, panel 3552x3840): 4x6, 5120x4320 (simulator, race, DLSS
+  off): 90.0 FPS, 0% late. 3x7 (3840x5040) also 90.0; 4x7 (5120x5040) 83; 5x5 (6400x3600) 90-91 uncapped, 1% low
+  79-84; 5x6 75-77; 6x6 65; DLSS 3x6 -> 1.5x (5760x6480) 57. The SDK's video memory estimate (Midnight Club's 1.05 GB
+  a unit of scale area) held 4x6 down to 4x5: Burnout sets 0.3 (render targets 4.9 GB at 5x6). Menu: VR EYE SIZE
+  now has 5120X3600 and 5120X4320.
 - [x] Faster: direct resolves in mode 1 (game, after 8ef7fa1, local): each tile straight into its third of the texture,
   the memory written too (mode 2, the SDK's VR default, left a stale tile: the menus' garage in the middle third; mode
   0, the EDRAM dump and copy, moved 167 Mpx an eye a frame). Simulator, race, bloom on, DLSS off, uncapped at 180 Hz:
