@@ -1395,6 +1395,16 @@ my disc, I'll let you know when its done."
   dispatch), then the same per-eye translation there. PS3 notes have no torch entry; their other per-eye fixes map to:
   sun shadows (done), water reflection (done today), grey beams (done today), height fog / haze ray (not checked on
   PS4).
+- [ ] Matt (2026-10-29, Uncharted 2), verbatim: "uncharted 2 has lots of bugs, write to wip:
+  1 - shadows move on HMD rotate
+  2 - mist moves on HMD rotate
+  3 - need to remove depth of field effect"
+  - [ ] 1. Shadows move on HMD rotate.
+  - [ ] 2. Mist moves on HMD rotate.
+  - [ ] 3. Remove the depth of field effect.
+  Not started. Leads: U1's per-eye fixes are keyed by U1 shader hashes (sun resolve 7c219ffb, torch passes 8a04b99b /
+  fe99f21a, light compute 43b8ee5e): U2's own passes are not covered (the 2026-10-26 entry: "U2 / U3 use other shaders:
+  not checked").
 - Details: `profiles/CUSA02343-notes.md`.
 
 ## Dragon's Dogma: Dark Arisen (BLUS31155 v01.02)
