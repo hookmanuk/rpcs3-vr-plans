@@ -1319,6 +1319,14 @@ my disc, I'll let you know when its done."
   [x] community-vr (local): F9 captures for a report: both eyes, the scene and the HUD as sent
   (%TEMP%/dcvr/eye_0..3.raw) and the frame's draws and camera into the log. Next: Matt presses F9 where he sees it,
   then the right eye's draws are bisected with SKIP on his capture.
+  [x] 2026-10-29 found (community-vr e7b1ce1, local): the right eye's layer of a stereo image was never cleared.
+  Runtime::ClearImage (fast-clear elimination, compute clears) cleared the guest's range, layer 0 only. At his spot
+  (walked from the checkpoint: the diagonal trunk, the big rock on the right; scratchpad unc/walk.py) with the shadow
+  resolve 7c219ffb skipped live (BB_SHADER_DEBUG_FILE, skipab.py): the left eye went fully lit (its mask cleared),
+  the right kept its shadows (mean change 4.3 = the control: an old mask), smeared after a head turn. Fixed: both eyes
+  44.6. Still head and a 20 degree head sweep there: eyes agree (0-0.05% blocks), 90.0 FPS at 90 Hz, eye 3584. His
+  exact frame was never reproduced (the old mask shows only where the resolve leaves pixels), so it needs his headset
+  look at that spot. Not pushed.
 - Details: `profiles/CUSA02343-notes.md`.
 
 ## Dragon's Dogma: Dark Arisen (BLUS31155 v01.02)
