@@ -2169,18 +2169,24 @@ Details and how to run: `profiles/454107DC-notes.md`.
   bloom and motion_blur from xerenge.conf like the launcher (51e2d93): run.sh --vr never did. VR, bloom on, 2x3,
   120 Hz simulator, race: 115-120 FPS, 1% low 84-97, late 0-1.1%. The streaks above roofs at speed in VR are the
   game's speed blur (XERENGE_NO_MOTION_BLUR does not remove it; same with and without).
-- [ ] DLSS: the bridge loads ("ready") but never evaluates: the SDK takes DLSS's depth at the scene's resolve, single
-  sampled and output sized; Burnout's scene is 2x MSAA in three tiles. Needs the guest's MSAA off and tiled depth.
-  Also needs a camera view-projection (most of Burnout's shaders carry only the object's WVP at c0: the rigid mode
-  gives DLSS an object's WVP as the camera) and per-object motion for the traffic (no world register: every draw reads
-  as unmoved, traffic would smear). No game patch for MSAA or tiling exists (Xenia's set has only the two blur ones).
-  Not worth it for speed: bloom on, simulator, race, 2x3 holds 180 FPS at 180 Hz (1% low 122-125, late 0-0.4%);
-  3x4 (3840x2880, about Matt's panel) 120 at 120 Hz (1% low 93-96); 3x5 113 at 120 Hz.
-- [ ] 60 Hz logic under 72-120 Hz frames (judder of the world's motion); plume's interpolation is plume-only (it
-  blends each draw's matrices, found by name in the translated shaders' source: xenos has no names). At 120 Hz each
-  step shows for exactly two frames (even); 72 and 90 Hz are uneven. Use 120 Hz in SteamVR. Tried
-  (reverted): the logic at 90 steps a second (timer step 833333 -> 555555 ticks, sub_8210B3C8's step length 1/90 inside
-  the logic): the race clock ran 16.1 s in 10.7 s of wall time (1.5x): it counts steps at a fixed 1/60.
+- [x] DLSS (SDK 84e820d, game 3a260d2, local): each tile's depth rows at its first colour resolve (the scissor's rows,
+  moved by the window offset into the render target: tile 1 rows 240-480 sit at 16-256), sample 0 of the 2x MSAA
+  depth (a multisampled variant of the motion pass), every tile taking the frame's camera (MCLA_VR_DLSS_TILES=1). The
+  camera: the static world's vertex shaders (C3FF17490757589F, 1A563CA9A421178A, ACB68BA117ABC107) all carry one
+  WVP, the camera's VP (MCLA_VR_CAMERA_VS); other draws' worlds from it (WVP x VP^-1), so traffic gets its own
+  motion. Setting GRAPHICS > VR DLSS (off, DLAA, upscale 1.5x / 2x; vr_dlss in xerenge.conf). Simulator, race,
+  120 Hz: DLAA 2560x2160 120 FPS (1% low 89-93), upscale 2560x2160 -> 3840x3240 120 FPS (1% low 93-105); no seams
+  at the tile rows, no ghosting in a 25 degree head sweep (zoomed crops). Needs the headset look.
+- [x] 60 Hz logic under 72-120 Hz frames: drawn between logic steps (SDK b344f54, game 8ef7fa1, local). The camera of
+  each logic state (CGtViewport::Update) is turned and moved to the frame's moment at the renderer's read (t from the
+  wall clock against the state drawn; its low end over 128 frames as t = 0: the timer runs a step a little early or
+  the state trails by most of a step); the SDK moves each moving draw from its world at the state before (paired by
+  place among the mesh's draws or nearest within 4 m) by the same t (vr::SetFrameInterpolation, keyed by swap count).
+  Simulator 90 Hz: the camera's moment advances 0.667 +- 0.016 steps a frame (min 0.61, max 0.70; without: 1, 1, 0).
+  The player car holds its place (shot-for-shot within 10 px of the run without). 120 FPS at 120 Hz, 90 at 90 with
+  DLSS. Plume's own interpolation blends each draw's matrices found by name in its shaders' source (xenos has none).
+  Tried before (reverted): the logic at 90 steps a second: the race clock ran 1.5x (it counts steps at 1/60).
+  XERENGE_VR_INTERPOLATE=0 / MCLA_VR_INTERPOLATE=0 turn it off. Needs the headset look (crash cameras, replays).
 - [x] Settings in the game's menu: Driver Details > Settings > GRAPHICS > VR EYE SIZE (2x3 2560x2160 to 3x6) and VR
   FRAME CAP (off, 1/2, 1/3), at the next start (xerenge.conf vr_resolution, vr_frame_cap).
 - [ ] Not tested on SteamVR: 2026-10-29 05:00 SteamVR ran but had no headset (xrGetSystem -35, form factor

@@ -43,6 +43,10 @@ c0-c23), `XERENGE_THREAD_DUMP` (guest threads' lr, r3-r5, r31 and the vtables of
   is black: the frame at ~0.4x, a stormy sky. Plume with bloom off adds the pixel itself. Test scripts must leave the
   variable unset, not empty. The frame log (VR_LOG_FRAME_FILE) prints each draw's texture fetch constants 0-5 and
   pixel constants c48-c63, c250-c255; --dump_shaders=DIR writes the microcode disassembly.
+- Accelerate is RT (pad file token `rt`); `up` is the d-pad and does nothing in a race (earlier "at speed" shots were the
+  rolling start).
+- DLSS and the logic-step interpolation: see 6-wip-games (MCLA_VR_DLSS_TILES, MCLA_VR_CAMERA_VS, vr::SetFrameInterpolation,
+  XERENGE_VR_INTERPLOG for the per-frame state, t and camera).
 - Movie player (main menu): object with five synchronization events at +84..+148 and wait wrappers sub_8248D1E0..
   sub_8248D240 (vtable 82056A28 +160..+176); the main thread waits on +132 (sub_8248D228 from 0x8248E8B0), the worker
   on +100 (sub_8248D1F8 from 0x8248DAC4).
