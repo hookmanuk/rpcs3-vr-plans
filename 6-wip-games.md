@@ -1381,7 +1381,14 @@ my disc, I'll let you know when its done."
   43b8ee5e's output (the half-size buffer it also reads is the AO chain 12ed77bf -> 746e3080 -> 38d8bf05). Torch-lit
   floor, both corrections at 1: 1.32 mean |log2 L/R| x100, 0.2% blocks off 15%+; light-compute correction off (his
   build then) 1.58 / 0.4%, x3 1.55 / 0.4%; sun-resolve shadow correction off 1.65 / 0.7%, x3 2.39 / 1.8%: both at their
-  minimum (community-vr 3c4e04f). Needs Matt's headset look. Skipping computes leaves the last frame's image in place in a
+  minimum (community-vr 3c4e04f). Needs Matt's headset look.
+  Matt after that build: "No the shadow is still wrong. The left eye has way more shadow than the right eye from the
+  torch." "The shadow offset per eye is just too far apart." "even your red blue screenshot shows the errors": I had
+  read the wall-aligned fringes as the timbers' parallax; the timbers sit at the wall's disparity, so they were the
+  shadows. Found: the torch's shadow is two full-screen passes into the shadow mask (vs 1bf62085, pgm 8a04b99b and
+  fe99f21a) that rebuild positions from the centre camera (buffer 0: c12/c14 ray, rows c16/c20/c24), as the sun
+  resolve did. [x] community-vr e89390d (local): per-eye copies, translation += row.x s c14. Timber wall, fringe pixels
+  (40%+ between eyes, wall aligned, 3 interleaved rounds): off 6.70%, on 2.93%, x2 3.60%. Needs Matt's headset look. Skipping computes leaves the last frame's image in place in a
   still scene: not a test. The environment's material (pgm feaf8d35) reads screen-space images: a 720x720 one at two
   alternating addresses (0x1148970000 / 0x1148bb0000, a temporal half-res buffer written by a compute: the likely
   torch light/shadow) and four 1440 ones. Next: find the compute writing the 720 buffer (log storage-image targets per
