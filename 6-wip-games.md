@@ -1375,7 +1375,8 @@ my disc, I'll let you know when its done."
   38d8bf05 (temporal reprojection), and 43b8ee5e: it rebuilds p = (u z, v z, z) from the centre ray (c26-c29) and
   takes it to world space with rows c30/c34/c38 (translation c33/c37/c41) against a light at c22-24 with a cube
   shadow; a per-eye translation (T + M (s c28, 0, 0), patched at shader emit) ran (x30 moved the light) but only on
-  the characters. Reverted (no effect on the torch). Skipping computes leaves the last frame's image in place in a
+  the characters. Matt: "Character light was wrong too": kept for that (community-vr e72a69b, local; sign and size
+  from the projection: no A/B settled it, the characters move and the pause menu stops the pass); needs his look. Skipping computes leaves the last frame's image in place in a
   still scene: not a test. The environment's material (pgm feaf8d35) reads screen-space images: a 720x720 one at two
   alternating addresses (0x1148970000 / 0x1148bb0000, a temporal half-res buffer written by a compute: the likely
   torch light/shadow) and four 1440 ones. Next: find the compute writing the 720 buffer (log storage-image targets per
