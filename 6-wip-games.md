@@ -2173,8 +2173,10 @@ Details and how to run: `profiles/454107DC-notes.md`.
   step shows for exactly two frames (even); 72 and 90 Hz are uneven. Use 120 Hz in SteamVR. Tried
   (reverted): the logic at 90 steps a second (timer step 833333 -> 555555 ticks, sub_8210B3C8's step length 1/90 inside
   the logic): the race clock ran 16.1 s in 10.7 s of wall time (1.5x): it counts steps at a fixed 1/60.
-- [ ] Settings in the game's menu (VR page), the eye size choice (only --draw_resolution_scale_x/y now).
-- [ ] Not tested on SteamVR (headset off tonight).
+- [x] Settings in the game's menu: Driver Details > Settings > GRAPHICS > VR EYE SIZE (2x3 2560x2160 to 3x6) and VR
+  FRAME CAP (off, 1/2, 1/3), at the next start (xerenge.conf vr_resolution, vr_frame_cap).
+- [ ] Not tested on SteamVR: 2026-10-29 05:00 SteamVR ran but had no headset (xrGetSystem -35, form factor
+  unavailable). Pacing must be checked there before a release (the simulator passed a cap that deadlocked on SteamVR).
 
 ## Midnight Club: Los Angeles Complete Edition (Xbox 360 545407F8, recomp: hookmanuk/mcla-recomp, not RPCS3)
 
