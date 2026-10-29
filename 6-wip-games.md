@@ -1347,8 +1347,23 @@ my disc, I'll let you know when its done."
   nearest is the light volumes' eye translation against the clip shift elsewhere). [x] community-vr b5da8f3 (local):
   F10 turns on a flash ring (both eyes of the last ~3.3 s, 384 px each), F9 then saves it to
   %TEMP%/dcvr/flashring.raw; tools/vr/flashring.py flags one-frame flashes and writes before/flash/after sheets. 90.0
-  FPS at 90 Hz with it on; a save is one ~74 ms hitch. Next: Matt's ring from that spot, then classify (culling, an
-  untextured draw, or a lighting hole) and fix.
+  FPS at 90 Hz with it on; a save is one ~74 ms hitch.
+  [x] Fixed (community-vr 9a1014d; local). His ring: large flat grey-beige shards with straight edges, one frame,
+  either eye. Live A/B on his session (dev trigger files, rings saved from my side, tools/vr/flashcount.py: one-frame
+  grey flashes of 200+ px per 3.3 s ring): normal 11, 32, 94, 72; IPD 0 0, 0; per-eye lights off and the shadow
+  correction off: still flashing (his eye). Cause: the eye clip shift was set by the headset thread every headset
+  frame from SteamVR's eye poses while the game's draws read it as they were recorded; a change between a frame's
+  depth pass and its colour pass (every mesh is drawn by both, different vertex shaders, the colour pass testing
+  equal depth) left the G-buffer's clear grey over near geometry. Never on the simulator (its poses do not move).
+  Fix: the shift changes only by more than 0.1% (never to a non-finite value), an eye distance under 1 cm from the
+  runtime keeps the last one; each change logged. Matt after: "I can't replicate it anymore"; his log: one change all
+  session (0 -> 0.029582 at the start). Not pushed.
+- Matt (2026-10-29, same spot): "I do notice that the sun bloom is different in each eye though on Nathan" (his
+  screenshot: diagonal light streaks on Nathan's back in the left eye, hardly any in the right). Live captures of
+  both eyes at the shadow correction's scale 1 / 0 / 2 / 1 / 0 / 1: Nathan was in shade in all of them, the eyes agree
+  (shirt brightness within 1-3%; no change with the scale). Not reproduced; a guess: the light shafts (translucent
+  quads in the air between the camera and Nathan, which in stereo cross him at a different place per eye: correct
+  parallax). Next time it shows: capture both eyes and skip the shaft shader to tell.
 - Details: `profiles/CUSA02343-notes.md`.
 
 ## Dragon's Dogma: Dark Arisen (BLUS31155 v01.02)
