@@ -2169,6 +2169,11 @@ Details and how to run: `profiles/454107DC-notes.md`.
   bloom and motion_blur from xerenge.conf like the launcher (51e2d93): run.sh --vr never did. VR, bloom on, 2x3,
   120 Hz simulator, race: 115-120 FPS, 1% low 84-97, late 0-1.1%. The streaks above roofs at speed in VR are the
   game's speed blur (XERENGE_NO_MOTION_BLUR does not remove it; same with and without).
+- [x] Faster: direct resolves in mode 1 (game, after 8ef7fa1, local): each tile straight into its third of the texture,
+  the memory written too (mode 2, the SDK's VR default, left a stale tile: the menus' garage in the middle third; mode
+  0, the EDRAM dump and copy, moved 167 Mpx an eye a frame). Simulator, race, bloom on, DLSS off, uncapped at 180 Hz:
+  3840x3600 an eye 113 -> 163 FPS (1% low 133), 3840x4320 140 (1% low 117), 2560x2160 180 (capped; 1% low 153);
+  DLSS 2560x2160 -> 3840x3240 155 FPS (1% low 131). Head sweep and DLSS crops clean.
 - [x] DLSS (SDK 84e820d, game 3a260d2, local): each tile's depth rows at its first colour resolve (the scissor's rows,
   moved by the window offset into the render target: tile 1 rows 240-480 sit at 16-256), sample 0 of the 2x MSAA
   depth (a multisampled variant of the motion pass), every tile taking the frame's camera (MCLA_VR_DLSS_TILES=1). The
