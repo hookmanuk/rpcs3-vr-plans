@@ -2155,7 +2155,9 @@ Details and how to run: `profiles/454107DC-notes.md`.
   all. The logic still steps at 60 Hz (the world moves in 1/60 s steps under a 90 Hz head).
 - [ ] DLSS: the bridge loads ("ready") but never evaluates: the SDK takes DLSS's depth at the scene's resolve, single
   sampled and output sized; Burnout's scene is 2x MSAA in three tiles. Needs the guest's MSAA off and tiled depth.
-- [ ] 60 Hz logic under 72-120 Hz frames (judder of the world's motion); plume's interpolation is plume-only.
+- [ ] 60 Hz logic under 72-120 Hz frames (judder of the world's motion); plume's interpolation is plume-only. Tried
+  (reverted): the logic at 90 steps a second (timer step 833333 -> 555555 ticks, sub_8210B3C8's step length 1/90 inside
+  the logic): the race clock ran 16.1 s in 10.7 s of wall time (1.5x): it counts steps at a fixed 1/60.
 - [ ] Settings in the game's menu (VR page), the eye size choice (only --draw_resolution_scale_x/y now).
 - [ ] Not tested on SteamVR (headset off tonight).
 
