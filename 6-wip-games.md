@@ -2175,7 +2175,9 @@ Details and how to run: `profiles/454107DC-notes.md`.
   bloom halos are wider). Open, small. Ruled out (xenos composite's constants, MCLA_VR_PS_CONST on FB3A19D15B918C21):
   the bloom weight (c254.y 1.5 -> 2.0 / 2.5 lifts blue as much: not it) and the colour table's coordinates (c53 as the
   half-texel remap, 31/32 + 0.5/32: no change). The table's blue axis (its slices) agrees, red and green (within a
-  slice) do not; next: the table's contents as each renderer loads them.
+  slice) do not. Plume with its grading off (XERENGE_COLOUR_GRADE=0) loses 18-47 levels in the highlights in every
+  channel; xenos keeps them in blue, so it applies the table; the gap is red and green only, about 10 levels.
+  Next: the table's contents as each renderer loads them.
 - [x] Faster: direct resolves in mode 1 (game, after 8ef7fa1, local): each tile straight into its third of the texture,
   the memory written too (mode 2, the SDK's VR default, left a stale tile: the menus' garage in the middle third; mode
   0, the EDRAM dump and copy, moved 167 Mpx an eye a frame). Simulator, race, bloom on, DLSS off, uncapped at 180 Hz:
