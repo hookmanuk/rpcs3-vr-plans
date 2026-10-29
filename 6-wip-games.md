@@ -1339,6 +1339,16 @@ my disc, I'll let you know when its done."
   rock's waterline, then falling away like a mirror image); the knob reversed (-0.5) gives 14, 14, 30, 33. No seams.
   Frame rate not A/B'd (one multiply-add in the river's pixel shader). Needs Matt's headset look. U2/U3 water not
   checked (other shaders). Not pushed.
+- [ ] Matt (2026-10-29, U1 jungle, the ruined wall past the river, three headset shots): "In this one scene theres
+  bits of the scene being shaded as grey in flashes." "its one frame quick flashes" (F9 catches the next frame, too
+  late). His shots: grey leaf shapes in the foreground plants, a large grey slab at the right eye's edge. The PS3
+  (RPCS3) notes' nearest: "Whole grey beams" (G-buffer holes from two passes' slightly different per-eye
+  projections) and the culling "grey wedges"; neither maps directly onto the PS4 port (no per-draw matrices; the
+  nearest is the light volumes' eye translation against the clip shift elsewhere). [x] community-vr b5da8f3 (local):
+  F10 turns on a flash ring (both eyes of the last ~3.3 s, 384 px each), F9 then saves it to
+  %TEMP%/dcvr/flashring.raw; tools/vr/flashring.py flags one-frame flashes and writes before/flash/after sheets. 90.0
+  FPS at 90 Hz with it on; a save is one ~74 ms hitch. Next: Matt's ring from that spot, then classify (culling, an
+  untextured draw, or a lighting hole) and fix.
 - Details: `profiles/CUSA02343-notes.md`.
 
 ## Dragon's Dogma: Dark Arisen (BLUS31155 v01.02)
