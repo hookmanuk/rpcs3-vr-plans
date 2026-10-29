@@ -1364,6 +1364,24 @@ my disc, I'll let you know when its done."
   (shirt brightness within 1-3%; no change with the scale). Not reproduced; a guess: the light shafts (translucent
   quads in the air between the camera and Nathan, which in stereo cross him at a different place per eye: correct
   parallax). Next time it shows: capture both eyes and skip the shaft shader to tell.
+- [ ] Matt (2026-10-29, U1 temple interior, his save copied to scratchpad vr/savedata_torch): "shadows from my torch
+  light here are misaligned in each eye too". Reproduced on the simulator (walk 3 s, right stick 0.5 s: Sully and
+  Nathan with torches, eye 1440): on the wall right of Nathan the texture lines up at a 10 px offset between the eyes
+  but the torch shadow's edge sits at nearly the same screen x in both (the shadow rebuilt from the centre camera's
+  ray, as the sun's was); his screenshot: a block cluster of left-brighter light where the torch falls (3.0% of blocks
+  vs 1.5%). Not found yet: which pass lights the torch on the environment. Ruled out: the light draws (853608ae
+  volumes, 3d0b0bda, b2a42acf, 47aad15c, c5f55a28, cc2d0c16, 14ab359c, b4fa3a82, 6f0e54fd: skipping each leaves the
+  torch regions unchanged), computes 746e3080 (per-eye images), 6a6422a9 (a buffer copy), 12ed77bf (SSAO),
+  38d8bf05 (temporal reprojection), and 43b8ee5e: it rebuilds p = (u z, v z, z) from the centre ray (c26-c29) and
+  takes it to world space with rows c30/c34/c38 (translation c33/c37/c41) against a light at c22-24 with a cube
+  shadow; a per-eye translation (T + M (s c28, 0, 0), patched at shader emit) ran (x30 moved the light) but only on
+  the characters. Reverted (no effect on the torch). Skipping computes leaves the last frame's image in place in a
+  still scene: not a test. The environment's material (pgm feaf8d35) reads screen-space images: a 720x720 one at two
+  alternating addresses (0x1148970000 / 0x1148bb0000, a temporal half-res buffer written by a compute: the likely
+  torch light/shadow) and four 1440 ones. Next: find the compute writing the 720 buffer (log storage-image targets per
+  dispatch), then the same per-eye translation there. PS3 notes have no torch entry; their other per-eye fixes map to:
+  sun shadows (done), water reflection (done today), grey beams (done today), height fog / haze ray (not checked on
+  PS4).
 - Details: `profiles/CUSA02343-notes.md`.
 
 ## Dragon's Dogma: Dark Arisen (BLUS31155 v01.02)
