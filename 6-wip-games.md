@@ -2163,7 +2163,14 @@ Details and how to run: `profiles/454107DC-notes.md`.
   game's speed blur (XERENGE_NO_MOTION_BLUR does not remove it; same with and without).
 - [ ] DLSS: the bridge loads ("ready") but never evaluates: the SDK takes DLSS's depth at the scene's resolve, single
   sampled and output sized; Burnout's scene is 2x MSAA in three tiles. Needs the guest's MSAA off and tiled depth.
-- [ ] 60 Hz logic under 72-120 Hz frames (judder of the world's motion); plume's interpolation is plume-only. Tried
+  Also needs a camera view-projection (most of Burnout's shaders carry only the object's WVP at c0: the rigid mode
+  gives DLSS an object's WVP as the camera) and per-object motion for the traffic (no world register: every draw reads
+  as unmoved, traffic would smear). No game patch for MSAA or tiling exists (Xenia's set has only the two blur ones).
+  Not worth it for speed: bloom on, simulator, race, 2x3 holds 180 FPS at 180 Hz (1% low 122-125, late 0-0.4%);
+  3x4 (3840x2880, about Matt's panel) 120 at 120 Hz (1% low 93-96); 3x5 113 at 120 Hz.
+- [ ] 60 Hz logic under 72-120 Hz frames (judder of the world's motion); plume's interpolation is plume-only (it
+  blends each draw's matrices, found by name in the translated shaders' source: xenos has no names). At 120 Hz each
+  step shows for exactly two frames (even); 72 and 90 Hz are uneven. Use 120 Hz in SteamVR. Tried
   (reverted): the logic at 90 steps a second (timer step 833333 -> 555555 ticks, sub_8210B3C8's step length 1/90 inside
   the logic): the race clock ran 16.1 s in 10.7 s of wall time (1.5x): it counts steps at a fixed 1/60.
 - [ ] Settings in the game's menu (VR page), the eye size choice (only --draw_resolution_scale_x/y now).
