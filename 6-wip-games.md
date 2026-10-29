@@ -2230,6 +2230,25 @@ Details and how to run: `profiles/454107DC-notes.md`.
   plume's RHI (render passes with a view mask, 2-layer targets); per-eye clip shift in the translated shaders
   (SPIR-V patch of the position output, ViewIndex); view-dependent textures by a per-eye bindless index; the camera
   hooks (burnout_vr.cpp) are renderer-independent.
+  Done 2026-10-29 (local: plume 015ae60, XenosRecomp 3a6b35e, SDK fff121f, game 691f9e8 + pacing):
+  - [x] Phase 1: the SDK's OpenXR layer on plume's own device (plume::VulkanVrHooks: the runtime's extensions,
+    multiview and timeline features, a native graphics queue kept for the headset); plume's picture copied to the
+    eyes by our command buffer on plume's queue (timeline signal); the pose taken at the frame's present on the
+    game's thread (TakeCameraPose / SetPresentPose). vr_renderer = plume (xerenge.conf) or XERENGE_VR_RENDERER.
+  - [x] Phase 2: multiview. 2-layer scene/motion/depth targets, framebuffer and pipelines with view mask 0b11,
+    resolved scene copies 2-layer, the title's shaders' stereo variants (XenosRecomp vr branch,
+    shader_common_stereo.h: SV_ViewID, 2D textures read as arrays at the eye's layer, the eye's clip shift from
+    shared bytes 320/324; caches built by tools/rebuild_plume_stereo_shaders.sh, 183 shaders, 0 failed); array views
+    for the title's draws only (video/passthrough keep 2D); post-processing off in stereo. Headset pacing by its
+    timer (MCLA_VR_PACE_TOKEN=0: the token put game, plume's present and the headset in series, 56 FPS).
+    Simulator: 2560x2160 an eye, race, 180.0 FPS at 180 Hz, 0% late; 5120x4320 (event intro screen, the 3D scene
+    behind) 180.0 at 180 Hz, 0-4% late, where xenos gave 96 uncapped. Parallax: near ground 22 px, far 1, HUD 0.
+    Head poses (yaw +-30, pitch -20, roll 15) frame the scene as xenos does. Flat plume unchanged.
+  - [ ] Next: the HUD on its own layer (it is drawn into the scene now: head-locked, zero parallax); DLSS on plume;
+    drawing between logic steps on plume (off: XERENGE_VR_INTERPOLATE=0); bloom/shrunk copies still 1-layer
+    (the left eye's bloom in both); the scripted route stuck at the event intro's Continue in some runs (a real pad
+    press when ready works on xenos; not confirmed whether plume-related). SteamVR untested.
+  - Gfx: plume VR is Matt's flatscreen renderer, so the xenos colour-table gap does not apply to it.
 - [ ] Not tested on SteamVR: 2026-10-29 05:00 SteamVR ran but had no headset (xrGetSystem -35, form factor
   unavailable). Pacing must be checked there before a release (the simulator passed a cap that deadlocked on SteamVR).
 
