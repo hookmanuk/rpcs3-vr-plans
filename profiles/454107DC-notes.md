@@ -37,6 +37,12 @@ c0-c23), `XERENGE_THREAD_DUMP` (guest threads' lr, r3-r5, r31 and the vtables of
 - Frame: scene 1280x720 2x MSAA in three predicated tiles (256 rows), resolved per tile; bloom 320 wide; composite
   vs D714DEDADAB9415A into the 1x 1280 target; HUD vs BCEC88072A5F344D / 30B5339A49CB9B5B / B2352AFC8C60D6B7 /
   D25CBA074BB11277; resolve to the frontbuffer.
+- The race HUD is drawn from the title's job loop (guest 8247C098 / 82476D88 / 824771E0, chains of 14+ frames) on
+  whichever thread takes the job: the main thread at 72-90 Hz, a worker at 120 Hz and up. The interface hooks'
+  thread-local mark (widescreen.cpp EnterInterface, from CB4FlashManager::Render and CGt2dLayer::RenderObjects)
+  therefore misses it at high rates; anything that must recognise HUD draws goes by their vertex shaders
+  (MCLA_VR_HUD_VS; plume maps them to its shader hashes, plume_vr.cpp HudVertexShader). The music panel
+  (CB4EATraxDisplay) alone draws under the mark on the main thread.
 - Bloom carries half the picture: the composite (ps FB3A19D15B918C21) is 1.17 x the scene (pixel c50.x x 0.25 over 8
   taps) + 1.5 x the bloom (320x180, ps C976E1B2F0B205DC extract then 6B97F1EC888F4E4D blur, weights pixel c56-c63).
   XERENGE_NO_BLOOM (any value, also empty: getenv) skips the setup that sets those weights, and on xenos the bloom term

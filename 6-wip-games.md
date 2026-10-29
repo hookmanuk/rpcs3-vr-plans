@@ -2244,10 +2244,20 @@ Details and how to run: `profiles/454107DC-notes.md`.
     Simulator: 2560x2160 an eye, race, 180.0 FPS at 180 Hz, 0% late; 5120x4320 (event intro screen, the 3D scene
     behind) 180.0 at 180 Hz, 0-4% late, where xenos gave 96 uncapped. Parallax: near ground 22 px, far 1, HUD 0.
     Head poses (yaw +-30, pitch -20, roll 15) frame the scene as xenos does. Flat plume unchanged.
-  - [ ] Next: the HUD on its own layer (it is drawn into the scene now: head-locked, zero parallax); DLSS on plume;
-    drawing between logic steps on plume (off: XERENGE_VR_INTERPOLATE=0); bloom/shrunk copies still 1-layer
-    (the left eye's bloom in both); the scripted route stuck at the event intro's Continue in some runs (a real pad
-    press when ready works on xenos; not confirmed whether plume-related). SteamVR untested.
+  - [x] Phase 3 (game 72bfa92, 06b24a3; SDK 9f41f13): the HUD on its own layer. At the frame's first draw by a HUD
+    vertex shader (MCLA_VR_HUD_VS, the xenos list, mapped to plume's shader hashes through its cache) the scene
+    (both eyes) is copied to the headset's screen and the target cleared for the HUD, which goes to the SDK's HUD
+    layer (the world-fixed sheet, as on xenos). Matt 2026-10-29: "Work out why the HUD only draws correctly on a 2d
+    layer at low frame rates and fix high rates": the first version split at the interface hooks' thread-local mark
+    (widescreen.cpp), and Burnout's race HUD is drawn from the title's job loop (guest 8247C098/82476D88) on
+    whichever thread takes the job: the main thread itself at 72-90 Hz (marked), a worker at 120 Hz and up (not
+    marked: no split, the HUD head-locked in the scene). By the shader every posed frame splits at 72 and 180 Hz;
+    the HUD stays in its box under yaw +-30, pitch -20, roll 15 (bo/hsB180_sheet.png, hsB72_sheet.png); 179 FPS
+    at 180 Hz with the layer on or off (XERENGE_VR_HUD_LAYER=0 keeps it in the scene).
+  - [ ] Next: DLSS on plume; drawing between logic steps on plume (off: XERENGE_VR_INTERPOLATE=0); bloom/shrunk
+    copies still 1-layer (the left eye's bloom in both); the scripted route's A press does not leave the event
+    intro's Continue at 180 Hz (it does at 72 Hz, same build, 2026-10-29 10:50; a real pad press when ready works on
+    xenos): to check whether a press is lost at high frame rates. SteamVR untested.
   - Gfx: plume VR is Matt's flatscreen renderer, so the xenos colour-table gap does not apply to it.
 - [ ] Not tested on SteamVR: 2026-10-29 05:00 SteamVR ran but had no headset (xrGetSystem -35, form factor
   unavailable). Pacing must be checked there before a release (the simulator passed a cap that deadlocked on SteamVR).
