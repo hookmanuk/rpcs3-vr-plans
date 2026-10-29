@@ -2172,7 +2172,10 @@ Details and how to run: `profiles/454107DC-notes.md`.
 - [x] Gfx against the flat game, measured (scratchpad bo/gfxmatch.py: the VR left eye aligned onto the flat frame by
   edge correlation, colours on the same pixels; race start, bloom on): VR against flat xenos the same; xenos against
   plume (Matt's flatscreen) red and green 9-17 levels lower in the midtones, blue level (slightly cooler: plume's
-  bloom halos are wider, the likely source). Open, small: matching plume's warmth would mean following its bloom.
+  bloom halos are wider). Open, small. Ruled out (xenos composite's constants, MCLA_VR_PS_CONST on FB3A19D15B918C21):
+  the bloom weight (c254.y 1.5 -> 2.0 / 2.5 lifts blue as much: not it) and the colour table's coordinates (c53 as the
+  half-texel remap, 31/32 + 0.5/32: no change). The table's blue axis (its slices) agrees, red and green (within a
+  slice) do not; next: the table's contents as each renderer loads them.
 - [x] Faster: direct resolves in mode 1 (game, after 8ef7fa1, local): each tile straight into its third of the texture,
   the memory written too (mode 2, the SDK's VR default, left a stale tile: the menus' garage in the middle third; mode
   0, the EDRAM dump and copy, moved 167 Mpx an eye a frame). Simulator, race, bloom on, DLSS off, uncapped at 180 Hz:
