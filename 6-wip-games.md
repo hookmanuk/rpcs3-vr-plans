@@ -2128,9 +2128,9 @@ this similar to midnight club. It should have all the same features, multiview, 
 matching the flatscreen. Work all night to make burnout as optimal as possible performance too."
 Details and how to run: `profiles/454107DC-notes.md`.
 
-- Branches `vr` in `H:\Xerenge` (game, from main 6fa1354) and `H:\Xerengeexglue-sdk` (SDK, shipa-2/rexglue-xerenge
-  from main 5d0edd5): local, not pushed. Build: `H:\Xerengeuild_game.cmd` (the game build compiles the SDK's runtime:
-  VS 18 Insiders' vcvars + clang 20.1.8 at H:	ools, `-DREXGLUE_USE_VULKAN=ON`). Do not run `scripts/setup-sdk.sh`
+- Branches `vr` in `H:\Xerenge` (game, from main 6fa1354) and `H:\Xerenge\rexglue-sdk` (SDK, shipa-2/rexglue-xerenge
+  from main 5d0edd5): local, not pushed. Build: `H:\Xerenge\build_game.cmd` (the game build compiles the SDK's runtime:
+  VS 18 Insiders' vcvars + clang 20.1.8 at H:\tools, `-DREXGLUE_USE_VULKAN=ON`). Do not run `scripts/setup-sdk.sh`
   (it resets the SDK checkout to origin). Run: `rexglue/run.sh --vr` (SteamVR running).
 - [x] The MCLA SDK VR layer ported onto Xerenge's SDK (OpenXR, multiview stereo with right-eye twins, HUD layer,
   headset pacing, DLSS bridge, eye shot, pad file): MCLA's VR diff applied by 3-way merge, its base's shared-memory
@@ -2153,6 +2153,14 @@ Details and how to run: `profiles/454107DC-notes.md`.
 - [x] Frame rate: vsync off, logic on the wall clock in VR. Simulator, race start: 72.0 at 72 Hz, 90.0 at 90 Hz
   (1% low 78), 120.0 at 120 Hz at 2560x2160 an eye (1% low 92-95); 3840x3600 an eye 113 FPS at 120 Hz. DLSS off for
   all. The logic still steps at 60 Hz (the world moves in 1/60 s steps under a 90 Hz head).
+- [x] Picture darker and overcast than the flat game (stormy sky, ~0.4x the brightness): my test scripts only. They
+  exported XERENGE_NO_BLOOM empty, which counts as set: the game's sky-bloom and blur setup (sub_821439E8,
+  sub_82173190, sub_8215B068) is skipped, the blur weights (pixel c56-c63) stay 0 and the composite (FB3A19D15B918C21:
+  1.17 x scene + 1.5 x bloom) adds a black bloom. Plume with bloom off adds the pixel itself instead (bloom in place),
+  so it stayed bright. With bloom really on, xenos and plume match (race start, and at speed). A VR start now takes
+  bloom and motion_blur from xerenge.conf like the launcher (51e2d93): run.sh --vr never did. VR, bloom on, 2x3,
+  120 Hz simulator, race: 115-120 FPS, 1% low 84-97, late 0-1.1%. The streaks above roofs at speed in VR are the
+  game's speed blur (XERENGE_NO_MOTION_BLUR does not remove it; same with and without).
 - [ ] DLSS: the bridge loads ("ready") but never evaluates: the SDK takes DLSS's depth at the scene's resolve, single
   sampled and output sized; Burnout's scene is 2x MSAA in three tiles. Needs the guest's MSAA off and tiled depth.
 - [ ] 60 Hz logic under 72-120 Hz frames (judder of the world's motion); plume's interpolation is plume-only. Tried
