@@ -2121,6 +2121,44 @@ Frame rate, free-roam drive at 440 uncapped: 61-62 FPS. Tried, no gain: the 640x
 shadow map) at 0.4 (59-60). RSX thread profile while driving is flat per-draw work (run_FIFO 7 %, emit_geometry 7 %,
 vertex copies 5 %): no single cost to cut.
 
+## Burnout Revenge (Xbox 360 454107DC, recomp: H:\Xerenge = hookmanuk/Xerenge, not RPCS3)
+
+Matt 2026-10-29: "We have burnout revenge downloaded in H:\Xerenge too. Create a vr branch and then add a VR renderer to
+this similar to midnight club. It should have all the same features, multiview, DLSS, high refresh rates, and gfx
+matching the flatscreen. Work all night to make burnout as optimal as possible performance too."
+Details and how to run: `profiles/454107DC-notes.md`.
+
+- Branches `vr` in `H:\Xerenge` (game, from main 6fa1354) and `H:\Xerengeexglue-sdk` (SDK, shipa-2/rexglue-xerenge
+  from main 5d0edd5): local, not pushed. Build: `H:\Xerengeuild_game.cmd` (the game build compiles the SDK's runtime:
+  VS 18 Insiders' vcvars + clang 20.1.8 at H:	ools, `-DREXGLUE_USE_VULKAN=ON`). Do not run `scripts/setup-sdk.sh`
+  (it resets the SDK checkout to origin). Run: `rexglue/run.sh --vr` (SteamVR running).
+- [x] The MCLA SDK VR layer ported onto Xerenge's SDK (OpenXR, multiview stereo with right-eye twins, HUD layer,
+  headset pacing, DLSS bridge, eye shot, pad file): MCLA's VR diff applied by 3-way merge, its base's shared-memory
+  files taken whole, 7 conflicts resolved. Xerenge's SDK builds Vulkan off on Windows: now on. Burnout runs VR on the
+  xenos plugin's Vulkan backend (plume, its default renderer, has no multiview: its RHI has no view masks).
+- [x] Head tracking: RenderWare cameras. The renderer reads the camera's frame (RwFrameGetMatrix from sub_82175350:
+  0x82175374/0x821753A0/0x82175614, the matrix and its LTM) and gets a copy turned by the head; the game's camera
+  keeps its own (posing the frame fed the head into the chase camera). The headset's field of view through
+  RwCameraSetViewWindow (one caller, 0x82353C14). Simulator, real pose: yaw +-30, pitch -20, roll 15 correct, HUD
+  world-fixed.
+- [x] SDK: the draw's matrices configurable (vr_world_constant -1 = none/rigid, vr_wvp_constant 0,
+  vr_constants_transposed: Burnout's gObjToProjMatrix c0, clip.i = dot(c_i, pos)); HUD vertex shaders BCEC88072A5F344D,
+  30B5339A49CB9B5B, B2352AFC8C60D6B7, D25CBA074BB11277 (MCLA_VR_HUD_VS): race HUD split 600/600 frames.
+- [x] Three slices of different places in the headset: Burnout draws its scene in three predicated tiles; the VR
+  direct resolves wrote each at the texture's origin. Off for Burnout (MCLA_VR_DIRECT_RESOLVE=0).
+- [x] Main-menu freeze on xenos (flat and VR, ~50% of boots; never on plume): a lost wakeup in the movie player's frame
+  handshake (main thread waits on event +132 via sub_8248D228, worker on +100 via sub_8248D1F8; found with a guest
+  thread dump of lr + the object's vtable). Both waits limited to 250 ms on xenos: 6/6 boots through (the limit has
+  not had to fire since: the timed wait changes the scheduling).
+- [x] Frame rate: vsync off, logic on the wall clock in VR. Simulator, race start: 72.0 at 72 Hz, 90.0 at 90 Hz
+  (1% low 78), 120.0 at 120 Hz at 2560x2160 an eye (1% low 92-95); 3840x3600 an eye 113 FPS at 120 Hz. DLSS off for
+  all. The logic still steps at 60 Hz (the world moves in 1/60 s steps under a 90 Hz head).
+- [ ] DLSS: the bridge loads ("ready") but never evaluates: the SDK takes DLSS's depth at the scene's resolve, single
+  sampled and output sized; Burnout's scene is 2x MSAA in three tiles. Needs the guest's MSAA off and tiled depth.
+- [ ] 60 Hz logic under 72-120 Hz frames (judder of the world's motion); plume's interpolation is plume-only.
+- [ ] Settings in the game's menu (VR page), the eye size choice (only --draw_resolution_scale_x/y now).
+- [ ] Not tested on SteamVR (headset off tonight).
+
 ## Midnight Club: Los Angeles Complete Edition (Xbox 360 545407F8, recomp: hookmanuk/mcla-recomp, not RPCS3)
 
 Matt (2026-10-24): "we have another game to convert to VR. H:\ROMs\midnightclub contains my own ripped iso. I have
