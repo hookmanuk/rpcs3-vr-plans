@@ -2177,7 +2177,9 @@ Details and how to run: `profiles/454107DC-notes.md`.
   half-texel remap, 31/32 + 0.5/32: no change). The table's blue axis (its slices) agrees, red and green (within a
   slice) do not. Plume with its grading off (XERENGE_COLOUR_GRADE=0) loses 18-47 levels in the highlights in every
   channel; xenos keeps them in blue, so it applies the table; the gap is red and green only, about 10 levels.
-  Next: the table's contents as each renderer loads them.
+  With the composite's bloom weight 0 in both (plume by a dev hook, since reverted; xenos MCLA_VR_PS_CONST) the gap
+  stays (red -13..-16, green -9..-13, blue 0): not bloom. Left: the scene before the table, or the table's sampling
+  (both read the same table bytes). Sharpening is off in plume unless the launcher sets it.
 - [x] Faster: direct resolves in mode 1 (game, after 8ef7fa1, local): each tile straight into its third of the texture,
   the memory written too (mode 2, the SDK's VR default, left a stale tile: the menus' garage in the middle third; mode
   0, the EDRAM dump and copy, moved 167 Mpx an eye a frame). Simulator, race, bloom on, DLSS off, uncapped at 180 Hz:
