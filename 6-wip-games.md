@@ -2187,6 +2187,10 @@ Details and how to run: `profiles/454107DC-notes.md`.
   against the table's 134 136 145, the fit is x and y one texel low; v + 1/32 gives 131 136 (red, green match). Not
   the instruction (no offsets), not 3D tiling (that decode is nonsense). Next: the xenos texture load / array sampling
   of a stacked k_8_8_8_8 32x32x32 (tf2 words 80424802 05681486 7C03E01F 01280C14 00000003 00000200).
+  The fit is not a constant shift: per grey level the in-slice coordinate xenos used runs 0.3-1.9 texels low. The
+  table changes over time (dumped per logged frame, VR_DUMP_FETCH2, dev, reverted): menus neutral (0.5 -> 128 128
+  128), race warm (134 136 144); xenos's race output (121 125 146) matches neither: not simply a stale copy.
+  Next: read back the host image xenos uploaded for it.
   Flat frame rate (race start, uncapped, unlocked): plume 434 FPS at 1280x720 and 2560x1440; xenos Vulkan 241 at both,
   D3D12 245 (CPU/emulation bound both).
 - [x] Highest eye size at 90 Hz (Matt's MeganeX superlight 8K, panel 3552x3840): 4x6, 5120x4320 (simulator, race, DLSS
@@ -2219,6 +2223,13 @@ Details and how to run: `profiles/454107DC-notes.md`.
   XERENGE_VR_INTERPOLATE=0 / MCLA_VR_INTERPOLATE=0 turn it off. Needs the headset look (crash cameras, replays).
 - [x] Settings in the game's menu: Driver Details > Settings > GRAPHICS > VR EYE SIZE (2x3 2560x2160 to 3x6) and VR
   FRAME CAP (off, 1/2, 1/3), at the next start (xerenge.conf vr_resolution, vr_frame_cap).
+- [ ] Matt 2026-10-29: "Can you build a plume VR render engine too with multiview. The whole reason for choosing this
+  recomp was that it has it's own render engine not reliant on xenos EDRAM slowdowns. Keep the existing xenos vr path
+  too so we can switch between them." Flat: plume 434 FPS against xenos 241 (CPU bound both). Plan: OpenXR on plume's
+  Vulkan device (the SDK layer's OnDeviceCreated takes xenos's VulkanDevice: an overload on raw handles); multiview in
+  plume's RHI (render passes with a view mask, 2-layer targets); per-eye clip shift in the translated shaders
+  (SPIR-V patch of the position output, ViewIndex); view-dependent textures by a per-eye bindless index; the camera
+  hooks (burnout_vr.cpp) are renderer-independent.
 - [ ] Not tested on SteamVR: 2026-10-29 05:00 SteamVR ran but had no headset (xrGetSystem -35, form factor
   unavailable). Pacing must be checked there before a release (the simulator passed a cap that deadlocked on SteamVR).
 
