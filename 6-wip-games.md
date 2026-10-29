@@ -1364,7 +1364,7 @@ my disc, I'll let you know when its done."
   (shirt brightness within 1-3%; no change with the scale). Not reproduced; a guess: the light shafts (translucent
   quads in the air between the camera and Nathan, which in stereo cross him at a different place per eye: correct
   parallax). Next time it shows: capture both eyes and skip the shaft shader to tell.
-- [ ] Matt (2026-10-29, U1 temple interior, his save copied to scratchpad vr/savedata_torch): "shadows from my torch
+- [x] Matt (2026-10-29, U1 temple interior, his save copied to scratchpad vr/savedata_torch): "shadows from my torch
   light here are misaligned in each eye too". Reproduced on the simulator (walk 3 s, right stick 0.5 s: Sully and
   Nathan with torches, eye 1440): on the wall right of Nathan the texture lines up at a 10 px offset between the eyes
   but the torch shadow's edge sits at nearly the same screen x in both (the shadow rebuilt from the centre camera's
@@ -1376,7 +1376,12 @@ my disc, I'll let you know when its done."
   takes it to world space with rows c30/c34/c38 (translation c33/c37/c41) against a light at c22-24 with a cube
   shadow; a per-eye translation (T + M (s c28, 0, 0), patched at shader emit) ran (x30 moved the light) but only on
   the characters. Matt: "Character light was wrong too": kept for that (community-vr e72a69b, local; sign and size
-  from the projection: no A/B settled it, the characters move and the pause menu stops the pass); needs his look. Skipping computes leaves the last frame's image in place in a
+  from the projection: no A/B settled it, the characters move and the pause menu stops the pass); needs his look.
+  It is the torch's fix too: the draw log now names each compute's storage targets, and the walls' material reads
+  43b8ee5e's output (the half-size buffer it also reads is the AO chain 12ed77bf -> 746e3080 -> 38d8bf05). Torch-lit
+  floor, both corrections at 1: 1.32 mean |log2 L/R| x100, 0.2% blocks off 15%+; light-compute correction off (his
+  build then) 1.58 / 0.4%, x3 1.55 / 0.4%; sun-resolve shadow correction off 1.65 / 0.7%, x3 2.39 / 1.8%: both at their
+  minimum (community-vr 3c4e04f). Needs Matt's headset look. Skipping computes leaves the last frame's image in place in a
   still scene: not a test. The environment's material (pgm feaf8d35) reads screen-space images: a 720x720 one at two
   alternating addresses (0x1148970000 / 0x1148bb0000, a temporal half-res buffer written by a compute: the likely
   torch light/shadow) and four 1440 ones. Next: find the compute writing the 720 buffer (log storage-image targets per
