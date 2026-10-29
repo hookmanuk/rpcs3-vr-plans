@@ -2180,6 +2180,15 @@ Details and how to run: `profiles/454107DC-notes.md`.
   With the composite's bloom weight 0 in both (plume by a dev hook, since reverted; xenos MCLA_VR_PS_CONST) the gap
   stays (red -13..-16, green -9..-13, blue 0): not bloom. Left: the scene before the table, or the table's sampling
   (both read the same table bytes). Sharpening is off in plume unless the launcher sets it.
+  Found: xenos samples the colour table one texel low on its red and green axes (x and y within a slice). The table
+  (fetch 2, 32 tiled 32x32 slices, 8in32, swizzle zyxw; dumped from guest memory, scratchpad bo/lut.bin, decoded
+  in bo/lutsim.py) applied with standard trilinear sampling to plume's ungraded frame reproduces plume's graded one
+  within 1 level in red and green. Xenos with the lookup forced to grey v (c53 = v, c53.w = 1): 0.5 gives 121 125 146
+  against the table's 134 136 145, the fit is x and y one texel low; v + 1/32 gives 131 136 (red, green match). Not
+  the instruction (no offsets), not 3D tiling (that decode is nonsense). Next: the xenos texture load / array sampling
+  of a stacked k_8_8_8_8 32x32x32 (tf2 words 80424802 05681486 7C03E01F 01280C14 00000003 00000200).
+  Flat frame rate (race start, uncapped, unlocked): plume 434 FPS at 1280x720 and 2560x1440; xenos Vulkan 241 at both,
+  D3D12 245 (CPU/emulation bound both).
 - [x] Faster: direct resolves in mode 1 (game, after 8ef7fa1, local): each tile straight into its third of the texture,
   the memory written too (mode 2, the SDK's VR default, left a stale tile: the menus' garage in the middle third; mode
   0, the EDRAM dump and copy, moved 167 Mpx an eye a frame). Simulator, race, bloom on, DLSS off, uncapped at 180 Hz:
