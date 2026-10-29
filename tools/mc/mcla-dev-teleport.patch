@@ -1,0 +1,152 @@
+diff --git a/src/vr_camera.cpp b/src/vr_camera.cpp
+index 513db56..011b352 100644
+--- a/src/vr_camera.cpp
++++ b/src/vr_camera.cpp
+@@ -12,6 +12,10 @@
+ #include <chrono>
+ #include <cstdlib>
+ #include <cstring>
++#include <filesystem>
++
++#define NOMINMAX
++#include <windows.h>
+ #include <map>
+ #include <mutex>
+ #include <string>
+@@ -307,6 +311,126 @@ extern "C" REX_FUNC(sub_8230BC38) {
+   __imp__sub_8230BC38(ctx, base);
+ }
+ 
++// Development: %TEMP%\mcla_tp holding "forward right up" (metres, along the car) moves the car's body matrix once
++// (the file is removed); every request logs the car's position.
++void DevTeleport(uint8_t* base, uint32_t car) {
++  static uint32_t frame = 0;
++  if (++frame % 30) {
++    return;
++  }
++  static const std::filesystem::path file = std::filesystem::temp_directory_path() / "mcla_tp";
++  std::error_code ec;
++  if (!std::filesystem::exists(file, ec)) {
++    return;
++  }
++  float d[3] = {}, radius = 0.f;
++  bool absolute = false;
++  if (FILE* f = std::fopen(file.string().c_str(), "r")) {
++    absolute = std::fgetc(f) == '@';  // "@ x y z radius": to world x z, y above it
++    if (!absolute) {
++      std::rewind(f);
++    }
++    std::fscanf(f, "%f %f %f %f", &d[0], &d[1], &d[2], &radius);  // radius: every copy of the position within it
++    std::fclose(f);
++  }
++  std::filesystem::remove(file, ec);
++  uint8_t* m = base + car;
++  if (!(std::abs(LoadFloat(m + 48)) < 1e5f && std::abs(LoadFloat(m + 56)) < 1e5f)) {
++    REXLOG_INFO("dev teleport: car {:08X} not a matrix", car);
++    return;
++  }
++  if (d[0] == 0.f && d[1] == 0.f && d[2] == 999.f) {  // scan guest memory for the position (x y z, big endian)
++    const float want[3] = {LoadFloat(m + 48), LoadFloat(m + 52), LoadFloat(m + 56)};
++    MEMORY_BASIC_INFORMATION info{};
++    for (uint8_t* p = base; p < base + 0x100000000ull; p += info.RegionSize) {
++      if (!VirtualQuery(p, &info, sizeof(info))) {
++        break;
++      }
++      if (info.State != MEM_COMMIT || (info.Protect & (PAGE_NOACCESS | PAGE_GUARD)) ||
++          !(info.Protect & (PAGE_READWRITE | PAGE_READONLY | PAGE_EXECUTE_READWRITE))) {
++        continue;
++      }
++      uint8_t* end = static_cast<uint8_t*>(info.BaseAddress) + info.RegionSize - 12;
++      for (uint8_t* q = static_cast<uint8_t*>(info.BaseAddress); q < end; q += 4) {
++        if (std::abs(LoadFloat(q) - want[0]) < 0.5f && std::abs(LoadFloat(q + 4) - want[1]) < 0.5f &&
++            std::abs(LoadFloat(q + 8) - want[2]) < 0.5f) {
++          REXLOG_INFO("dev teleport: position at {:08X}", uint32_t(q - base));
++        }
++      }
++    }
++    return;
++  }
++  float camera[16];  // the game's camera (cockpit view: inside the player's car), not the target's matrix
++  {
++    std::scoped_lock lock{g_pose_mutex};
++    std::memcpy(camera, g_update_game, sizeof(camera));
++  }
++  float rows[3][3];
++  for (int r = 0; r < 3; ++r) {
++    float length = 0.f;
++    for (int c = 0; c < 3; ++c) {
++      rows[r][c] = camera[r * 4 + c];
++      length += rows[r][c] * rows[r][c];
++    }
++    for (float& v : rows[r]) {
++      v /= std::sqrt(length);
++    }
++  }
++  float position[3];
++  if (radius > 0.f) {  // every x y z within the radius in 0xBC000000-0xBFFFFFFF moved the same
++    float move[3], want[3];
++    for (int c = 0; c < 3; ++c) {
++      want[c] = camera[12 + c];
++      move[c] = -d[0] * rows[2][c] + d[1] * rows[0][c] + d[2] * rows[1][c];
++    }
++    if (absolute) {
++      move[0] = d[0] - want[0];
++      move[1] = d[1];
++      move[2] = d[2] - want[2];
++    }
++    uint32_t moved = 0;
++    MEMORY_BASIC_INFORMATION info{};
++    for (uint8_t* p = base + 0xBC000000u; p < base + 0xC0000000ull; p += info.RegionSize) {
++      if (!VirtualQuery(p, &info, sizeof(info))) {
++        break;
++      }
++      if (info.State != MEM_COMMIT || (info.Protect & (PAGE_NOACCESS | PAGE_GUARD)) || !(info.Protect & PAGE_READWRITE)) {
++        continue;
++      }
++      uint8_t* end = static_cast<uint8_t*>(info.BaseAddress) + info.RegionSize - 12;
++      for (uint8_t* q = static_cast<uint8_t*>(info.BaseAddress); q < end; q += 4) {
++        if (std::abs(LoadFloat(q) - want[0]) < radius && std::abs(LoadFloat(q + 4) - want[1]) < radius &&
++            std::abs(LoadFloat(q + 8) - want[2]) < radius && q - 48 >= static_cast<uint8_t*>(info.BaseAddress)) {
++          bool matrix = true;  // a matrix's position: three unit rows before it (16 bytes apart)
++          for (int r = 0; r < 3 && matrix; ++r) {
++            float length = 0.f;
++            for (int c = 0; c < 3; ++c) {
++              const float v = LoadFloat(q - 48 + 16 * r + 4 * c);
++              length += v * v;
++            }
++            matrix = std::abs(length - 1.f) < 0.05f;
++          }
++          if (!matrix) {
++            continue;
++          }
++          for (int c = 0; c < 3; ++c) {
++            StoreFloat(q + 4 * c, LoadFloat(q + 4 * c) + move[c]);
++          }
++          ++moved;
++          q += 8;
++        }
++      }
++    }
++    REXLOG_INFO("dev teleport: {} copies moved {:.1f} {:.1f} {:.1f}", moved, move[0], move[1], move[2]);
++    return;
++  }
++  for (int c = 0; c < 3; ++c) {
++    position[c] = camera[12 + c];
++  }
++  REXLOG_INFO("dev teleport: car {:08X} at {:.1f} {:.1f} {:.1f} forward ({:.2f} {:.2f} {:.2f}), moved {} {} {}", car,
++              position[0], position[1], position[2], -rows[2][0], -rows[2][1], -rows[2][2], d[0], d[1], d[2]);
++}
++
+ // The game camera's update (r3 the camera): when it rewrites the director's camera it is the active camera, and its
+ // target is the car the cockpit camera rides in (HoldCockpitCamera).
+ extern "C" REX_FUNC(sub_822AA040) {
+@@ -320,6 +444,9 @@ extern "C" REX_FUNC(sub_822AA040) {
+     const uint32_t target = LoadU32(base + camera + 48);
+     g_car_matrix.store(target ? target + 272 : 0, std::memory_order_relaxed);
+   }
++  if (const uint32_t car = g_car_matrix.load(std::memory_order_relaxed)) {
++    DevTeleport(base, car);
++  }
+ }
+ 
+ // grcViewport::SetCameraMtx with an explicit view (development probe only).
