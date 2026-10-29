@@ -2169,6 +2169,10 @@ Details and how to run: `profiles/454107DC-notes.md`.
   bloom and motion_blur from xerenge.conf like the launcher (51e2d93): run.sh --vr never did. VR, bloom on, 2x3,
   120 Hz simulator, race: 115-120 FPS, 1% low 84-97, late 0-1.1%. The streaks above roofs at speed in VR are the
   game's speed blur (XERENGE_NO_MOTION_BLUR does not remove it; same with and without).
+- [x] Gfx against the flat game, measured (scratchpad bo/gfxmatch.py: the VR left eye aligned onto the flat frame by
+  edge correlation, colours on the same pixels; race start, bloom on): VR against flat xenos the same; xenos against
+  plume (Matt's flatscreen) red and green 9-17 levels lower in the midtones, blue level (slightly cooler: plume's
+  bloom halos are wider, the likely source). Open, small: matching plume's warmth would mean following its bloom.
 - [x] Faster: direct resolves in mode 1 (game, after 8ef7fa1, local): each tile straight into its third of the texture,
   the memory written too (mode 2, the SDK's VR default, left a stale tile: the menus' garage in the middle third; mode
   0, the EDRAM dump and copy, moved 167 Mpx an eye a frame). Simulator, race, bloom on, DLSS off, uncapped at 180 Hz:
