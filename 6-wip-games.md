@@ -1327,6 +1327,18 @@ my disc, I'll let you know when its done."
   44.6. Still head and a 20 degree head sweep there: eyes agree (0-0.05% blocks), 90.0 FPS at 90 Hz, eye 3584. His
   exact frame was never reproduced (the old mask shows only where the resolve leaves pixels), so it needs his headset
   look at that spot. Not pushed.
+- Matt (2026-10-29, U1): "in uncharted, the river reflections in the jungle (walk forwards to it) looks wrong. The
+  difference in each eye looks too big." Reproduced at his jungle save (walk forward ~6 s; eye 1440, simulator): the
+  rock's reflection had 15-20 px of disparity growing down the reflection, nearer than the rock it reflects (12-15).
+  Cause: the water (vs 0019120e, ps pgm f2fab535) samples its planar reflection (720x720, rendered per eye: vs
+  2fddb205, 1710c018, bde7fde5, ...) through the reflected view direction and the centre camera's constants
+  (pixel-shader projection, constants 155-173): both eyes read the same place in their own reflection, so the
+  water's own disparity was added to the reflection's. [x] community-vr c6423c9 (local): that one sample moves by the
+  water pixel's centre-to-eye shift (0.5 * vr_shift * gl_FragCoord.w; BB_VR_PROJECTIVE_SAMPLES / _SCALE, cache _mv6).
+  Same spot, fresh load each: down the reflection 15, 15, 18, 20 px before, 13, 11, 10, 11 after (continuous with the
+  rock's waterline, then falling away like a mirror image); the knob reversed (-0.5) gives 14, 14, 30, 33. No seams.
+  Frame rate not A/B'd (one multiply-add in the river's pixel shader). Needs Matt's headset look. U2/U3 water not
+  checked (other shaders). Not pushed.
 - Details: `profiles/CUSA02343-notes.md`.
 
 ## Dragon's Dogma: Dark Arisen (BLUS31155 v01.02)

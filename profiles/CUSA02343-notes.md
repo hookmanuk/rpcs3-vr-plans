@@ -259,3 +259,17 @@ commits cherry-picked (not a merge: that would bring full-release's history), th
   matched along x (normalised correlation, blind to brightness), then the blocks' brightness ratio. A cross-run
   ground truth (eye distance 0, head moved to an eye: IPD trigger) failed: the boat rocks, the camera moves between
   shots. The log line "VR shadows per eye: applied N, skipped M" shows it ran.
+
+## Water reflection (U1, fork c6423c9, 2026-10-29)
+
+- Matt: "the river reflections in the jungle (walk forwards to it) looks wrong. The difference in each eye looks too
+  big." The river's pixel shader (pgm f2fab535, with vs 0019120e) reads its planar reflection (image 8: a 720x720
+  main-view fraction, so two layers, drawn per eye) at a projection it computes itself: (constants 155-157 + the
+  reflected view direction) through the rows in constants 159-170, divided; the view direction from the camera
+  position in constants 171-173 and the world position (attribute 4). Nothing there is per eye, so ScanScreenParams
+  cannot move it, and each eye's reflection carried the water surface's disparity on top of its own.
+- Fix: that one sample moves by the water pixel's eye shift (0.5 * vr_shift[view] * gl_FragCoord.w, multiview
+  pipelines only; emit_spirv_vr.cpp ProjectiveSample). Other water with the same kind of lookup (U2, U3, other games)
+  needs its (pgm, image) in BB_VR_PROJECTIVE_SAMPLES's default.
+- Test: scratchpad unc/rvab.sh (fresh load of the jungle save, walk 6.5 s, head yaw 35 pitch -15, both eyes twice)
+  and dispmap.py (16 px blocks matched along x). Before/after/reversed in 6-wip-games.md.
