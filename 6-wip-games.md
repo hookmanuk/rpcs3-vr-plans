@@ -1302,6 +1302,23 @@ my disc, I'll let you know when its done."
   held (the aim zoom). [x] community-vr (local, after ca4ef2c): the reticle layer only while Camera::GameXScale() >
   BB_VR_RETICLE_XSCALE (default 1.8); otherwise the HUD stays whole on the near quad. Built 23:11, not run (Matt:
   "when done just let me test"). U2/U3 thresholds unmeasured.
+- Matt (2026-10-29, U1 jungle, SteamVR, eye 3584, DLSS off): "In the jungle the right eye has different sun light on
+  it to the left eye. I've saved the game for it, fix this." His screenshot (evidence: the image in the chat, copied to
+  scratchpad unc/matt_jungle.png): zoomed, the right eye has extra soft orange light the left lacks: a blob on the
+  ground nearest the camera and a vertical streak along the near rock's edge. Block-matched (lrcmp style): 0.57% of
+  blocks off by 20%, all right-brighter, around Sully and that ground. - [ ] Not reproduced. His saves copied (never
+  used in place) to scratchpad vr/savedata_jungle; the checkpoint loads in the jungle clearing. Simulator, eye 3584
+  and 1440, the correction on: eyes agree at every check (0-0.16% blocks off; head yaw 0/+-25/-50, pitch 0 to -55,
+  walking the path, IPD 0.085/0.12 to match his larger shift 0.0148 vs 0.0110). SteamVR could not be used (headset
+  off: xrGetSystem -35). Facts found: the dappled sun is the cascaded shadow resolve ps 7c219ffb (SKIP removes all
+  sun shadow); its correction ran in his session (20001 applied, 0 skipped); the shader (spirv-cross) reads only what
+  the correction moves (split distances, rows 1-3 of each cascade, per-view buffers). Tried (reverted: no effect
+  shown): U1's depth-reading light draws (vs 0019120e, 58b25301) read the depth through game memory, which holds the
+  left eye's layer only; a right-eye copy (layer 1 tiled into a per-eye buffer, R32F linear depth too) ran but changed
+  nothing measurable, and leaving that copy empty did not change the right eye either: those reads do not show there.
+  [x] community-vr (local): F9 captures for a report: both eyes, the scene and the HUD as sent
+  (%TEMP%/dcvr/eye_0..3.raw) and the frame's draws and camera into the log. Next: Matt presses F9 where he sees it,
+  then the right eye's draws are bisected with SKIP on his capture.
 - Details: `profiles/CUSA02343-notes.md`.
 
 ## Dragon's Dogma: Dark Arisen (BLUS31155 v01.02)
