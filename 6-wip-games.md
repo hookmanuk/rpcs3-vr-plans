@@ -3206,10 +3206,13 @@ matching VR with no gfx errors and 90fps."
     option to the top of options, and add a recentre menu item to the top of the VR options page."
     Done (game 9df9050): VR heads the Settings tab (prepended to its children), RECENTRE heads the VR page (checked:
     recentred from yaw 30), Back no longer recentres; README.txt updated.
-  - [ ] "You need to fix those tutorial popups too. Notice they don't fit on the hud" (the MISSION LOG / MINI MAP
-    tutorial boxes in free roam). Open: on the simulator the box is whole on the HUD layer, at the flat game's place
-    (7-26% across, top left); the Sidekick phone was cut at the HUD's left edge in one shot (sliding in?). Asked Matt
-    what is cut.
+  - [x] "You need to fix those tutorial popups too. Notice they don't fit on the hud" / "Yes, the sidekick phone. Try
+    in 2d to compare". Fixed (game 1fc6046, in his zip's bin): the phone is drawn by a viewport of its own
+    (grcViewport::Perspective from 0x82725F2C, fov 35) that takes its aspect from the main viewport, which VR sets to
+    the headset's (0.99): the phone quad (vs AF357F24CB8776C3) was 1.8x as wide (projection x 57.9 against 32.2 flat),
+    too far left and cut at the HUD's left and bottom edges. That caller now gets the game's aspect (the main call's,
+    before VR changes it). HUD layer against the flat game: the phone at the same place and size, whole; fixed under
+    yaw -20 / pitch -10.
 
 ## Uncharted: Drake's Fortune (BCUS98103, update 01.10)
 
