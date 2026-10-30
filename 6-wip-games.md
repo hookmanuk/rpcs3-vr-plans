@@ -1459,6 +1459,10 @@ my disc, I'll let you know when its done."
   one-frame jump at the zoom's end. Simulator, head 40 degrees left: view -116 -> -130 over ~1 s, <= 1.6 degrees a
   frame, target 0.00-0.04 degrees off. Matt: "ok this is good". Launcher defaults now head aim on, vertical lock
   "always" (274252e).
+- 2026-10-30: release vr-0.2 (uncharted_pc 77b68f9, tag v0.3.8-vr0.2, community-vr pushed): zip
+  H:/uncharted_pc/dist/uncharted-windows-v0.3.8-vr0.2.zip, notes packaging/windows/RELEASE-vr-0.2.md (Matt: U2/U3 stay
+  "untested"). Out-of-box check from the unzipped package (--play, simulator): OpenXR session focused, language screen
+  on the virtual screen, U1 boat in stereo at 3584, 90 FPS (cold cache). Matt publishes.
 - Details: `profiles/CUSA02343-notes.md`.
 
 ## Dragon's Dogma: Dark Arisen (BLUS31155 v01.02)
