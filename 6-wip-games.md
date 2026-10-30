@@ -1399,12 +1399,26 @@ my disc, I'll let you know when its done."
   1 - shadows move on HMD rotate
   2 - mist moves on HMD rotate
   3 - need to remove depth of field effect"
-  - [ ] 1. Shadows move on HMD rotate.
-  - [ ] 2. Mist moves on HMD rotate.
-  - [ ] 3. Remove the depth of field effect.
-  Not started. Leads: U1's per-eye fixes are keyed by U1 shader hashes (sun resolve 7c219ffb, torch passes 8a04b99b /
-  fe99f21a, light compute 43b8ee5e): U2's own passes are not covered (the 2026-10-26 entry: "U2 / U3 use other shaders:
-  not checked").
+  - [x] 1. Shadows move on HMD rotate. U2 builds every render view through the main camera's call, also a light's
+    projection (the train wreck's fire: 60 degrees, far 11 m) and a view at the origin (far 100): both were head
+    tracked, so the fire's light and shadows turned with the head. Now only views with far >= 500 m are tracked
+    (BB_VR_MAIN_FAR_MIN; U1 5000, U2 100000, U3 5000 in play). (uncharted_pc 5a79c21)
+  - [x] 2. Mist moves on HMD rotate. The mist and haze pass (pgm 84adaaea, shared by U2 and U3) fades with the view
+    depth z, not the distance: the same rock gets more or less mist as the head turns. Its density term now uses the
+    ray length (BB_VR_RADIAL_DEPTH, emitted per shader). (5a79c21)
+  - [x] 3. Depth of field removed in VR: the composite (pgm 3371ae8d, U2 and U3) reads 0 from its focus mask
+    (BB_VR_FIXED_SAMPLES): far mountains sharp (Laplacian 1.70 -> 6.36), near unchanged. (5a79c21)
+  Checked on the simulator at Matt's U2 save (the cliff after the train, copied to scratchpad vr/savedata_matt_u2),
+  eye 1440: a world-lock check (tools: scratchpad unc/wl_shots.py + worldlock.py, the left eye at head yaw 0 / 12 / 25
+  / 0, the turned one warped back by the rotation and diffed, the second yaw 0 as the control): the fire-lit patch
+  moved before and not after (cells 7.4 / 5.6 / 8.8 -> 5.0 / 4.0 / 3.8); the mist band at yaw 25 9.7 -> 3.8 (control
+  0.9-1.6). U1's sun shadow correction (7c219ffb) already runs in U2 (10001 applied). Needs Matt's headset look.
+  U3 (pub save): the same mist and depth of field shaders; its full-screen light passes (pgm 0d90d5b9, 5fb447d7,
+  5d941826, U1's torch layout) now per eye: mean |log2 L/R| x100 off 3.54, on 1.45, x3 5.37 (two rounds, the same).
+  Not done: U3's volumetric spot light (pgm 0a8f4f44, a cone intersection with the centre ray).
+  Frame rate, simulator 90 Hz, 3584 (Matt's), DLSS off: U3 pub 90.0 (1% low 84, 0% late); U2 cliff 82 (1% low 74-75,
+  ~50% over a period) with the fixes on or off (A/B 81.3/82.5 vs 82.3/82.1: no cost); the scene is GPU-bound (profile
+  14.5 ms: cs 43b8ee5e 2.9 ms, the snow particles 1.2 ms). U1 jungle 90.0 (1% low 80).
 - [ ] Matt (2026-10-30): head aiming option ("When Nathan is aiming we should let the user move their head to move the
   targeting reticule") and a vertical-axis lock (never / always / when aiming). Then: "The aiming needs to be instant
   and tied to where you look, not tied to slow aiming. It should also affect where Nathan points his gun too. Also we
@@ -1412,7 +1426,13 @@ my disc, I'll let you know when its done."
   Done on the simulator (uncharted_pc aa9a4d1, launcher VR card, both off by default): the aiming camera's direction
   (camera object +0x1830, U1 1.00 update +0xc42c0) is written with the head's at the start of its update: 30/12 degree
   head swing, aim on the gaze the next frame; the stick turned 73 degrees with the aim held on the gaze; Nathan's gun
-  follows. Vertical lock zeroes right stick up/down (pad layer). Headset check pending; U2 / U3 have no aim hook.
+  follows. Vertical lock zeroes right stick up/down (pad layer). Headset check pending.
+  [ ] U2 / U3 (uncharted_pc 829a57b): hooks found statically, not yet tried while aiming (no save with a gun: Matt's
+  U2 save is at the end of chapter 1, mine at the train and the U3 pub). Each game's CameraControlZoom from its
+  factory and vtable; the update that turns the aim direction by the stick, matched to U1's by the same helper call
+  and stores: U2 +0x18c9a0 (this in rdi, direction +0x1f30), U3 +0x135950 (this in rsi, direction +0x11e0). Only a unit
+  vector is replaced. Reticle threshold (x scale > 1.8) unmeasured in U2/U3. Shader cache: one VR cache for all eye
+  sizes, VR fixes retranslate only their own shaders (Matt: "u1 shader compilation stutter is pretty bad").
 - Details: `profiles/CUSA02343-notes.md`.
 
 ## Dragon's Dogma: Dark Arisen (BLUS31155 v01.02)

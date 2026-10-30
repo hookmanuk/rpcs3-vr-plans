@@ -285,3 +285,36 @@ camera object +0x1830 turned the camera and stayed turned. A data watch (`WATCH 
 writes the head's direction there at the update's entry (rsi = the camera object); what the update adds sideways is
 the stick, taken into the held view so the stick still turns. The game's mouse aim (src/runtime_pad.c) is a right
 stick value while aiming (direct only for the follow camera, +0x1310), so the direct write is the better path.
+
+## U2 / U3: lights, mist, depth of field, head aim, shader cache (uncharted_pc 5a79c21, 829a57b, 2026-10-30)
+
+Matt: "implement all relevant changes to uncharted 2 & 3 as well, all gfx fixes, performance and aiming."
+
+- Shared shaders: the collection's three games share much of the post chain. U1's sun shadow resolve (7c219ffb) and
+  character light compute (43b8ee5e) run in U2 too, so their per-eye fixes already applied there; the mist pass
+  (84adaaea) and depth of field composite (3371ae8d) are in U2 and U3.
+- Head-tracked views: U2/U3 build all render views through the main camera's call (+0x61194a / +0x5b153a), including
+  lights' projections (U2 train wreck fire: x scale 1.7321, near 0.1, far 11) and an origin view (x scale 1, far 100).
+  Only views with far >= BB_VR_MAIN_FAR_MIN (500 m) are head-tracked now. U3 logs a few far-0 main-shaped views while
+  loading (skipped); in play its main view has far 5000.
+- Mist (84adaaea): z = c3 / (depth - c2); density max(0, c20 z + c21) x max(0, c22 h + c23), h the world height from
+  the ray (c8, c9, c10 rows, c11). c20 is multiplied by sqrt(1 + xr^2 + yr^2) (xr = c0 (2u - 1 - c70), yr = c1 (1 - 2v -
+  c71); u, v from gl_FragCoord, which is declared for the shader). The sky branch (depth = 1: fixed z 1000) is left.
+- Depth of field: 7b9c669b (720, CoC-weighted downsample of the scene by the R8 focus mask), the composite 3371ae8d
+  mixes scene -> blur by the mask (image 2). FixedSample: that image reads 0. The blur chain still runs (cheap).
+- Tools: BB_VR_RADIAL_DEPTH "pgm:term:rx:ry:ox:oy", BB_VR_FIXED_SAMPLES "pgm:image:value" (both emitted per shader;
+  "VR radial depth" / "VR fixed sample" logged at emission); world-lock check scratchpad unc/wl_shots.py + worldlock.py;
+  skip sweep unc/skipsweep.py (SKIP trigger per pgm, change per 4x4 cell vs a control dump).
+- Shader cache: the suffix is `_mv7` for every eye size (PatchShader is empty here: nothing holds the size). A shader a
+  VR fix translates carries a tag in the top byte of its stored binary version (Vr::ShaderTag), so adding or changing a
+  fix retranslates only those shaders. Matt's 3584 cache was copied to the shared folder. Before, every VR fix bump and
+  every eye size started an empty cache (his 3584 one had dropped from ~3000 to ~1800 entries).
+- Head aim U2/U3 (statically, not yet tried in game): the class name is registered with a factory (U1 +0xbff30, U2
+  +0x187830, U3 +0x1352c0; U2's second copy of the string "CameraControlZoom" at +0xb4a38e is the registration one);
+  each factory's constructor stores the vtable (U1 +0x9648e0, U2 +0xe085e0, U3 +0x13686c0). U1's update is slot 19
+  (+0xc42c0: result rdi, this rsi, input rdx). U2 splits it: slot 28 +0x18cef0 the location (U1's shape) and slot 29
+  +0x18c9a0 (this rdi, input rsi) turning +0x1f30 with the helper +0x334220 (this+0x160, input+0x54, &dir, &dir2
+  +0x1f40), as U1 turns +0x1830 with +0x2764c0. U3 keeps U1's shape (slot 36 +0x135950) with the pair at
+  +0x11e0 / +0x11f0 (U2's +0x1ec8 / +0x1ed0 / +0x1f90 location fields are U3's +0x1170 / +0x1180 / +0x1240).
+  camera-aim-override-direction (U2 native +0x3f9230) only writes globals (+0xeb7a60, mode +0xeb7a9c = 2) that U2's
+  camera manager does not act on: not used.
