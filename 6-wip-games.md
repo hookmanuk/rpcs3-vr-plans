@@ -1447,6 +1447,18 @@ my disc, I'll let you know when its done."
   and stores: U2 +0x18c9a0 (this in rdi, direction +0x1f30), U3 +0x135950 (this in rsi, direction +0x11e0). Only a unit
   vector is replaced. Reticle threshold (x scale > 1.8) unmeasured in U2/U3. Shader cache: one VR cache for all eye
   sizes, VR fixes retranslate only their own shaders (Matt: "u1 shader compilation stutter is pretty bad").
+  [x] Matt (2026-10-30, U1, after aa9a4d1): "when I look to the left before aiming, then aim, then the camera moves to
+  another place ... Similarly when I finish aiming the view snaps"; then "the aim should be on what I'm looking at
+  straight away"; "It's fine to leave the camera moved, but the target aim should remain looking at what I was
+  originally looking at ... smoothly rotate the look to maintain the target as the zoom smoothly happens"; "Just use
+  10m as the depth". uncharted_pc c3731ab, 7fcf702 (BB_VR_HEAD_AIM_TRACE=1 logs every frame): the aim starts with the
+  zoom camera's update + L2 (not the x scale mid-blend); only stick/mouse input turns R (the game's first update reset
+  the direction: 30 degree jump); on release the follow camera is turned to R's heading (pad layer hook) and R held
+  until the camera is back; the reticle from the aim direction; the point 10 m along the gaze at the start stays under
+  it while the camera moves to the shoulder (R turned, no roll), the viewpoint glides (0.12 s) through the game's
+  one-frame jump at the zoom's end. Simulator, head 40 degrees left: view -116 -> -130 over ~1 s, <= 1.6 degrees a
+  frame, target 0.00-0.04 degrees off. Matt: "ok this is good". Launcher defaults now head aim on, vertical lock
+  "always" (274252e).
 - Details: `profiles/CUSA02343-notes.md`.
 
 ## Dragon's Dogma: Dark Arisen (BLUS31155 v01.02)
