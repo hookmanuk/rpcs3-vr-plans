@@ -2353,6 +2353,12 @@ Details and how to run: `profiles/454107DC-notes.md`.
     outside the timer's account. Simulator, plume, 2560x2160: boot to race and Continue at 180/120/72 Hz (race clock
     the same 6 s later at all three), pause menu shows, Down moves, A resumes at 180 and 72. Race 180 Hz: 180.0 FPS,
     1% low 135-147, late 0%. The code is renderer-independent (game_timing.cpp): flat unlocked takes the same path.
+- [ ] Matt 2026-10-30 (headset, plume, 3840x4320 an eye, burnout.exe started directly with XERENGE_VR_RENDERER=plume,
+  after game 26d6c1c): "The HUD is missing completely now in game, the pause menu too." (On the simulator at
+  2560x2160, 180 and 72 Hz, the same build showed the race HUD and the pause menu in the eye shots: check his size and
+  start, SteamVR.)
+- [ ] Matt 2026-10-30: "The car selection screen auto rotates the camera, when I move my head its very jerky, it feels
+  like I'm fighting the auto rotation."
 - [ ] Not tested on SteamVR: 2026-10-29 05:00 SteamVR ran but had no headset (xrGetSystem -35, form factor
   unavailable). Pacing must be checked there before a release (the simulator passed a cap that deadlocked on SteamVR).
 
