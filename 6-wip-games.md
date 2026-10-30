@@ -3189,11 +3189,27 @@ matching VR with no gfx errors and 90fps."
         scaling). Not looked at yet.
 
 - [ ] Matt 2026-10-30, from the 0.1 release with his save (GPS map on Back), "fix now":
-  - [ ] "Image 1 - press back in game to get to the map, you'll see elements in the top right cut off. Also turning
+  - [x] "Image 1 - press back in game to get to the map, you'll see elements in the top right cut off. Also turning
     your head culls the map, it should be square."
-  - [ ] "Image 2 - press back in game and then Y for the mission log. You'll see its headlocked and chopped off."
-  - [ ] "Now the GPS map is accessible with the back button, using back to recentre makes no sense. Instead move the VR
+  - [x] "Image 2 - press back in game and then Y for the mission log. You'll see its headlocked and chopped off."
+    Fixed (SDK 46f9af0, game 9df9050, local; mcla.exe + rexgpu-xenos.dll + rexruntime.dll copied into his zip's bin,
+    his old ones kept as *.bak-2026-10-30). Cause: the Back menu's pages are the UI movie drawn into a 960-wide 2x MSAA
+    target (frame log: vs 88F617431F7D9C9B, pitch 960 msaa 1, ~90-170 draws) and laid over the frame by a full-screen
+    draw (vs 1FAB9787BCA32D7C ps E5EBEFAE4D165CBA) before the HUD split: the page landed in the posed eye picture
+    (head-locked, cut by the eye's field of view) and the map's 3D city was drawn by the posed camera (culled as the
+    head turned). Now the SDK flags a frame with such draws (vr::UiPanel, on at once, off after 8 frames without; not
+    the Sidekick phone's 280-wide 4x target) and the camera hook leaves the camera unposed: the whole frame goes on the
+    fixed screen. The pause menu (Start) draws the same way, so it is now on the screen too. Simulator (his save,
+    3x6): map and mission log whole, fixed under yaw +-25 / pitch 10 / roll 15; B back to head-tracked driving; free
+    roam with the Sidekick message stays posed.
+  - [x] "Now the GPS map is accessible with the back button, using back to recentre makes no sense. Instead move the VR
     option to the top of options, and add a recentre menu item to the top of the VR options page."
+    Done (game 9df9050): VR heads the Settings tab (prepended to its children), RECENTRE heads the VR page (checked:
+    recentred from yaw 30), Back no longer recentres; README.txt updated.
+  - [ ] "You need to fix those tutorial popups too. Notice they don't fit on the hud" (the MISSION LOG / MINI MAP
+    tutorial boxes in free roam). Open: on the simulator the box is whole on the HUD layer, at the flat game's place
+    (7-26% across, top left); the Sidekick phone was cut at the HUD's left edge in one shot (sliding in?). Asked Matt
+    what is cut.
 
 ## Uncharted: Drake's Fortune (BCUS98103, update 01.10)
 
