@@ -1405,6 +1405,14 @@ my disc, I'll let you know when its done."
   Not started. Leads: U1's per-eye fixes are keyed by U1 shader hashes (sun resolve 7c219ffb, torch passes 8a04b99b /
   fe99f21a, light compute 43b8ee5e): U2's own passes are not covered (the 2026-10-26 entry: "U2 / U3 use other shaders:
   not checked").
+- [ ] Matt (2026-10-30): head aiming option ("When Nathan is aiming we should let the user move their head to move the
+  targeting reticule") and a vertical-axis lock (never / always / when aiming). Then: "The aiming needs to be instant
+  and tied to where you look, not tied to slow aiming. It should also affect where Nathan points his gun too. Also we
+  should retain the ability to turn left and right whilst head aiming."
+  Done on the simulator (uncharted_pc aa9a4d1, launcher VR card, both off by default): the aiming camera's direction
+  (camera object +0x1830, U1 1.00 update +0xc42c0) is written with the head's at the start of its update: 30/12 degree
+  head swing, aim on the gaze the next frame; the stick turned 73 degrees with the aim held on the gaze; Nathan's gun
+  follows. Vertical lock zeroes right stick up/down (pad layer). Headset check pending; U2 / U3 have no aim hook.
 - Details: `profiles/CUSA02343-notes.md`.
 
 ## Dragon's Dogma: Dark Arisen (BLUS31155 v01.02)

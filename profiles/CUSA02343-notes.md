@@ -273,3 +273,15 @@ commits cherry-picked (not a merge: that would bring full-release's history), th
   needs its (pgm, image) in BB_VR_PROJECTIVE_SAMPLES's default.
 - Test: scratchpad unc/rvab.sh (fresh load of the jungle save, walk 6.5 s, head yaw 35 pitch -15, both eyes twice)
   and dispmap.py (16 px blocks matched along x). Before/after/reversed in 6-wip-games.md.
+
+## Head aim (uncharted_pc aa9a4d1, 2026-10-30)
+
+A stick-driven loop (the head's error as a right stick value) was too slow: the aiming camera turns at most ~45
+degrees/s at full stick (1.02; 1.00 more past 1.0 in the float pad state), and a gain fast enough to close in a frame
+oscillated. The aiming camera's persistent direction was found as RPCS3's was: float triples equal to the camera's
+forward (`aimfind.py scan`), kept those that followed a stick turn (8 left), then rewrote each turned 20 degrees: only
+camera object +0x1830 turned the camera and stayed turned. A data watch (`WATCH <addr> 4 rw`) gave its writers (update
++0xc42c0: stores at +0xc4b6f / +0xc4fdc) and readers (+0x276c9d / +0x27733e, the player's aim). The VR camera hook
+writes the head's direction there at the update's entry (rsi = the camera object); what the update adds sideways is
+the stick, taken into the held view so the stick still turns. The game's mouse aim (src/runtime_pad.c) is a right
+stick value while aiming (direct only for the follow camera, +0x1310), so the direct write is the better path.
