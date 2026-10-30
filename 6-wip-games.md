@@ -2342,9 +2342,17 @@ Details and how to run: `profiles/454107DC-notes.md`.
     at 180 Hz with the layer on or off (XERENGE_VR_HUD_LAYER=0 keeps it in the scene).
   - [ ] Next: DLSS on plume; drawing between logic steps on plume (off: XERENGE_VR_INTERPOLATE=0); bloom/shrunk
     copies still 1-layer (the left eye's bloom in both); the scripted route's A press does not leave the event
-    intro's Continue at 180 Hz (it does at 72 Hz, same build, 2026-10-29 10:50; a real pad press when ready works on
-    xenos): to check whether a press is lost at high frame rates. SteamVR untested.
-  - Gfx: plume VR is Matt's flatscreen renderer, so the xenos colour-table gap does not apply to it.
+    intro's Continue at 180 Hz (fixed 2026-10-30, below). SteamVR untested.
+  - [x] Input at high frame rates (game 26d6c1c, local; Matt 2026-10-30: "Keep working on getting high framerates
+    input to work"). Event intro's Continue ignored A at 120 Hz and up: a menu event (sub_821F5B10 posting through
+    sub_82427030) is taken only if its frame and the next both run a logic step; on the wall clock at 120 Hz+ steps
+    never come two frames in a row. Running the input on the frame before each step instead lost the title's Start.
+    Fix: after an event the next frame gets a step (written into the main loop's step count, the timer's caller
+    160(r1), and counted in the timer +0x28). Also the pause menu never appeared at any VR rate (72 too): paused
+    (timer +0x34) the timer returns 0 steps on the wall clock; now 60 steps a second by the wall clock while paused,
+    outside the timer's account. Simulator, plume, 2560x2160: boot to race and Continue at 180/120/72 Hz (race clock
+    the same 6 s later at all three), pause menu shows, Down moves, A resumes at 180 and 72. Race 180 Hz: 180.0 FPS,
+    1% low 135-147, late 0%. The code is renderer-independent (game_timing.cpp): flat unlocked takes the same path.
 - [ ] Not tested on SteamVR: 2026-10-29 05:00 SteamVR ran but had no headset (xrGetSystem -35, form factor
   unavailable). Pacing must be checked there before a release (the simulator passed a cap that deadlocked on SteamVR).
 
