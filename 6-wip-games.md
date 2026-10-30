@@ -3296,6 +3296,13 @@ matching VR with no gfx errors and 90fps."
   posed): the camera settles on the seat (back 0.474), head tracking unchanged (yaw 30 checked). +64 alone was not
   enough. MCLA_VR_UNPOSED_READBACK=0 off. Ruled out on the way: COCKPIT SWAY (on and off both broke), FMA
   (-march=x86-64-v3 in setup made no difference; reverted).
+  Matt: "No it still doesnt work. I moved my head during the transition back into the car and it still froze" /
+  "it stays stuck once my head stops". Second leak closed (0d6b6b6: the render thread's setter keeps the game's camera
+  too), still stuck with the head moving: the camera log (simulator head swaying +-8 cm, +-10 deg from the map's
+  open, sway.py) showed the game's own camera stopping part-way (back 0.613) and never moving again, head still or
+  not. [x] d31a9bf: from the map's close until the game's camera is unchanged for 0.5 s (8 s at most) the camera is
+  unposed (frame on the fixed screen, as the map): the descent runs as flat. Swaying run (Matt pressing): "yes that
+  works"; log: unposed 33.960, settled 35.571. Repackaged 0.1 zip (both fixes). MCLA_VR_SETTLE=0 off.
 
 ## Uncharted: Drake's Fortune (BCUS98103, update 01.10)
 
