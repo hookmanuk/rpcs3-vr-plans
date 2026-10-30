@@ -3214,6 +3214,16 @@ matching VR with no gfx errors and 90fps."
     before VR changes it). HUD layer against the flat game: the phone at the same place and size, whole; fixed under
     yaw -20 / pitch -10.
 
+- [x] Matt 2026-10-30: "can you add an auto recenter when the user first presses start at the main menu?" / "the
+  recentre doesnt work. I pressed start to begin, then I'm in the wrong place in the cockpit." / "It was on the main
+  menu, waiting for me to start the game" -> "ok, recentre works great now." (game 461c564, then the fix): the main
+  menu is a head-tracked scene with a HUD layer, so ShowingGameplay could not tell it from the game. Now Start
+  recentres unless the pause menu opens or closes in the 0.4 s after it (settings_menu VrPauseMenuEvents). A Start the
+  game ignores in play (a tutorial popup up) recentres too.
+- [ ] Matt 2026-10-30: "Tree shadows are wrong, they only cover half the trees or bushes, and areflickery and can
+  rotate too. Just load into the game and you'll see the bushes ahead like this." (his shot: the bushes across the
+  road at the start, ahead left)
+
 ## Uncharted: Drake's Fortune (BCUS98103, update 01.10)
 
 **Matt's headset report (2026-10-15 afternoon, build `faf4a5bce` on `openxr`), open, in his words:**
