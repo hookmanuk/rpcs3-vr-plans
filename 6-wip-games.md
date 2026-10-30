@@ -1424,6 +1424,15 @@ my disc, I'll let you know when its done."
     image 2." His shots: `evidence/uncharted-collection/2026-10-30-matt-u2-shadow-left-only.png` (the cliff after
     the train, a dark shadow patch in the fire-lit snow in front of the wreck, circled, left eye only) and
     `2026-10-30-matt-u2-shadow-flicker.png` (the same spot a moment later: the patch gone in both eyes). Not started.
+- [ ] Matt (2026-10-30, U1 chapter 1, the boat), verbatim: "u1 I just pushed someone on the boat, and on flat it shows
+  this prompt. In VR there is no prompt! Fix this now". The prompt: "Press (Y) after the first punch lands" (lower
+  centre). Shots: `evidence/uncharted-collection/2026-10-30-matt-u1-prompt-flat.png` (flat, with it) and
+  `2026-10-30-matt-u1-prompt-vr-missing.png` (VR, the same moment: none). In progress.
+- [ ] Matt (2026-10-30, launcher), verbatim: "Theres also a bug in the launcher, if you double click on a game, the
+  tooltip says it runs that game. Actually it just runs the collection launcher with your last game defaulted."
+  Facts so far: the card's double-click sets `start` and plays; run.py boots that game's executable directly with no
+  arguments (BB_EXE). The collection's own menu starts U2 with argv "eboot.bin ispartofuccollection" (out/guest-argv.txt).
+  Not reproduced or changed yet.
 - [ ] Matt (2026-10-30): head aiming option ("When Nathan is aiming we should let the user move their head to move the
   targeting reticule") and a vertical-axis lock (never / always / when aiming). Then: "The aiming needs to be instant
   and tied to where you look, not tied to slow aiming. It should also affect where Nathan points his gun too. Also we
