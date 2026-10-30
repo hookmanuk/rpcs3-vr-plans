@@ -1419,6 +1419,11 @@ my disc, I'll let you know when its done."
   Frame rate, simulator 90 Hz, 3584 (Matt's), DLSS off: U3 pub 90.0 (1% low 84, 0% late); U2 cliff 82 (1% low 74-75,
   ~50% over a period) with the fixes on or off (A/B 81.3/82.5 vs 82.3/82.1: no cost); the scene is GPU-bound (profile
   14.5 ms: cs 43b8ee5e 2.9 ms, the snow particles 1.2 ms). U1 jungle 90.0 (1% low 80).
+  - [ ] Matt (2026-10-30, U2, after the fixes above), verbatim: "U2 has different shadows per eye, circled shadow
+    exists only in left eye. (image 1)" "U2 has flickering shadows disappearing in both eyes, compare image 1 to
+    image 2." His shots: `evidence/uncharted-collection/2026-10-30-matt-u2-shadow-left-only.png` (the cliff after
+    the train, a dark shadow patch in the fire-lit snow in front of the wreck, circled, left eye only) and
+    `2026-10-30-matt-u2-shadow-flicker.png` (the same spot a moment later: the patch gone in both eyes). Not started.
 - [ ] Matt (2026-10-30): head aiming option ("When Nathan is aiming we should let the user move their head to move the
   targeting reticule") and a vertical-axis lock (never / always / when aiming). Then: "The aiming needs to be instant
   and tied to where you look, not tied to slow aiming. It should also affect where Nathan points his gun too. Also we
