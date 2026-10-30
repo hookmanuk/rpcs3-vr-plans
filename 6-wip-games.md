@@ -3303,6 +3303,28 @@ matching VR with no gfx errors and 90fps."
   not. [x] d31a9bf: from the map's close until the game's camera is unchanged for 0.5 s (8 s at most) the camera is
   unposed (frame on the fixed screen, as the map): the descent runs as flat. Swaying run (Matt pressing): "yes that
   works"; log: unposed 33.960, settled 35.571. Repackaged 0.1 zip (both fixes). MCLA_VR_SETTLE=0 off.
+  Final: 33f6511 (settle until the camera is back at the car and still; the read-back restore removed, it moved the
+  lamp glows with the head). Matt: "yes this all looks good!". His profile backed up (E:\Documents\mcla-backup-
+  2026-10-30-final) and cleared for a from-zero release run.
+- Matt (2026-10-30, intro): "In the intro the guy in the green shirt in the middle is misaligned between eyes!" /
+  "the left and right edges of his body were ghosted. They were too far apart." / "I think it might be a shadow
+  issue". Also: "the intro movie has a multi coloured background to it too."
+  [x] Movie (SDK, uncommitted): the movie frames carry ~6 hidden scene draws (a depth-only draw, colour mask 0), so
+  they went to the headset as head-tracked scenes with the movie on the HUD quad and a stretched false-colour copy
+  around it. A frame is a scene only with 16+ scene draws (VrFrameHasScene); movie now on the fixed screen,
+  vehicle select still head-tracked.
+  [~] Shadows (SDK, uncommitted, MCLA_VR_WVP_EYE=0 off): the sun shadow is a screen-space mask (1280 pass, vs
+  9B17968A); the main pass reads it at screen coords its VS builds from the clip position (o3 = x + w, w - y, w;
+  ps BBF9F06A tf13 / w). The eye shift was only added to the output position, so each eye read the mask half the
+  eyes' disparity off: shadow edges on characters and ground differ between the eyes. Now the shift goes into the
+  WVP's translation (c11.x += shift, for VS reading c8-c11) so all clip-derived values move with the eye.
+  First try (x += shift * w on every row) moved the whole picture by a constant: no parallax, "all the in game eyes
+  are misaligned" (reverted at once; zip rebuilt without it). Measured (shedge.py: ground shadow-edge disparity minus
+  texture disparity, 20 cutscene frames, his default settings): control ~27 offsets >= 4 px (frames 10-12 at 9-14),
+  fixed ~3 (a camera cut). Free-roam depth sane (near ground -14, car -4, far 0). Only reproduces with the default
+  settings (MSAA on, 2x3); my dev toml (MSAA off, 3x6) hid it. Fixed DLL in his install (old one beside it as
+  rexgpu-xenos.dll.reverted), zip still without it until he checks. Sunglasses smear (cutscene) looked clean with the
+  fix; to confirm.
 
 ## Uncharted: Drake's Fortune (BCUS98103, update 01.10)
 
