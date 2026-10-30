@@ -3188,6 +3188,13 @@ matching VR with no gfx errors and 90fps."
       - Native 2x4 without DLSS: the top row of each eye is garbage (replay too; the fill_row fix only runs when
         scaling). Not looked at yet.
 
+- [ ] Matt 2026-10-30, from the 0.1 release with his save (GPS map on Back), "fix now":
+  - [ ] "Image 1 - press back in game to get to the map, you'll see elements in the top right cut off. Also turning
+    your head culls the map, it should be square."
+  - [ ] "Image 2 - press back in game and then Y for the mission log. You'll see its headlocked and chopped off."
+  - [ ] "Now the GPS map is accessible with the back button, using back to recentre makes no sense. Instead move the VR
+    option to the top of options, and add a recentre menu item to the top of the VR options page."
+
 ## Uncharted: Drake's Fortune (BCUS98103, update 01.10)
 
 **Matt's headset report (2026-10-15 afternoon, build `faf4a5bce` on `openxr`), open, in his words:**
