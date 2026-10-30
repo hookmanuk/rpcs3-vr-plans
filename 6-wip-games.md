@@ -3220,9 +3220,16 @@ matching VR with no gfx errors and 90fps."
   menu is a head-tracked scene with a HUD layer, so ShowingGameplay could not tell it from the game. Now Start
   recentres unless the pause menu opens or closes in the 0.4 s after it (settings_menu VrPauseMenuEvents). A Start the
   game ignores in play (a tutorial popup up) recentres too.
-- [ ] Matt 2026-10-30: "Tree shadows are wrong, they only cover half the trees or bushes, and areflickery and can
+- [x] Matt 2026-10-30: "Tree shadows are wrong, they only cover half the trees or bushes, and areflickery and can
   rotate too. Just load into the game and you'll see the bushes ahead like this." (his shot: the bushes across the
-  road at the start, ahead left)
+  road at the start, ahead left) / "I presume this might be linked to the code where you rotate the bushes to match
+  our view". Fixed (SDK 814502f, game 456e794; rexgpu-xenos.dll in his zip's bin): his guess was right. With no MSAA
+  the bushes draw twice: a depth pass (vs 4D181C0D99016B72, colour mask 0) and a colour pass (vs 00D8DD6B3BC0AFCF,
+  same cards and constants). Only the depth pass was in the card-facing lists (translator VrBillboardShader and the
+  c208/c209 patch), so its cards faced the eye while the colour pass kept the game's (posed) axes; where they
+  disagreed the depth pass hid the colour: black wedges, changing with the head. MCLA_VR_FOLIAGE=0 removed them (the
+  test); now 00D8 is in both lists. Right eye, his settings (3x5): bushes lit and whole over 4 frames, at yaw 0 and
+  +-20. Not "shadows": the black is unlit pixels.
 
 ## Uncharted: Drake's Fortune (BCUS98103, update 01.10)
 
