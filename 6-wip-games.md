@@ -3285,7 +3285,17 @@ matching VR with no gfx errors and 90fps."
   back to go to the map, then A to select the race, then it moves back into the car, but goes to the wrong place, and
   then nothing works, I can't drive anywhere. I cant do anything other than recentre with start. So maybe it thinks
   I'm still in a menu?" (Not on GitHub: hookmanuk/mcla-recomp has no releases; his "0.1 with codex" = the 2026-10-28
-  zip.)
+  zip.) / "Its like the camera movement motion never quite finishes properly so it doesn't trigger the next HUD stage"
+  [x] Fixed (game dfbd9ab, in the repackaged 0.1 zip). The warp eases the camera down from the map (677 m) into the
+  seat, each step from the camera the game reads back out of the viewport. That held the head-posed camera, so each
+  step got the head's pose again: the camera settled turned and moved by the head (back 0.553 against the seat's
+  0.474) and never arrived; the intro waited with the controls locked. Only with the head moved (position, not just
+  turned) after the last recentre, so every simulator run (head exactly at 0) worked: reproduced with the simulator
+  head at x 0.06, z -0.04, yaw 6, pitch 4 set as the map opened (camera log: 1500 posings after the map closed). Now
+  SetCameraMtx's hook puts the game's own camera back at viewport+64 and +320 after the call (the view at +384 stays
+  posed): the camera settles on the seat (back 0.474), head tracking unchanged (yaw 30 checked). +64 alone was not
+  enough. MCLA_VR_UNPOSED_READBACK=0 off. Ruled out on the way: COCKPIT SWAY (on and off both broke), FMA
+  (-march=x86-64-v3 in setup made no difference; reverted).
 
 ## Uncharted: Drake's Fortune (BCUS98103, update 01.10)
 
