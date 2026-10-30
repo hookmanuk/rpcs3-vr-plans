@@ -3281,6 +3281,12 @@ matching VR with no gfx errors and 90fps."
   test); now 00D8 is in both lists. Right eye, his settings (3x5): bushes lit and whole over 4 frames, at yaw 0 and
   +-20. Not "shadows": the black is unlit pixels.
 
+- [ ] Matt 2026-10-30, refreshed 0.1 zip (out/release, today's fixes): "YEah this is bugged too. If you start, then hit
+  back to go to the map, then A to select the race, then it moves back into the car, but goes to the wrong place, and
+  then nothing works, I can't drive anywhere. I cant do anything other than recentre with start. So maybe it thinks
+  I'm still in a menu?" (Not on GitHub: hookmanuk/mcla-recomp has no releases; his "0.1 with codex" = the 2026-10-28
+  zip.)
+
 ## Uncharted: Drake's Fortune (BCUS98103, update 01.10)
 
 **Matt's headset report (2026-10-15 afternoon, build `faf4a5bce` on `openxr`), open, in his words:**
