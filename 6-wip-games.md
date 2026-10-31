@@ -3360,6 +3360,12 @@ matching VR with no gfx errors and 90fps."
   (errors 8x): control has shadows off the bodies and streaks from the sunglasses, fixed has neither; normal IPD the
   sleeve wedge in one eye only (control) is gone; character depth unchanged (-22 both), free roam unchanged.
   Matt: "ok this all works well." Release zip rebuilt (2026-10-31 11:11).
+- Matt (2026-10-31): "could we stop the 2d window detection for the start menu pause and race starts? ... can you
+  tighten the detection to only be the map?" [x] game 6d045e3: the fixed screen only while the map's own menu state
+  'PromptMap' is drawn (found by logging menu state names at the Flash populate hook, 0x82220314: it shows with the map
+  only, not the pause menu). Tried and dropped: camera 50 m from the car (cutscenes), 150 m above (race transitions),
+  a Back press before the panel (missed the tutorial's map, opened with A). Matt: "seems good". Zip rebuilt 11:54.
+  Not checked: a race start never draws PromptMap; the tutorial's map uses it (same page, assumed).
 
 ## Uncharted: Drake's Fortune (BCUS98103, update 01.10)
 
