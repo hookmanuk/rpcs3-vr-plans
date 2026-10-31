@@ -2390,7 +2390,8 @@ Details and how to run: `profiles/454107DC-notes.md`.
     marked: no split, the HUD head-locked in the scene). By the shader every posed frame splits at 72 and 180 Hz;
     the HUD stays in its box under yaw +-30, pitch -20, roll 15 (bo/hsB180_sheet.png, hsB72_sheet.png); 179 FPS
     at 180 Hz with the layer on or off (XERENGE_VR_HUD_LAYER=0 keeps it in the scene).
-  - [ ] Next: DLSS on plume; drawing between logic steps on plume (off: XERENGE_VR_INTERPOLATE=0); bloom/shrunk
+  - [ ] Next: (DLSS dropped 2026-10-31, Matt: "lets just remove DLSS, the game doesn't need it anyway"; the VR DLSS
+    option removed, game 362acc7. VR EYE SIZE goes to 7680x5760 instead, beefd6b: 97-111 FPS uncapped.) drawing between logic steps on plume (off: XERENGE_VR_INTERPOLATE=0); bloom/shrunk
     copies still 1-layer (the left eye's bloom in both); the scripted route's A press does not leave the event
     intro's Continue at 180 Hz (fixed 2026-10-30, below). SteamVR untested.
   - [x] Input at high frame rates (game 26d6c1c, local; Matt 2026-10-30: "Keep working on getting high framerates
