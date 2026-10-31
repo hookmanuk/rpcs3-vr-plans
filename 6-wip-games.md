@@ -3337,11 +3337,11 @@ matching VR with no gfx errors and 90fps."
 - Matt (2026-10-30, intro): "In the intro the guy in the green shirt in the middle is misaligned between eyes!" /
   "the left and right edges of his body were ghosted. They were too far apart." / "I think it might be a shadow
   issue". Also: "the intro movie has a multi coloured background to it too."
-  [x] Movie (SDK, uncommitted): the movie frames carry ~6 hidden scene draws (a depth-only draw, colour mask 0), so
+  [x] Movie (SDK f48104c): the movie frames carry ~6 hidden scene draws (a depth-only draw, colour mask 0), so
   they went to the headset as head-tracked scenes with the movie on the HUD quad and a stretched false-colour copy
   around it. A frame is a scene only with 16+ scene draws (VrFrameHasScene); movie now on the fixed screen,
   vehicle select still head-tracked.
-  [~] Shadows (SDK, uncommitted, MCLA_VR_WVP_EYE=0 off): the sun shadow is a screen-space mask (1280 pass, vs
+  [x] Shadows (SDK f48104c, game 171bced, MCLA_VR_WVP_EYE=0 off): the sun shadow is a screen-space mask (1280 pass, vs
   9B17968A); the main pass reads it at screen coords its VS builds from the clip position (o3 = x + w, w - y, w;
   ps BBF9F06A tf13 / w). The eye shift was only added to the output position, so each eye read the mask half the
   eyes' disparity off: shadow edges on characters and ground differ between the eyes. Now the shift goes into the
@@ -3353,6 +3353,13 @@ matching VR with no gfx errors and 90fps."
   settings (MSAA on, 2x3); my dev toml (MSAA off, 3x6) hid it. Fixed DLL in his install (old one beside it as
   rexgpu-xenos.dll.reverted), zip still without it until he checks. Sunglasses smear (cutscene) looked clean with the
   fix; to confirm.
+  Matt (with that build): "the shadows on the green character are still misaligned". The fix skipped every VS with
+  a0-indexed constants (float_dynamic_addressing): the skinned characters (5D4900DBE4747540, BB0A33CE1324966E,
+  92 VS in all). Now any VS reading c11: the shifted c11 load stores the shift in a function variable and the
+  position's own shift subtracts it, so each vertex is shifted once either way. Checked with MCLA_VR_WORLD_SCALE=8
+  (errors 8x): control has shadows off the bodies and streaks from the sunglasses, fixed has neither; normal IPD the
+  sleeve wedge in one eye only (control) is gone; character depth unchanged (-22 both), free roam unchanged.
+  Matt: "ok this all works well." Release zip rebuilt (2026-10-31 11:11).
 
 ## Uncharted: Drake's Fortune (BCUS98103, update 01.10)
 
