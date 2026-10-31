@@ -2432,8 +2432,13 @@ Details and how to run: `profiles/454107DC-notes.md`.
   start, SteamVR.)
 - [ ] Matt 2026-10-30: "The car selection screen auto rotates the camera, when I move my head its very jerky, it feels
   like I'm fighting the auto rotation."
+  Matt 2026-10-31: still open ("Head movement on the car selection screen feels jerky against its auto-rotation.").
 - [ ] Not tested on SteamVR: 2026-10-29 05:00 SteamVR ran but had no headset (xrGetSystem -35, form factor
   unavailable). Pacing must be checked there before a release (the simulator passed a cap that deadlocked on SteamVR).
+- [ ] Matt 2026-10-31 (SteamVR, headset): "SteamVR frame pacing hasn't been tested yet - generally its smooth, but its
+  not perfect, ensure 1 real frame is always sent for 1 steamVR frame."
+- [ ] Matt 2026-10-31: "We need to recentre the headset when pressing start." (Start: the in-game pause/title press;
+  recentre = the SDK's reference yaw/position, vr_openxr.cpp "recentred".)
 
 ## Midnight Club: Los Angeles Complete Edition (Xbox 360 545407F8, recomp: hookmanuk/mcla-recomp, not RPCS3)
 
