@@ -2467,6 +2467,22 @@ Details and how to run: `profiles/454107DC-notes.md`.
   metres by the camera's projection, centre turned with the head, w = depth for the eyes' shift. Paused race: marker
   disparity as their cars'; yaw 20 cars +505/+517 px, markers +500/+522; pitch -10 both -273/-275. XERENGE_VR_MARKERS=0
   off. Race 3840x4320 uncapped 134-180 FPS (before 147-180, run-to-run). Awaiting Matt's headset check.
+  Follow-ups (Matt's headset, 2026-10-31), all confirmed by him:
+  - World swam on a head turn and settled: plume declared each frame at a pose from a queue (1-3 frames old when its
+    present ran behind). Now each Swap marker carries its frame's pose (game 65d711a; 900 of 900 frames). Matt: "the
+    head turning is now perfect". SDK fb5978a also measures pose-to-headset-frame (2-5 ms) and looks that far ahead.
+  - Markers: depth value is z = 1 - 1/depth (1 m near plane), not the camera's (half distance before); recognised to 2 m,
+    hidden under 10 m (cars beside you darkened the view); far markers put over their car as drawn (the game eases a
+    marker after its car: up to 260 px off on corners) and taken from the logic camera to the drawn one (game 65d711a,
+    7816675; SDK 566b35a). Matt: "markers are good".
+- [x] Matt 2026-10-31: "pressing start should recenter even in the splashscreens and intro menus" - the flat screen
+  stood fixed in LOCAL; now at the recentred reference (SDK 8ded80e). Matt: works.
+- [x] Matt 2026-10-31: "when boosting theres a lot of screenshake ... add an option ... a dampener option to reduce
+  the shake, say 0 - 1". The race camera (sub_822F5128) turns by three small axis-angle rotations (found with a CPU
+  write breakpoint on the camera object CGtViewport::Update reads, XERENGE_VR_WATCH_CAMERA; the angles logged at its
+  sin/cos calls in Matt's boost run: ~0 driving, to 0.02 rad boosting). Each scaled by xerenge.conf camera_shake (0-1),
+  0.25 by default (game 4468916). A smoothing filter tried first only cut the 3.5-8 Hz pitch shake 0.37 -> 0.25 deg rms:
+  removed. Matt: "that works perfectly, lets have 0.25 be the default".
 - [x] Matt 2026-10-31: "We need to recentre the headset when pressing start." Start recentres (game 066fbbf,
   SetButtonPressedHook -> vr::Recenter); simulator: head at yaw 30, Start -> "recentred (yaw 30.0 degrees)".
 
