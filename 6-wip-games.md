@@ -2450,6 +2450,23 @@ Details and how to run: `profiles/454107DC-notes.md`.
   cumulative stats), MeganeX, 3840x4320 an eye, race, DLSS off: 72 Hz 0 of 3240 reprojected (72 submits/s, app GPU
   2.3-4.5 ms); 90 Hz 0 of 3600 twice (one other run 9 of 3600, the lock off 0 of 3600). Test eye shots cause
   reprojection bursts (GPU sync): judge pacing without them.
+- [x] Matt 2026-10-31: "HUDs are now a mixture of the wrong ratio. The intro is too wide. The pause menu is too tall."
+  (After the eye-size fix the eye target is 3840x4320.) The flat screen (title, menus) took the 16:9 default shape:
+  now the frame's (SDK SetScreenAspect, 6400576); after the HUD split every 2D draw keeps the 16:9 box (the pause
+  menu was not marked interface; game 062c231). Simulator, 21:9 window: title, menu, race HUD, pause in proportion.
+- [x] Matt 2026-10-31: "Turning my head still makes the camera jerky in the car selection screen. Turning my head in
+  races isnt jerky, but does move the world smoothly, and then snaps back after." The head pose was taken once a 60 Hz
+  logic step (CGtViewport::Update): at 90 Hz every third frame reused it. Per-frame log (XERENGE_VR_POSELOG) with a
+  smooth simulator head sweep: car select 243 of 717 frames repeated (turn 1.2, 0.6, 0 degrees a frame). Now taken per
+  frame drawn and carried on to the moment asked (SDK HeadPoseNow 6fa6621, game 6b5c98e): 0 repeats at car select and
+  in the race (was 32 of 713 with the per-frame read alone: frames 9-15 ms against the loop's 11.1). Earlier
+  freeze-and-snap windows in test runs were the eye shots' GPU sync. Awaiting Matt's headset check.
+- [x] Matt 2026-10-31: "The in race markers for cars are at the wrong depth, they are fixed on the HUD whereas they
+  should be the depth of each car they relate to." (blue triangles, on the HUD layer). The game projects them with its
+  own camera, each draw's gPosOffset.z its car's depth value. Now drawn in the scene (game, after 062c231): depth to
+  metres by the camera's projection, centre turned with the head, w = depth for the eyes' shift. Paused race: marker
+  disparity as their cars'; yaw 20 cars +505/+517 px, markers +500/+522; pitch -10 both -273/-275. XERENGE_VR_MARKERS=0
+  off. Race 3840x4320 uncapped 134-180 FPS (before 147-180, run-to-run). Awaiting Matt's headset check.
 - [x] Matt 2026-10-31: "We need to recentre the headset when pressing start." Start recentres (game 066fbbf,
   SetButtonPressedHook -> vr::Recenter); simulator: head at yaw 30, Start -> "recentred (yaw 30.0 degrees)".
 
