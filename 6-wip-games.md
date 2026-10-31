@@ -2403,6 +2403,29 @@ Details and how to run: `profiles/454107DC-notes.md`.
     outside the timer's account. Simulator, plume, 2560x2160: boot to race and Continue at 180/120/72 Hz (race clock
     the same 6 s later at all three), pause menu shows, Down moves, A resumes at 180 and 72. Race 180 Hz: 180.0 FPS,
     1% low 135-147, late 0%. The code is renderer-independent (game_timing.cpp): flat unlocked takes the same path.
+- [x] Gfx check against flat plume with real head poses and sway (Matt 2026-10-31: "Check burnout for any graphics bugs
+  against the flat version. Make sure you use cameras sway and check eye positions of all elements and effects.").
+  Simulator, plume, paused race and the Traffic Attack card, poses yaw +-25, pitch -20/+15, roll 15, sway 15 cm
+  left/right, 20 cm forward, 10 cm up (scratchpad bo/sway.py, worldlock2.py: ORB homography of each pose onto rest).
+  Found and fixed:
+  - HUD layer (game 2a25336): card box, boost bar, timer gold, backings and x4 bar too dark/see-through against flat.
+    Plume did not write alpha as xenos does (alpha srcblend SrcAlpha -> One for the premultiplied layer, and alpha
+    in the write mask for "over" blends): plume_vr.cpp HudBlendControl/HudColorMask. Now the same as flat.
+  - No sharpening in VR (SDK 60bb903, game 2a25336): plume's CAS/FXAA are skipped in stereo; a CAS compute pass per
+    eye in the headset copy (vr_scene_cas.comp, conf `sharpen`). Edge energy 5.2 -> 9.4 (flat's level).
+  - Sparks and speed streaks followed the head (game a8c3e47): the particle system builds them on the CPU in the
+    game's unturned view space, drawn with a projection-only gObjToProjMatrix (vs 289A00146AFBBCC4). Draws whose
+    c0-c3 is a pure perspective projection now get the head's turn and offset (plume_vr.cpp ViewSpaceDraw /
+    TurnViewSpaceDraw; view-space signs -1 1 1 found by sweep; XERENGE_VR_TURN_VIEW=0 off). World-lock residual
+    (mean / p99): yawL25 10.1/104 -> 5.5/43, yawR25 12.2/104 -> 6.9/48, pitchD20 11.1/120 -> 4.7/34, pitchU15
+    12.3/114 -> 7.0/48, roll15 10.6/113 -> 6.5/50 (what is left is edge resampling). Sway 15 cm: car +-7 px, sparks
+    by it +-6, near streaks with the near road, sky streaks with the arch.
+  Checked fine: scene colours and bloom against flat; eye disparity (SGBM, rest): sky streaks ~0 px, car 1, sparks
+  beside it 3, near road 19, no element at a wrong depth. Simulator note: the HUD quad shows ~215 px between eyes in
+  the simulator's composite, a preview artifact (the game submits one union FOV, tangents -1.376..1.376, for both
+  eyes; the simulator shows projection images unreprojected but draws quads with each eye's asymmetric FOV:
+  (1.376/2.215 - 0.5) x 800 = 97 px an eye); real disparity of the 1.1 m quad is ~21 px. Frame rate after the
+  fixes: race, 3840x4320 an eye, 180 Hz uncapped, DLSS off: 180.0 FPS, 1% low 139-142, late 0%.
 - [ ] Matt 2026-10-30 (headset, plume, 3840x4320 an eye, burnout.exe started directly with XERENGE_VR_RENDERER=plume,
   after game 26d6c1c): "The HUD is missing completely now in game, the pause menu too." (On the simulator at
   2560x2160, 180 and 72 Hz, the same build showed the race HUD and the pause menu in the eye shots: check his size and

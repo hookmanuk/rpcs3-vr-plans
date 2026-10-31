@@ -56,3 +56,10 @@ c0-c23), `XERENGE_THREAD_DUMP` (guest threads' lr, r3-r5, r31 and the vtables of
 - Movie player (main menu): object with five synchronization events at +84..+148 and wait wrappers sub_8248D1E0..
   sub_8248D240 (vtable 82056A28 +160..+176); the main thread waits on +132 (sub_8248D228 from 0x8248E8B0), the worker
   on +100 (sub_8248D1F8 from 0x8248DAC4).
+- View-space draws: particles (sparks, speed streaks; vs 289A00146AFBBCC4) are CPU-built in the game's own view space
+  and drawn with gObjToProjMatrix = projection only, so the renderer's head turn misses them; plume_vr.cpp
+  ViewSpaceDraw detects a pure perspective c0-c3 and TurnViewSpaceDraw multiplies in C [A t] (A_ij = sigma_i sigma_j
+  s_i s_j pose[i][j], s = -1 1 -1, sigma = -1 1 1; dev trigger %TEMP%/xerenge_vr/VIEWSIGNS "s0 s1 s2 g0 g1 g2").
+  gCurrentWorldViewMatrix/gPrev feed only motion vectors (turning them changed nothing).
+- Simulator composites show the HUD quad ~215 px apart between eyes: preview artifact of the union FOV (see
+  6-wip-games), not a game bug.
