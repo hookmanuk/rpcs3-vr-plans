@@ -2430,15 +2430,28 @@ Details and how to run: `profiles/454107DC-notes.md`.
   after game 26d6c1c): "The HUD is missing completely now in game, the pause menu too." (On the simulator at
   2560x2160, 180 and 72 Hz, the same build showed the race HUD and the pause menu in the eye shots: check his size and
   start, SteamVR.)
-- [ ] Matt 2026-10-30: "The car selection screen auto rotates the camera, when I move my head its very jerky, it feels
+- [x] Matt 2026-10-30: "The car selection screen auto rotates the camera, when I move my head its very jerky, it feels
   like I'm fighting the auto rotation."
   Matt 2026-10-31: still open ("Head movement on the car selection screen feels jerky against its auto-rotation.").
+  Fixed (game 066fbbf, awaiting Matt's headset check): 60 Hz logic under 90 Hz frames moved the turning camera 1, 1, 0
+  steps a frame; drawing between logic steps is now on for plume (camera at the frame's moment, burnout_vr.cpp; each
+  moving draw from its world at the state before, plume_vr.cpp InterpolateDraw, the xenos path's method). Simulator
+  90 Hz, car select: camera per-frame move sd 27 mm -> 0.5 mm, the same under a +-30 degree head sweep (the head does
+  not feed into the game's camera); race: player car's screen position steady (2nd difference 0.0001 NDC, camera-only
+  0.03). 3840x4320 at 180 Hz uncapped: same FPS on and off.
 - [ ] Not tested on SteamVR: 2026-10-29 05:00 SteamVR ran but had no headset (xrGetSystem -35, form factor
   unavailable). Pacing must be checked there before a release (the simulator passed a cap that deadlocked on SteamVR).
-- [ ] Matt 2026-10-31 (SteamVR, headset): "SteamVR frame pacing hasn't been tested yet - generally its smooth, but its
+- [x] Matt 2026-10-31 (SteamVR, headset): "SteamVR frame pacing hasn't been tested yet - generally its smooth, but its
   not perfect, ensure 1 real frame is always sent for 1 steamVR frame."
-- [ ] Matt 2026-10-31: "We need to recentre the headset when pressing start." (Start: the in-game pause/title press;
-  recentre = the SDK's reference yaw/position, vr_openxr.cpp "recentred".)
+  Two causes. (1) His runs drew each eye at 10320x4320 / 5160x2160 (logs build/logs/burnout_00x): plume widened the
+  eye target to his 21:9 window's shape; VR now takes vr_resolution as is (game 0e41670). (2) The game's timer pacing
+  drifted against the headset (loop's wait for the game sliding through the period; simulator 72 Hz 12-59 skipped a
+  window): phase-locked (SDK 292f035, MCLA_VR_PHASE_LOCK=0 off). SteamVR compositor stats (bo/vrstats.py, pyopenvr
+  cumulative stats), MeganeX, 3840x4320 an eye, race, DLSS off: 72 Hz 0 of 3240 reprojected (72 submits/s, app GPU
+  2.3-4.5 ms); 90 Hz 0 of 3600 twice (one other run 9 of 3600, the lock off 0 of 3600). Test eye shots cause
+  reprojection bursts (GPU sync): judge pacing without them.
+- [x] Matt 2026-10-31: "We need to recentre the headset when pressing start." Start recentres (game 066fbbf,
+  SetButtonPressedHook -> vr::Recenter); simulator: head at yaw 30, Start -> "recentred (yaw 30.0 degrees)".
 
 ## Midnight Club: Los Angeles Complete Edition (Xbox 360 545407F8, recomp: hookmanuk/mcla-recomp, not RPCS3)
 
