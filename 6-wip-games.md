@@ -2487,6 +2487,32 @@ Details and how to run: `profiles/454107DC-notes.md`.
 - [x] Matt 2026-10-31: "We need to recentre the headset when pressing start." Start recentres (game 066fbbf,
   SetButtonPressedHook -> vr::Recenter); simulator: head at yaw 30, Start -> "recentred (yaw 30.0 degrees)".
 
+- [x] Matt 2026-10-31: "This event I've got to, car wheels are appearing and disappearing. It wasn't happening in
+  earlier events." / "Even parts of the car wobble as well, its not just wheels" / "In world tour, go to the right to
+  the last location, preview - angel valley, there you will see your own car and other cars wobble and missing
+  wheels." / "You can see it clearly on your own vehicle after you press Y". XERENGE_VR_INTERPOLATE=0 cured it; holding
+  the camera to the steps while anything near moved also did, but Matt: "racing and turning doesnt seem smooth anymore
+  ... Its a racing game, it needs to be smooth." Causes, all in plume's drawing between logic steps (game a33a016):
+  - A draw's world was VPinv WVP: VP's z row is its w row but for the near plane (infinite far), so VP inverted whole
+    is near singular, and Angel Valley is 4.8 km out (VP translations ~2000): float rounding put draws metres off,
+    differently each frame, so the player car's parts lost their pairs and were drawn half between steps, half not
+    (0 own and 52 loose in about half the frames). Now from VP's x, y and w rows (a 3x3).
+  - Wheels: their origin is off the axle (up to 3.5 m a step as they spin, the body 0.5 m); blending two turns ~90
+    degrees apart moved the wheel off the car and flattened it. Draws are now placed by their mesh's centre (vertex
+    bounds, unpacked once a mesh); turned more than 5 degrees a step: not blended, moved by the origin if it goes
+    straight, else by the centre (the hub).
+  - Pairing: the nearest of a mesh's draws took a neighbour's when its own was culled. Now a pair is sure only within
+    12 cm of still / its own travel / the same relative to the camera (centre or origin); unsure draws are carried by a
+    nearby moving draw moving as they do (4.5 m, 25 cm a step) or drawn as they are; draws sharing a world are drawn as
+    the first of them (one part of a car 40 m out changing detail had been 15 cm off the rest).
+  Proof (simulator, 90 Hz, 7680x5760, XERENGE_VR_CARCHECK): the player car's parts against its body's motion, 3000+
+  frames creeping and racing: body parts 0-1 mm, wheels median 0, p99 8 mm (suspension; 109 mm once at the start
+  drop, the rear assembly as one); same-world draws drawn apart: 0 of 251,671 (race), 0 of 79,749 (parked), 0 of
+  143,756 (30 s full throttle). Debris around the wheels (vs 6CB1C11DA9698E7D, 2-15 cm pieces) is drawn as it is
+  unless it pairs by its own travel. Cost ~0.4 ms a frame racing (XERENGE_VR_INTERPTIME). Race 90.0 FPS, late 0.00%.
+  The camera is between steps everywhere again. Awaiting Matt's headset check (Angel Valley chase view, parked and
+  moving).
+
 ## Midnight Club: Los Angeles Complete Edition (Xbox 360 545407F8, recomp: hookmanuk/mcla-recomp, not RPCS3)
 
 Matt (2026-10-24): "we have another game to convert to VR. H:\ROMs\midnightclub contains my own ripped iso. I have
