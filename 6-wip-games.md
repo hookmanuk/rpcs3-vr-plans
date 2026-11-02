@@ -3475,6 +3475,15 @@ matching VR with no gfx errors and 90fps."
   only, not the pause menu). Tried and dropped: camera 50 m from the car (cutscenes), 150 m above (race transitions),
   a Back press before the panel (missed the tutorial's map, opened with A). Matt: "seems good". Zip rebuilt 11:54.
   Not checked: a race start never draws PromptMap; the tutorial's map uses it (same page, assumed).
+- [x] Matt (2026-11-02, goal): "check Midnight Club for the camera sliding forwards and backwards as you accelerate,
+  I've been getting multiple user reports this is still happening". Found (simulator, free roam, MCLA_VR_SWAY_LOG):
+  the hold (COCKPIT SWAY off) had one seat for every view and held only views inside the car. The chase view was never
+  held: the game swings it 5.7-10.5 m behind the car as it accelerates and brakes (the slide); stopping in the hood
+  view (0, 1.0, -0.45 in the body) moved the cockpit's seat (-0.345, 1.045, 0.456) to the hood. Game (uncommitted,
+  vr_camera.cpp HoldCockpitCamera): a seat per view (learnt standing still, the nearest seat within 0.5 m inside the
+  car, 3.5 m behind); cockpit and hood held whole as before; the chase views held at their seat's distance along the
+  car only (height, swing aside and direction stay the game's). Simulator: chase seat 8.211 held through 5.71-10.49 m of
+  the game's swing; cockpit, hood, chase each kept their own seat. Needs Matt's look (COCKPIT SWAY on = the game's).
 
 ## Uncharted: Drake's Fortune (BCUS98103, update 01.10)
 
