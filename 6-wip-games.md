@@ -2610,6 +2610,13 @@ Details and how to run: `profiles/454107DC-notes.md`.
   draws (0E11948850EAEE91, up to 1409 every 2 s while rivals were near) for the car's, and the step result written over
   them replaced the markers' placing. HUD vertex shaders left out: 0 taken. Simulator, Sunshine Keys race: 72.0 FPS,
   late 0.11%, markers placed (5060 in the run). Needs Matt's look (no rival close in my shots).
+  - Matt: "markers are back, but they are very flickery. Do they not have the smooth motion logic applied to them?"
+    Their placing is smooth (cockpit, 577 of 577 frames snapped onto their car, x 2nd difference p90 0.0007). The
+    flicker: the step interpolation left the interface's draws out by w < 0.5 only by chance (the markers' c12-c15 hold
+    the last draw's leftovers), and last night's cockpit change (only draws at the eye left out) let them in: moved now
+    and then and their placing written over - 0 of 522,000 before the cockpit, ~4,800 in its 9 s with markers on
+    screen. HUD vertex shaders left out at InterpolateDraw (game 72e8c86, local). 72.0 FPS, late 0.22%. Needs Matt's
+    look.
 - 2026-11-02, crash camera (Matt: "Whilst in the middle of a crash (if I drive into oncoming traffic) the crash cam works
   badly. If I turn my head then its very jerky, cars are all jumpy, and also the sparks are tied to my head"; "They
   literally move from on side of the world to the other when I turn my head"). Parked by Matt ("Ignore the crashes").
