@@ -2582,6 +2582,19 @@ Details and how to run: `profiles/454107DC-notes.md`.
     the introduction's chase camera (at the GO), none during it.
   - Seen: a car without its own seat yet (A32A5933BE97329A) puts the left eye inside the A-pillar at the default seat;
     the per-car seat keys fix it.
+- 2026-11-02, flicker regression (Matt: "theres now flicker on scenery and HUD markers ... the signpost flickering, even on
+  the pause menu"; "this is not cockpit view specific. It happens with every camera. It flickers every sign on this
+  track. This is a regression since last night. Fix it."), game 6c543d3 (local, not pushed):
+  - [x] Cause: the cockpit's 5 cm near plane was written into the RenderWare camera (+112) and never put back, so after
+    the cockpit had been on once every view had a tenth of the depth precision (D32F, far 10000 m) and far signs
+    z-fought their boards. Sweep in one paused cockpit frame (Sunshine Keys festival banner ~60 m, 3800 px): wrong
+    pixels at 0.05 m 232 (gantry 540), 0.1 m 417, 0.15 m 634, 0.2 m 258, 0.3 m 15, 0.5 m 0; the roof needs ~5 cm.
+  - [x] Fix: the camera keeps the game's 0.5 m; in the cockpit the player car's own draws (origin within 2.5 m of car 0,
+    not those drawn about the eye: the sky and haze, which otherwise hid the town) get z = 0.1 (w - 0.05) in plume
+    (CockpitNearDraw). Simulator: banner and gantry 0 px off the game's own frame; roof and pillars whole at pitch 30,
+    yaw +-20, roll 15; driving Angel Valley only the car's parts and its wheel debris take it. Cockpit, Sunshine Keys
+    parked, 120 Hz uncapped (DLSS off): 120.0 FPS on and off, 1% low 91-94 vs 93-96 (noise), late 0-0.11%, draw cost
+    +1.3 ms a second (~0.01 ms a frame). Needs Matt's headset check.
 
 ## Midnight Club: Los Angeles Complete Edition (Xbox 360 545407F8, recomp: hookmanuk/mcla-recomp, not RPCS3)
 
