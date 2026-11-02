@@ -1476,6 +1476,14 @@ my disc, I'll let you know when its done."
   - Frame rates (simulator, eye 3584, DLSS off): U2 cliff at 90 Hz capped 89.1-90.1 (1% low 78-83, late <=0.22%),
     120 Hz uncapped ceiling 94.4 (1% low 83-85); U3 pub at the 120 cap (1% low 75). U2 GPU 12.7 ms a frame there
     (BB_GPU_PROFILE): cs 43b8ee5e 2.5 ms, the 1792 G-buffer-like pass 1.1 ms, an R8Uint 3584 upload each frame 0.23 ms.
+  - One-eye audit (BB_VR_AUDIT=1, eye 1440, head 0 / 30 -10 / -30 10): U2 cliff and U3 pub. Shared on purpose (fine):
+    the shadow maps (2048/4096/512, one layer), the 32x32 -> 16x16 exposure chain, compute aec539f0's buffer.
+    U2 compute 69de1134 (64x1 from the per-eye depth: the fraction of a region's depth samples past a distance, a sun
+    or flare visibility test) read by both eyes: a scalar, fine. U3 compute 661db47f: the volumetric spot light's
+    epipolar march (512 lines x 512 samples from the eye's depth and the light's shadow map), left eye only, read by
+    the beam pass 0a8f4f44 in both eyes: the right eye's shafts are the left's. At the pub the beam adds under 0.5
+    levels (99% of pixels), so not seen there; a fix needs both eyes' marches (the 512x512 R16G16F image two layers,
+    the dispatch per eye, and the eye's offset in its projection, c32-c35) and a scene with strong shafts to check.
 - Details: `profiles/CUSA02343-notes.md`.
 
 ## Dragon's Dogma: Dark Arisen (BLUS31155 v01.02)
