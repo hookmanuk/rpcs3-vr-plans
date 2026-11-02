@@ -2595,6 +2595,16 @@ Details and how to run: `profiles/454107DC-notes.md`.
     yaw +-20, roll 15; driving Angel Valley only the car's parts and its wheel debris take it. Cockpit, Sunshine Keys
     parked, 120 Hz uncapped (DLSS off): 120.0 FPS on and off, 1% low 91-94 vs 93-96 (noise), late 0-0.11%, draw cost
     +1.3 ms a second (~0.01 ms a frame). Needs Matt's headset check.
+  - Matt: "ok thats fixed".
+- 2026-11-02, steering wheel (Matt: "the first car in the selection (left most) the steering wheel doesnt move, the other
+  2 cars do"; "If you steer into the wall or another car then the steering wheel jitters a lot, can we remove that effect
+  so its just affected by your turning"), game (local, not pushed):
+  - [x] Leftmost garage car (C23F78068B1CA22E, Sunshine Keys garage, left from the default): its wheel disc (319 of
+    1564 vertices, 0.37 x 0.36 x 0.17 m) is 8 cm behind the car's origin; the finder wanted > 10 cm ahead. Range now
+    -0.6 to 1 m (car-model space, not the seat: Matt OK'd the wider range). Found, turns.
+  - [x] Jitter: the angle came from the front wheels as drawn (shaken by impacts). Now the left stick as the game reads
+    it (pad hook, XERENGE_VR_STEER, 0 while paused), eased 0.06 s, same scale (8 degrees x 12). Simulator: -8 / +8 / 0
+    for full left / right / centre; 0.0 in all 43 samples along the barrier at full throttle. Needs Matt's look.
 
 ## Midnight Club: Los Angeles Complete Edition (Xbox 360 545407F8, recomp: hookmanuk/mcla-recomp, not RPCS3)
 
