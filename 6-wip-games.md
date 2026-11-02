@@ -2617,6 +2617,20 @@ Details and how to run: `profiles/454107DC-notes.md`.
     and then and their placing written over - 0 of 522,000 before the cockpit, ~4,800 in its 9 s with markers on
     screen. HUD vertex shaders left out at InterpolateDraw (game 72e8c86, local). 72.0 FPS, late 0.22%. Needs Matt's
     look.
+- 2026-11-02 later, game (local, not pushed): results screen grey panels taken for markers (markers off on /PostEvent/
+  screens, 0012fa6; Matt: working); jump drop-out (chase camera also by the car's level heading, 380bdb6); wall-hit
+  flick (chase view held through smooth camera swings, b9eb19d); race start = the event's clock 0x82A513E8 > 0 (0 till
+  each GO: a race after its countdown with a rolling start, a crash event's GO alike; found by memory snapshots across
+  both; e1acfcb) - the accelerating flag is 1 through the countdown (a speed gate failed: rolling start; reverted).
+- Crash events (rank UNSAFE, White Mountain, Swiss Roll: card, fly-over (A skips), car select, PRESS A TO START, GET
+  READY, GO; scratchpad bo/crashrun.sh simulator, crashsvr.sh SteamVR). Matt: head turns and car parts stuttery.
+  - Not the GPU (XERENGE_DEBUG=1 pass timing: 6.9-8.0 ms a frame in the crash, the blur passes 0.6-1.2 ms); the render
+    thread recorded (2.2 -> 6.5 ms) then waited for the frame's GPU work, in series. XERENGE_ASYNC_PRESENT on in VR
+    (3ab99d7): simulator 72 Hz 143-145 frames/2 s through the crash (95-105 before); SteamVR 90 Hz 172-180 (99-156
+    without), a 2 s burst of 65 reprojected at the impact. Watch for black frames (flat once showed them).
+  - Step pairing: the crash's cars move 1-5 game ticks between states one apart; pairing also tries 2, 0.5, 3, 4 x the
+    last travel: body misses 23 -> 16% before the crash, 54 -> 35% in it (race unchanged). Still open: the rest of the
+    misses (ratios continuous 0.25-6), the pairing's cost (O(n^2) over a mesh's instances: 20 -> 128 ms a second).
 - 2026-11-02, crash camera (Matt: "Whilst in the middle of a crash (if I drive into oncoming traffic) the crash cam works
   badly. If I turn my head then its very jerky, cars are all jumpy, and also the sparks are tied to my head"; "They
   literally move from on side of the world to the other when I turn my head"). Parked by Matt ("Ignore the crashes").
