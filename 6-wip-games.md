@@ -1482,8 +1482,12 @@ my disc, I'll let you know when its done."
     or flare visibility test) read by both eyes: a scalar, fine. U3 compute 661db47f: the volumetric spot light's
     epipolar march (512 lines x 512 samples from the eye's depth and the light's shadow map), left eye only, read by
     the beam pass 0a8f4f44 in both eyes: the right eye's shafts are the left's. At the pub the beam adds under 0.5
-    levels (99% of pixels), so not seen there; a fix needs both eyes' marches (the 512x512 R16G16F image two layers,
-    the dispatch per eye, and the eye's offset in its projection, c32-c35) and a scene with strong shafts to check.
+    levels (99% of pixels), so not seen there. [x] Fixed (uncharted_pc community-vr, local, after 77b68f9): the 512x512
+    R16G16F image two layers (the compute runs per eye, reading and writing its vr_eye layer), each eye's depth lookup
+    offset c34 moved by half its clip shift (BB_VR_EYE_OFFSET_PS). Audit after: 661db47f a both-eyes pass writing two
+    layers, no one-eye finding left but the shared exposure; whole-frame L/R at the pub 2.15 -> 1.50 (one shot each,
+    the fight moving); U3 pub 3584 still at the 120 cap, U2 cliff 90.0 at 90 Hz. Needs a scene with strong shafts in the
+    headset.
 - Details: `profiles/CUSA02343-notes.md`.
 
 ## Dragon's Dogma: Dark Arisen (BLUS31155 v01.02)
