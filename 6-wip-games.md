@@ -2605,6 +2605,25 @@ Details and how to run: `profiles/454107DC-notes.md`.
   - [x] Jitter: the angle came from the front wheels as drawn (shaken by impacts). Now the left stick as the game reads
     it (pad hook, XERENGE_VR_STEER, 0 while paused), eased 0.06 s, same scale (8 degrees x 12). Simulator: -8 / +8 / 0
     for full left / right / centre; 0.0 in all 43 samples along the barrier at full throttle. Needs Matt's look.
+- 2026-11-02, markers gone in the cockpit view (Matt: "What did you do to the markers??? They've disappeared in cockpit
+  view only"), game (local, not pushed): my cockpit near plane per draw (6c543d3) took the interface's vertex shader's
+  draws (0E11948850EAEE91, up to 1409 every 2 s while rivals were near) for the car's, and the step result written over
+  them replaced the markers' placing. HUD vertex shaders left out: 0 taken. Simulator, Sunshine Keys race: 72.0 FPS,
+  late 0.11%, markers placed (5060 in the run). Needs Matt's look (no rival close in my shots).
+- 2026-11-02, crash camera (Matt: "Whilst in the middle of a crash (if I drive into oncoming traffic) the crash cam works
+  badly. If I turn my head then its very jerky, cars are all jumpy, and also the sparks are tied to my head"; "They
+  literally move from on side of the world to the other when I turn my head"). Parked by Matt ("Ignore the crashes").
+  Ruled out on the simulator: the crash camera goes through the same view-window call (82353C14) with the head pose and
+  the headset's field of view every frame (the game zooms 0.39-0.66, replaced); its handedness is the chase camera's (det
+  +1); the seat is published on every view change; the view-space streaks (BCC4) are recognised and turned. Seen: the
+  crash costs frame rate (72 -> ~50 at 72 Hz), and three passes over scene copies (vs 64CB3EDE4808EF9B, 740B6DEC54C4311F
+  into 320x180, 3C2D311FDFE543E8 back over 1280x720) run with the posed camera's matrix (XERENGE_NO_MOTION_BLUR does not
+  remove them). Test route: scratchpad bo/crashwatch4.sh (Angel Valley, steer into the oncoming lanes; the log line
+  "game's camera (race on, game's camera its own)" marks the wreck). Pausing in the crash camera went to a loading
+  screen.
+- README (game bf69ea2): the European ISO only (the USA claims removed from the intro, the requirements and the installer
+  paragraph); the cockpit view in its own section (Y, arrow keys, Ctrl+Up/Down for depth). Only on `vr`, not pushed;
+  `main` untouched (Matt asked whether both branches were updated - waiting on him).
 
 ## Midnight Club: Los Angeles Complete Edition (Xbox 360 545407F8, recomp: hookmanuk/mcla-recomp, not RPCS3)
 
