@@ -1488,6 +1488,11 @@ my disc, I'll let you know when its done."
     layers, no one-eye finding left but the shared exposure; whole-frame L/R at the pub 2.15 -> 1.50 (one shot each,
     the fight moving); U3 pub 3584 still at the 120 cap, U2 cliff 90.0 at 90 Hz. Needs a scene with strong shafts in the
     headset.
+  - [ ] U2 performance lead: the 1440/3584 R8Uint image at 0x11350f8000 (the stencil plane, flags GpuDirty) is
+    detiled and uploaded ~200 times a second (2 a frame): its guest memory is rewritten by the GPU (likely the depth
+    tiled into guest memory for texel-buffer reads, e1c1da0), then a pass samples it as a texture. A copy from the
+    depth image's stencil aspect instead would save ~0.3 ms of U2's 12.7 ms GPU frame (cliff, 3584): not tried
+    (shared code, measure first).
 - Details: `profiles/CUSA02343-notes.md`.
 
 ## Dragon's Dogma: Dark Arisen (BLUS31155 v01.02)
