@@ -2565,6 +2565,23 @@ Details and how to run: `profiles/454107DC-notes.md`.
     a car without a separate wheel piece keeps it still. Needs Matt's look on other cars.
   - Not reproduced: Matt's "sometimes its still flickery" after the near-depth change (simulator: the car's parts
     agree to ~15 mm in every frame).
+- 2026-11-02, the cockpit in the game's camera cycle (Matt: "From the low on track view, if you press Y it should go to
+  cockpit view. From cockpit view Y goes to chase cam. From chase cam Y goes to low on track view. It should feel
+  native"), game `vr` uncommitted:
+  - [x] Y in a race: bumper -> cockpit -> chase -> bumper. The game has two race cameras (chase 1.18 m up 4.6 m back;
+    bumper 0.55 up 1.10 forward). Y from the bumper goes to the game (its chase camera) and turns the cockpit on at
+    the game's first chase update; in the cockpit the press is taken out of the pad state the game reads (its
+    XamInputGetState wrapper sub_825AFE90) and the cockpit goes off over the chase camera. Not while paused (byte
+    0x828466E4, 1 in the pause menu; Y does nothing there in the game), nor outside a race. Simulator: chase, bumper,
+    cockpit, chase, (pause: Y ignored), bumper, cockpit.
+  - [x] The race's start: 0x82846B80 is not "race running" but the player accelerating (1 within ~0.2 s of pressing,
+    from the countdown's first shot, not before it; 0 ~2 s after letting go). Cockpit gating did hold (latched, and
+    countdown shots are not the chase camera), but a car left on the line never turned it on. Now the GO is the chase
+    camera back after >= 2 s of the countdown's shots (the event's introduction before them is the chase camera, ~3.5
+    s; the 3-2-1 shots 5.4 s), the accelerating flag kept as a fallback. Simulator, no throttle: cockpit 9.1 s after
+    the introduction's chase camera (at the GO), none during it.
+  - Seen: a car without its own seat yet (A32A5933BE97329A) puts the left eye inside the A-pillar at the default seat;
+    the per-car seat keys fix it.
 
 ## Midnight Club: Los Angeles Complete Edition (Xbox 360 545407F8, recomp: hookmanuk/mcla-recomp, not RPCS3)
 
