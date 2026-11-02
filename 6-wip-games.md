@@ -1463,6 +1463,19 @@ my disc, I'll let you know when its done."
   H:/uncharted_pc/dist/uncharted-windows-v0.3.8-vr0.2.zip, notes packaging/windows/RELEASE-vr-0.2.md (Matt: U2/U3 stay
   "untested"). Out-of-box check from the unzipped package (--play, simulator): OpenXR session focused, language screen
   on the virtual screen, U1 boat in stereo at 3584, 90 FPS (cold cache). Matt publishes.
+- Night 2026-11-01/02 (goal: "make sure uncharted 2 & 3 are optimal and have no graphical errors in one eye"):
+  - U2 left-eye-only fire shadow (Matt 2026-10-30): not reproduced at his cliff save. Simulator, eye 1440 and 3584:
+    the fire-lit snow's blocks agree between the eyes in single shots (mean |log2 L/R| x100 1.1), over a 300-frame
+    flash ring standing (worst frame 2.4, <1.3% blocks off by 20%), during a head sweep -30..30 (worst 1.5) and after
+    walking (0.74); no flicker standing (the patch's brightness 85.7-86.7 over 3.3 s). Both of U2's per-eye light
+    fixes run there (sun resolve 7c219ffb, light pass 5fb447d7). His shot shows a thin diagonal shadow in the left eye
+    only: needs his F9 capture when it shows.
+  - U3 volumetric spot light (pgm 0a8f4f44): the ray's origin (c16, camera from the cone's tip; Δ = s c4) moved per
+    eye was tried and reverted: at the pub its contribution is under 0.5 levels in 99% of pixels (one bright line at
+    the poker table's edge), so neither the effect nor the sign could be shown.
+  - Frame rates (simulator, eye 3584, DLSS off): U2 cliff at 90 Hz capped 89.1-90.1 (1% low 78-83, late <=0.22%),
+    120 Hz uncapped ceiling 94.4 (1% low 83-85); U3 pub at the 120 cap (1% low 75). U2 GPU 12.7 ms a frame there
+    (BB_GPU_PROFILE): cs 43b8ee5e 2.5 ms, the 1792 G-buffer-like pass 1.1 ms, an R8Uint 3584 upload each frame 0.23 ms.
 - Details: `profiles/CUSA02343-notes.md`.
 
 ## Dragon's Dogma: Dark Arisen (BLUS31155 v01.02)
@@ -2512,6 +2525,29 @@ Details and how to run: `profiles/454107DC-notes.md`.
   unless it pairs by its own travel. Cost ~0.4 ms a frame racing (XERENGE_VR_INTERPTIME). Race 90.0 FPS, late 0.00%.
   The camera is between steps everywhere again. Awaiting Matt's headset check (Angel Valley chase view, parked and
   moving).
+- Night 2026-11-01/02, the cockpit view (goal: "dont stop till all parts are working"), game `vr` uncommitted:
+  - [x] C toggles it (xerenge.conf vr_cockpit); on only once the race runs (the game's race flag 0x82846B80: 1 from
+    the GO, 0 in the introduction, the countdown and while paused - latched per race) and while the game's camera is
+    its chase camera (1.18 m up, 4.6 m back, along the car): the countdown's shots, takedowns and crashes stay the
+    game's (Matt: "the camera usually zooms to the crashed car, we should respect that").
+  - [x] Pinned to the car as drawn: car 0 of the game's car table, a global at 0x82CE0040 (the physics matrix
+    0x82B554E0 leads it by speed: 22 cm at 36 m/s, 42 cm at 55 m/s - Matt: "Accelerating shifts you back through the
+    car"). Eye in the drawn body 0.830 0.430 -0.760 +-1 mm from 0 to 57 m/s. Matt: car 0 works in a multiplayer race.
+  - [x] Near plane 5 cm, own windows hidden (glass ps 521C4D9D5E6CC77A, origin within 2 m of car 0: the doors' side
+    windows too; Matt: "this works now"), front not detaching (draws at the eye's depth were left unblended: only
+    |x|,|y|,|w| < 1 mm now).
+  - [x] Seat per car: vr_cockpit_offset_<model>, the model a hash of the meshes drawn at car 0's place (Matt: "the
+    multiple cars offsets seems to work"). Default seat -0.350 0.722 0.000 (Matt's).
+  - [x] Race markers in the cockpit: projected from the game's chase camera (XERENGE_VR_MARKERCAM per frame), not the
+    pinned one. Marker 2nd difference p90 0.0026 / p99 0.0073 (chase view 0.0023 / 0.0053; before 0.0044 / 0.057);
+    height above its car 0.85 (chase 0.85, before 1.25). Needs Matt's look.
+  - [x] Steering wheel turns: the disc-shaped piece of the car's interior mesh (Angel Valley's car: mesh
+    A06BC7BE1EE3A593, 321 of 1525 vertices, hub 0.345 0.432 0.370, axis 0 -0.306 0.952) turned about its axis by the
+    front wheels' steering angle (axles against the body) x 12 as plume unpacks it (kept out of the vertex cache in the
+    cockpit). Full lock ~8 degrees at the wheels, ~95 at the steering wheel; left turns it anticlockwise. One car checked;
+    a car without a separate wheel piece keeps it still. Needs Matt's look on other cars.
+  - Not reproduced: Matt's "sometimes its still flickery" after the near-depth change (simulator: the car's parts
+    agree to ~15 mm in every frame).
 
 ## Midnight Club: Los Angeles Complete Edition (Xbox 360 545407F8, recomp: hookmanuk/mcla-recomp, not RPCS3)
 
