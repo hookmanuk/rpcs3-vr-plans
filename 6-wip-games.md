@@ -2622,8 +2622,8 @@ Details and how to run: `profiles/454107DC-notes.md`.
   "game's camera (race on, game's camera its own)" marks the wreck). Pausing in the crash camera went to a loading
   screen.
 - README (game bf69ea2): the European ISO only (the USA claims removed from the intro, the requirements and the installer
-  paragraph); the cockpit view in its own section (Y, arrow keys, Ctrl+Up/Down for depth). Only on `vr`, not pushed;
-  `main` untouched (Matt asked whether both branches were updated - waiting on him).
+  paragraph); the cockpit view in its own section (Y, arrow keys, Ctrl+Up/Down for depth). Matt: "main should mirror VR
+  for the readme": main 644338e has vr's README. Both branches pushed (vr 1ceb131, main 644338e).
 
 ## Midnight Club: Los Angeles Complete Edition (Xbox 360 545407F8, recomp: hookmanuk/mcla-recomp, not RPCS3)
 
