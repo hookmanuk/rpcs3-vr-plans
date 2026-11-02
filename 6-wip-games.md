@@ -2631,6 +2631,11 @@ Details and how to run: `profiles/454107DC-notes.md`.
   - Step pairing: the crash's cars move 1-5 game ticks between states one apart; pairing also tries 2, 0.5, 3, 4 x the
     last travel: body misses 23 -> 16% before the crash, 54 -> 35% in it (race unchanged). Still open: the rest of the
     misses (ratios continuous 0.25-6), the pairing's cost (O(n^2) over a mesh's instances: 20 -> 128 ms a second).
+  - Matt: "Keep fixing the misses". Pairing along the line of travel (0-6 x) and, with no line, the clearly nearest
+    within 1 m (under half the next nearest): body misses before the start 2.1%, after the GO 4.4%, in the crash 2.4%
+    (were 12.6 / 15.5 / 54%); race unchanged; same-world splits race 0/242,870, crash 4/52,191 (5 without). Left: A-B-A
+    back-and-forth positions on the static shots (PRESS A TO START, after the crash) - the game's data. Pairing cost in
+    the crash 45 ms a second (128). 72 Hz held through the crash. Game dae8112 (local). Needs Matt's headset look.
 - 2026-11-02, crash camera (Matt: "Whilst in the middle of a crash (if I drive into oncoming traffic) the crash cam works
   badly. If I turn my head then its very jerky, cars are all jumpy, and also the sparks are tied to my head"; "They
   literally move from on side of the world to the other when I turn my head"). Parked by Matt ("Ignore the crashes").
