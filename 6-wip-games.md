@@ -1463,6 +1463,14 @@ my disc, I'll let you know when its done."
   H:/uncharted_pc/dist/uncharted-windows-v0.3.8-vr0.2.zip, notes packaging/windows/RELEASE-vr-0.2.md (Matt: U2/U3 stay
   "untested"). Out-of-box check from the unzipped package (--play, simulator): OpenXR session focused, language screen
   on the virtual screen, U1 boat in stereo at 3584, 90 FPS (cold cache). Matt publishes.
+- 2026-11-03: drakolordx7 rewrote `community` (email to forks): hookmanuk `community` force-reset to it (a58b159; the
+  fork's 279 old commits were all drakolord's, 275 patch-identical). Merged into `community-vr` (uncharted_pc 4af9998,
+  local) against the old base 8e84018 (6 conflicts, both sides kept; VERSION 0.3.9-vr0.2). Upstream's update check now
+  wants an asset named `uncharted-windows.zip` with a GitHub digest: the next VR release must use that name. Simulator
+  2160, 60 Hz vblank: U1 jungle / U2 cliff in stereo 90 FPS (1% low 83-84, 0% late), U3 title. Fixed 744e931: movies
+  paced at 60 Hz with VR immediate flips (were 90 flips/s at a 60 Hz vblank; Matt "video running way too fast"); U3
+  intro logos now at the flat game's times. Open: U3 title screen's lower half solid yellow in VR (Matt "horrible"):
+  the eye sees below the title backdrop's ground, shaded yellow (not a clear), flat never shows it.
 - Night 2026-11-01/02 (goal: "make sure uncharted 2 & 3 are optimal and have no graphical errors in one eye"):
   - U2 left-eye-only fire shadow (Matt 2026-10-30): not reproduced at his cliff save. Simulator, eye 1440 and 3584:
     the fire-lit snow's blocks agree between the eyes in single shots (mean |log2 L/R| x100 1.1), over a 300-frame
