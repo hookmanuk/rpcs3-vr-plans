@@ -1471,6 +1471,13 @@ my disc, I'll let you know when its done."
   paced at 60 Hz with VR immediate flips (were 90 flips/s at a 60 Hz vblank; Matt "video running way too fast"); U3
   intro logos now at the flat game's times. Open: U3 title screen's lower half solid yellow in VR (Matt "horrible"):
   the eye sees below the title backdrop's ground, shaded yellow (not a clear), flat never shows it.
+  [x] ebbe742 + d08f830 (local): menus on the flat screen. Telephoto views (game x scale > 3.5, U3 title 4.5) and
+  views whose game camera is still 1.5 s with the 2D layer over 6% of a 16x16 HUD sample (U2 title/menus 88%, U3
+  100%; play/hints/tutorial freeze small) are untagged until the camera moves. U2 ch5 and U3 pub stay stereo, 90 FPS.
+  Head aim U2/U3 (Matt "do it now"): pad layer now reports L1 or L2 as aim (U2 default layout aims with L1).
+  U2 ch5 (test saves copy H:/uc_test_user, chapters unlocked): only reached the run-and-gun tutorial freeze; L1 zooms
+  (x scale 1.95) but the aiming camera hook (+0x18c9a0) never ran there: unverified, needs a live gunfight (save from
+  Matt). U3 aim not reached. Not pushed (Matt: wait).
 - Night 2026-11-01/02 (goal: "make sure uncharted 2 & 3 are optimal and have no graphical errors in one eye"):
   - U2 left-eye-only fire shadow (Matt 2026-10-30): not reproduced at his cliff save. Simulator, eye 1440 and 3584:
     the fire-lit snow's blocks agree between the eyes in single shots (mean |log2 L/R| x100 1.1), over a 300-frame
