@@ -2671,9 +2671,12 @@ Details and how to run: `profiles/454107DC-notes.md`.
   pose, 144-145 frames a 2 s, 0 refused. Needs Matt's headset look.
   - Ruled out on the way: the logic clock (t monotonic, every wreck frame's camera matched to a state); SteamVR pacing
     (cs1: 90/90 presents, 0 reprojected through the crash, before this fix).
-  - Next: the sparks swinging with the head in the crash camera. Lead: they are view-space draws (ViewSpaceDraw: a
-    projection only) turned by the pose, but keep the game's own projection - the crash camera zooms 0.39-0.66 (the
-    scene's is replaced by the headset's), so they would be drawn up to 2.5x magnified and swing that much faster.
+  - A race's wreck too (the crash camera runs Crash mode's thirty): Sunshine Keys racerun.sh, before (sc3) 230-262
+    frames a 2 s to the headset after the wreck, 86-117 refused; after (rw1) 144-145, 0 refused. The old Angel Valley
+    wreck logs (cw7-cw13) had it too, with the title at 107-121 frames a 2 s: the "72 -> ~50" there was this.
+  - Sparks swinging with the head: not the projection (view-space draws' sx/sy = the headset's, 0.727/0.719, before
+    and after the wreck). Likely the same generated frames (a blend of two frames' head-turned sparks); needs Matt's
+    look. crashwatch4.sh's Angel Valley route no longer gets past World Tour's location select (A not taken there).
 - README (game bf69ea2): the European ISO only (the USA claims removed from the intro, the requirements and the installer
   paragraph); the cockpit view in its own section (Y, arrow keys, Ctrl+Up/Down for depth). Matt: "main should mirror VR
   for the readme": main 644338e has vr's README. Both branches pushed (vr 1ceb131, main 644338e).
