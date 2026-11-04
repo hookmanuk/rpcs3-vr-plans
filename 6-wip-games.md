@@ -2697,6 +2697,15 @@ Details and how to run: `profiles/454107DC-notes.md`.
     Hidden as the player car's own blended perspective draws (not the interface's: they hid the HUD first), drawn
     unseen rather than left out - left out, the car's model changed (8EEE510D86415080 -> E279/4929) and its seat was
     lost. Needs Matt's headset look.
+  - Explosion flames missing everywhere (flat too; upstream shipa-2/Xerenge #27 open, #52): diagnosed, not fixed. Only
+    point-list draws in the game: VS B60167394EEF80F1 / PS 3B45099329CB8A37 (runtime shader from VS ADB93201AECD0169),
+    from a wreck on, ~8,000 points a frame (temp counter, removed). Two translation faults: (1) XenosRecomp maps the VS
+    point-size export (ExportRegister::VSPointSizeEdgeFlagKillVertex) to output.oPos - the size
+    (gParams.x * sqrt(c255.x / z)) overwrites the particle's clip x; (2) the PS samples its texture at the point-sprite
+    coordinate the hardware generates (r2.zw, param_gen), which nothing generates (r2 = 0). And plume draws point lists
+    as 1-pixel Vulkan points (MapTopology POINT_LIST, no point size). Fix: XenosRecomp - a point-size output
+    ([[vk::builtin("PointSize")]] / PSIZE) and the PS's generated register from SV point coord - or plume expanding each
+    point to a quad. XenosRecomp is shipa-2's repo with local VR commits: needs Matt's OK.
 - README (game bf69ea2): the European ISO only (the USA claims removed from the intro, the requirements and the installer
   paragraph); the cockpit view in its own section (Y, arrow keys, Ctrl+Up/Down for depth). Matt: "main should mirror VR
   for the readme": main 644338e has vr's README. Both branches pushed (vr 1ceb131, main 644338e).
