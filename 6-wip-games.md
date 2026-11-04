@@ -2706,6 +2706,18 @@ Details and how to run: `profiles/454107DC-notes.md`.
     as 1-pixel Vulkan points (MapTopology POINT_LIST, no point size). Fix: XenosRecomp - a point-size output
     ([[vk::builtin("PointSize")]] / PSIZE) and the PS's generated register from SV point coord - or plume expanding each
     point to a quad. XenosRecomp is shipa-2's repo with local VR commits: needs Matt's OK.
+  - Matt 2026-11-04: "We have our own repos now, you should be changing that. For the flame fix". Fix made, NOT
+    committed (waiting on Matt's drive): XenosRecomp (hookmanuk fork, vr) - the point-size export to oPts and
+    [[vk::builtin("PointSize")]] oPointSize = max(oPts.x * XENOS_POINT_SCALE, 1) (SPIR-V); the PS register after
+    the interpolators (param_gen) = float4(0, 0, gl_PointCoord) via [[vk::ext_builtin_input(16)]]. Game plume_draw.cpp:
+    shared byte 328 = host/guest height (XENOS_POINT_SCALE), plus a TEMP XERENGE_POINT_DEV multiplier to find them.
+    Plume RHI enables every supported feature, largePoints included. Defender quarantines a freshly linked
+    XenosRecomp.exe (Trojan:Win32/Bearfoos.B!ml, false positive) - run the stereo translation right after linking or
+    have Matt restore it; an exclusion for H:\Xerenge\XenosRecompuild needs admin.
+  - Scripted test: no explosion reached (the car hits the wall alone, Crashbreaker bar 0%); 40x points not seen in
+    1200-wide shots. Matt: "I think I saw them" - then "just let me drive": he tests with
+    XERENGE_POINT_DEV=40 ./run.sh --windowed --vr=true. Next: his result, then remove XERENGE_POINT_DEV and commit both
+    repos (push XenosRecomp to hookman).
 - README (game bf69ea2): the European ISO only (the USA claims removed from the intro, the requirements and the installer
   paragraph); the cockpit view in its own section (Y, arrow keys, Ctrl+Up/Down for depth). Matt: "main should mirror VR
   for the readme": main 644338e has vr's README. Both branches pushed (vr 1ceb131, main 644338e).
