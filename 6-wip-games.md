@@ -2662,6 +2662,18 @@ Details and how to run: `profiles/454107DC-notes.md`.
   remove them). Test route: scratchpad bo/crashwatch4.sh (Angel Valley, steer into the oncoming lanes; the log line
   "game's camera (race on, game's camera its own)" marks the wreck). Pausing in the crash camera went to a loading
   screen.
+- 2026-11-04, Matt: "continue on fixing the burnout crash mode" (both entries: crash camera and crash events), then "The
+  camera judder old frames is the worst problem. Fix that now." Cause: Crash mode's flat frame generation
+  (plume FramesToGenerate, XERENGE_CRASH_INTERPOLATION on by default: the title at thirty gets a blended frame between
+  its last and this one, put up first) ran in VR on top of the between-steps drawing - every other headset frame an
+  older picture (288 frames a 2 s, 143 refused) and half the title's frames drawn with another frame's pose (452 of 900
+  own). Off in VR (game 91e964b, local): Swiss Roll through the wreck, head swaying, simulator 72 Hz: 900 of 900 own
+  pose, 144-145 frames a 2 s, 0 refused. Needs Matt's headset look.
+  - Ruled out on the way: the logic clock (t monotonic, every wreck frame's camera matched to a state); SteamVR pacing
+    (cs1: 90/90 presents, 0 reprojected through the crash, before this fix).
+  - Next: the sparks swinging with the head in the crash camera. Lead: they are view-space draws (ViewSpaceDraw: a
+    projection only) turned by the pose, but keep the game's own projection - the crash camera zooms 0.39-0.66 (the
+    scene's is replaced by the headset's), so they would be drawn up to 2.5x magnified and swing that much faster.
 - README (game bf69ea2): the European ISO only (the USA claims removed from the intro, the requirements and the installer
   paragraph); the cockpit view in its own section (Y, arrow keys, Ctrl+Up/Down for depth). Matt: "main should mirror VR
   for the readme": main 644338e has vr's README. Both branches pushed (vr 1ceb131, main 644338e).
