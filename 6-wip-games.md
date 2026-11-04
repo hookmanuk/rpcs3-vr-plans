@@ -2799,6 +2799,12 @@ Details and how to run: `profiles/454107DC-notes.md`.
     streak pixels; check the PS's oC1 (motion vectors) target in VR and whether the additive blend/bloom of RT0 differs.
     The billboard effects (sub_82174800 types 4 and 5) are screen space (pixel coordinates), and in VR the game builds
     them squashed to 9/16 height (64x36 against 64x65) - compensated by gParticleScale, but worth checking against flat.
+  - Streaks resolved as NOT a VR fault: paused at the first big streak draw (hook signals %TEMP%\xerenge_vr\SPARKS,
+    pause2.sh), flat and VR show the same thin spark streaks; the thick fiery burst in flat stays with crash
+    interpolation off (XERENGE_CRASH_INTERPOLATION=0) and motion blur off. My VR impact shots were from the in-car
+    seat (Matt's VR cockpit camera), flat's from the chase camera, and VR shows the real field of view instead of a
+    65-degree view stretched over a TV - the comparison was confounded; the geometry matches in world units. The
+    Crashbreaker explosion itself is still unseen (crashbreaker_log.cmd).
 - README (game bf69ea2): the European ISO only (the USA claims removed from the intro, the requirements and the installer
   paragraph); the cockpit view in its own section (Y, arrow keys, Ctrl+Up/Down for depth). Matt: "main should mirror VR
   for the readme": main 644338e has vr's README. Both branches pushed (vr 1ceb131, main 644338e).
