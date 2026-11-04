@@ -2777,6 +2777,12 @@ Details and how to run: `profiles/454107DC-notes.md`.
     has every explosion/fire emit with its real parameters (fxemit), the effects drawn each second (fxlog) and every
     flame spawn (spawnlog) - replay those through BOOMTEST and check how each effect moves and blends. Dev code still
     uncommitted (dev_watch.cpp, plume_draw.cpp TEMP blocks: PARTDRAW / DATAWATCH logging, env checks cached).
+  - Arming a Crashbreaker myself, dead ends (2026-11-04 late): the "Min boost power" tweak is never read during a crash
+    and B presses (read watch), "boost per checked vehicle" only by the tweak loader (sub_82350D90); messages 186/187
+    (CrashBreaker / Pickup, table 825E7920) are HUD message slots only; an integer scan for cars-hit gives a different
+    set each run (holding all at 60 crashed the game), the float 82A4F804 is an effect array (sub_82191B78), not the
+    bar. Xenia's compatibility issues (#914, canary #31) report no missing explosions. Still needs Matt's
+    crashbreaker_log.cmd run.
 - README (game bf69ea2): the European ISO only (the USA claims removed from the intro, the requirements and the installer
   paragraph); the cockpit view in its own section (Y, arrow keys, Ctrl+Up/Down for depth). Matt: "main should mirror VR
   for the readme": main 644338e has vr's README. Both branches pushed (vr 1ceb131, main 644338e).
