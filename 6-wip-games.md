@@ -2718,6 +2718,20 @@ Details and how to run: `profiles/454107DC-notes.md`.
     1200-wide shots. Matt: "I think I saw them" - then "just let me drive": he tests with
     XERENGE_POINT_DEV=40 ./run.sh --windowed --vr=true. Next: his result, then remove XERENGE_POINT_DEV and commit both
     repos (push XenosRecomp to hookman).
+  - Matt: "there are no flames or explosions still". Found three more: (a) the stereo header had no
+    XENOS_POINT_SCALE - every stereo vertex shader failed to compile (XenosRecomp "Wrote 10 unique (54 skipped)" =
+    empty SPIR-V); (b) the particles' 8x8 DXT3 tiled textures (pitch 128) have their data 26 blocks along the tile
+    (offset 0x1C0, every one: 19307000, 19302000, 18E3B000); plume read the empty origin = transparent black. Read
+    from the tile's first non-empty block when the origin is empty (tiny textures only); (c) point size against the
+    1280x256 tile band's height (2.8x too big) - now the guest frame's, and in VR times the game's view window
+    (x * 9/16, the game's gParams 15.12 flat and VR alike) over the headset's. XenosRecomp 0058275 (pushed hookman),
+    game 551c5de (local). Matt: "it looks like dust is fixed now, but wheres the flames?"; "the particles are massively
+    over bright"; "flames go down instead of up".
+  - The particles' positions: spawned at the car (y ~28) and 2 s later 20-50 m under the road, flat and VR alike (CPU
+    sim, not rendering; projection = the scene's). The game draws them with depth LESS on a reversed-depth viewport
+    (zscale -1), so under-ground ones show through. Suspect a recompiler sign error in the particle update
+    (upstream rexglue-sdk #419/#468 are NORMPACKED64, which Burnout does not use: it uses vupkd3d128 types 0, 1, 3).
+    Open: find the particle update (data breakpoint on the vertex buffer, map host RIP via burnout_init.cpp's table).
 - README (game bf69ea2): the European ISO only (the USA claims removed from the intro, the requirements and the installer
   paragraph); the cockpit view in its own section (Y, arrow keys, Ctrl+Up/Down for depth). Matt: "main should mirror VR
   for the readme": main 644338e has vr's README. Both branches pushed (vr 1ceb131, main 644338e).
