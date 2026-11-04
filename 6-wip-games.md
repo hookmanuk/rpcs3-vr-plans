@@ -2786,6 +2786,19 @@ Details and how to run: `profiles/454107DC-notes.md`.
   - Re-checked 2026-11-04 night (simulator, DLSS off, 200 Hz): crash event (head swaying) 200.0 FPS, 1% low 134-146,
     late 0.2-0.9%, game frames = headset frames (no repeats); race 200.0 FPS, 1% low 134-147, late 0.4-0.8% - parity.
     Fly-over HUD: flat shows none during the fly-over either; the Car Select panel matches flat (VR in its fixed box).
+  - The crash's FIRE STREAKS found (2026-11-04 night): flat shows a dense burst of thick fiery streaks at every impact,
+    VR thin lines. Skipping draws by vertex shader in flat (XERENGE_SKIP_VS, plume_draw.cpp TEMP): the streaks are VS
+    289A00146AFBBCC4 / PS 060DE18F2BF145BE (additive quad lists, 24-byte vertices) drawn by sub_821632E0 (per car,
+    caller sub_821646B8, D3DDevice_DrawVerticesUP from 82163A28). Each streak is built from the spark's position history
+    (ring at 82A47F00, 80 bytes a sample, written by sub_82164220 each frame; times within a window from the car's
+    data +232 -> +92): one quad per sample interval, u = age / window. VR samples about twice as often (u 0.34 against
+    0.68 a segment) and builds twice the segments (up to ~2060 vertices a frame against ~1376) - the same width (0.06)
+    and the same total length in world units, so the geometry should match; why it looks thin in VR is still open.
+    Not it: draw smoothing (XERENGE_VR_INTERPOLATE(_DRAWS)=0 unchanged), motion blur (flat with it off keeps the
+    streaks thick). Next: capture one frame flat and VR at the same moment (a savestate or freeze) and compare the
+    streak pixels; check the PS's oC1 (motion vectors) target in VR and whether the additive blend/bloom of RT0 differs.
+    The billboard effects (sub_82174800 types 4 and 5) are screen space (pixel coordinates), and in VR the game builds
+    them squashed to 9/16 height (64x36 against 64x65) - compensated by gParticleScale, but worth checking against flat.
 - README (game bf69ea2): the European ISO only (the USA claims removed from the intro, the requirements and the installer
   paragraph); the cockpit view in its own section (Y, arrow keys, Ctrl+Up/Down for depth). Matt: "main should mirror VR
   for the readme": main 644338e has vr's README. Both branches pushed (vr 1ceb131, main 644338e).
