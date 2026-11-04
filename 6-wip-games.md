@@ -2783,6 +2783,9 @@ Details and how to run: `profiles/454107DC-notes.md`.
     set each run (holding all at 60 crashed the game), the float 82A4F804 is an effect array (sub_82191B78), not the
     bar. Xenia's compatibility issues (#914, canary #31) report no missing explosions. Still needs Matt's
     crashbreaker_log.cmd run.
+  - Re-checked 2026-11-04 night (simulator, DLSS off, 200 Hz): crash event (head swaying) 200.0 FPS, 1% low 134-146,
+    late 0.2-0.9%, game frames = headset frames (no repeats); race 200.0 FPS, 1% low 134-147, late 0.4-0.8% - parity.
+    Fly-over HUD: flat shows none during the fly-over either; the Car Select panel matches flat (VR in its fixed box).
 - README (game bf69ea2): the European ISO only (the USA claims removed from the intro, the requirements and the installer
   paragraph); the cockpit view in its own section (Y, arrow keys, Ctrl+Up/Down for depth). Matt: "main should mirror VR
   for the readme": main 644338e has vr's README. Both branches pushed (vr 1ceb131, main 644338e).
