@@ -2732,6 +2732,25 @@ Details and how to run: `profiles/454107DC-notes.md`.
     (zscale -1), so under-ground ones show through. Suspect a recompiler sign error in the particle update
     (upstream rexglue-sdk #419/#468 are NORMPACKED64, which Burnout does not use: it uses vupkd3d128 types 0, 1, 3).
     Open: find the particle update (data breakpoint on the vertex buffer, map host RIP via burnout_init.cpp's table).
+  - Matt: "it kinda works, the particles are massively over bright ... flames go down instead of up". Over-bright: the
+    point size was against the 1280x256 band (2.8x) and not the headset's FOV - fixed in game 551c5de (above).
+  - Particle code found (data breakpoint, dev_watch.cpp): the evaluator sub_8214F860 writes the 5 systems' vertex
+    buffers (E5F0D000-E5F29000, 1600 each); it is analytic: y = max(pA + vA t + g/2 t^2, pB + vB t + g/2 t^2) (B the
+    bounce, taking over at the start height), killed after desc+0xC seconds. Spawn: sub_8214F6E8 (r3 system, r4 start,
+    r5 velocity, f1 time, f2 ground); its callers build velocities with sub_820B0758 (random cone, LCG + fcfid).
+    Descriptors (image data, unchanged at run time): 825EC630 sparks (g -14.7, 3 s), 825EC680 (g -14.7, 4 s),
+    825EC6D0 / 825EC720 debris (g -24.5), 825EC770 FLAMES (g +2.8, 0.9 s, orange). The sparks fall under the road
+    after one bounce by design (3-4 s life); drawn with depth LESS they show through it.
+  - Checked, no fault: fmadds/fmsubs/fnmsubs, vmaddfp(128)/vnmsubfp(128)/vmaddcfp128 operand order, rlwinm, srawi,
+    extsh, fcfid, vupkd3d128 (Burnout uses types 0, 1, 3). Flames injected through the game's own spawn
+    (XERENGE_FLAMETEST=1: at the car, v 0 1.5 0) rise correctly in the evaluator - so "flames go down" is the
+    velocity the explosion gives them, only seen with a real Crashbreaker, which scripted driving could not reach
+    (best: 9 cars, bar 86%; poking ~900 rising floats to 1.0 did not arm it).
+  - Next: Matt does a Crashbreaker with XERENGE_PARTLOG=1 (logs every system once a second: the flame system's start
+    and velocities) - then the emitter's path for those numbers. Dev tools uncommitted in H:\Xerenge: dev_watch.cpp
+    (XERENGE_DATAWATCH / BARSCAN / PARTLOG / FLAMETEST), its CMake line, the tick in game_timing.cpp, plume's
+    XERENGE_DATAWATCH publish; scratch: boombar3.sh, barfrac.py, simcap.py, simwin.py (recreated - the old vr/*.py
+    scripts were deleted from the temp folder 2026-11-04 18:03).
 - README (game bf69ea2): the European ISO only (the USA claims removed from the intro, the requirements and the installer
   paragraph); the cockpit view in its own section (Y, arrow keys, Ctrl+Up/Down for depth). Matt: "main should mirror VR
   for the readme": main 644338e has vr's README. Both branches pushed (vr 1ceb131, main 644338e).
