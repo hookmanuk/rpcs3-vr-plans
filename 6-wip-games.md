@@ -2677,6 +2677,26 @@ Details and how to run: `profiles/454107DC-notes.md`.
   - Sparks swinging with the head: not the projection (view-space draws' sx/sy = the headset's, 0.727/0.719, before
     and after the wreck). Likely the same generated frames (a blend of two frames' head-turned sparks); needs Matt's
     look. crashwatch4.sh's Angel Valley route no longer gets past World Tour's location select (A not taken there).
+- 2026-11-04 goal (Matt): "fix burnout crash mode. It should be as performant as the normal races, with no juddery head
+  movement. Also make sure that the HUD looks the same as flat mode, I suspect the flyover may be missing the HUD
+  entries." Then: "Normal race starts also show dark for a split second when first run"; "the windscreen is still there.
+  it should be hidden"; "It's just a normal windshield.... Find it like you found the others. It must be a shader."
+  - Performance (simulator, Matt's 4x7 = 5120x5040 eyes, DLSS off): race and Swiss Roll both 200 Hz held (400-401
+    frames a 2 s, 0 refused), 120 Hz both 240-241. SteamVR 90 Hz (headset on), Swiss Roll through the wreck: 90
+    presents every second, 2 reprojected in 16 s, app GPU 2.5-3.2 ms, 900/900 own pose.
+  - HUD vs flat (run.sh --windowed flat against VR, flyhud.sh / flyhud2.sh): the fly-over has no HUD in flat either;
+    card, car select, PRESS A TO START (blinks), GET READY, GO and the race HUD all present in VR.
+  - Fly-over dark/ungraded for ~6 s before car select in VR only (mono and HUD layer off were bright): the HUD split
+    fired at an interface shader's draw (0E11948850EAEE91, 146 indices) inside the tiled scene (1280x256 band), before
+    the post-processing. No split in a tile band (game 55bc5fe): shots 6-8 57/62/45 -> 121/134/101.
+  - Race start white/black frame at GO: the car's seat loaded 0.45 s after the cockpit (model learnt over 30 steps), the
+    eye above the roof meanwhile. A car with a seat of its own has it from the first frame naming it; an unknown car the
+    default from the start (not the last race's). 28 ms after the cockpit now.
+  - Crash event car's glass (STOCK C170 MID): windows E5ED654FBF9AC092, and its windscreen the body's own ps
+    9F1DFF3494E11857 blended (07060706) - found by halving the frame's 30 pixel shaders (DRAWLOG + SKIP at the GO).
+    Hidden as the player car's own blended perspective draws (not the interface's: they hid the HUD first), drawn
+    unseen rather than left out - left out, the car's model changed (8EEE510D86415080 -> E279/4929) and its seat was
+    lost. Needs Matt's headset look.
 - README (game bf69ea2): the European ISO only (the USA claims removed from the intro, the requirements and the installer
   paragraph); the cockpit view in its own section (Y, arrow keys, Ctrl+Up/Down for depth). Matt: "main should mirror VR
   for the readme": main 644338e has vr's README. Both branches pushed (vr 1ceb131, main 644338e).
