@@ -2751,6 +2751,32 @@ Details and how to run: `profiles/454107DC-notes.md`.
     (XERENGE_DATAWATCH / BARSCAN / PARTLOG / FLAMETEST), its CMake line, the tick in game_timing.cpp, plume's
     XERENGE_DATAWATCH publish; scratch: boombar3.sh, barfrac.py, simcap.py, simwin.py (recreated - the old vr/*.py
     scripts were deleted from the temp folder 2026-11-04 18:03).
+  - 2026-11-04 evening, more found (all from the simulator and flat runs, no real Crashbreaker yet):
+    - The point "flame" system (827E2B20, 825EC770) is never spawned into: only two calls spawn points
+      (sub_820B2C88: sparks, system 0; sub_820B31D0: types 0-3 -> systems 0-3). So the orange additive points Matt saw
+      falling are the SPARKS (825EC630, g -14.7, same orange blob texture 19307000) - falling is by design.
+    - The sprite texture is right: the 8x8 DXT3 tiles decode to a round orange blob (sparks/flames) and a grey puff;
+      no up/down to flip. The point coordinate matches Xenia (V = 0 at the top, -fvk-invert-y keeps D3D's orientation).
+    - Explosions are a second system, billboards: 38 effect instances (0x100 each from 827A7E20) with definitions
+      (0x94 each from 825F1B40: name pointer at +0, layer at +16): 15/17 fxfire, 19 fxexplosionflash, 20
+      fxexplosionsmoke, 22/27/28 fxexplosionfire, plus fxsmoke, fxglass, fxdebris1/2, leaves, newspapers. Emit:
+      sub_8214D788 (r3 instance, r4 start, r5 velocity, f1 time, f2-f6 sizes, caller bytes 95/103 flags). Queued per
+      frame by sub_8214D878 into lists by layer; sub_821749D8 draws list 0 (sub_82174800: a switch on the instance's
+      type, quad lists, prim 13) - the crash's smoke, glass and debris do draw (quad-list draws logged).
+    - The three fxexplosionfire definitions are on layer 0 -> list 1, and NOTHING reads list 1 (read watch on its
+      count and entries during an injected explosion; no code or data in the image refers to it): dead data on the
+      console too, so the explosion's fire must be fxfire / flash / smoke on list 0.
+    - Injected explosions (XERENGE_BOOMTEST + %TEMP%\xerenge_vr\BOOM, XERENGE_BOOMFX=indices) emit and draw (a new
+      additive quad-list draw; flat shows a small orange glow at the wreck) - but my guessed sizes/params are not the
+      game's, so they prove only that the path draws.
+    - Crashbreaker tweakables (EA's tweak table, 0x20 bytes each from ~8284C000): "Score/CrashBreaker: Min boost power
+      for crash breaker" 0.05 at 825F8DCC, "Boost value gain per Checked Vehicle in Crash Car" 20 at 825E21DC, "Time in
+      helicam, before car explodes" 0.25 at 825F8ACC. Poking the first to 0 or the second to 100000
+      (XERENGE_POKE=addr=hex,...) did not arm a Crashbreaker in scripted runs (the cars hit decide it).
+  - Next: Matt runs H:\Xerenge\crashbreaker_log.cmd and does one Crashbreaker; H:\Xerenge\crashbreaker.log then
+    has every explosion/fire emit with its real parameters (fxemit), the effects drawn each second (fxlog) and every
+    flame spawn (spawnlog) - replay those through BOOMTEST and check how each effect moves and blends. Dev code still
+    uncommitted (dev_watch.cpp, plume_draw.cpp TEMP blocks: PARTDRAW / DATAWATCH logging, env checks cached).
 - README (game bf69ea2): the European ISO only (the USA claims removed from the intro, the requirements and the installer
   paragraph); the cockpit view in its own section (Y, arrow keys, Ctrl+Up/Down for depth). Matt: "main should mirror VR
   for the readme": main 644338e has vr's README. Both branches pushed (vr 1ceb131, main 644338e).
