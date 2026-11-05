@@ -2819,6 +2819,28 @@ Details and how to run: `profiles/454107DC-notes.md`.
     820CE760; f3 = 0 by design, the 0.0 at 82000B30). It is layer 0 -> the undrawn list 1 - and layer 0 is in the
     original image too (rexglue/generated/xenos-scan/guest-image.bin: 825F2808/2AEC/2B80 = 0, the others -1), so it is
     not drawn on the console either: not a port fault.
+  - 2026-11-05 evening, Matt after a real Crashbreaker: "the particles are all tiny and also in the wrong place".
+    - FOUND why the billboard effects never showed (flat and VR): smoke, glass, debris, explosion smoke, boost exhaust
+      flames (vertex shaders 2EB5EF5854FD98EC, 7CECE80AA19923DA) draw with the viewport transform off (PA_CL_VTE_CNTL
+      0x400): positions in pixels of the 1280x720 frame, w 1, z = 1 - (zShift + zScale / d) = 0.0001 + 0.5 / d
+      (sub_8214C118). Plume took them as clip space -> hundreds of screens off. Fix (uncommitted): XenosRecomp
+      make_stereo_header.py XERENGE_SCREEN_TO_CLIP (shared bytes 336-360: pixels -> clip, z -> 1 - z for the flipped
+      depth range), plume_draw.cpp FillSharedConstants sets it for Direct3D draws with VTE scale/offset bits clear and
+      not over a resolved copy (XERENGE_SCREEN_SPACE=0 off); in stereo each eye shifts by clip shift * 2 * z (byte 332,
+      XERENGE_VR_PARTICLE_DEPTH). All shader caches rebuilt (mono, runtime, stereo). Flat A/B: start-line tyre/exhaust
+      smoke and blue boost flames now show; injected explosion shows fire glow + big smoke clouds, flat and VR (both
+      eyes, behind the fence correctly). Head turn (yaw 25, pitch 10, paused) keeps the smoke on the wheels.
+    - Point sprites in zoomed shots: the crash/Crashbreaker cameras zoom the game's view window from 1.36 (race 1.1975)
+      to 0.69, and PointSpriteScale shrank the sprites with it while the headset does not zoom. Floor at 1.1975
+      (burnout_vr.cpp, XERENGE_VR_SPRITE_WINDOW).
+    - Perf (simulator 200 Hz, 4x7 eyes, crash, DLSS off), same build A/B: fix off 169-200 FPS, 1% low 83-137, late
+      0.4-4.6%; fix on 181-200 FPS, 1% low 132-151, late 0-1.2% (noise; no cost).
+    - OPEN (Matt 2026-11-05 screenshot: yellow/white dots over the fence "drawing in front of everything"): the point
+      sprites (VS B60167394EEF80F1, RB_DEPTHCONTROL 0x712 = test LESS, no write) against the scene's reversed depth
+      (GEQUAL, viewport zscale -1): LESS passes only where a sprite is BEHIND the scene. Paused crash, xenos renderer
+      (reference) shows none of those dots over the wreck, plume a cluster. Ties in with the sim sending them 20-50 m
+      under the road ("flames go down") - seen through road and fence. Next: why xenos hides them (its depth for
+      points / the particle update's sign), then fix the root cause.
 - README (game bf69ea2): the European ISO only (the USA claims removed from the intro, the requirements and the installer
   paragraph); the cockpit view in its own section (Y, arrow keys, Ctrl+Up/Down for depth). Matt: "main should mirror VR
   for the readme": main 644338e has vr's README. Both branches pushed (vr 1ceb131, main 644338e).
