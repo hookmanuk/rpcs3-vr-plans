@@ -2805,6 +2805,12 @@ Details and how to run: `profiles/454107DC-notes.md`.
     seat (Matt's VR cockpit camera), flat's from the chase camera, and VR shows the real field of view instead of a
     65-degree view stretched over a TV - the comparison was confounded; the geometry matches in world units. The
     Crashbreaker explosion itself is still unseen (crashbreaker_log.cmd).
+  - More arming attempts (2026-11-05 small hours, flat so the HUD is readable): 12 driving lines with aftertouch and B
+    taps (cbtry.sh) - at most 1 car hit, bar 5% (a pickup; "PAYLOAD SPILL"); the scripted lines rarely reach the
+    junction's traffic (about 1 run in 3 hits one car). Holding settled scan candidates (0 at the start, the same value
+    at two late snapshots, gated on the bar's lit icon, baricon.py) at 1.0 (8370 floats near 0.05) or at 100 (654
+    floats/ints near 5) left the bar at 5% - the bar is neither the fraction nor the percent stored plainly. The race HUD
+    does not go through Apt's member setter (sub_8242BDB0, XERENGE_APTLOG lists only menu natives).
 - README (game bf69ea2): the European ISO only (the USA claims removed from the intro, the requirements and the installer
   paragraph); the cockpit view in its own section (Y, arrow keys, Ctrl+Up/Down for depth). Matt: "main should mirror VR
   for the readme": main 644338e has vr's README. Both branches pushed (vr 1ceb131, main 644338e).
