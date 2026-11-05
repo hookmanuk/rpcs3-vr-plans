@@ -2811,6 +2811,14 @@ Details and how to run: `profiles/454107DC-notes.md`.
     at two late snapshots, gated on the bar's lit icon, baricon.py) at 1.0 (8370 floats near 0.05) or at 100 (654
     floats/ints near 5) left the bar at 5% - the bar is neither the fraction nor the percent stored plainly. The race HUD
     does not go through Apt's member setter (sub_8242BDB0, XERENGE_APTLOG lists only menu natives).
+  - A car's explosion found: sub_820DFDA8 (per car, each frame; callers sub_820EA340 / sub_820E9F78) runs it when bit
+    8 of the car state's (car +2664) byte +12893 is set - effects (sub_820CB148, sub_820CDD50), sound ids 27-29
+    (sub_822BC1D0), rumble - and clears the bit. XERENGE_EXPLODE=1 + %TEMP%\xerenge_vr\EXPLODE sets it on the player's
+    car (+624 == 1): it ran (log "explode:"), nothing visible while driving.
+  - Every ordinary crash already emits fxexplosionfire (definition 27, 825F2ADC) at the impact (sub_820CDD50, lr
+    820CE760; f3 = 0 by design, the 0.0 at 82000B30). It is layer 0 -> the undrawn list 1 - and layer 0 is in the
+    original image too (rexglue/generated/xenos-scan/guest-image.bin: 825F2808/2AEC/2B80 = 0, the others -1), so it is
+    not drawn on the console either: not a port fault.
 - README (game bf69ea2): the European ISO only (the USA claims removed from the intro, the requirements and the installer
   paragraph); the cockpit view in its own section (Y, arrow keys, Ctrl+Up/Down for depth). Matt: "main should mirror VR
   for the readme": main 644338e has vr's README. Both branches pushed (vr 1ceb131, main 644338e).
