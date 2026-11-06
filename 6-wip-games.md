@@ -2905,7 +2905,8 @@ Details and how to run: `profiles/454107DC-notes.md`.
       three (one window 119.9); 1% low on 85-95, off 85-93; late on 0.11-0.67%, off 0.22-0.44%. RSX ms/frame is not in
       this game's log. No cost.
     - Still to confirm: Matt's headset.
-  - 0.4.9-vr-0.3 built, not pushed or tagged (game 58b8cf1; XenosRecomp 5207aac, SDK e1931b9 also local):
+  - 0.4.9-vr-0.3 tested by Matt ("this all works"): vr and tag pushed (game 58b8cf1; XenosRecomp 5207aac, SDK e1931b9),
+    main's README d77f2ed, draft GitHub release for him to publish:
     H:\Xerengeelease\Burnout_Revenge_Installer-win-amd64-0.4.9-vr-0.3.exe, 36.4 MB, same file list as 0.2, no DLSS. Dev
     code removed (dev_watch.cpp now in tools/burnout; XERENGE_UPLOG gone, so tools/burnout/sparkrun.sh needs its SPARKS
     signal put back to be rerun). Installed from the European ISO with the real installer (portable, H:\XerengeOOB):
