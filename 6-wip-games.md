@@ -3851,6 +3851,13 @@ matching VR with no gfx errors and 90fps."
   car, 3.5 m behind); cockpit and hood held whole as before; the chase views held at their seat's distance along the
   car only (height, swing aside and direction stay the game's). Simulator: chase seat 8.211 held through 5.71-10.49 m of
   the game's swing; cockpit, hood, chase each kept their own seat. Needs Matt's look (COCKPIT SWAY on = the game's).
+- [ ] Matt (2026-11-06, vr-0.1 in his headset): "cockpit sway held does work initially. but, there is a bug where the
+  view suddenly teleports forwards about 0.5m, after which the view slides forwards and backwards, just like when
+  cockpit sway is on." "No, stopping does not stop the slide. I wasn't doing anything special, If I just drive for
+  like 20 secs it normally triggers the jump." His log (mcla_003) has nothing on it: vr-0.1 does not log the hold.
+  Seat lost and relearnt at the next stop is out (his stop test), unless the target flips every frame. Diagnostic
+  build: vr-0.1's camera + plans/tools/mc/mcla-hold-diag.patch (not committed to the game), bin\mcla_holddiag.exe in
+  his release folder; HOLDDIAG log lines. 9d8fe5e (local, unpushed) not in that build and not known to cure this.
 
 ## Uncharted: Drake's Fortune (BCUS98103, update 01.10)
 

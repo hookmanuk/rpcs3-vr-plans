@@ -1,0 +1,211 @@
+diff --git a/src/vr_camera.cpp b/src/vr_camera.cpp
+index 586ae5e..73e4a03 100644
+--- a/src/vr_camera.cpp
++++ b/src/vr_camera.cpp
+@@ -164,6 +164,19 @@ uint32_t LoadU32(const uint8_t* p) {
+   return __builtin_bswap32(v);
+ }
+ 
++// DIAGNOSTIC BUILD ONLY (plans/tools/mc/mcla-hold-diag.patch): why the cockpit hold lets go. Never committed.
++extern "C" __declspec(dllimport) int __stdcall IsBadReadPtr(const void*, unsigned long long);
++struct HoldDiag {
++  bool have_seat = false;
++  float seat[3]{};
++  uint32_t seat_car = 0;
++  int still = 0;
++};
++HoldDiag g_hold_diag;
++std::atomic<uint32_t> g_diag_camera{0};
++std::atomic<int> g_diag_budget{4000};  // event lines, so a per-frame flip cannot fill the disk
++bool DiagEvent() { return g_diag_budget.fetch_sub(1, std::memory_order_relaxed) > 0; }
++
+ // Holds the cockpit camera (m: rows, the game's camera) at its seat in the car: its place, and its pitch with no roll
+ // (the game's heading is kept: looking left or right). The seat is where the camera was in the body's frame after the
+ // car stood still for half a second (learn: the update thread's first setting of a frame); only a camera inside the
+@@ -208,6 +221,10 @@ void HoldCockpitCamera(uint8_t* base, float (&m)[16], bool learn) {
+   static int still = 0;
+   if (learn) {
+     if (car_address != seat_car) {
++      if (DiagEvent()) {
++        REXLOG_INFO("HOLDDIAG SEAT WIPED: car {:08X} -> {:08X}, had seat {} {:.3f} {:.3f} {:.3f}", seat_car, car_address,
++                    have_seat, seat[0], seat[1], seat[2]);
++      }
+       seat_car = car_address;
+       have_seat = false;
+       still = 0;
+@@ -217,11 +234,20 @@ void HoldCockpitCamera(uint8_t* base, float (&m)[16], bool learn) {
+     std::memcpy(last_position, position, sizeof(position));
+     still = dx * dx + dy * dy + dz * dz < 1e-6f ? still + 1 : 0;  // under 1 mm a frame
+     if (cockpit && still >= 30) {
++      const float sx = seat[0] - local[0], sy = seat[1] - local[1], sz = seat[2] - local[2];
++      if ((!have_seat || sx * sx + sy * sy + sz * sz > 1e-4f) && DiagEvent()) {
++        REXLOG_INFO("HOLDDIAG SEAT LEARNT: car {:08X} {:.3f} {:.3f} {:.3f} (was {} {:.3f} {:.3f} {:.3f}) pitch {:.3f} still {}",
++                    car_address, local[0], local[1], local[2], have_seat, seat[0], seat[1], seat[2], back[1], still);
++      }
+       std::memcpy(seat, local, sizeof(seat));
+       seat_pitch = back[1];
+       have_seat = true;
+     }
+   }
++  g_hold_diag.have_seat = have_seat;
++  std::memcpy(g_hold_diag.seat, seat, sizeof(seat));
++  g_hold_diag.seat_car = seat_car;
++  g_hold_diag.still = still;
+   if (!cockpit || !have_seat || seat_car != car_address) {
+     return;
+   }
+@@ -249,6 +275,118 @@ void HoldCockpitCamera(uint8_t* base, float (&m)[16], bool learn) {
+   }
+ }
+ 
++// One update's camera against the car: every 250 ms, and each update for half a second after anything sudden.
++void HoldDiagLog(uint8_t* base, const float (&game)[16], const float (&held)[16], const float (&out)[16],
++                 const float* pose, bool learn, bool readback) {
++  static int calls[2][2]{};
++  ++calls[learn][readback];
++  const uint32_t car_address = g_car_matrix.load(std::memory_order_relaxed);
++  float rows[3][3]{}, position[3]{}, lengths[3]{};
++  bool car_ok = car_address != 0;
++  for (int r = 0; r < 3 && car_ok; ++r) {
++    float length = 0.f;
++    for (int c = 0; c < 3; ++c) {
++      rows[r][c] = LoadFloat(base + car_address + 16 * r + 4 * c);
++      length += rows[r][c] * rows[r][c];
++    }
++    lengths[r] = std::sqrt(length);
++    car_ok = lengths[r] > 1e-3f;
++    if (car_ok) {
++      for (float& v : rows[r]) {
++        v /= lengths[r];
++      }
++    }
++    position[r] = LoadFloat(base + car_address + 48 + 4 * r);
++  }
++  const auto in_body = [&](const float (&matrix)[16], float (&local)[3]) {
++    for (int r = 0; r < 3; ++r) {
++      local[r] = (matrix[12] - position[0]) * rows[r][0] + (matrix[13] - position[1]) * rows[r][1] +
++                 (matrix[14] - position[2]) * rows[r][2];
++    }
++  };
++  float local_game[3], local_held[3], local_out[3];
++  in_body(game, local_game);
++  in_body(held, local_held);
++  in_body(out, local_out);
++  const auto distance = [](const float* a, const float* b) {
++    return std::sqrt((a[0] - b[0]) * (a[0] - b[0]) + (a[1] - b[1]) * (a[1] - b[1]) + (a[2] - b[2]) * (a[2] - b[2]));
++  };
++  static float learnt_out[3];
++  static int disagreements = 0;
++  if (!learn) {  // the frame's other setting of the camera: does it agree with the first?
++    disagreements += distance(local_out, learnt_out) > 0.1f;
++    return;
++  }
++  static float last_game[3], last_out[3], last_pose[3], last_position[3];
++  static uint32_t last_car = 0, last_camera = 0;
++  static bool last_held = false;
++  static int burst = 0;
++  static auto last_line = std::chrono::steady_clock::now();
++  const bool is_held = std::memcmp(game + 12, held + 12, 12) != 0;
++  const uint32_t camera = g_diag_camera.load(std::memory_order_relaxed);
++  const float along = game[8] * rows[2][0] + game[9] * rows[2][1] + game[10] * rows[2][2];
++  const float d_game = distance(local_game, last_game), d_out = distance(local_out, last_out),
++              d_pose = distance(pose + 12, last_pose), d_car = distance(position, last_position);
++  const char* event = !car_ok                   ? nullptr
++                      : is_held != last_held    ? (is_held ? "HOLD ON" : "HOLD OFF")
++                      : car_address != last_car ? "CAR CHANGED"
++                      : camera != last_camera   ? "CAMERA OBJECT CHANGED"
++                      : d_game > 0.1f           ? "GAME CAMERA JUMP IN BODY"
++                      : d_out > 0.1f            ? "FINAL CAMERA JUMP IN BODY"
++                      : d_pose > 0.1f           ? "HEAD POSE JUMP"
++                      : d_car > 3.f             ? "CAR WORLD JUMP"
++                                                : nullptr;
++  if (event && DiagEvent()) {
++    REXLOG_INFO("HOLDDIAG EVENT {}: moved game {:.3f} final {:.3f} head {:.3f} car(world) {:.3f}", event, d_game, d_out,
++                d_pose, d_car);
++    burst = 36;
++  }
++  const auto now = std::chrono::steady_clock::now();
++  if ((burst > 0 && DiagEvent()) || now - last_line > std::chrono::milliseconds(250)) {
++    burst = std::max(0, burst - 1);
++    last_line = now;
++    const uint32_t target = car_address > 272 ? car_address - 272 : 0;
++    float chassis_local[3]{};
++    uint32_t chassis = 0, camera_vtable = 0, target_vtable = 0;
++    if (target && !IsBadReadPtr(base + target, 32)) {
++      target_vtable = LoadU32(base + target);
++      chassis = LoadU32(base + target + 28);
++      if (chassis && !IsBadReadPtr(base + chassis + 16, 64)) {
++        const float p[3] = {LoadFloat(base + chassis + 16 + 48), LoadFloat(base + chassis + 16 + 52),
++                            LoadFloat(base + chassis + 16 + 56)};
++        for (int r = 0; r < 3; ++r) {
++          chassis_local[r] = (p[0] - position[0]) * rows[r][0] + (p[1] - position[1]) * rows[r][1] +
++                             (p[2] - position[2]) * rows[r][2];
++        }
++      }
++    }
++    if (camera && !IsBadReadPtr(base + camera, 4)) {
++      camera_vtable = LoadU32(base + camera);
++    }
++    REXLOG_INFO(
++        "HOLDDIAG {} sway {} panel {} car {:08X} cam {:08X}/{:08X} target-vt {:08X} chassis {:08X} | game {:.3f} {:.3f} "
++        "{:.3f} held {:.3f} {:.3f} {:.3f} final {:.3f} {:.3f} {:.3f} seat {} {:.3f} {:.3f} {:.3f} | along {:.3f} scale "
++        "{:.3f} {:.3f} {:.3f} chassis-in-body {:.3f} {:.3f} {:.3f} head {:.3f} {:.3f} {:.3f} | carstep {:.4f} still {} "
++        "calls first {}+{} second {}+{} disagree {}",
++        is_held ? "HELD" : "free", bool(REXCVAR_GET(vr_cockpit_sway)), vr::UiPanel(), car_address, camera, camera_vtable,
++        target_vtable, chassis, local_game[0], local_game[1], local_game[2], local_held[0], local_held[1], local_held[2],
++        local_out[0], local_out[1], local_out[2], g_hold_diag.have_seat, g_hold_diag.seat[0], g_hold_diag.seat[1],
++        g_hold_diag.seat[2], along, lengths[0], lengths[1], lengths[2], chassis_local[0], chassis_local[1],
++        chassis_local[2], pose[12], pose[13], pose[14], d_car, g_hold_diag.still, calls[1][0], calls[1][1], calls[0][0],
++        calls[0][1], disagreements);
++    std::memset(calls, 0, sizeof(calls));
++    disagreements = 0;
++  }
++  std::memcpy(learnt_out, local_out, sizeof(local_out));
++  std::memcpy(last_game, local_game, sizeof(local_game));
++  std::memcpy(last_out, local_out, sizeof(local_out));
++  std::memcpy(last_pose, pose + 12, sizeof(last_pose));
++  std::memcpy(last_position, position, sizeof(position));
++  last_car = car_address;
++  last_camera = camera;
++  last_held = is_held;
++}
++
+ }  // namespace
+ 
+ // The tree impostors (DISTANT TREES): the game re-renders each one's picture, round-robin, from the direction the
+@@ -324,6 +462,11 @@ extern "C" REX_FUNC(sub_822AA040) {
+   __imp__sub_822AA040(ctx, base);
+   if (director && std::memcmp(before, base + director + 0x1C0, sizeof(before)) != 0) {
+     const uint32_t target = LoadU32(base + camera + 48);
++    const uint32_t old_car = g_car_matrix.load(std::memory_order_relaxed);
++    if (old_car != (target ? target + 272 : 0) && DiagEvent()) {
++      REXLOG_INFO("HOLDDIAG TARGET: car {:08X} -> {:08X}, camera object {:08X}", old_car, target ? target + 272 : 0, camera);
++    }
++    g_diag_camera.store(camera, std::memory_order_relaxed);
+     g_car_matrix.store(target ? target + 272 : 0, std::memory_order_relaxed);
+   }
+ }
+@@ -573,6 +716,7 @@ extern "C" REX_FUNC(sub_8217CE80) {
+   // second setting) is turned from the camera it came from, not turned again. Any of the last 16 posed cameras counts:
+   // the render thread's viewport holds an older frame's (kRenderCameraCaller), and one not recognised was turned twice
+   // (looking up and down then moved the camera up, down and along, settling somewhere else).
++  bool diag_readback = false;
+   {
+     std::scoped_lock lock{g_pose_mutex};
+     for (const Posed& p : g_posed_history) {
+@@ -581,6 +725,7 @@ extern "C" REX_FUNC(sub_8217CE80) {
+         same = (i & 3) == 3 || std::abs(p.out[i] - m[i]) < 1e-3f;
+       }
+       if (same) {
++        diag_readback = true;
+         std::memcpy(m, p.in, sizeof(m));
+         break;
+       }
+@@ -604,6 +749,7 @@ extern "C" REX_FUNC(sub_8217CE80) {
+                                        pose[14] * m[2 * 4 + c]);
+   }
+   out[15] = m[15];
++  HoldDiagLog(base, game, m, out, pose, uint32_t(ctx.lr) == kCameraObjectCaller, diag_readback);
+   {
+     std::scoped_lock lock{g_pose_mutex};
+     Posed& p = g_posed_history[g_posed_history_next++ % 16];
