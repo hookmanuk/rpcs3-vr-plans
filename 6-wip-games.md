@@ -3867,6 +3867,13 @@ matching VR with no gfx errors and 90fps."
   In d164254, vr-0.1 and 9d8fe5e alike. Not known: why those objects' updates look like writes to the director's camera
   (updates on t38760, the camera setting on t46676: a race is possible). Proposed: stay on the current car while the
   camera is inside its views; no seat wipe on a change. Not built yet.
+  Built (game, uncommitted vr_camera.cpp): HoldCar stays on the car the camera is in, picks by place among all camera
+  objects' cars; seats kept per car. Simulator (earlier version): flips ignored over ~20 s of driving, ended in a crash;
+  final versions not run (Matt: "dont test, I will test it"). Matt: "seems ok... once after the GPS map it teleported
+  me forwards. I stopped the car and it reset the position." "the first one was the jump" (mcla_005, map at 20:10:47,
+  3 s after a pause). Theory, unproven: a panel freezes the car with the camera swayed, read as a stop, seat learnt
+  there. Built: seats kept from a panel until the car has driven 1 m; log lines "seat kept after a menu", "seat moved".
+  Handed over as bin\mcla_holdfix2.exe / Hold Fix 2.cmd, not run by me.
 
 ## Uncharted: Drake's Fortune (BCUS98103, update 01.10)
 
