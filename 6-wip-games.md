@@ -3882,7 +3882,7 @@ matching VR with no gfx errors and 90fps."
   under 2 cm an update) with the camera steady, no panel; a stopped-dead car keeps its seats; the settle uses the hold's
   car. Handed over as bin\mcla_holdfix3.exe / Hold Fix 3.cmd.
   Matt: "yep this all seems good". mcla_008: a freeze refused (20:27:32, camera 15 cm forward of the seat, seat kept).
-  Game c729284 (local, with 9d8fe5e; neither pushed nor released: vr-0.1 still has both bugs). Headset only, by Matt; the
+  Game c729284 (with 9d8fe5e; released as vr-0.2, tag on 3960dad, draft for Matt to publish 2026-11-06). Headset only, by Matt; the
   final build never run on the simulator (his request).
 
 ## Uncharted: Drake's Fortune (BCUS98103, update 01.10)
