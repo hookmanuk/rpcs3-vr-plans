@@ -1,0 +1,20 @@
+2026-11-06 22:26 2880 grid passes-on: avg 86.5 FPS, 1% low 43.4, p50 11.25 ms, p99 23.05 ms, worst 26.0 ms, 865 frames, draws 3838
+2026-11-06 22:28 2880 grid uncapped: avg 83.6 FPS, 1% low 43.5, p50 11.75 ms, p99 23.01 ms, worst 25.9 ms, 836 frames, draws 4118
+2026-11-06 22:28 2880 driving: avg 89.9 FPS, 1% low 46.1, p50 11.07 ms, p99 21.71 ms, worst 37.6 ms, 899 frames, draws 2443
+2026-11-06 22:30 5120 grid uncapped: avg 65.4 FPS, 1% low 41.0, p50 15.22 ms, p99 24.39 ms, worst 28.2 ms, 654 frames, draws 4157
+2026-11-06 22:30 5120 driving: avg 86.5 FPS, 1% low 47.6, p50 11.12 ms, p99 21.02 ms, worst 27.2 ms, 865 frames, draws 2337
+2026-11-06 22:33 VR 5120 grid HZ240 fov1.4: avg 64.8 FPS, 1% low 39.8, p50 15.25 ms, p99 25.14 ms, worst 26.7 ms, 648 frames, draws 4579
+2026-11-06 22:33 VR 5120 driving HZ240 fov1.4: avg 84.0 FPS, 1% low 43.8, p50 11.50 ms, p99 22.85 ms, worst 35.6 ms, 840 frames, draws 2066
+2026-11-06 22:35 VR 2880 grid HZ240 fov1.4: avg 83.9 FPS, 1% low 39.3, p50 11.53 ms, p99 25.43 ms, worst 41.6 ms, 839 frames, draws 4582
+2026-11-06 22:35 VR 2880 driving HZ240 fov1.4: avg 126.4 FPS, 1% low 47.4, p50 7.30 ms, p99 21.08 ms, worst 25.2 ms, 1264 frames, draws 2065
+2026-11-06 22:37 FLAT 5120x3240 grid (same pixels as VR 2880 x2): avg 137.3 FPS, 1% low 109.2, p50 7.19 ms, p99 9.16 ms, worst 9.9 ms, 1373 frames, draws 4497
+2026-11-06 22:37 FLAT 5120x3240 driving: avg 200.1 FPS, 1% low 123.9, p50 4.74 ms, p99 8.07 ms, worst 10.1 ms, 2002 frames, draws 2481
+2026-11-06 22:40 VR 2880 grid HZ240 timers: avg 81.2 FPS, 1% low 39.8, p50 11.95 ms, p99 25.14 ms, worst 31.0 ms, 812 frames, draws 4747
+2026-11-06 22:42 sweep1 800x800 PGR4_VR_FOV=1.4 grid: avg 91.6 FPS, 1% low 40.0, p50 10.36 ms, p99 25.01 ms, worst 29.0 ms, 733 frames, draws 4753
+ perf:   waiting on host GPU 0.00 ms/frame | GPU time 10.32 ms/frame (worst 15.0)
+2026-11-06 22:42 sweep1 800x800 PGR4_VR_FOV=1.4 driving: avg 137.8 FPS, 1% low 49.5, p50 6.79 ms, p99 20.22 ms, worst 24.6 ms, 1103 frames, draws 2411
+ perf:   waiting on host GPU 0.00 ms/frame | GPU time 5.04 ms/frame (worst 7.4)
+2026-11-06 22:44 sweep1 1600x1600 PGR4_VR_FOV=1.4 grid: avg 90.5 FPS, 1% low 43.5, p50 10.61 ms, p99 22.98 ms, worst 28.9 ms, 724 frames, draws 4758
+ perf:   waiting on host GPU 0.00 ms/frame | GPU time 10.63 ms/frame (worst 17.5)
+2026-11-06 22:44 sweep1 1600x1600 PGR4_VR_FOV=1.4 driving: avg 141.0 FPS, 1% low 51.5, p50 6.47 ms, p99 19.40 ms, worst 30.2 ms, 1128 frames, draws 2403
+ perf:   waiting on host GPU 0.00 ms/frame | GPU time 5.05 ms/frame (worst 11.1)

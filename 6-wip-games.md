@@ -4263,3 +4263,15 @@ generated profile is wrong (picked indexed light vectors at `c[68]`); the hand p
 - **WipEout HD regression, open (2026-10-15):** `vrtest_wipeout_race` at 120 Hz now 100 FPS with **28-32 % late frames**
   (RSX 3.1-3.3 ms); the 10-11 runs had 100.0 FPS, 0 % late, RSX 1.3-1.6 ms. Not caused by eager submission (off: 29.6 %)
   nor the depth-barrier fix (without it: 27.8 %): something on `openxr` since 10-11. To bisect.
+
+## Project Gotham Racing 4 (Xbox 360 4D5307F9, recomp: H:\PGR4-ReGPU = hookmanuk/PGR4-ReGPU, not RPCS3)
+
+Matt 2026-11-06 goal: "start VR support on the vr branch": multiview VR in a single pass; option to remove screenshake (defaulted to
+remove); as high a frame rate as possible, ideally 90 FPS at 5K per eye; all visuals in VR the same as flat, especially the HUD, 2D
+markers and particle effects; force feedback for wheel and road forces; keep going all night. Details: `profiles/4D5307F9-notes.md`.
+
+- [x] Builds on branch `vr` (needs Title Update #2, in H:\ROMs\pgr4). Flat 4K about 150 FPS on Matt's PC.
+- [x] One pass, both eyes (2-layer surfaces, 2 instances a draw); head tracking and eye matrices in clip space; HUD box fixed in the
+  world; simulator, real pose: yaw 30 correct. Stereo race grid and driving render.
+- [ ] Open: performance (5120 per eye 65 / 84 FPS, grid / driving, target 90), screen shake option, HUD and 2D markers, particles,
+  force feedback, head-turn culling. Not yet tried on SteamVR.
