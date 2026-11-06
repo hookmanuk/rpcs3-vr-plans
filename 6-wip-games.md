@@ -2905,6 +2905,12 @@ Details and how to run: `profiles/454107DC-notes.md`.
       three (one window 119.9); 1% low on 85-95, off 85-93; late on 0.11-0.67%, off 0.22-0.44%. RSX ms/frame is not in
       this game's log. No cost.
     - Still to confirm: Matt's headset.
+  - 0.4.9-vr-0.3 built, not pushed or tagged (game 58b8cf1; XenosRecomp 5207aac, SDK e1931b9 also local):
+    H:\Xerengeelease\Burnout_Revenge_Installer-win-amd64-0.4.9-vr-0.3.exe, 36.4 MB, same file list as 0.2, no DLSS. Dev
+    code removed (dev_watch.cpp now in tools/burnout; XERENGE_UPLOG gone, so tools/burnout/sparkrun.sh needs its SPARKS
+    signal put back to be rerun). Installed from the European ISO with the real installer (portable, H:\XerengeOOB):
+    boots at version 0.3 to the title menu on the simulator, 72 FPS, pad input works. Race from the installed copy not
+    run: Matt stopped it to test himself.
 - README (game bf69ea2): the European ISO only (the USA claims removed from the intro, the requirements and the installer
   paragraph); the cockpit view in its own section (Y, arrow keys, Ctrl+Up/Down for depth). Matt: "main should mirror VR
   for the readme": main 644338e has vr's README. Both branches pushed (vr 1ceb131, main 644338e).
