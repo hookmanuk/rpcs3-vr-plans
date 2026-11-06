@@ -2841,6 +2841,70 @@ Details and how to run: `profiles/454107DC-notes.md`.
       (reference) shows none of those dots over the wreck, plume a cluster. Ties in with the sim sending them 20-50 m
       under the road ("flames go down") - seen through road and fence. Next: why xenos hides them (its depth for
       points / the particle update's sign), then fix the root cause.
+    - FIXED (uncommitted) 2026-11-05 night: the dots. Xenos does not draw point lists at all (forced depth ALWAYS: still
+      none), so it is no reference for them. The sprites' depth state is the hardware's (xenos register 0x712, LESS, same
+      EDRAM depth base as the scene): they carry a bias towards the camera (z = w - 0.6, against the scene's 0.5 near)
+      that only makes sense for a near-is-0 buffer, and the 360 build reversed depth (viewport z -1, GEQUAL) - so as set
+      they show only where a fifth behind geometry (the glitter seen through the wreck). plume_graphics_system.cpp
+      mirrors LESS/LEQUAL to GREATER/GEQUAL for point lists on a reversed viewport (XERENGE_SPRITE_DEPTH=0: as the
+      guest). The glitter behind the car is now hidden by it; dark debris specks show against the sky; race start
+      unchanged (4035 px differ). Matt: "Its better, dirt and smoke looks good now."
+  - Matt 2026-11-05 late: "Fire still doesn't seem right though. It appears breifly but then disappears. If I were to
+    guess, I'd say its still spawning fire particles downwards below the road so we dont see them. Fire should go up.
+    Make fire work properly." And: "there is a "TARGET" text that floats in the HUD, it should be attached to some
+    target car you're supposed to hit. To get to the actual crash junction just drive slower towards the intersection
+    so you dont crash."
+    - Route to the junction (flat, scratch slowdrive.sh + route.txt): "press a; wait 1; press a; wait 2.5; hold
+      rt=0.55 lx=-0.35; wait 4.5; hold rt=0.5 lx=-0.1; wait 8" (pad file rt=/lt= analog added to the SDK's
+      MCLA_PAD_FILE parser): 34-47 cars, Crashbreaker, TARGET CAR TAKEDOWN, silver medal. Reaches the junction about
+      half the time on plume, rarely on xenos (slower, traffic varies).
+    - Xenos flat (reference) shows big orange fireballs at "BURST INTO FLAMES" and a burning column after the
+      Crashbreaker; plume flat has neither (flat too, not a VR fault). Both show the small burning debris balls.
+    - Every effect type (sub_82174800: 0 sub_82148AE0, 1 sub_82149438, 4/5 sub_8214C118) draws through
+      DrawVerticesUP quad lists from 821749A8 - the screen-space billboard shader (plume 2EB5EF58, xenos 4728F38E).
+      Same effects requested in both renderers (fxfire 1, fxexplosionsmoke 1 / 4, fxexplosionsmokeaboveLit/Unlit 0,
+      fxsmoke 4, fxglass / fxdebris 5). Textures: 192DF000 the flame (DXT3, additive 00010106), 192C5000 orange cloud,
+      192B8/192D2/19281/1928E/192EC/19322 smoke, glass, debris.
+    - The flame draws (192DF000) are identical in both: ~60 draws a second, ~100 vertices each, quads ~25 px, colour
+      ARGB 3B161616 (xenos vfetch 95 read back = plume's unpack). Skipping them in xenos leaves its fireball: the
+      fireball is another draw. Next: which (xenos skip by shader / texture), then why plume loses it.
+    - FOUND and fixed (uncommitted), Matt 2026-11-06: "this is all looking good now, the target label works and the
+      flames are all visible and in the right place!". The burning wrecks' and explosions' fire (VS 65AD35605662A514, PS
+      7A6DF6C1E26BB804, a "Lion" flipbook, 19117000 / 190F6000) goes into an effects buffer: render target 2 bound alone,
+      800x368 (EDRAM base 0x2D0), mask 0xF00, blend from RB_BLENDCONTROL2 (0x220A, 00010706, not target 0's 00010001);
+      the console copies the scene in first and the final pass (PS 1CD5D644F08C1FD0, gParticleSampler 06434000) takes the
+      buffer where its alpha > 0. Plume's target 0 mask was empty so they wrote nothing. Now drawn over the frame with
+      target 2's mask and blend (plume_graphics_system.cpp, XERENGE_EFFECTS_BUFFER=0: off), its clear left out; source 2's
+      resolve already copied the frame. Partial A/B, 200 Hz, DLSS off, fix off / on / off: ~199 / ~200 / 200 FPS, 1% low
+      109-120 / 131-142 / 140-150; no second "on" run.
+    - TARGET label: two draws starting the frame's 2D draws, with a marker's depth value and no triangle, so MarkerDraw
+      left them to the HUD. Taken as markers while the event runs (XERENGE_VR_RACING; XERENGE_VR_TARGET_MARKER=0: off),
+      and paused by its first draw's size. PlaceMarker now unprojects through the game's own window
+      (XERENGE_VR_GAME_WINDOW; the crash shots zoom to 0.45-0.69 and the label went to the sky; through a zoom 0.59 -> 0.45
+      raw x -0.68 -> -0.98, placed -0.29 -> -0.32) and moves a car's draws as one. Simulator paused, yaw +-20, pitch 10,
+      roll 15: whole, above the same car.
+  - Matt 2026-11-06, next: "The only thing left is the long standing orange sparks. If you turn your head rapidly you
+    will see the sparks move with your head. This has always been the case and is wrong. You can replicate by just
+    acclerating in a straight line until you crash on that crash junction, and turn your head and take screenshots
+    as/after your crash".
+    - Cause: the streaks (VS 289A00146AFBBCC4, sub_821632E0, CPU-built in view space) go through a ring of the view matrix
+      (16 samples of 80 bytes a player from 0x82A47F00, written by sub_82164220 and sub_8214E178 from 0x82923EE0). That
+      matrix is the renderer's head-posed one, and plume then turned the draw by the head again (TurnViewSpaceDraw).
+      Paused tests cannot show it (Matt: paused vertices are frozen), so test the running game.
+    - Fix (burnout_vr.cpp, UnposeSparkRing; XERENGE_VR_SPARK_RING=0: off): each new ring sample is the drawn camera's
+      view, without the head. Not yet committed in the game; waiting for Matt's test.
+    - Measured, simulator, not paused, crash in his config (vr_cockpit = 1), real head pose swept +-25 deg at 2 Hz for 6 s
+      from the first sparks, per-draw trace of streak quads (trace since removed). Static camera after the crash, draws
+      with 8+ quads:
+      | | n | centre x vs yaw (tangent/deg) | r | quad width, fast head / slow head |
+      | fix off | 227 | 0.0173 (tan 1 deg = 0.0175: follows the head 1:1) | 0.820 | 0.0784 / 0.0408 |
+      | fix on | 233 | -0.0001 | -0.019 | 0.0017 / 0.0016 |
+      Moving camera, fix on: width vs head speed r -0.001, centre vs yaw 0.0018 (r 0.204); fix off 0.0218 (r 0.842).
+      Shots: evidence/burnout-sparks/ (fix off: large burst smeared and off the wreck; fix on: tight at the wreck).
+    - Frame rate, 120 Hz simulator, 4x7, DLSS off, on/off/on, last four log windows of each run: game 120 FPS in all
+      three (one window 119.9); 1% low on 85-95, off 85-93; late on 0.11-0.67%, off 0.22-0.44%. RSX ms/frame is not in
+      this game's log. No cost.
+    - Still to confirm: Matt's headset.
 - README (game bf69ea2): the European ISO only (the USA claims removed from the intro, the requirements and the installer
   paragraph); the cockpit view in its own section (Y, arrow keys, Ctrl+Up/Down for depth). Matt: "main should mirror VR
   for the readme": main 644338e has vr's README. Both branches pushed (vr 1ceb131, main 644338e).
