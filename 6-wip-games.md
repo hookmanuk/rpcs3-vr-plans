@@ -3874,6 +3874,13 @@ matching VR with no gfx errors and 90fps."
   3 s after a pause). Theory, unproven: a panel freezes the car with the camera swayed, read as a stop, seat learnt
   there. Built: seats kept from a panel until the car has driven 1 m; log lines "seat kept after a menu", "seat moved".
   Handed over as bin\mcla_holdfix2.exe / Hold Fix 2.cmd, not run by me.
+  Matt: "all good until I got a popup tutorial message about the police while driving, then it jumped again. I then
+  stopped and it jumped back to the right place." mcla_007: theory confirmed. 20:20:16 pause while driving: seat kept at
+  z 0.457, camera at 0.115 (34 cm). 20:20:57 pop-up, no panel: seat moved 0.457 -> 0.130; 20:21:10 his stop: back to
+  0.452. Also a junk seat (-2.226 0.886 3.561) learnt from the pause menu's own camera, and 15 s unposed after the map
+  at 20:20:24-39 (the settle went by the flipping car). Built, not run: a seat moves only after a gentle stop (last step
+  under 2 cm an update) with the camera steady, no panel; a stopped-dead car keeps its seats; the settle uses the hold's
+  car. Handed over as bin\mcla_holdfix3.exe / Hold Fix 3.cmd.
 
 ## Uncharted: Drake's Fortune (BCUS98103, update 01.10)
 
