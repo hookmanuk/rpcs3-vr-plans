@@ -318,3 +318,25 @@ Matt: "implement all relevant changes to uncharted 2 & 3 as well, all gfx fixes,
   +0x11e0 / +0x11f0 (U2's +0x1ec8 / +0x1ed0 / +0x1f90 location fields are U3's +0x1170 / +0x1180 / +0x1240).
   camera-aim-override-direction (U2 native +0x3f9230) only writes globals (+0xeb7a60, mode +0xeb7a9c = 2) that U2's
   camera manager does not act on: not used.
+
+## Quest 3 stalls, pacing, menu state (vr-0.3, 2026-11-06)
+
+- Reports: an RTX 3070 (1440 per eye, 80 Hz, Quest 3, Virtual Desktop, VDXR and SteamVR) and an RTX 4090 (2880, 120 Hz, likely a
+  Quest 3, unconfirmed). Logs with BB_FRAME_STATS=1: shader compiles 0 in nearly every report; the game finishes 63-84
+  frames a second (4090: 70-77) and the headset shows 18-54 (25-52). Longest waits on the headset's path 0.5-1.5 s, in the
+  copy's fence on VDXR ("command buffer") and in xrReleaseSwapchainImage / xrEndFrame on SteamVR, while the game's slowest
+  frame stays 25-58 ms: the GPU is not hung. Matt's headset at 5120 per eye, unable to hold the rate: 58 finished, 58
+  shown, longest wait 0.0 ms. The 5090 on the simulator GPU-bound (94 of 120 Hz): 0.1 ms. Not the driver (Matt).
+- The adaptive cap's loop: the runtime halves, one flip per headset frame gives 40, 40 < 0.95 x 80 uncaps, the game runs at
+  93-130, 1.12 x 80 caps again: 8-28 flips a run. Not the whole story: the 4090 never reached its cap (134) and stalls too.
+- Fix (bd7b41e): one flip per headset frame always (no rate test), a flip allowed anyway after 100 ms, movies exempt.
+  BB_VR_CAP=adaptive the old cap, 0 none. BB_VR_STALL_LOG=<ms> logs slow steps of the loop. uncharted-debug.bat ships them.
+  SteamVR, U1: 1440 90.0 flips / 90.0 headset, 5120 about 58 FPS (Frame stats) as before. Not run on a Quest; half-rate
+  recovery not exercised. If stalls remain: BB_VR_SHARED_QUEUE=1 (copies on the game's queue) is the next test.
+- Menu state (d2e9b86): U2 object image +0xf2e350, state +0x1014 (0 play and loading, 3 opening, 12 open, 5 closing; found by
+  diffing the data segment across title, menu, pause and play; the game tests it at +0x249851). U1 +0xabb148, +0x794 (the
+  same writes, not run). +0x1038 is a per-frame flag, cleared at +0x2a51de: do not read it. U3: U2's code patterns do not
+  match; find it by the same diff.
+- The launcher's Copy VR report said "does not know this game version" on every copy: it misled a user whose version was fine.
+  CUSA02344 (another dump, SHA dc017b45...) works through the code patterns, with 18 VR patches against 02343's 49: why not
+  checked (no dump here).

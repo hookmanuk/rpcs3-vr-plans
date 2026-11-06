@@ -1478,6 +1478,21 @@ my disc, I'll let you know when its done."
   U2 ch5 (test saves copy H:/uc_test_user, chapters unlocked): only reached the run-and-gun tutorial freeze; L1 zooms
   (x scale 1.95) but the aiming camera hook (+0x18c9a0) never ran there: unverified, needs a live gunfight (save from
   Matt). U3 aim not reached. Not pushed (Matt: wait).
+- [ ] Matt (2026-11-03, U2, from the main menu's Continue), verbatim: "1 - Turning HMD left or right shows jumping world.
+  I suspect this is steamVR frame pacing issue. 2 - Shadows on the ground near the opening in front flicker on and off,
+  capture multiple frames at once to see the difference. 3 - The new 2d/3d detection is rubbish. The main menu loads 3d
+  then swaps to 2d almost straight away. The game shows in 3d and then randomly switched to 2d."
+  1 not investigated (lead: two views per frame pass the head-tracking filter, x scale 1.303 and 0.896, each with a pose
+  tag; U1 has one). 2 not started. 3 changed, partly checked (below).
+- 2026-11-06: release vr-0.3 (uncharted_pc f5564b3, tag v0.3.9-vr0.3, community-vr pushed, draft release id 437038072 with
+  uncharted-windows.zip; Matt publishes). Matt: "this release is for frame pacing fixes for u1, u2 & u3 are still not
+  ready". Details in `profiles/CUSA02343-notes.md`, "Quest 3 stalls, pacing, menu state".
+  - [ ] Users on Quest 3 (3070 and 4090 logs, F:/downloads): long stalls, 1 FPS in U1's chapter 2 cave (CUSA02343; 02344 less
+    bad). One frame per xrWaitFrame shipped to fix the flooding; whether the stalls go is untested on a Quest.
+  - [ ] DLSS on: GPU device lost at the first play frames (3070, driver 581.94). U1 assertion loading the temple area
+    (`iSubMesh < m_numSubMeshInstances`, mesh.h:1361; 4090, 2880). Neither reproduced.
+  - [ ] Menu state (d2e9b86): only U2's switch into its first menu seen. U2 play and pause, U1 not checked; U3's field not
+    found (old guess kept, stale reading fixed).
 - Night 2026-11-01/02 (goal: "make sure uncharted 2 & 3 are optimal and have no graphical errors in one eye"):
   - U2 left-eye-only fire shadow (Matt 2026-10-30): not reproduced at his cliff save. Simulator, eye 1440 and 3584:
     the fire-lit snow's blocks agree between the eyes in single shots (mean |log2 L/R| x100 1.1), over a 300-frame
