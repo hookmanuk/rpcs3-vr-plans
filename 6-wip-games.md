@@ -3858,6 +3858,15 @@ matching VR with no gfx errors and 90fps."
   Seat lost and relearnt at the next stop is out (his stop test), unless the target flips every frame. Diagnostic
   build: vr-0.1's camera + plans/tools/mc/mcla-hold-diag.patch (not committed to the game), bin\mcla_holddiag.exe in
   his release folder; HOLDDIAG log lines. 9d8fe5e (local, unpushed) not in that build and not known to cure this.
+  Found (his run, mcla_004.log): at 19:35:18.873 the hold's car (g_car_matrix) went from his car BF44D8F0 to BF293E10,
+  another car's matrix 396 m away, via camera object BDAD2A30, and then flipped up to ~47 times a second between his
+  car and two others (camera objects BDAD2A30, BF476BF0, BDAD1CB0; nearest 60.6 m). Each change wipes the seat and
+  zeroes the still count, so the seat never comes back: 1192 of 1192 logged updates in his cockpit after it unheld,
+  still count 1-3 while parked (30 needed). The view never left his car. Game camera forward of the seat at that
+  moment 17 cm, up to 32 cm while driving (z 0.457 -> 0.139), so my 8.4 cm figure (driving off, braking) was far too low.
+  In d164254, vr-0.1 and 9d8fe5e alike. Not known: why those objects' updates look like writes to the director's camera
+  (updates on t38760, the camera setting on t46676: a race is possible). Proposed: stay on the current car while the
+  camera is inside its views; no seat wipe on a change. Not built yet.
 
 ## Uncharted: Drake's Fortune (BCUS98103, update 01.10)
 
