@@ -106,6 +106,18 @@ roughness 0.08-0.09 with Enable on, 0.0001-0.007 off.
 - The simulator's xrEndFrame costs 1.5-2 ms and spikes to 17-29 ms, which is its 1% lows: pacing needs SteamVR (headset off on 2026-11-06).
 - Mirror window: on is faster than off on the simulator (74 against 60 FPS at 5120, not understood): stays on, REGPU_VR_NO_MIRROR=1.
 
+### Frame pacing, real headset (2026-11-07). Supersedes the null headset figures below
+
+**Measure on the real headset through SteamVR with `vrstats.exe` (SteamVR's own account).** On the null headset every frame reads as reprojected, even at 800 per eye with the GPU idle, its compositor runs at about 100 Hz whatever it is set to, and 5120 read 97-100 FPS against 75-88 on the real headset.
+
+What was wrong, measured: xrWaitFrame/xrEndFrame ran on the renderer's thread, so xrEndFrame came before the GPU had finished; the runtime shared the game's queue and its waits held each frame's GPU work back to 7 ms into the frame; the game's thread ran free against the headset, so runs settled in a good or bad phase by chance. SteamVR switched the app's period between 11, 22, 33 and 55 ms.
+
+Wrong turns, all mine: blaming SteamVR's compositor for the 15-19 ms frames (Windows' GPU counters: vrcompositor 0.3%, SteamVR's own figure 0.76 ms; Matt said so first); a game limit at the headset's rate removed (right) and then patches for early submission, a separate queue and a token one at a time, one lucky 10 s window read as fixed. Matt: "We have made VR mods for uncharted and burnout that frame pace perfectly, use those as a guide." Porting their loop whole fixed it at once.
+
+The loop (`vr/vr.cpp` FrameLoop): own thread and queue; xrWaitFrame, LocateViews, token (VdSwap waits for it, 50 ms limit); WaitForGameFrame until the GPU has finished a newer frame (100 ms limit); xrBeginFrame; copy on the headset's queue; xrEndFrame with the pose the frame was drawn with. The renderer only publishes: `SnapshotViews`, `BeginPublish`, `Publish`. A fence wake must be checked again: a stale one left a repeat every few frames (Tokyo: 28-46 repeats in 5 s).
+
+At 5120 the limit is real GPU work: 490 W, 84-91% busy, about 12.5 ms. Road 1.15 ms, walls 0.94, full-screen composite pass about 2.7. Mirror window off: no gain on the real headset (78.5/77.0 against 80.4/80.8). Not tried: hidden area mask, now measurable on the real headset (pixels are about 3.5 ms of the frame, so about 0.6 ms expected).
+
 ### Real SteamVR without a headset (2026-11-07): `plans/tools/pgr4/nullvr.sh`, `nullsweep.sh`
 
 SteamVR's null headset, with a private config folder (VR_CONFIG_PATH), so Steam's own settings stay untouched. Real compositor and frame pacing, no optics

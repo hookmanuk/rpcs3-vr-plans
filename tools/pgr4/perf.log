@@ -252,3 +252,64 @@
 2026-11-07 06:36 margin simulator 90 Hz 5120x5120 REGPU_VR_SMALL_SCALE=1.5 grid: avg 89.9 FPS, 1% low 44.1, p50 10.87 ms, p99 22.66 ms, worst 31.7 ms, 1799 frames, draws 3760
 2026-11-07 06:38 margin simulator 90 Hz 5120x5120 grid: avg 90.0 FPS, 1% low 43.7, p50 10.97 ms, p99 22.87 ms, worst 28.7 ms, 1800 frames, draws 3783
 2026-11-07 06:41 simulator 90 Hz 2880 driving, fake wheel, final: avg 89.6 FPS, 1% low 45.5, p50 11.06 ms, p99 21.98 ms, worst 61.8 ms, 718 frames, draws 1799
+2026-11-07 07:46 SteamVR null 5120 grid timeline: avg 98.5 FPS, 1% low 51.9, p50 9.86 ms, p99 19.28 ms, worst 21.1 ms, 591 frames, draws 4119
+2026-11-07 07:49 eager SteamVR null 90 5120 REGPU_SUBMIT_DRAWS=256 grid: avg 99.7 FPS, 1% low 62.2, p50 10.01 ms, p99 16.07 ms, worst 21.1 ms, 598 frames, draws 3521
+2026-11-07 07:49 eager SteamVR null 90 5120 REGPU_SUBMIT_DRAWS=256 driving: avg 99.4 FPS, 1% low 62.4, p50 10.08 ms, p99 16.04 ms, worst 33.1 ms, 596 frames, draws 2206
+2026-11-07 07:51 eager SteamVR null 90 5120 REGPU_SUBMIT_DRAWS=64 grid: avg 99.7 FPS, 1% low 64.0, p50 10.04 ms, p99 15.63 ms, worst 21.8 ms, 598 frames, draws 3485
+2026-11-07 07:52 eager SteamVR null 90 5120 REGPU_SUBMIT_DRAWS=64 driving: avg 99.3 FPS, 1% low 68.5, p50 10.11 ms, p99 14.60 ms, worst 33.9 ms, 596 frames, draws 2182
+2026-11-07 07:54 eager SteamVR null 90 5120 grid: avg 99.9 FPS, 1% low 63.1, p50 9.95 ms, p99 15.84 ms, worst 17.7 ms, 599 frames, draws 3498
+2026-11-07 07:54 eager SteamVR null 90 5120 driving: avg 99.5 FPS, 1% low 59.6, p50 10.03 ms, p99 16.77 ms, worst 38.0 ms, 597 frames, draws 2208
+2026-11-07 07:56 eager SteamVR null 90 5120 REGPU_SUBMIT_DRAWS=1024 grid: avg 99.5 FPS, 1% low 59.1, p50 9.94 ms, p99 16.93 ms, worst 24.0 ms, 597 frames, draws 3499
+2026-11-07 07:57 eager SteamVR null 90 5120 REGPU_SUBMIT_DRAWS=1024 driving: avg 99.5 FPS, 1% low 66.0, p50 10.05 ms, p99 15.15 ms, worst 32.4 ms, 597 frames, draws 2348
+2026-11-07 07:59 5120 grid: avg 99.2 FPS, 1% low 55.6, p50 9.97 ms, p99 17.99 ms, worst 21.2 ms, 596 frames, draws 3518
+2026-11-07 08:02 800 grid: avg 100.0 FPS, 1% low 60.3, p50 10.06 ms, p99 16.58 ms, worst 19.6 ms, 601 frames, draws 3519
+2026-11-07 08:04 spike SteamVR null 90 800 grid: avg 99.8 FPS, 1% low 60.4, p50 9.87 ms, p99 16.57 ms, worst 21.9 ms, 1198 frames, draws 3498
+2026-11-07 08:12 hmd HMD - grid: avg 78.5 FPS, 1% low 41.1, p50 11.22 ms, p99 24.33 ms, worst 29.8 ms, 471 frames, draws 4104
+2026-11-07 08:13 hmd HMD - driving: avg 89.8 FPS, 1% low 72.8, p50 11.13 ms, p99 13.73 ms, worst 30.6 ms, 539 frames, draws 2552
+2026-11-07 08:15 hmdeager HMD - REGPU_SUBMIT_DRAWS=128 grid: avg 87.4 FPS, 1% low 43.1, p50 11.15 ms, p99 23.23 ms, worst 28.5 ms, 525 frames, draws 3902
+2026-11-07 08:15 hmdeager HMD - REGPU_SUBMIT_DRAWS=128 driving: avg 85.8 FPS, 1% low 43.9, p50 11.11 ms, p99 22.79 ms, worst 36.8 ms, 515 frames, draws 2544
+2026-11-07 08:17 hmdeager HMD - REGPU_SUBMIT_DRAWS=512 grid: avg 90.0 FPS, 1% low 74.6, p50 11.05 ms, p99 13.40 ms, worst 14.4 ms, 540 frames, draws 4089
+2026-11-07 08:17 hmdeager HMD - REGPU_SUBMIT_DRAWS=512 driving: avg 89.8 FPS, 1% low 75.1, p50 11.11 ms, p99 13.32 ms, worst 35.7 ms, 539 frames, draws 2311
+2026-11-07 08:19 hmdeager HMD - grid: avg 82.4 FPS, 1% low 42.7, p50 11.16 ms, p99 23.39 ms, worst 27.8 ms, 494 frames, draws 4090
+2026-11-07 08:20 hmdeager HMD - driving: avg 82.0 FPS, 1% low 43.7, p50 11.16 ms, p99 22.91 ms, worst 36.6 ms, 492 frames, draws 2544
+2026-11-07 08:23 ownqueue HMD - grid: avg 90.0 FPS, 1% low 59.8, p50 11.07 ms, p99 16.71 ms, worst 18.6 ms, 540 frames, draws 3927
+2026-11-07 08:23 ownqueue HMD - driving: avg 89.5 FPS, 1% low 73.2, p50 11.11 ms, p99 13.66 ms, worst 34.8 ms, 537 frames, draws 2515
+2026-11-07 08:26 ownqueue HMD - grid: avg 86.2 FPS, 1% low 44.3, p50 11.14 ms, p99 22.59 ms, worst 24.2 ms, 517 frames, draws 4113
+2026-11-07 08:26 ownqueue HMD - driving: avg 84.8 FPS, 1% low 43.3, p50 11.13 ms, p99 23.08 ms, worst 38.8 ms, 509 frames, draws 2509
+2026-11-07 08:28 ownqueue HMD - REGPU_VR_SHARED_QUEUE=1 grid: avg 82.9 FPS, 1% low 42.7, p50 11.15 ms, p99 23.44 ms, worst 24.4 ms, 499 frames, draws 4092
+2026-11-07 08:28 ownqueue HMD - REGPU_VR_SHARED_QUEUE=1 driving: avg 89.8 FPS, 1% low 75.8, p50 11.12 ms, p99 13.19 ms, worst 33.3 ms, 539 frames, draws 2554
+2026-11-07 08:30 eagerlists HMD - REGPU_NO_DEFER_LISTS=1 grid: avg 90.0 FPS, 1% low 59.1, p50 11.05 ms, p99 16.93 ms, worst 19.9 ms, 540 frames, draws 4110
+2026-11-07 08:30 eagerlists HMD - REGPU_NO_DEFER_LISTS=1 driving: avg 89.8 FPS, 1% low 75.0, p50 11.13 ms, p99 13.34 ms, worst 35.7 ms, 539 frames, draws 2342
+2026-11-07 08:32 eagerlists HMD - REGPU_NO_DEFER_LISTS=1 REGPU_SUBMIT_DRAWS=256 grid: avg 85.9 FPS, 1% low 43.8, p50 11.13 ms, p99 22.83 ms, worst 23.6 ms, 515 frames, draws 3907
+2026-11-07 08:32 eagerlists HMD - REGPU_NO_DEFER_LISTS=1 REGPU_SUBMIT_DRAWS=256 driving: avg 85.3 FPS, 1% low 44.3, p50 11.17 ms, p99 22.59 ms, worst 37.2 ms, 512 frames, draws 2528
+2026-11-07 08:35 paced HMD - grid: avg 85.8 FPS, 1% low 43.8, p50 11.12 ms, p99 22.82 ms, worst 27.0 ms, 1714 frames, draws 3466
+2026-11-07 08:36 paced HMD - driving: avg 85.9 FPS, 1% low 42.6, p50 11.14 ms, p99 23.47 ms, worst 39.5 ms, 1719 frames, draws 3663
+2026-11-07 08:37 paced HMD - REGPU_VR_SHARED_QUEUE=1 REGPU_VR_DEFER_LISTS=1 REGPU_SUBMIT_DRAWS=0 grid: avg 90.0 FPS, 1% low 73.8, p50 11.10 ms, p99 13.55 ms, worst 14.9 ms, 1800 frames, draws 3759
+2026-11-07 08:38 paced HMD - REGPU_VR_SHARED_QUEUE=1 REGPU_VR_DEFER_LISTS=1 REGPU_SUBMIT_DRAWS=0 driving: avg 85.2 FPS, 1% low 43.9, p50 11.15 ms, p99 22.79 ms, worst 45.8 ms, 1705 frames, draws 3088
+2026-11-07 08:40 paced HMD - grid: avg 84.7 FPS, 1% low 42.4, p50 11.11 ms, p99 23.57 ms, worst 28.3 ms, 1695 frames, draws 3470
+2026-11-07 08:40 paced HMD - driving: avg 85.8 FPS, 1% low 43.0, p50 11.14 ms, p99 23.24 ms, worst 41.7 ms, 1717 frames, draws 3788
+2026-11-07 08:44 token HMD - REGPU_VR_GAME_LEAD=1 grid: avg 90.0 FPS, 1% low 73.1, p50 11.10 ms, p99 13.69 ms, worst 15.2 ms, 1800 frames, draws 3485
+2026-11-07 08:44 token HMD - REGPU_VR_GAME_LEAD=1 driving: avg 88.2 FPS, 1% low 44.5, p50 11.13 ms, p99 22.49 ms, worst 35.4 ms, 1764 frames, draws 3667
+2026-11-07 08:46 token HMD - REGPU_VR_GAME_LEAD=0 grid: avg 90.0 FPS, 1% low 74.2, p50 11.11 ms, p99 13.47 ms, worst 14.7 ms, 1800 frames, draws 3469
+2026-11-07 08:47 token HMD - REGPU_VR_GAME_LEAD=0 driving: avg 86.8 FPS, 1% low 43.0, p50 11.10 ms, p99 23.24 ms, worst 34.8 ms, 1734 frames, draws 3637
+2026-11-07 08:54 ported HMD - grid: avg 90.0 FPS, 1% low 84.5, p50 11.11 ms, p99 11.84 ms, worst 15.9 ms, 1800 frames, draws 3757
+2026-11-07 08:54 ported HMD - driving: avg 90.0 FPS, 1% low 74.2, p50 11.11 ms, p99 13.48 ms, worst 30.7 ms, 1800 frames, draws 3051
+2026-11-07 08:57 ported HMD 5120x5120 grid: avg 75.0 FPS, 1% low 43.4, p50 11.30 ms, p99 23.02 ms, worst 29.7 ms, 1501 frames, draws 3740
+2026-11-07 08:57 ported HMD 5120x5120 driving: avg 83.0 FPS, 1% low 44.8, p50 11.76 ms, p99 22.30 ms, worst 38.8 ms, 1659 frames, draws 3067
+2026-11-07 08:59 ported HMD 5120x5120 Tokyo night rain grid: avg 83.8 FPS, 1% low 68.7, p50 11.90 ms, p99 14.56 ms, worst 19.2 ms, 1258 frames, draws 3406
+2026-11-07 09:00 ported HMD 5120x5120 Tokyo night rain driving: avg 80.1 FPS, 1% low 54.5, p50 12.45 ms, p99 18.34 ms, worst 32.3 ms, 1201 frames, draws 2337
+2026-11-07 09:02 ported HMD 5120x5120 Vegas cone sprint grid: avg 88.4 FPS, 1% low 45.0, p50 11.12 ms, p99 22.21 ms, worst 24.0 ms, 1327 frames, draws 3537
+2026-11-07 09:02 ported HMD 5120x5120 Vegas cone sprint driving: avg 79.3 FPS, 1% low 43.9, p50 11.36 ms, p99 22.79 ms, worst 29.8 ms, 1189 frames, draws 2573
+2026-11-07 09:05 HMD 5120 grid per-shader marks: avg 80.3 FPS, 1% low 49.9, p50 11.88 ms, p99 20.06 ms, worst 27.7 ms, 644 frames, draws 3904
+2026-11-07 09:10 sizes HMD 4096x4096 grid: avg 90.0 FPS, 1% low 85.5, p50 11.11 ms, p99 11.70 ms, worst 13.4 ms, 1080 frames, draws 3771
+2026-11-07 09:10 sizes HMD 4096x4096 driving: avg 90.0 FPS, 1% low 69.1, p50 11.12 ms, p99 14.46 ms, worst 30.5 ms, 1080 frames, draws 2894
+2026-11-07 09:12 sizes HMD 4608x4608 grid: avg 90.0 FPS, 1% low 83.4, p50 11.12 ms, p99 11.99 ms, worst 12.5 ms, 1080 frames, draws 3764
+2026-11-07 09:12 sizes HMD 4608x4608 driving: avg 88.0 FPS, 1% low 44.9, p50 11.13 ms, p99 22.28 ms, worst 33.7 ms, 1056 frames, draws 2893
+2026-11-07 09:14 sizes HMD 5120x5120 REGPU_VR_NO_MIRROR=1 grid: avg 78.5 FPS, 1% low 44.4, p50 11.24 ms, p99 22.53 ms, worst 23.6 ms, 943 frames, draws 3787
+2026-11-07 09:14 sizes HMD 5120x5120 REGPU_VR_NO_MIRROR=1 driving: avg 77.0 FPS, 1% low 44.5, p50 11.75 ms, p99 22.46 ms, worst 28.5 ms, 925 frames, draws 2908
+2026-11-07 09:16 sizes HMD 5120x5120 grid: avg 80.4 FPS, 1% low 44.6, p50 11.24 ms, p99 22.42 ms, worst 23.0 ms, 965 frames, draws 3765
+2026-11-07 09:16 sizes HMD 5120x5120 driving: avg 80.8 FPS, 1% low 44.7, p50 11.58 ms, p99 22.35 ms, worst 28.3 ms, 970 frames, draws 2891
+2026-11-07 09:19 final HMD 4096x4096 Tokyo night rain grid: avg 90.0 FPS, 1% low 83.4, p50 11.11 ms, p99 11.99 ms, worst 19.1 ms, 1350 frames, draws 3408
+2026-11-07 09:19 final HMD 4096x4096 Tokyo night rain driving: avg 89.9 FPS, 1% low 63.9, p50 11.12 ms, p99 15.66 ms, worst 39.1 ms, 1348 frames, draws 2018
+2026-11-07 09:21 final HMD 4096x4096 Vegas cone sprint grid: avg 90.0 FPS, 1% low 83.9, p50 11.11 ms, p99 11.92 ms, worst 13.3 ms, 1350 frames, draws 3530
+2026-11-07 09:22 final HMD 4096x4096 Vegas cone sprint driving: avg 86.8 FPS, 1% low 44.3, p50 11.13 ms, p99 22.59 ms, worst 43.6 ms, 1303 frames, draws 2550

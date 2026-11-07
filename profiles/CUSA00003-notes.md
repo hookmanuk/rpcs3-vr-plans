@@ -345,3 +345,16 @@ lost device in ~37 readbacks-off boots (an earlier build at 4320, compute a6cfe0
   that may need turning off like motion blur, settings at the same table as enableMotionBlur: enableWaterDroplets,
   lensdust), photo mode, garage.
 - Disocclusion fill is the background stretched (DIBR limit): edges of the A-pillars and mirrors.
+
+## igorexa225's port compared (github.com/igorexa225/driveclub-recomp-vr, read 2026-11-07, code only, nothing run)
+
+Its core is ours (its README credits this fork for the camera route, multiview and the HUD split). Players report less stutter than ours; no measurement yet. Likely, best evidence first:
+1. Our adaptive cap (`vr_openxr.cpp` NoteFlip) tests the raw display period: the runtime halves, the game is capped, 90 Hz returns, it is uncapped, repeatedly. Measured on Uncharted, fixed there (bd7b41e), never brought here. Theirs ignores whole fractions (`bbport_vr.cpp:3715`).
+2. Their default is AFR at Auto size (about 8.3 MP a frame); ours points at 3200 (20.5 MP). Their quick start recommends true stereo: which players use is unknown.
+3. We call xrWaitFrame, then wait for the game; they call it when a frame exists. Under load a slot can pass.
+4. They are on upstream v0.4.1, 324 commits past our v0.2.5, with PGO; ours has it off.
+5. Our shader cache is per render size. 6. They tuned on Virtual Desktop; we have no entry for it.
+
+To confirm 1: a Virtual Desktop player, GPU-bound, one race on v0.2.5-vr1.3 by default and with BB_VR_CAP=0: "capped/uncapped" toggling and the shown rate recovering.
+
+Worth taking: `Color2DMsaa` in `ArrayedImage` (checked: ours reads layer 0 of the glass; their commit 5017739: a second window frame 190 px right on every car; symptom not looked for here); glow size rules; the exposure filter; Lanczos resample and Auto size; SMAA and the game's TAA; seat keys. Skip AFR.
