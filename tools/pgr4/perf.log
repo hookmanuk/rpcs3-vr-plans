@@ -634,3 +634,15 @@
 2026-11-07 22:12 base2 Tokyo in-car driving: avg 90.0 FPS, 1% low 78.9, p50 11.11 ms, p99 12.68 ms, worst 17.7 ms, 2700 frames, draws 748
 2026-11-07 22:14 pri3 Tokyo in-car driving: avg 89.7 FPS, 1% low 59.1, p50 11.12 ms, p99 16.92 ms, worst 39.9 ms, 2691 frames, draws 2157
 2026-11-07 22:17 base3 Tokyo in-car driving: avg 89.8 FPS, 1% low 67.0, p50 11.12 ms, p99 14.93 ms, worst 49.3 ms, 2693 frames, draws 2975
+2026-11-07 22:22 sampled=0 grid: avg 90.0 FPS, 1% low 78.0, p50 11.11 ms, p99 12.83 ms, worst 14.7 ms, 720 frames, draws 4402
+2026-11-07 22:22 sampled=1 grid: avg 90.0 FPS, 1% low 79.6, p50 11.12 ms, p99 12.56 ms, worst 13.9 ms, 720 frames, draws 3484
+2026-11-07 22:22 sampled=0 grid: avg 90.0 FPS, 1% low 79.6, p50 11.12 ms, p99 12.56 ms, worst 15.2 ms, 720 frames, draws 4199
+2026-11-07 22:22 sampled=1 grid: avg 90.0 FPS, 1% low 82.1, p50 11.11 ms, p99 12.19 ms, worst 13.8 ms, 720 frames, draws 3764
+2026-11-07 22:23 sampled=0 grid: avg 90.0 FPS, 1% low 80.8, p50 11.11 ms, p99 12.38 ms, worst 15.9 ms, 720 frames, draws 4084
+2026-11-07 22:23 sampled=1 grid: avg 90.0 FPS, 1% low 81.3, p50 11.11 ms, p99 12.31 ms, worst 13.5 ms, 720 frames, draws 3764
+2026-11-07 22:26 framereuse=0 grid: avg 90.0 FPS, 1% low 76.9, p50 11.12 ms, p99 13.00 ms, worst 15.5 ms, 720 frames, draws 3768
+2026-11-07 22:26 framereuse=1 grid: avg 90.1 FPS, 1% low 79.8, p50 11.11 ms, p99 12.53 ms, worst 13.4 ms, 720 frames, draws 4390
+2026-11-07 22:27 framereuse=0 grid: avg 90.0 FPS, 1% low 79.8, p50 11.12 ms, p99 12.53 ms, worst 13.3 ms, 720 frames, draws 4111
+2026-11-07 22:27 framereuse=1 grid: avg 90.0 FPS, 1% low 83.7, p50 11.12 ms, p99 11.95 ms, worst 15.3 ms, 720 frames, draws 3786
+2026-11-07 22:27 framereuse=0 grid: avg 90.0 FPS, 1% low 79.8, p50 11.12 ms, p99 12.54 ms, worst 14.1 ms, 720 frames, draws 3767
+2026-11-07 22:28 framereuse=1 grid: avg 90.0 FPS, 1% low 83.2, p50 11.11 ms, p99 12.02 ms, worst 14.5 ms, 720 frames, draws 3816
