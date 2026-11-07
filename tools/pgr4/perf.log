@@ -245,3 +245,10 @@
 2026-11-07 06:20 simulator 90 Hz 2880 grid, runtime pacing: avg 89.8 FPS, 1% low 39.6, p50 10.88 ms, p99 25.28 ms, worst 26.7 ms, 898 frames, draws 4399
 2026-11-07 06:22 simulator 72 Hz 2880 grid, runtime pacing: avg 72.0 FPS, 1% low 41.2, p50 13.82 ms, p99 24.25 ms, worst 39.9 ms, 576 frames, draws 4381
 2026-11-07 06:24 simulator 90 Hz 5120 grid, runtime pacing: avg 89.9 FPS, 1% low 40.8, p50 10.77 ms, p99 24.50 ms, worst 28.2 ms, 1349 frames, draws 4109
+2026-11-07 06:28 SteamVR null 90 5120 grid, long frame log: avg 98.3 FPS, 1% low 53.9, p50 9.96 ms, p99 18.54 ms, worst 27.6 ms, 1967 frames, draws 3642
+2026-11-07 06:30 simulator 90 Hz 5120 grid, long frame log: avg 90.0 FPS, 1% low 41.8, p50 10.95 ms, p99 23.94 ms, worst 29.3 ms, 1800 frames, draws 3763
+2026-11-07 06:32 margin simulator 90 Hz 5120x5120 grid: avg 90.0 FPS, 1% low 42.9, p50 11.01 ms, p99 23.29 ms, worst 25.7 ms, 1800 frames, draws 3780
+2026-11-07 06:34 margin simulator 90 Hz 5120x5120 REGPU_VR_SMALL_SCALE=2 grid: avg 89.9 FPS, 1% low 42.9, p50 10.99 ms, p99 23.31 ms, worst 29.5 ms, 1798 frames, draws 3785
+2026-11-07 06:36 margin simulator 90 Hz 5120x5120 REGPU_VR_SMALL_SCALE=1.5 grid: avg 89.9 FPS, 1% low 44.1, p50 10.87 ms, p99 22.66 ms, worst 31.7 ms, 1799 frames, draws 3760
+2026-11-07 06:38 margin simulator 90 Hz 5120x5120 grid: avg 90.0 FPS, 1% low 43.7, p50 10.97 ms, p99 22.87 ms, worst 28.7 ms, 1800 frames, draws 3783
+2026-11-07 06:41 simulator 90 Hz 2880 driving, fake wheel, final: avg 89.6 FPS, 1% low 45.5, p50 11.06 ms, p99 21.98 ms, worst 61.8 ms, 718 frames, draws 1799

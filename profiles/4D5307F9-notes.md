@@ -88,6 +88,8 @@ Matt's fork of zer0ducksgiven/PGR4-ReGPU: `H:\PGR4-ReGPU`, branch `vr` (local, n
 - `input/wheel.cpp` plays all of them. Tested with PGR4_FAKE_WHEEL=1 PGR4_WHEEL_FF_TRACE=1 PGR4_WHEEL_FF_WORDS=1 (the values change with
   the car), **not on a real wheel**.
 
+Audit for a real wheel, code only (`input/wheel.cpp`, needs a wheel to run; the fake wheel stops above SDL): the thread runs every 2 ms and holds the device's lock across SDL calls, and many drivers wait for each USB write. Conditions now go out only on a felt change (centre 0.5%, coefficients and saturations 1%), vibrations and conditions at most about 120 a second; a refused effect is asked for every 5 s, not every pass; a type the wheel lacks is logged once; `sine` added to the features logged at start. Look for these in the log on a real wheel: `wheel: force feedback:`, `was refused` (the negative outer spring is the likely one), `has no effect of the game's type`.
+
 ## Screen shake
 
 Settings `screen_shake` (launcher switch, PGR4_SCREEN_SHAKE). Proved with Camera.Shake.UseCustom and a large custom amount: direction
@@ -139,5 +141,7 @@ and pixel shaders, and why the GPU sat at half power. Culling with `r.pos = 0` h
 - After the copy the GPU really is shading: 490 W, 84-91% busy, rxpci 4-5 GB/s, GPU time 10-11 ms, the road the largest item (1.07 ms, crowd 0.26). Off-screen scale 2: 89.1 against 88.8. Mirror off: worse (87.2, 16.7% late).
 - Pacing: `xrWaitFrame` took 0.02 ms at 90 Hz: the game's limiter (VdSwap, a CPU timer) set the rate, a second clock against the runtime's. With it out of the way (limit 360, the default in VR; REGPU_VR_HZ sets another) the null headset gives 97-99 FPS at 5120 and the simulator 90.0 at 90 Hz, 72.0 at 72 Hz. Game time follows the clock: same speeds at the same moments.
 - REGPU_VR_TRACE=1 logs length/xrEndFrame/xrWaitFrame per frame; `tools/pgr4/latecheck.py` reads it, `nulllate.sh` runs it. Late frames at 5120: 18/9/4, 19/13/0, 26/18/0: xrEndFrame, GPU contended near its limit.
+- The 15-19 ms frames at 5120 (REGPU_GPU_PASSES=1 REGPU_GPU_LONG=13 logs each long frame's passes): one arbitrary pass grows by 7-9 ms (the final resolve 9.5 against 0.7, a 2.7 ms pass 11.8). Looks like another process taking the GPU, most likely SteamVR's compositor: frames of 16 ms or more, SteamVR 366, simulator 85 (no compositor process), and no such single block on the simulator. Not proved, no view inside SteamVR. Simulator at 90 Hz, 5120: 90.0 sustained. Off-screen scale 3, 2, 1.5: all 90.0, mean GPU span 10.6-10.7 ms, stays 3.
+- Not done, can't be measured here: hidden area mask (XR_KHR_visibility_mask; no real lens on the null headset; about 20% of the pixels on a real one).
 - Constants in video memory (copied before the frame): crowd unchanged, 1.69 ms, not worth it. The D3D12 Agility SDK 1.616 loads but reports GPU upload heaps unsupported on this Windows (22631): no resizable-BAR ring.
 - A failed resource creation looks like success: the first run of the fix had `CreateCommittedResource` fail on the guest resource's desc and fell back silently, and an A/B of it measured nothing (flat "no change"). Check the log line `vertex data in video memory`.
