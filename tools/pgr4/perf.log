@@ -227,3 +227,21 @@
  perf:   waiting on host GPU 0.00 ms/frame | GPU time 9.33 ms/frame (worst 12.3)
 2026-11-07 05:48 headroom 2880x2880 driving: avg 133.8 FPS, 1% low 46.5, p50 7.26 ms, p99 21.49 ms, worst 46.9 ms, 1071 frames, draws 2412
  perf:   waiting on host GPU 0.00 ms/frame | GPU time 5.48 ms/frame (worst 12.0)
+2026-11-07 05:56 SteamVR null 90 5120 grid, late frames: avg 88.9 FPS, 1% low 59.7, p50 11.12 ms, p99 16.76 ms, worst 22.2 ms, 1777 frames, draws 4118
+2026-11-07 05:58 SteamVR 144 5120 grid per-shader marks: avg 89.8 FPS, 1% low 55.1, p50 10.47 ms, p99 18.15 ms, worst 21.0 ms, 539 frames, draws 4432
+2026-11-07 06:01 knobs SteamVR null 90 5120 grid: avg 88.8 FPS, 1% low 59.6, p50 11.12 ms, p99 16.78 ms, worst 27.8 ms, 1776 frames, draws 4135
+2026-11-07 06:01 knobs SteamVR null 90 5120 driving: avg 88.6 FPS, 1% low 59.3, p50 11.12 ms, p99 16.87 ms, worst 23.3 ms, 1062 frames, draws 2334
+2026-11-07 06:04 knobs SteamVR null 90 5120 REGPU_VR_SMALL_SCALE=2 grid: avg 89.1 FPS, 1% low 59.6, p50 11.12 ms, p99 16.78 ms, worst 27.8 ms, 1781 frames, draws 4134
+2026-11-07 06:04 knobs SteamVR null 90 5120 REGPU_VR_SMALL_SCALE=2 driving: avg 89.1 FPS, 1% low 60.3, p50 11.12 ms, p99 16.58 ms, worst 26.4 ms, 1069 frames, draws 2534
+2026-11-07 06:06 knobs SteamVR null 90 5120 REGPU_VR_NO_MIRROR=1 grid: avg 87.2 FPS, 1% low 59.1, p50 11.13 ms, p99 16.93 ms, worst 22.5 ms, 1744 frames, draws 4135
+2026-11-07 06:06 knobs SteamVR null 90 5120 REGPU_VR_NO_MIRROR=1 driving: avg 89.0 FPS, 1% low 59.8, p50 11.12 ms, p99 16.72 ms, worst 27.9 ms, 1068 frames, draws 2554
+2026-11-07 06:09 pacing SteamVR null 90 5120 REGPU_VR_HZ=360 grid: avg 99.6 FPS, 1% low 60.3, p50 9.95 ms, p99 16.59 ms, worst 26.1 ms, 1992 frames, draws 4116
+2026-11-07 06:10 pacing SteamVR null 90 5120 REGPU_VR_HZ=360 driving: avg 99.2 FPS, 1% low 56.6, p50 10.02 ms, p99 17.66 ms, worst 30.3 ms, 1190 frames, draws 2521
+2026-11-07 06:12 pacing SteamVR null 90 5120 grid: avg 87.0 FPS, 1% low 59.1, p50 11.14 ms, p99 16.91 ms, worst 23.2 ms, 1740 frames, draws 4113
+2026-11-07 06:12 pacing SteamVR null 90 5120 driving: avg 88.6 FPS, 1% low 59.6, p50 11.12 ms, p99 16.79 ms, worst 28.1 ms, 1064 frames, draws 2557
+2026-11-07 06:15 pacing SteamVR null 144 5120 REGPU_VR_HZ=360 grid: avg 97.7 FPS, 1% low 52.1, p50 9.80 ms, p99 19.20 ms, worst 32.2 ms, 1954 frames, draws 4137
+2026-11-07 06:15 pacing SteamVR null 144 5120 REGPU_VR_HZ=360 driving: avg 99.2 FPS, 1% low 55.1, p50 9.99 ms, p99 18.16 ms, worst 36.6 ms, 1190 frames, draws 2663
+2026-11-07 06:18 SteamVR null 90 5120 grid, runtime pacing: avg 97.5 FPS, 1% low 52.9, p50 9.84 ms, p99 18.89 ms, worst 26.7 ms, 1950 frames, draws 4138
+2026-11-07 06:20 simulator 90 Hz 2880 grid, runtime pacing: avg 89.8 FPS, 1% low 39.6, p50 10.88 ms, p99 25.28 ms, worst 26.7 ms, 898 frames, draws 4399
+2026-11-07 06:22 simulator 72 Hz 2880 grid, runtime pacing: avg 72.0 FPS, 1% low 41.2, p50 13.82 ms, p99 24.25 ms, worst 39.9 ms, 576 frames, draws 4381
+2026-11-07 06:24 simulator 90 Hz 5120 grid, runtime pacing: avg 89.9 FPS, 1% low 40.8, p50 10.77 ms, p99 24.50 ms, worst 28.2 ms, 1349 frames, draws 4109

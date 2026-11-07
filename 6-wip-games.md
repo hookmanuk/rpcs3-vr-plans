@@ -4291,8 +4291,10 @@ markers and particle effects; force feedback for wheel and road forces; keep goi
   | 5120 | St Petersburg, 144 Hz | 98.5 (1% low 56) | 99 (58) |
   | 5120 | Tokyo night heavy rain, 144 Hz | 99.8 (71) | 96.4 (48) |
   | 5120 | Las Vegas Cone Sprint, 144 Hz | 100 (60) | 97.7 (48) |
-  | 5120 | St Petersburg, 90 Hz | 88.5 (59) | 88.8 (59) |
+  | 5120 | St Petersburg, null headset set to 90 Hz, runtime pacing | 97.5-99 | 99 |
+  | 5120 | St Petersburg grid, simulator at 90 Hz (its xrEndFrame costs 3 ms) | **90.0** sustained | |
   | 2880 | Tokyo / Vegas, 144 Hz (before the last fix) | 100 / 100 | 100 / 100 |
 
-  At 90 Hz, 5120 is about 1.5% of frames short of a perfect 90; a real headset's wider view draws more.
+  The null headset's compositor runs at about 100 Hz whatever it is set to. The game's own limiter at 90 Hz beat against it (88.5 FPS): xrWaitFrame now paces alone (simulator: 90.0 at 90 Hz, 72.0 at 72 Hz).
+  At 5120 about 3% of frames still run 15-19 ms (long xrEndFrame, GPU near its limit; gone at lower sizes). A real headset's wider view draws more than these numbers.
 - [ ] Open, needs Matt: **real headset** (a wider view draws more than the null headset's numbers), **real wheel** (forces only tested with the fake wheel).
