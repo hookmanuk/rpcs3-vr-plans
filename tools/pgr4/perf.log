@@ -622,3 +622,15 @@
 2026-11-07 21:40 final_chase HMD 5120x5120 Tokyo night rain driving: avg 90.0 FPS, 1% low 73.0, p50 11.12 ms, p99 13.71 ms, worst 27.6 ms, 1351 frames, draws 2143
 2026-11-07 21:42 final_chase HMD 5120x5120 Vegas cone sprint grid: avg 90.0 FPS, 1% low 79.3, p50 11.11 ms, p99 12.61 ms, worst 14.8 ms, 1351 frames, draws 3529
 2026-11-07 21:43 final_chase HMD 5120x5120 Vegas cone sprint driving: avg 89.9 FPS, 1% low 56.2, p50 11.12 ms, p99 17.79 ms, worst 34.1 ms, 1348 frames, draws 2544
+2026-11-07 21:46 a Tokyo in-car driving: avg 89.9 FPS, 1% low 57.5, p50 11.12 ms, p99 17.39 ms, worst 38.3 ms, 2698 frames, draws 2019
+2026-11-07 21:49 spk Tokyo in-car driving: avg 90.0 FPS, 1% low 78.7, p50 11.11 ms, p99 12.71 ms, worst 22.3 ms, 2699 frames, draws 1793
+2026-11-07 21:53 vrs Tokyo in-car driving: avg 90.0 FPS, 1% low 72.0, p50 11.11 ms, p99 13.88 ms, worst 31.1 ms, 2700 frames, draws 2962
+2026-11-07 21:55 base Tokyo in-car driving: avg 89.9 FPS, 1% low 63.9, p50 11.12 ms, p99 15.65 ms, worst 40.1 ms, 2697 frames, draws 1056
+2026-11-07 21:58 vrs Tokyo in-car driving: avg 89.8 FPS, 1% low 55.9, p50 11.11 ms, p99 17.89 ms, worst 42.0 ms, 2692 frames, draws 1748
+2026-11-07 22:01 base Tokyo in-car driving: avg 89.8 FPS, 1% low 74.1, p50 11.12 ms, p99 13.49 ms, worst 25.9 ms, 2694 frames, draws 1010
+2026-11-07 22:04 pri1 Tokyo in-car driving: avg 90.0 FPS, 1% low 78.5, p50 11.12 ms, p99 12.74 ms, worst 20.3 ms, 2699 frames, draws 1860
+2026-11-07 22:07 base1 Tokyo in-car driving: avg 89.7 FPS, 1% low 74.5, p50 11.11 ms, p99 13.43 ms, worst 41.8 ms, 2692 frames, draws 1845
+2026-11-07 22:09 pri2 Tokyo in-car driving: avg 90.0 FPS, 1% low 76.9, p50 11.11 ms, p99 13.01 ms, worst 20.4 ms, 2700 frames, draws 2018
+2026-11-07 22:12 base2 Tokyo in-car driving: avg 90.0 FPS, 1% low 78.9, p50 11.11 ms, p99 12.68 ms, worst 17.7 ms, 2700 frames, draws 748
+2026-11-07 22:14 pri3 Tokyo in-car driving: avg 89.7 FPS, 1% low 59.1, p50 11.12 ms, p99 16.92 ms, worst 39.9 ms, 2691 frames, draws 2157
+2026-11-07 22:17 base3 Tokyo in-car driving: avg 89.8 FPS, 1% low 67.0, p50 11.12 ms, p99 14.93 ms, worst 49.3 ms, 2693 frames, draws 2975
