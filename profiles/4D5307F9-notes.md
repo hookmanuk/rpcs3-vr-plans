@@ -63,6 +63,14 @@ Matt's fork of zer0ducksgiven/PGR4-ReGPU: `H:\PGR4-ReGPU`, branch `vr` (local, n
 - Cone Sprint (Arcade, chapter 2, event 3, Las Vegas): the gate pillars and cones are 3D objects; "Cone Gate", points and the star are flat HUD. All HUD draws have the
   depth test off (depthctl 00700764). The rev counter is drawn translucent: a cone or barrier shows through it, flat and VR alike (compared on the barrier).
 
+- Occlusion queries in a race: 4 a frame, vs 8edac5ea1aa54d06 on the mono 320x180 pass (colour 2800B8, depth 0), from the game's camera, so they do not depend on the eyes.
+  The colour-mask-0 draws of vs 2fe309ee (scissor 16x16) are not queries.
+
+- Panel glass (vs c8c72c62732db4c1 ps b52fda521e70fc9d): samples the frame, panel contents already on it, at the flat screen position it computes into o[2]. `VrRewriteShader` sets o[2] from the eye's final position.
+- A panel's scissor (the car list 91,139-415,532): clip distances on the frame; the flat game's wide-screen scissor mapping must not run in VR (it left host scissor -756..540).
+- 3D medals in panels: vs d4f0a3c4018247c9 (off-screen layer), d0cb4228ca25ff92 (on the frame), in REGPU_VR_HUD_VS. They draw through a camera on the heap (4003E7xx), which the frustum shaping must leave alone. The world's cameras are static: 82AB61A0 (main view) and 82ADF240. Shaping only 82C91D00 or only 82ADF240 brought the black road bars back: 82C91D00 is the camera whose world matrix turns, not the one whose projection is built.
+- Flat against VR, every menu screen: `tools/pgr4/menus.sh`; head poses: `poses.sh`; a panel's draws: `hudlist.py`; barrier and sparks: `crash.sh`.
+
 ## Particles
 
 - Tyre smoke: vs 246d1432b64841aa, ps 701118197155dbca: soft particles. The vertex shader hands its clip position on (o[1] = clip x c224)
@@ -95,3 +103,26 @@ roughness 0.08-0.09 with Enable on, 0.0001-0.007 off.
 - No effect: fetch bounds, submit cadence (128, 2048), 7 draw workers. Off-screen pass scale: 3 to 1.5 gives 64 to 70 FPS on the grid.
 - The simulator's xrEndFrame costs 1.5-2 ms and spikes to 17-29 ms, which is its 1% lows: pacing needs SteamVR (headset off on 2026-11-06).
 - Mirror window: on is faster than off on the simulator (74 against 60 FPS at 5120, not understood): stays on, REGPU_VR_NO_MIRROR=1.
+
+### Real SteamVR without a headset (2026-11-07): `plans/tools/pgr4/nullvr.sh`, `nullsweep.sh`
+
+SteamVR's null headset, with a private config folder (VR_CONFIG_PATH), so Steam's own settings stay untouched. Real compositor and frame pacing, no optics
+(its view is 90 degrees square, narrower than a real headset, so a real headset draws more). Quirks: a cold SteamVR opens room setup, which ends the OpenXR session
+(state 8, the game exits): nullvr.sh lets that happen, closes it, starts again. Once the start hung in runtime init at frame 0, with SteamVR just restarted.
+
+- 90 Hz, 2880 per eye, grid: 90.0 FPS by the runtime's count, xrEndFrame 0.45 ms.
+- 90 Hz, 4096: grid 79.4, driving 88.2. 90 Hz, 5120: grid 74.5, driving 82.9, both with p50 about 11.2 ms: most frames make 90 Hz and the rest wait for the next slot (22 ms).
+  That wait is the "spike" in xrEndFrame: a frame over the slot, not a hitch of its own. GPU time at 5120 is 13.2 ms: 2-3 ms short of 90 Hz on the grid.
+- GPU at 5120 grid: 81-91% busy but only 286-306 W: the geometry front end limits it, not shading.
+- Mirror off is slower here too (60 against 72 live, GPU time 16.4 against 13.2): not understood; left on.
+
+### Where the fixed cost goes (St Petersburg grid, 800 per eye, REGPU_GPU_SHADERS=1 REGPU_NO_DRAW_WORKERS=1; these markers crash with workers on)
+
+- Same top shaders at 800 and 5120 with the same times: 882d1487 (building walls, red in the tint test) 2.0 ms, 705 draws, 795k vertices; d9c8f878 (columns, stands) 1.7 ms, 293 draws, 917k;
+  553a8f3b (the crowd) 1.7 ms, 568 draws, only 116k vertices; 142ded03 0.7; f676e896 0.6. Vertices counted with both instances (`drawstats` now lists them).
+- Top five vertex shaders with `r.pos = 0` (draws and vertex work stay, nothing rasterised): GPU 10.3 to 4.8 ms, 88 to 154 FPS. So this is neither draw submission nor vertex shading.
+- Flat colour in their pixel shaders: no change, so not pixel shading. Depth test off: no change. REGPU_VR_ONE_EYE halves them, so the cost is per instance.
+- Coverage draws in occlusion queries off: no change. Interpolators limited to 8 of 16 (hlsl signature): 97-99 against 96-97 FPS, no real change: not attributes.
+- Grid against driving at 800: GPU 9.7 against 5.3 ms: the stands and crowd at the start line are half the frame.
+- SV_ClipDistance0 off for every draw: 97-100 against 97 FPS on the grid, none driving: no gain, reverted. REGPU_SUBMIT_DRAWS 1024 on SteamVR at 144 Hz: 77.7 against 72.7-76.9 grid: within noise. Off-screen scale 1.5 on SteamVR: no gain.
+- Not explained: a draw that rasterises costs about 1.5 us per instance whatever its pixels and vertices (the crowd: 568 draws, 116k vertices, 1.7 ms). Nsight GPU Trace would be the next step. Not tried: hidden area mask (no mask on the null headset to measure), variable rate shading (pixels are only about 3.5 ms of the 13 at 5120).
