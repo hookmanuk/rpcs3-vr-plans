@@ -4283,17 +4283,16 @@ markers and particle effects; force feedback for wheel and road forces; keep goi
 - [x] Head poses (simulator's real pose, yaw -20, +20, pitch 10, roll 15) on the profile dialog, the grid and the pause menu: HUD and panels whole in their box. All menu screens against flat.
   Found and fixed by that check: the dialog's glass showed a small copy of the view, the car list was cut away, medals in the wrong place, crest past its panel.
 - [x] Sparks, motion blur, rain, tyre smoke in both eyes. Same speeds at the same moments as flat (55, 61, 68 mph). Occlusion queries answer the same as flat on the night track.
-- Frame rate, real SteamVR (null headset, 90 degrees square, DLSS off, `tools/pgr4/nullvr.sh`). The null headset itself seems capped at about 100 FPS:
+- [x] Frame rate, real SteamVR (null headset, 90 degrees square, DLSS off, `tools/pgr4/nullvr.sh`). The null headset itself caps at about 100 FPS. Vertex data in video memory took
+  St Petersburg's grid at 5120 from 76 to 99 FPS and Vegas driving from 79 to 98-100:
 
   | Eye | Scene | Grid | Driving |
   |---|---|---|---|
-  | 5120 | St Petersburg, 144 Hz | 73-78 | 94-97 |
-  | 5120 | Tokyo night heavy rain, 144 Hz | 92 | 95 |
-  | 5120 | Las Vegas Cone Sprint, 144 Hz | 89 | 79 |
-  | 5120 | St Petersburg, 90 Hz | 75-77 | 83-87 |
-  | 4096 | St Petersburg, 90 Hz | 79 | 88 |
-  | 2880 | St Petersburg, 90 Hz | 87-90 | 90 (1% low 86) |
-  | 2880 | Tokyo / Vegas, 144 Hz | 100 / 100 | 100 / 97 |
+  | 5120 | St Petersburg, 144 Hz | 98.5 (1% low 56) | 99 (58) |
+  | 5120 | Tokyo night heavy rain, 144 Hz | 99.8 (71) | 96.4 (48) |
+  | 5120 | Las Vegas Cone Sprint, 144 Hz | 100 (60) | 97.7 (48) |
+  | 5120 | St Petersburg, 90 Hz | 88.5 (59) | 88.8 (59) |
+  | 2880 | Tokyo / Vegas, 144 Hz (before the last fix) | 100 / 100 | 100 / 100 |
 
-- [ ] Open, 5120 per eye: the start line crowd and stands (73-78) and Vegas driving (79) miss 90. GPU time 13 ms there. The cost is in triangle setup, resolution independent; see notes.
+  At 90 Hz, 5120 is about 1.5% of frames short of a perfect 90; a real headset's wider view draws more.
 - [ ] Open, needs Matt: **real headset** (a wider view draws more than the null headset's numbers), **real wheel** (forces only tested with the fake wheel).

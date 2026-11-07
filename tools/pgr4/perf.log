@@ -170,3 +170,60 @@
 2026-11-07 04:17 final SteamVR null 90 5120 driving: avg 87.0 FPS, 1% low 45.5, p50 11.13 ms, p99 21.97 ms, worst 22.5 ms, 870 frames, draws 2291
 2026-11-07 04:19 final SteamVR null 90 2880 grid: avg 87.1 FPS, 1% low 47.7, p50 11.13 ms, p99 20.97 ms, worst 33.3 ms, 872 frames, draws 3815
 2026-11-07 04:19 final SteamVR null 90 2880 driving: avg 89.8 FPS, 1% low 86.4, p50 11.11 ms, p99 11.57 ms, worst 22.3 ms, 898 frames, draws 2309
+2026-11-07 04:24 FLAT 720p St P grid per-shader timing: avg 123.3 FPS, 1% low 96.1, p50 7.97 ms, p99 10.41 ms, worst 13.6 ms, 740 frames, draws 4821
+2026-11-07 04:30 800 grid ring video=0 (per-shader marks): avg 81.8 FPS, 1% low 38.2, p50 11.69 ms, p99 26.15 ms, worst 30.2 ms, 491 frames, draws 4100
+2026-11-07 04:32 800 grid ring video=1 (per-shader marks): avg 71.9 FPS, 1% low 36.2, p50 13.18 ms, p99 27.64 ms, worst 30.5 ms, 432 frames, draws 4361
+2026-11-07 04:34 800 grid base for pcie: avg 111.5 FPS, 1% low 44.5, p50 8.64 ms, p99 22.46 ms, worst 25.3 ms, 557 frames, draws 4050
+2026-11-07 04:34 800 driving for pcie: avg 118.3 FPS, 1% low 48.0, p50 8.33 ms, p99 20.84 ms, worst 23.9 ms, 473 frames, draws 2687
+2026-11-07 04:38 800 grid video vertices: avg 105.8 FPS, 1% low 43.4, p50 9.08 ms, p99 23.02 ms, worst 25.9 ms, 846 frames, draws 4384
+2026-11-07 04:38 800 driving video vertices: avg 138.4 FPS, 1% low 51.0, p50 7.25 ms, p99 19.62 ms, worst 26.9 ms, 831 frames, draws 1689
+2026-11-07 04:40 800 grid video vertices: avg 109.2 FPS, 1% low 43.4, p50 8.81 ms, p99 23.06 ms, worst 26.1 ms, 874 frames, draws 4359
+2026-11-07 04:41 800 driving video vertices: avg 137.1 FPS, 1% low 51.4, p50 7.25 ms, p99 19.45 ms, worst 37.6 ms, 823 frames, draws 1683
+2026-11-07 04:43 shadow SteamVR null 144 5120 REGPU_VIDEO_VERTICES=1 REGPU_PERF=1 grid: avg 99.2 FPS, 1% low 54.5, p50 10.23 ms, p99 18.36 ms, worst 26.7 ms, 993 frames, draws 3815
+2026-11-07 04:43 shadow SteamVR null 144 5120 REGPU_VIDEO_VERTICES=1 REGPU_PERF=1 driving: avg 99.9 FPS, 1% low 70.9, p50 10.25 ms, p99 14.10 ms, worst 19.9 ms, 1000 frames, draws 2308
+2026-11-07 04:45 shadow SteamVR null 144 5120 REGPU_PERF=1 grid: avg 76.3 FPS, 1% low 42.2, p50 13.27 ms, p99 23.72 ms, worst 30.9 ms, 764 frames, draws 3819
+2026-11-07 04:46 shadow SteamVR null 144 5120 REGPU_PERF=1 driving: avg 95.8 FPS, 1% low 53.7, p50 10.30 ms, p99 18.61 ms, worst 24.4 ms, 959 frames, draws 2334
+2026-11-07 04:48 shadow SteamVR null 90 5120 REGPU_VIDEO_VERTICES=1 REGPU_PERF=1 grid: avg 88.5 FPS, 1% low 59.5, p50 11.12 ms, p99 16.80 ms, worst 22.1 ms, 886 frames, draws 3817
+2026-11-07 04:48 shadow SteamVR null 90 5120 REGPU_VIDEO_VERTICES=1 REGPU_PERF=1 driving: avg 89.7 FPS, 1% low 82.1, p50 11.11 ms, p99 12.18 ms, worst 22.1 ms, 897 frames, draws 2139
+2026-11-07 04:51 videoverts FLAT 5120x3240 grid: avg 131.8 FPS, 1% low 103.8, p50 7.62 ms, p99 9.63 ms, worst 10.6 ms, 1054 frames, draws 5111
+2026-11-07 04:51 videoverts FLAT 5120x3240 driving: avg 187.9 FPS, 1% low 125.5, p50 5.31 ms, p99 7.97 ms, worst 11.0 ms, 1503 frames, draws 2119
+2026-11-07 04:53 videoverts FLAT 5120x3240 REGPU_NO_VIDEO_VERTICES=1 grid: avg 131.6 FPS, 1% low 97.6, p50 7.54 ms, p99 10.25 ms, worst 13.2 ms, 1053 frames, draws 5098
+2026-11-07 04:53 videoverts FLAT 5120x3240 REGPU_NO_VIDEO_VERTICES=1 driving: avg 188.3 FPS, 1% low 122.1, p50 5.31 ms, p99 8.19 ms, worst 9.8 ms, 1506 frames, draws 2136
+2026-11-07 04:55 videoverts FLAT 1920x1080 grid: avg 141.8 FPS, 1% low 101.4, p50 7.02 ms, p99 9.86 ms, worst 11.5 ms, 1134 frames, draws 5118
+2026-11-07 04:55 videoverts FLAT 1920x1080 driving: avg 222.0 FPS, 1% low 140.9, p50 4.29 ms, p99 7.10 ms, worst 8.8 ms, 1777 frames, draws 2119
+2026-11-07 04:57 videoverts FLAT 1920x1080 REGPU_NO_VIDEO_VERTICES=1 grid: avg 141.4 FPS, 1% low 103.0, p50 7.04 ms, p99 9.71 ms, worst 10.7 ms, 1131 frames, draws 5114
+2026-11-07 04:57 videoverts FLAT 1920x1080 REGPU_NO_VIDEO_VERTICES=1 driving: avg 222.5 FPS, 1% low 141.3, p50 4.27 ms, p99 7.08 ms, worst 9.4 ms, 1780 frames, draws 2136
+2026-11-07 05:00 SteamVR null 144 Hz 5120 Tokyo night rain grid: avg 88.1 FPS, 1% low 48.0, p50 10.58 ms, p99 20.85 ms, worst 27.6 ms, 705 frames, draws 3363
+2026-11-07 05:00 SteamVR null 144 Hz 5120 Tokyo night rain driving: avg 93.8 FPS, 1% low 50.6, p50 10.42 ms, p99 19.76 ms, worst 21.0 ms, 750 frames, draws 2106
+2026-11-07 05:03 SteamVR null 144 Hz 5120 Vegas cone sprint grid: avg 92.3 FPS, 1% low 48.4, p50 10.43 ms, p99 20.66 ms, worst 24.9 ms, 738 frames, draws 3558
+2026-11-07 05:03 SteamVR null 144 Hz 5120 Vegas cone sprint driving: avg 81.8 FPS, 1% low 47.6, p50 11.41 ms, p99 21.00 ms, worst 31.4 ms, 654 frames, draws 3857
+2026-11-07 05:06 SteamVR null 144 Hz 5120 Tokyo night rain grid: avg 99.6 FPS, 1% low 69.3, p50 10.28 ms, p99 14.42 ms, worst 20.9 ms, 797 frames, draws 3365
+2026-11-07 05:06 SteamVR null 144 Hz 5120 Tokyo night rain driving: avg 99.6 FPS, 1% low 61.1, p50 10.28 ms, p99 16.36 ms, worst 21.1 ms, 797 frames, draws 2212
+2026-11-07 05:09 SteamVR null 144 Hz 5120 Vegas cone sprint grid: avg 99.5 FPS, 1% low 58.7, p50 10.31 ms, p99 17.04 ms, worst 25.3 ms, 796 frames, draws 3561
+2026-11-07 05:09 SteamVR null 144 Hz 5120 Vegas cone sprint driving: avg 99.9 FPS, 1% low 60.1, p50 10.24 ms, p99 16.63 ms, worst 26.9 ms, 799 frames, draws 3852
+2026-11-07 05:11 SteamVR null 144 Hz 2880 Tokyo night rain grid: avg 100.0 FPS, 1% low 72.7, p50 10.30 ms, p99 13.76 ms, worst 15.9 ms, 800 frames, draws 3368
+2026-11-07 05:12 SteamVR null 144 Hz 2880 Tokyo night rain driving: avg 99.5 FPS, 1% low 71.8, p50 10.31 ms, p99 13.92 ms, worst 14.2 ms, 796 frames, draws 1143
+2026-11-07 05:14 SteamVR null 144 Hz 2880 Vegas cone sprint grid: avg 100.0 FPS, 1% low 71.2, p50 10.31 ms, p99 14.05 ms, worst 16.4 ms, 800 frames, draws 3558
+2026-11-07 05:14 SteamVR null 144 Hz 2880 Vegas cone sprint driving: avg 100.0 FPS, 1% low 71.7, p50 10.32 ms, p99 13.94 ms, worst 16.2 ms, 800 frames, draws 3847
+2026-11-07 05:16 flatshadow FLAT 5120x3240 REGPU_VIDEO_VERTICES=1 grid: avg 133.5 FPS, 1% low 95.1, p50 7.47 ms, p99 10.52 ms, worst 11.4 ms, 1069 frames, draws 5118
+2026-11-07 05:17 flatshadow FLAT 5120x3240 REGPU_VIDEO_VERTICES=1 driving: avg 201.1 FPS, 1% low 127.7, p50 4.71 ms, p99 7.83 ms, worst 9.7 ms, 1609 frames, draws 2122
+2026-11-07 05:18 flatshadow FLAT 5120x3240 grid: avg 128.5 FPS, 1% low 94.0, p50 7.69 ms, p99 10.63 ms, worst 11.5 ms, 1028 frames, draws 5096
+2026-11-07 05:18 flatshadow FLAT 5120x3240 driving: avg 184.9 FPS, 1% low 124.5, p50 5.27 ms, p99 8.03 ms, worst 10.2 ms, 1480 frames, draws 2035
+2026-11-07 05:20 flatshadow FLAT 5120x3240 REGPU_VIDEO_VERTICES=1 grid: avg 135.4 FPS, 1% low 102.8, p50 7.36 ms, p99 9.73 ms, worst 10.6 ms, 1083 frames, draws 5110
+2026-11-07 05:20 flatshadow FLAT 5120x3240 REGPU_VIDEO_VERTICES=1 driving: avg 202.8 FPS, 1% low 129.0, p50 4.70 ms, p99 7.75 ms, worst 9.7 ms, 1622 frames, draws 2113
+2026-11-07 05:36 mirror SteamVR null 144 5120 REGPU_PERF=1 grid: avg 98.5 FPS, 1% low 55.6, p50 10.21 ms, p99 17.98 ms, worst 24.4 ms, 986 frames, draws 3813
+2026-11-07 05:37 mirror SteamVR null 144 5120 REGPU_PERF=1 driving: avg 99.0 FPS, 1% low 58.4, p50 10.29 ms, p99 17.13 ms, worst 28.4 ms, 989 frames, draws 2325
+2026-11-07 05:39 mirror SteamVR null 90 5120 REGPU_PERF=1 grid: avg 88.5 FPS, 1% low 59.4, p50 11.12 ms, p99 16.84 ms, worst 22.5 ms, 885 frames, draws 3795
+2026-11-07 05:39 mirror SteamVR null 90 5120 REGPU_PERF=1 driving: avg 88.8 FPS, 1% low 59.3, p50 11.12 ms, p99 16.88 ms, worst 23.2 ms, 888 frames, draws 1962
+2026-11-07 05:42 SteamVR null 144 Hz 5120 Tokyo night rain grid: avg 99.8 FPS, 1% low 70.8, p50 10.31 ms, p99 14.13 ms, worst 17.1 ms, 799 frames, draws 3369
+2026-11-07 05:42 SteamVR null 144 Hz 5120 Tokyo night rain driving: avg 96.4 FPS, 1% low 47.8, p50 10.34 ms, p99 20.92 ms, worst 32.6 ms, 771 frames, draws 2107
+2026-11-07 05:44 SteamVR null 144 Hz 5120 Vegas cone sprint grid: avg 100.0 FPS, 1% low 60.4, p50 10.29 ms, p99 16.56 ms, worst 17.8 ms, 801 frames, draws 3565
+2026-11-07 05:44 SteamVR null 144 Hz 5120 Vegas cone sprint driving: avg 97.7 FPS, 1% low 48.0, p50 10.22 ms, p99 20.82 ms, worst 41.1 ms, 781 frames, draws 3838
+2026-11-07 05:46 headroom 5120x5120 grid: avg 92.3 FPS, 1% low 41.3, p50 10.26 ms, p99 24.22 ms, worst 27.0 ms, 739 frames, draws 4378
+ perf:   waiting on host GPU 0.00 ms/frame | GPU time 10.09 ms/frame (worst 15.6)
+2026-11-07 05:46 headroom 5120x5120 driving: avg 98.6 FPS, 1% low 42.0, p50 9.56 ms, p99 23.82 ms, worst 49.8 ms, 788 frames, draws 2264
+ perf:   waiting on host GPU 0.00 ms/frame | GPU time 10.45 ms/frame (worst 43.2)
+2026-11-07 05:48 headroom 2880x2880 grid: avg 99.7 FPS, 1% low 43.4, p50 9.69 ms, p99 23.06 ms, worst 28.3 ms, 798 frames, draws 4397
+ perf:   waiting on host GPU 0.00 ms/frame | GPU time 9.33 ms/frame (worst 12.3)
+2026-11-07 05:48 headroom 2880x2880 driving: avg 133.8 FPS, 1% low 46.5, p50 7.26 ms, p99 21.49 ms, worst 46.9 ms, 1071 frames, draws 2412
+ perf:   waiting on host GPU 0.00 ms/frame | GPU time 5.48 ms/frame (worst 12.0)

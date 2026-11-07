@@ -125,4 +125,16 @@ SteamVR's null headset, with a private config folder (VR_CONFIG_PATH), so Steam'
 - Coverage draws in occlusion queries off: no change. Interpolators limited to 8 of 16 (hlsl signature): 97-99 against 96-97 FPS, no real change: not attributes.
 - Grid against driving at 800: GPU 9.7 against 5.3 ms: the stands and crowd at the start line are half the frame.
 - SV_ClipDistance0 off for every draw: 97-100 against 97 FPS on the grid, none driving: no gain, reverted. REGPU_SUBMIT_DRAWS 1024 on SteamVR at 144 Hz: 77.7 against 72.7-76.9 grid: within noise. Off-screen scale 1.5 on SteamVR: no gain.
-- Not explained: a draw that rasterises costs about 1.5 us per instance whatever its pixels and vertices (the crowd: 568 draws, 116k vertices, 1.7 ms). Nsight GPU Trace would be the next step. Not tried: hidden area mask (no mask on the null headset to measure), variable rate shading (pixels are only about 3.5 ms of the 13 at 5120).
+
+### The answer: vertex data across PCIe (`nvidia-smi dmon -s tu`, the rxpci column)
+
+The GPU was reading **22 GB/s, about 200 MB a frame, from system memory** on the grid: guest memory is mapped to the GPU in place ("zero copy"), and both eyes read every vertex. That is why the cost ignored resolution
+and pixel shaders, and why the GPU sat at half power. Culling with `r.pos = 0` hid it, and the "per-draw" reading above was this too.
+
+`renderer.cpp` VideoNeeds, VR only (REGPU_NO_VIDEO_VERTICES=1 turns it off; REGPU_VIDEO_VERTICES=1 turns it on flat): a 512 MB copy of guest memory in video memory, gphys reads that. rxpci 22 to 7 GB/s.
+5120 at 144 Hz: grid 76 to 99, Vegas driving 79 to 98-100 (null headset's cap about 100). 90 Hz: 88.5 / 88.8. Flat: 128 to 134 grid, 185 to 202 driving (opt-in: it isn't needed there).
+
+- **Don't track this by hash.** First version: a buffer copied once, recopied when its hash changed. Scrolling through cars and back gave exploded geometry: cars are streamed into a pool, a model loaded back hashes as before, while the copy holds the car loaded since.
+  Now a CPU mirror of the copy (`g_videoMirror`) is compared byte for byte, and writing over bytes another buffer covers sends that buffer back to be compared. Test: `tools/pgr4/stale.sh` (flat against VR).
+- Constants in video memory (copied before the frame): crowd unchanged, 1.69 ms, not worth it. The D3D12 Agility SDK 1.616 loads but reports GPU upload heaps unsupported on this Windows (22631): no resizable-BAR ring.
+- A failed resource creation looks like success: the first run of the fix had `CreateCommittedResource` fail on the guest resource's desc and fell back silently, and an A/B of it measured nothing (flat "no change"). Check the log line `vertex data in video memory`.
