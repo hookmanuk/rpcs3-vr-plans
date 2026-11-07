@@ -475,3 +475,150 @@
 2026-11-07 18:48 reverted HMD 5120x5120 driving: avg 89.9 FPS, 1% low 73.5, p50 11.11 ms, p99 13.61 ms, worst 30.1 ms, 1348 frames, draws 1722
 2026-11-07 18:50 reverted HMD 5120x5120 REGPU_VR_DRAWN_CLEARS=1 grid: avg 90.0 FPS, 1% low 54.1, p50 11.10 ms, p99 18.50 ms, worst 22.9 ms, 1350 frames, draws 3492
 2026-11-07 18:50 reverted HMD 5120x5120 REGPU_VR_DRAWN_CLEARS=1 driving: avg 89.9 FPS, 1% low 69.8, p50 11.12 ms, p99 14.33 ms, worst 36.6 ms, 1348 frames, draws 1643
+2026-11-07 18:56 over HMD 5120x5120 REGPU_GPU_PASSES=1 REGPU_GPU_LONG=13 grid: avg 90.0 FPS, 1% low 82.0, p50 11.11 ms, p99 12.19 ms, worst 13.5 ms, 1800 frames, draws 3598
+2026-11-07 18:56 over HMD 5120x5120 REGPU_GPU_PASSES=1 REGPU_GPU_LONG=13 driving: avg 89.9 FPS, 1% low 69.0, p50 11.12 ms, p99 14.50 ms, worst 32.5 ms, 1798 frames, draws 3040
+2026-11-07 18:59 lows HMD 5120x5120 grid: avg 90.0 FPS, 1% low 83.9, p50 11.11 ms, p99 11.92 ms, worst 13.3 ms, 1350 frames, draws 3494
+2026-11-07 18:59 lows HMD 5120x5120 driving: avg 90.0 FPS, 1% low 68.8, p50 11.12 ms, p99 14.53 ms, worst 31.4 ms, 1350 frames, draws 1551
+2026-11-07 19:01 lows HMD 5120x5120 NOFENCE=1 grid: avg 90.0 FPS, 1% low 58.4, p50 11.13 ms, p99 17.14 ms, worst 19.8 ms, 1350 frames, draws 3498
+2026-11-07 19:01 lows HMD 5120x5120 NOFENCE=1 driving: avg 89.9 FPS, 1% low 78.2, p50 11.11 ms, p99 12.78 ms, worst 28.4 ms, 1349 frames, draws 1819
+2026-11-07 19:03 lows HMD 5120x5120 REGPU_VR_NO_SEAT_LOCK=1 grid: avg 90.0 FPS, 1% low 82.5, p50 11.11 ms, p99 12.13 ms, worst 14.8 ms, 1351 frames, draws 3492
+2026-11-07 19:03 lows HMD 5120x5120 REGPU_VR_NO_SEAT_LOCK=1 driving: avg 90.0 FPS, 1% low 77.4, p50 11.12 ms, p99 12.92 ms, worst 35.0 ms, 1350 frames, draws 1829
+2026-11-07 19:05 lows HMD 5120x5120 grid: avg 90.0 FPS, 1% low 82.5, p50 11.11 ms, p99 12.12 ms, worst 12.9 ms, 1351 frames, draws 3497
+2026-11-07 19:06 lows HMD 5120x5120 driving: avg 90.0 FPS, 1% low 74.7, p50 11.11 ms, p99 13.39 ms, worst 32.1 ms, 1350 frames, draws 1576
+2026-11-07 19:07 lows HMD 5120x5120 NOFENCE=1 grid: avg 90.0 FPS, 1% low 82.7, p50 11.11 ms, p99 12.09 ms, worst 13.0 ms, 1350 frames, draws 3500
+2026-11-07 19:08 lows HMD 5120x5120 NOFENCE=1 driving: avg 90.0 FPS, 1% low 77.9, p50 11.12 ms, p99 12.83 ms, worst 27.8 ms, 1350 frames, draws 1872
+2026-11-07 19:10 lows HMD 5120x5120 REGPU_VR_NO_SEAT_LOCK=1 grid: avg 90.0 FPS, 1% low 80.7, p50 11.11 ms, p99 12.39 ms, worst 13.3 ms, 1350 frames, draws 3499
+2026-11-07 19:10 lows HMD 5120x5120 REGPU_VR_NO_SEAT_LOCK=1 driving: avg 89.9 FPS, 1% low 72.5, p50 11.11 ms, p99 13.79 ms, worst 38.6 ms, 1349 frames, draws 1837
+2026-11-07 19:13 nowait HMD 5120x5120 grid: avg 90.0 FPS, 1% low 55.4, p50 11.13 ms, p99 18.05 ms, worst 20.4 ms, 1350 frames, draws 3481
+2026-11-07 19:13 nowait HMD 5120x5120 driving: avg 90.0 FPS, 1% low 76.1, p50 11.11 ms, p99 13.14 ms, worst 42.7 ms, 1350 frames, draws 1605
+2026-11-07 19:15 nowait HMD 5120x5120 PGR4_VR_WAIT_FENCE=1 grid: avg 90.0 FPS, 1% low 81.6, p50 11.11 ms, p99 12.25 ms, worst 13.3 ms, 1350 frames, draws 3493
+2026-11-07 19:15 nowait HMD 5120x5120 PGR4_VR_WAIT_FENCE=1 driving: avg 90.0 FPS, 1% low 74.5, p50 11.11 ms, p99 13.42 ms, worst 34.9 ms, 1350 frames, draws 1874
+2026-11-07 19:17 nowait HMD 5120x5120 grid: avg 90.0 FPS, 1% low 55.4, p50 11.12 ms, p99 18.04 ms, worst 21.7 ms, 1350 frames, draws 3499
+2026-11-07 19:17 nowait HMD 5120x5120 driving: avg 90.0 FPS, 1% low 73.4, p50 11.11 ms, p99 13.62 ms, worst 29.2 ms, 1351 frames, draws 1709
+2026-11-07 19:19 nowait HMD 5120x5120 PGR4_VR_WAIT_FENCE=1 grid: avg 90.0 FPS, 1% low 55.6, p50 11.11 ms, p99 17.99 ms, worst 22.1 ms, 1350 frames, draws 3477
+2026-11-07 19:20 nowait HMD 5120x5120 PGR4_VR_WAIT_FENCE=1 driving: avg 89.9 FPS, 1% low 74.8, p50 11.12 ms, p99 13.37 ms, worst 36.2 ms, 1349 frames, draws 1750
+2026-11-07 19:21 nowait HMD 5120x5120 grid: avg 102.8 FPS, 1% low 58.5, p50 9.41 ms, p99 17.10 ms, worst 24.6 ms, 1541 frames, draws 3622
+2026-11-07 19:22 nowait HMD 5120x5120 driving: avg 107.9 FPS, 1% low 75.7, p50 9.24 ms, p99 13.21 ms, worst 40.3 ms, 1618 frames, draws 1554
+2026-11-07 19:24 nowait HMD 5120x5120 PGR4_VR_WAIT_FENCE=1 grid: avg 101.0 FPS, 1% low 57.9, p50 9.40 ms, p99 17.27 ms, worst 219.6 ms, 1515 frames, draws 3585
+2026-11-07 19:24 nowait HMD 5120x5120 PGR4_VR_WAIT_FENCE=1 driving: avg 106.9 FPS, 1% low 76.6, p50 9.33 ms, p99 13.05 ms, worst 34.5 ms, 1603 frames, draws 1896
+2026-11-07 19:27 a boot 1 win 1 grid: avg 108.5 FPS, 1% low 79.8, p50 9.18 ms, p99 12.54 ms, worst 15.9 ms, 868 frames, draws 4361
+2026-11-07 19:27 a boot 1 win 2 grid: avg 107.5 FPS, 1% low 81.4, p50 9.22 ms, p99 12.29 ms, worst 13.7 ms, 859 frames, draws 3761
+2026-11-07 19:27 a boot 1 win 3 grid: avg 111.0 FPS, 1% low 80.1, p50 8.94 ms, p99 12.49 ms, worst 13.3 ms, 888 frames, draws 3584
+2026-11-07 19:28 a boot 2 win 1 grid: avg 108.7 FPS, 1% low 80.2, p50 9.14 ms, p99 12.47 ms, worst 14.3 ms, 869 frames, draws 4395
+2026-11-07 19:29 a boot 2 win 2 grid: avg 107.1 FPS, 1% low 80.1, p50 9.22 ms, p99 12.49 ms, worst 18.7 ms, 857 frames, draws 3759
+2026-11-07 19:29 a boot 2 win 3 grid: avg 111.0 FPS, 1% low 77.7, p50 8.96 ms, p99 12.86 ms, worst 14.1 ms, 887 frames, draws 3549
+2026-11-07 19:30 a boot 3 win 1 grid: avg 106.2 FPS, 1% low 93.6, p50 9.46 ms, p99 10.69 ms, worst 13.8 ms, 850 frames, draws 4396
+2026-11-07 19:31 a boot 3 win 2 grid: avg 105.0 FPS, 1% low 86.6, p50 9.57 ms, p99 11.54 ms, worst 13.4 ms, 840 frames, draws 3780
+2026-11-07 19:31 a boot 3 win 3 grid: avg 107.3 FPS, 1% low 90.3, p50 9.35 ms, p99 11.07 ms, worst 15.8 ms, 859 frames, draws 3602
+2026-11-07 19:32 a boot 4 win 1 grid: avg 109.3 FPS, 1% low 79.2, p50 9.08 ms, p99 12.63 ms, worst 13.6 ms, 875 frames, draws 4367
+2026-11-07 19:32 a boot 4 win 2 grid: avg 107.7 FPS, 1% low 80.4, p50 9.22 ms, p99 12.44 ms, worst 13.5 ms, 862 frames, draws 3783
+2026-11-07 19:33 a boot 4 win 3 grid: avg 111.2 FPS, 1% low 81.2, p50 8.97 ms, p99 12.32 ms, worst 14.3 ms, 889 frames, draws 3467
+2026-11-07 19:35 freeclear HMD 5120x5120 grid: avg 109.2 FPS, 1% low 79.3, p50 9.08 ms, p99 12.60 ms, worst 15.7 ms, 1638 frames, draws 3446
+2026-11-07 19:35 freeclear HMD 5120x5120 driving: avg 109.5 FPS, 1% low 62.8, p50 9.02 ms, p99 15.92 ms, worst 33.4 ms, 1643 frames, draws 2108
+2026-11-07 19:37 freeclear HMD 5120x5120 REGPU_VR_DRAWN_CLEARS=1 grid: avg 109.1 FPS, 1% low 79.3, p50 9.13 ms, p99 12.61 ms, worst 13.5 ms, 1637 frames, draws 3485
+2026-11-07 19:38 freeclear HMD 5120x5120 REGPU_VR_DRAWN_CLEARS=1 driving: avg 108.7 FPS, 1% low 69.6, p50 9.15 ms, p99 14.36 ms, worst 47.5 ms, 1630 frames, draws 1819
+2026-11-07 19:40 freeclear HMD 5120x5120 grid: avg 105.3 FPS, 1% low 58.7, p50 9.14 ms, p99 17.04 ms, worst 27.1 ms, 1578 frames, draws 3485
+2026-11-07 19:40 freeclear HMD 5120x5120 driving: avg 109.6 FPS, 1% low 69.3, p50 9.08 ms, p99 14.43 ms, worst 42.4 ms, 1644 frames, draws 1749
+2026-11-07 19:42 freeclear HMD 5120x5120 REGPU_VR_DRAWN_CLEARS=1 grid: avg 105.3 FPS, 1% low 57.4, p50 9.16 ms, p99 17.41 ms, worst 21.2 ms, 1580 frames, draws 3433
+2026-11-07 19:42 freeclear HMD 5120x5120 REGPU_VR_DRAWN_CLEARS=1 driving: avg 108.6 FPS, 1% low 64.9, p50 9.18 ms, p99 15.40 ms, worst 40.7 ms, 1629 frames, draws 1720
+2026-11-07 19:44 b boot 1 win 1 grid: avg 106.2 FPS, 1% low 57.9, p50 9.12 ms, p99 17.28 ms, worst 21.3 ms, 850 frames, draws 4376
+2026-11-07 19:45 b boot 1 win 2 grid: avg 103.2 FPS, 1% low 57.8, p50 9.23 ms, p99 17.29 ms, worst 24.6 ms, 826 frames, draws 3728
+2026-11-07 19:45 b boot 1 win 3 grid: avg 107.1 FPS, 1% low 60.0, p50 9.06 ms, p99 16.68 ms, worst 19.7 ms, 857 frames, draws 3582
+2026-11-07 19:46 b boot 2 win 1 grid: avg 105.9 FPS, 1% low 59.6, p50 9.19 ms, p99 16.77 ms, worst 22.7 ms, 848 frames, draws 4376
+2026-11-07 19:46 b boot 2 win 2 grid: avg 103.5 FPS, 1% low 52.5, p50 9.22 ms, p99 19.06 ms, worst 23.1 ms, 829 frames, draws 3748
+2026-11-07 19:47 b boot 2 win 3 grid: avg 106.6 FPS, 1% low 58.3, p50 9.09 ms, p99 17.16 ms, worst 20.3 ms, 853 frames, draws 3602
+2026-11-07 19:48 b boot 3 win 1 grid: avg 105.0 FPS, 1% low 55.8, p50 9.21 ms, p99 17.94 ms, worst 20.2 ms, 839 frames, draws 4396
+2026-11-07 19:48 b boot 3 win 2 grid: avg 103.7 FPS, 1% low 59.4, p50 9.24 ms, p99 16.82 ms, worst 20.2 ms, 830 frames, draws 3729
+2026-11-07 19:49 b boot 3 win 3 grid: avg 106.3 FPS, 1% low 56.8, p50 9.08 ms, p99 17.60 ms, worst 22.8 ms, 851 frames, draws 3571
+2026-11-07 19:50 b boot 4 win 1 grid: avg 108.9 FPS, 1% low 78.1, p50 9.14 ms, p99 12.81 ms, worst 14.4 ms, 871 frames, draws 4379
+2026-11-07 19:50 b boot 4 win 2 grid: avg 107.4 FPS, 1% low 80.0, p50 9.20 ms, p99 12.49 ms, worst 14.6 ms, 860 frames, draws 3763
+2026-11-07 19:50 b boot 4 win 3 grid: avg 111.2 FPS, 1% low 79.9, p50 8.92 ms, p99 12.52 ms, worst 13.5 ms, 890 frames, draws 3569
+2026-11-07 19:52 b boot 5 win 1 grid: avg 105.3 FPS, 1% low 57.9, p50 9.20 ms, p99 17.29 ms, worst 19.6 ms, 843 frames, draws 4343
+2026-11-07 19:52 b boot 5 win 2 grid: avg 103.5 FPS, 1% low 56.5, p50 9.34 ms, p99 17.69 ms, worst 21.3 ms, 827 frames, draws 3744
+2026-11-07 19:52 b boot 5 win 3 grid: avg 106.3 FPS, 1% low 53.6, p50 9.08 ms, p99 18.67 ms, worst 21.0 ms, 851 frames, draws 3549
+2026-11-07 19:54 b boot 6 win 1 grid: avg 107.7 FPS, 1% low 61.1, p50 9.03 ms, p99 16.38 ms, worst 22.1 ms, 861 frames, draws 4377
+2026-11-07 19:54 b boot 6 win 2 grid: avg 105.4 FPS, 1% low 59.4, p50 9.05 ms, p99 16.83 ms, worst 19.6 ms, 843 frames, draws 3781
+2026-11-07 19:54 b boot 6 win 3 grid: avg 108.1 FPS, 1% low 59.1, p50 8.89 ms, p99 16.93 ms, worst 20.2 ms, 865 frames, draws 3551
+2026-11-07 19:57 c boot 1 grid: avg 102.4 FPS, 1% low 61.3, p50 9.50 ms, p99 16.31 ms, worst 19.0 ms, 1025 frames, draws 4376
+2026-11-07 19:58 c boot 2 grid: avg 107.3 FPS, 1% low 78.2, p50 9.30 ms, p99 12.79 ms, worst 14.9 ms, 1073 frames, draws 4398
+2026-11-07 20:00 c boot 3 grid: avg 104.5 FPS, 1% low 57.1, p50 9.25 ms, p99 17.52 ms, worst 20.1 ms, 1046 frames, draws 4396
+2026-11-07 20:02 c boot 4 grid: avg 107.4 FPS, 1% low 76.9, p50 9.25 ms, p99 13.01 ms, worst 16.1 ms, 1074 frames, draws 4343
+2026-11-07 20:04 c boot 5 grid: avg 104.2 FPS, 1% low 57.4, p50 9.28 ms, p99 17.41 ms, worst 20.0 ms, 1042 frames, draws 4381
+2026-11-07 20:06 u boot 1 grid: avg 105.8 FPS, 1% low 57.7, p50 9.15 ms, p99 17.33 ms, worst 19.6 ms, 1058 frames, draws 4374
+2026-11-07 20:08 u boot 2 grid: avg 105.5 FPS, 1% low 61.2, p50 9.20 ms, p99 16.33 ms, worst 19.0 ms, 1055 frames, draws 4398
+2026-11-07 20:10 u boot 3 grid: avg 108.2 FPS, 1% low 77.2, p50 9.18 ms, p99 12.96 ms, worst 15.7 ms, 1082 frames, draws 4376
+2026-11-07 20:11 u boot 4 grid: avg 90.0 FPS, 1% low 58.9, p50 11.11 ms, p99 16.96 ms, worst 20.3 ms, 901 frames, draws 4381
+2026-11-07 20:13 u boot 5 grid: avg 90.0 FPS, 1% low 78.6, p50 11.11 ms, p99 12.72 ms, worst 14.1 ms, 900 frames, draws 4404
+2026-11-07 20:15 p boot 1 grid: avg 89.9 FPS, 1% low 80.1, p50 11.12 ms, p99 12.48 ms, worst 17.0 ms, 899 frames, draws 4395
+2026-11-07 20:17 p boot 2 grid: avg 90.0 FPS, 1% low 78.8, p50 11.12 ms, p99 12.68 ms, worst 14.1 ms, 900 frames, draws 4400
+2026-11-07 20:18 p boot 3 grid: avg 90.0 FPS, 1% low 80.8, p50 11.11 ms, p99 12.37 ms, worst 13.5 ms, 900 frames, draws 4402
+2026-11-07 20:20 p boot 4 grid: avg 89.9 FPS, 1% low 56.2, p50 11.13 ms, p99 17.80 ms, worst 21.7 ms, 899 frames, draws 4398
+2026-11-07 20:22 p boot 5 grid: avg 89.9 FPS, 1% low 79.5, p50 11.11 ms, p99 12.58 ms, worst 16.7 ms, 899 frames, draws 4402
+2026-11-07 20:23 p boot 6 grid: avg 90.0 FPS, 1% low 83.8, p50 11.12 ms, p99 11.93 ms, worst 13.0 ms, 900 frames, draws 4383
+2026-11-07 20:26 h1 boot 1 grid: avg 90.0 FPS, 1% low 81.0, p50 11.11 ms, p99 12.35 ms, worst 14.6 ms, 900 frames, draws 4380
+2026-11-07 20:26 h1 boot 1 driving: avg 90.0 FPS, 1% low 72.8, p50 11.12 ms, p99 13.73 ms, worst 27.2 ms, 1080 frames, draws 2246
+2026-11-07 20:28 n1 boot 1 grid: avg 90.0 FPS, 1% low 80.5, p50 11.10 ms, p99 12.42 ms, worst 13.6 ms, 900 frames, draws 3765
+2026-11-07 20:28 n1 boot 1 driving: avg 90.0 FPS, 1% low 74.7, p50 11.11 ms, p99 13.39 ms, worst 36.9 ms, 1080 frames, draws 2112
+2026-11-07 20:30 h2 boot 1 grid: avg 90.0 FPS, 1% low 79.0, p50 11.11 ms, p99 12.66 ms, worst 15.4 ms, 900 frames, draws 4387
+2026-11-07 20:30 h2 boot 1 driving: avg 90.0 FPS, 1% low 76.8, p50 11.12 ms, p99 13.02 ms, worst 25.4 ms, 1080 frames, draws 2283
+2026-11-07 20:32 n2 boot 1 grid: avg 90.0 FPS, 1% low 81.3, p50 11.11 ms, p99 12.29 ms, worst 14.8 ms, 900 frames, draws 4387
+2026-11-07 20:32 n2 boot 1 driving: avg 90.0 FPS, 1% low 76.6, p50 11.12 ms, p99 13.05 ms, worst 34.6 ms, 1080 frames, draws 2270
+2026-11-07 20:34 h3 boot 1 grid: avg 90.0 FPS, 1% low 81.2, p50 11.11 ms, p99 12.32 ms, worst 15.3 ms, 900 frames, draws 4382
+2026-11-07 20:34 h3 boot 1 driving: avg 89.9 FPS, 1% low 76.7, p50 11.12 ms, p99 13.03 ms, worst 24.7 ms, 1079 frames, draws 2281
+2026-11-07 20:36 n3 boot 1 grid: avg 90.0 FPS, 1% low 79.9, p50 11.12 ms, p99 12.52 ms, worst 13.2 ms, 900 frames, draws 4384
+2026-11-07 20:36 n3 boot 1 driving: avg 89.8 FPS, 1% low 66.3, p50 11.11 ms, p99 15.08 ms, worst 28.5 ms, 1078 frames, draws 2139
+2026-11-07 20:38 h4 boot 1 grid: avg 90.0 FPS, 1% low 77.7, p50 11.11 ms, p99 12.88 ms, worst 14.8 ms, 900 frames, draws 4397
+2026-11-07 20:38 h4 boot 1 driving: avg 89.9 FPS, 1% low 77.5, p50 11.12 ms, p99 12.91 ms, worst 28.6 ms, 1080 frames, draws 2272
+2026-11-07 20:40 n4 boot 1 grid: avg 90.0 FPS, 1% low 82.2, p50 11.11 ms, p99 12.17 ms, worst 13.4 ms, 900 frames, draws 4381
+2026-11-07 20:40 n4 boot 1 driving: avg 89.9 FPS, 1% low 78.6, p50 11.11 ms, p99 12.73 ms, worst 29.7 ms, 1079 frames, draws 2275
+2026-11-07 20:44 mask on grid: avg 90.0 FPS, 1% low 63.9, p50 11.11 ms, p99 15.66 ms, worst 18.8 ms, 720 frames, draws 4381
+2026-11-07 20:45 mask off grid: avg 89.9 FPS, 1% low 55.3, p50 11.09 ms, p99 18.07 ms, worst 22.3 ms, 720 frames, draws 3786
+2026-11-07 20:47 mask2 on grid: avg 89.8 FPS, 1% low 60.8, p50 11.11 ms, p99 16.43 ms, worst 22.1 ms, 718 frames, draws 4380
+2026-11-07 20:49 m1 boot 1 grid: avg 90.0 FPS, 1% low 81.9, p50 11.11 ms, p99 12.21 ms, worst 13.1 ms, 900 frames, draws 4396
+2026-11-07 20:49 m1 boot 1 driving: avg 90.0 FPS, 1% low 75.7, p50 11.12 ms, p99 13.21 ms, worst 34.2 ms, 1079 frames, draws 2282
+2026-11-07 20:51 o1 boot 1 grid: avg 89.9 FPS, 1% low 79.2, p50 11.11 ms, p99 12.62 ms, worst 16.1 ms, 899 frames, draws 4397
+2026-11-07 20:51 o1 boot 1 driving: avg 89.9 FPS, 1% low 71.4, p50 11.11 ms, p99 14.01 ms, worst 29.6 ms, 1079 frames, draws 2259
+2026-11-07 20:53 m2 boot 1 grid: avg 90.0 FPS, 1% low 82.8, p50 11.11 ms, p99 12.08 ms, worst 13.2 ms, 899 frames, draws 4380
+2026-11-07 20:53 m2 boot 1 driving: avg 89.9 FPS, 1% low 76.8, p50 11.11 ms, p99 13.02 ms, worst 37.5 ms, 1079 frames, draws 2281
+2026-11-07 20:55 o2 boot 1 grid: avg 90.0 FPS, 1% low 78.8, p50 11.11 ms, p99 12.68 ms, worst 13.3 ms, 900 frames, draws 4400
+2026-11-07 20:55 o2 boot 1 driving: avg 89.9 FPS, 1% low 73.3, p50 11.12 ms, p99 13.64 ms, worst 29.9 ms, 1079 frames, draws 2301
+2026-11-07 20:57 m3 boot 1 grid: avg 90.0 FPS, 1% low 83.1, p50 11.11 ms, p99 12.04 ms, worst 12.9 ms, 901 frames, draws 4401
+2026-11-07 20:57 m3 boot 1 driving: avg 90.0 FPS, 1% low 75.1, p50 11.12 ms, p99 13.31 ms, worst 25.3 ms, 1080 frames, draws 2284
+2026-11-07 20:59 o3 boot 1 grid: avg 90.0 FPS, 1% low 79.6, p50 11.12 ms, p99 12.57 ms, worst 15.1 ms, 900 frames, draws 4398
+2026-11-07 20:59 o3 boot 1 driving: avg 89.9 FPS, 1% low 77.2, p50 11.12 ms, p99 12.95 ms, worst 36.4 ms, 1079 frames, draws 2237
+2026-11-07 21:01 m4 boot 1 grid: avg 90.0 FPS, 1% low 79.5, p50 11.11 ms, p99 12.57 ms, worst 15.3 ms, 900 frames, draws 4401
+2026-11-07 21:01 m4 boot 1 driving: avg 89.9 FPS, 1% low 76.3, p50 11.12 ms, p99 13.10 ms, worst 32.5 ms, 1079 frames, draws 2278
+2026-11-07 21:03 o4 boot 1 grid: avg 90.0 FPS, 1% low 81.8, p50 11.11 ms, p99 12.22 ms, worst 13.1 ms, 900 frames, draws 4398
+2026-11-07 21:03 o4 boot 1 driving: avg 90.0 FPS, 1% low 77.4, p50 11.11 ms, p99 12.91 ms, worst 33.7 ms, 1080 frames, draws 2249
+2026-11-07 21:07 true grid: avg 90.0 FPS, 1% low 81.0, p50 11.12 ms, p99 12.34 ms, worst 13.5 ms, 1080 frames, draws 4080
+2026-11-07 21:07 true driving: avg 90.0 FPS, 1% low 75.1, p50 11.12 ms, p99 13.31 ms, worst 35.0 ms, 1350 frames, draws 1671
+2026-11-07 21:09 mh1 boot 1 grid: avg 90.0 FPS, 1% low 62.2, p50 11.12 ms, p99 16.07 ms, worst 19.6 ms, 901 frames, draws 4389
+2026-11-07 21:09 mh1 boot 1 driving: avg 90.0 FPS, 1% low 62.0, p50 11.12 ms, p99 16.14 ms, worst 28.1 ms, 1080 frames, draws 2290
+2026-11-07 21:11 mn1 boot 1 grid: avg 90.0 FPS, 1% low 61.3, p50 11.12 ms, p99 16.30 ms, worst 20.1 ms, 900 frames, draws 4403
+2026-11-07 21:11 mn1 boot 1 driving: avg 90.0 FPS, 1% low 75.3, p50 11.12 ms, p99 13.29 ms, worst 30.8 ms, 1080 frames, draws 2123
+2026-11-07 21:13 mh2 boot 1 grid: avg 90.0 FPS, 1% low 79.5, p50 11.11 ms, p99 12.58 ms, worst 13.2 ms, 900 frames, draws 4402
+2026-11-07 21:13 mh2 boot 1 driving: avg 90.0 FPS, 1% low 77.0, p50 11.12 ms, p99 12.98 ms, worst 27.6 ms, 1081 frames, draws 2268
+2026-11-07 21:15 mn2 boot 1 grid: avg 90.0 FPS, 1% low 62.1, p50 11.12 ms, p99 16.11 ms, worst 18.5 ms, 900 frames, draws 4409
+2026-11-07 21:15 mn2 boot 1 driving: avg 89.9 FPS, 1% low 77.0, p50 11.12 ms, p99 12.99 ms, worst 32.0 ms, 1079 frames, draws 2284
+2026-11-07 21:17 mh3 boot 1 grid: avg 90.0 FPS, 1% low 78.4, p50 11.11 ms, p99 12.76 ms, worst 14.8 ms, 900 frames, draws 4386
+2026-11-07 21:17 mh3 boot 1 driving: avg 89.9 FPS, 1% low 79.6, p50 11.12 ms, p99 12.57 ms, worst 36.2 ms, 1079 frames, draws 2282
+2026-11-07 21:19 mn3 boot 1 grid: avg 90.0 FPS, 1% low 83.4, p50 11.12 ms, p99 11.99 ms, worst 13.2 ms, 900 frames, draws 4388
+2026-11-07 21:19 mn3 boot 1 driving: avg 89.9 FPS, 1% low 78.9, p50 11.12 ms, p99 12.68 ms, worst 36.3 ms, 1079 frames, draws 2135
+2026-11-07 21:21 mh4 boot 1 grid: avg 90.0 FPS, 1% low 79.6, p50 11.12 ms, p99 12.56 ms, worst 13.5 ms, 900 frames, draws 4399
+2026-11-07 21:21 mh4 boot 1 driving: avg 90.0 FPS, 1% low 76.1, p50 11.11 ms, p99 13.13 ms, worst 32.2 ms, 1080 frames, draws 2292
+2026-11-07 21:23 mn4 boot 1 grid: avg 90.0 FPS, 1% low 81.2, p50 11.11 ms, p99 12.31 ms, worst 13.9 ms, 901 frames, draws 3791
+2026-11-07 21:23 mn4 boot 1 driving: avg 90.0 FPS, 1% low 77.8, p50 11.12 ms, p99 12.85 ms, worst 32.6 ms, 1080 frames, draws 2580
+2026-11-07 21:27 hitch HMD 5120x5120 REGPU_VR_TRACE=1 REGPU_GPU_PASSES=1 REGPU_GPU_LONG=20 grid: avg 90.0 FPS, 1% low 56.3, p50 11.12 ms, p99 17.75 ms, worst 24.4 ms, 3600 frames, draws 3492
+2026-11-07 21:27 hitch HMD 5120x5120 REGPU_VR_TRACE=1 REGPU_GPU_PASSES=1 REGPU_GPU_LONG=20 driving: avg 90.0 FPS, 1% low 68.4, p50 11.11 ms, p99 14.61 ms, worst 29.3 ms, 3599 frames, draws 2315
+2026-11-07 21:30 final_chase HMD 5120x5120 grid: avg 90.0 FPS, 1% low 80.1, p50 11.12 ms, p99 12.48 ms, worst 14.9 ms, 1350 frames, draws 4110
+2026-11-07 21:30 final_chase HMD 5120x5120 driving: avg 90.0 FPS, 1% low 76.3, p50 11.11 ms, p99 13.11 ms, worst 39.0 ms, 1349 frames, draws 1625
+2026-11-07 21:32 final_incar HMD 5120x5120 grid: avg 89.9 FPS, 1% low 79.1, p50 11.12 ms, p99 12.65 ms, worst 17.1 ms, 1348 frames, draws 3609
+2026-11-07 21:33 final_incar HMD 5120x5120 driving: avg 89.9 FPS, 1% low 75.4, p50 11.11 ms, p99 13.26 ms, worst 35.0 ms, 1349 frames, draws 1835
+2026-11-07 21:35 final_incar HMD 5120x5120 Tokyo night rain grid: avg 90.0 FPS, 1% low 81.5, p50 11.11 ms, p99 12.27 ms, worst 13.2 ms, 1351 frames, draws 2706
+2026-11-07 21:35 final_incar HMD 5120x5120 Tokyo night rain driving: avg 89.5 FPS, 1% low 56.3, p50 11.12 ms, p99 17.76 ms, worst 35.2 ms, 1342 frames, draws 1793
+2026-11-07 21:37 final_incar HMD 5120x5120 Vegas cone sprint grid: avg 89.9 FPS, 1% low 74.6, p50 11.11 ms, p99 13.40 ms, worst 17.2 ms, 1349 frames, draws 4024
+2026-11-07 21:38 final_incar HMD 5120x5120 Vegas cone sprint driving: avg 89.9 FPS, 1% low 58.7, p50 11.12 ms, p99 17.03 ms, worst 34.9 ms, 1348 frames, draws 2391
+2026-11-07 21:40 final_chase HMD 5120x5120 Tokyo night rain grid: avg 90.0 FPS, 1% low 78.1, p50 11.11 ms, p99 12.81 ms, worst 20.0 ms, 1350 frames, draws 3392
+2026-11-07 21:40 final_chase HMD 5120x5120 Tokyo night rain driving: avg 90.0 FPS, 1% low 73.0, p50 11.12 ms, p99 13.71 ms, worst 27.6 ms, 1351 frames, draws 2143
+2026-11-07 21:42 final_chase HMD 5120x5120 Vegas cone sprint grid: avg 90.0 FPS, 1% low 79.3, p50 11.11 ms, p99 12.61 ms, worst 14.8 ms, 1351 frames, draws 3529
+2026-11-07 21:43 final_chase HMD 5120x5120 Vegas cone sprint driving: avg 89.9 FPS, 1% low 56.2, p50 11.12 ms, p99 17.79 ms, worst 34.1 ms, 1348 frames, draws 2544

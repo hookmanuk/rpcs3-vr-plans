@@ -204,12 +204,29 @@ All in-car, St Petersburg, 5120, real headset, 15 s windows:
 | Change | Grid 1% low | Driving 1% low | Driving worst | Driving reprojected/s |
 |---|---|---|---|---|
 | Before, SteamVR auto throttling on | 55-85 | 44-45 | 28-38 ms | 4-13 |
-| Matt turned SteamVR auto throttling off, drawn clear | 54-56 | 70-74 | 37-40 ms | 0.9 |
-| + real clear | 82-83 | 74-76 | 30 ms | 0.3-0.6 |
+| Matt turned SteamVR auto throttling off | 55 or 80 (see below) | 66-79 | 28-38 ms | 0.3-0.9 |
+| + lens mask (no lock) | 80-83 | 75-77 | 25-37 ms | 0.3 |
+
+Build 469a201 (lens mask, real clear), real headset, 5120, SteamVR auto throttling off, 15 s windows. Game-side 1% low / worst / SteamVR reprojected a second (doubled, mispresented of about 975 frames seen):
+
+| Scene | Grid | Driving |
+|---|---|---|
+| St Petersburg chase | 80.1 / 14.9 ms / 0.4 | 76.3 / 39.0 ms / 0.5 (0, 0) |
+| St Petersburg in-car | 79.1 / 17.1 ms / 0.5 | 75.4 / 35.0 ms / 0.5 (1, 4) |
+| Tokyo night rain in-car | 81.5 / 13.2 ms / 0.0 | 56.3 / 35.2 ms / 1.7 (6, 16) |
+| Tokyo night rain chase | 78.1 / 20.0 ms / 0.1 | 73.0 / 27.6 ms / 0.2 |
+| Las Vegas cone sprint in-car | 74.6 / 17.2 ms / 0.1 | 58.7 / 34.9 ms / 1.0 (0, 2) |
+| Las Vegas cone sprint chase | 79.3 / 14.8 ms / 0.4 | 56.2 / 34.1 ms / 0.7 (2, 5) |
+
+Remaining hitches (40 s of St Petersburg driving, REGPU_VR_TRACE): 6 frames over 20 ms. The token is on time, the frame reaches its swap late (up to 18.6 ms after it): heavier stretches (draws a frame 1,700 -> 3,400, renderer 4 -> 8 ms). Not file reads (1 of 11 near one; NVMe). Locking the busy threads to their own cores: no difference over 4 pairs (an earlier "4 of 4" did not hold).
 
 - **SteamVR auto throttling** was most of it: one late frame then held xrWaitFrame at 22 ms for about 21 frames, with the game's frame already finished before the token. Other players will have this setting on: tell them, or find a way to ask for it.
-- **Real clear:** ps 8c8b535864c59f02 vs 9862cfa7a2bc20ec, a full-surface rectangle right after the mirror, colour and depth in its vertices. `VrClearRect`, REGPU_VR_CLEAR_VS/PS, REGPU_VR_DRAWN_CLEARS=1 reverts. Compared on a frozen race against a control: only the pause menu's animated highlight differs.
+- **Real clear:** ps 8c8b535864c59f02 vs 9862cfa7a2bc20ec, a full-surface rectangle right after the mirror, colour and depth in its vertices. `VrClearRect`, REGPU_VR_CLEAR_VS/PS, REGPU_VR_DRAWN_CLEARS=1 reverts. Same picture on a frozen race against a control (only the pause menu's animated highlight differs). Gain small: median frame 0.03-0.15 ms. **It does not move the 1% low: commit 1206092's "grid 54-56 to 82-83" was wrong**, those runs fell in the two grid modes below by chance. A retest with the same number of runs each way read the same.
+- **Grid modes:** the grid's game-side 1% low is either about 55 or about 80, the same for a whole boot, on identical settings, scene and draw count. In the low mode there are 130-145 frames over 14 ms in 24 s, in the high mode 7. It comes in clusters over time and also appears free-running. Cause not found. Not thread placement: the same ideal processors gave both modes; a lock gave 5 of 6 high, then with no lock 4 of 4 were high as well.
+- **The game-side 1% low overstates what is shown.** `vrperf.py` uses swap-to-swap times, which jitter (12 ms then 10 ms). At the same moment: grid game-side 1% low 81, SteamVR 0.3 reprojected/s, 0 of 778 frames doubled or mispresented; driving 75, 0.3, 0 doubled, 1 mispresented of 974. (`vrstats` sees about 65 of the 90 frames a second.) Quote both. 0.3/s is still a missed frame about every 3 s, and the isolated 25-37 ms hitches are real.
+- **Lens mask:** XR_KHR_visibility_mask, 108 vertices an eye, 21.8% of the eye on Matt's headset. `VrLensMaskStamp`, nearest depth right after the frame's clear and again after the next tile's depth clear (without that the mask stopped at row 480 of 720). REGPU_VR_NO_LENS_MASK=1. Game-side 1% low +2 grid, +1.4 driving, but GPU power on the same scene, flipped live: 389 W against 420 W, so about 8% of real GPU work. Exposure unchanged (centre mean 34.340 against 34.341). The corners keep the clear colour (grey): ask Matt to look for it at the edge in fast head turns. The simulator gives no mask, so check it on SteamVR.
+- **Free running:** with the headset switched off SteamVR stops pacing (xrWaitFrame 0 ms, `vrstats` shows presents = dropped = reprojected = about 190). Don't take pacing numbers then; they do show the headroom: 105-111 FPS at 5120, median 9.1 ms.
 - **Long "passes" in REGPU_GPU_PASSES are mostly the GPU waiting for work**, not GPU cost (REGPU_GPU_LONG now prints the times lists reached the queue). A 42 ms pass was a gap between lists.
-- **Tried, no gain, reverted or left off:** REGPU_SUBMIT_DRAWS 64/256 (64 worse on the grid); Debug.WaitForFence off (0x82A80B5C; the game's own wait after Present, about 6 ms a frame, but something else blocks in its place); waiting for the token after D3D's kick instead of in VdSwap (D3D kicks after VdSwap, sub_826CE8C0, so a finished frame waits unsent; moving the wait gave 1% lows of 56-61 against 76-78, so I reverted it, cause not known).
+- **Tried, no gain, reverted or left off:** REGPU_SUBMIT_DRAWS 64/256 (64 worse on the grid); Debug.WaitForFence off (0x82A80B5C; the game's own wait after Present, about 6 ms a frame, but something else blocks in its place); waiting for the token after D3D's kick instead of in VdSwap (D3D kicks after VdSwap, sub_826CE8C0, so a finished frame waits unsent; moving the wait gave 1% lows of 56-61 against 76-78, so I reverted it. The frame's idle wait before the token, about 6.5 ms, absorbs small stalls of the game).
 - The rear-view mirror's old stereo path is not faster than the one-image path. Seat lock off: 88.4/89.9 against 86.8/88.4 average before Matt's setting, two pairs, not settled.
 - Tools: `simfps.sh` (simulator uncapped, SIMXR_HZ), `ppcfn.py` (a recompiled function's PowerPC), INCAR=1 and NOFENCE=1 in `hmdtest.sh`.
