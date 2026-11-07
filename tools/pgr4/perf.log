@@ -646,3 +646,7 @@
 2026-11-07 22:27 framereuse=1 grid: avg 90.0 FPS, 1% low 83.7, p50 11.12 ms, p99 11.95 ms, worst 15.3 ms, 720 frames, draws 3786
 2026-11-07 22:27 framereuse=0 grid: avg 90.0 FPS, 1% low 79.8, p50 11.12 ms, p99 12.54 ms, worst 14.1 ms, 720 frames, draws 3767
 2026-11-07 22:28 framereuse=1 grid: avg 90.0 FPS, 1% low 83.2, p50 11.11 ms, p99 12.02 ms, worst 14.5 ms, 720 frames, draws 3816
+2026-11-07 23:35 precise HMD 5120x5120 grid: avg 90.0 FPS, 1% low 78.9, p50 11.11 ms, p99 12.67 ms, worst 16.5 ms, 1350 frames, draws 3489
+2026-11-07 23:35 precise HMD 5120x5120 driving: avg 90.0 FPS, 1% low 73.2, p50 11.12 ms, p99 13.66 ms, worst 29.9 ms, 1350 frames, draws 1798
+2026-11-07 23:37 precise HMD 5120x5120 grid: avg 89.9 FPS, 1% low 60.3, p50 11.11 ms, p99 16.59 ms, worst 22.2 ms, 1349 frames, draws 3788
+2026-11-07 23:37 precise HMD 5120x5120 driving: avg 89.9 FPS, 1% low 68.6, p50 11.12 ms, p99 14.58 ms, worst 29.5 ms, 1349 frames, draws 1551
