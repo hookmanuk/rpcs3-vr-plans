@@ -185,3 +185,31 @@ Tools: `rec100.py` (the game's window, every distinct frame, no sync with the ga
 - **Dialog:** text is drawn, the frame resolved, then the glass (ps b52fda521e70fc9d) shows the resolved frame through its partly transparent surface. Its place on the frame came from the vertices; interpolated across a panel seen at an angle it isn't the pixel's own, so the copy slid and squashed against the real text. Now from SV_Position. REGPU_VR_GLASS_INTERPOLATED=1. Part of the glass was also missing at strong turns: clipped where the tilted panel left the depth range (not a depth fight: depth off did not help). Layers without depth now have z = w/2.
 - Frame rate after all this, real headset, 5120, St Petersburg, third-person view: grid 90.0 / 0.0 twice; driving 90.0 / 0.1 and 88.9 / 3.3.
 - False trails: one-row coloured dashes came from the simulator's window scaling (not in the game's window). "Cold cache" did not explain the missing road markings. Flash counts include moving scenery and HUD popups: look at the frames.
+
+### Third round of Matt's test, 2026-11-07
+
+- **Cockpit bounce, second go:** the first seat lock moved the view, so the world took the bounce instead ("still a lot of bouncing"). Now only the car's own draws move (shaders reading `(vc[20].`): the body exactly, its other parts by last frame's figure. Vertical movement of the dash against the camera: 12-97 px to 0-2 px of 800 (`bounce.py`, `dashtest.sh`).
+- **Start-light glow moving with the head:** not a HUD sprite or a cube reflection. The car's glass (ps 97bbba1372ecfd4c) samples the resolved frame through itself (t11, 0D9B0000), by a clip position its vertex shader hands on unchanged (`v = max(rN.xyzw, rN.xyzw); o[`). It stayed the game camera's, so it read another part of the eye's image. VrPatch now passes that through `VrEyeClip`.
+- **Race intro bands smeared:** the bands reach the screen corners with some vertices only, and the "full-screen quad stays over the whole view" rule stretched those out to the eye's corners. Any textured layer goes in the box whole (flag 2048).
+- **Glass tint missing at an angle (depth clipping, not depth fighting):** a 2D layer without depth has z = w/2 in the box.
+- **Rear-view mirrors white:** a 424x96 3D view through its own viewport (212,48 +212,-48), in the top left corner of colour base 0, pitch 1280, resolved to 10F7C000 (448x96), drawn on the car by ps 5a31243492041c37. As a pitch-1280 pass it went through the eye's matrices and landed elsewhere, leaving only sky in the corner copied out. `vrSmallView` in renderer.cpp: viewport smaller than the screen on both axes on a wide pass, not a HUD shader: one instance, no eye matrix, resolved as one image. REGPU_VR_SMALL_VIEW_STEREO=1 reverts. It also drops the second eye's cost of about 400 draws.
+- Tools: `tintghost.py` (which shader changes a box of the picture), `tintcrop.py` (montage of that box per shader), `tintfind.py`, `mirrortest.sh`.
+
+### 1% lows, 2026-11-07 (Matt: "They are the most important measure in VR")
+
+My earlier "Grid holds 90; driving 88.9-89.9 with a few over-budget frames" was wrong: the same runs had 1% lows of 45-57 FPS and worst frames of 21-30 ms. Report the 1% low, worst frame and reprojected/s with every number.
+
+All in-car, St Petersburg, 5120, real headset, 15 s windows:
+
+| Change | Grid 1% low | Driving 1% low | Driving worst | Driving reprojected/s |
+|---|---|---|---|---|
+| Before, SteamVR auto throttling on | 55-85 | 44-45 | 28-38 ms | 4-13 |
+| Matt turned SteamVR auto throttling off, drawn clear | 54-56 | 70-74 | 37-40 ms | 0.9 |
+| + real clear | 82-83 | 74-76 | 30 ms | 0.3-0.6 |
+
+- **SteamVR auto throttling** was most of it: one late frame then held xrWaitFrame at 22 ms for about 21 frames, with the game's frame already finished before the token. Other players will have this setting on: tell them, or find a way to ask for it.
+- **Real clear:** ps 8c8b535864c59f02 vs 9862cfa7a2bc20ec, a full-surface rectangle right after the mirror, colour and depth in its vertices. `VrClearRect`, REGPU_VR_CLEAR_VS/PS, REGPU_VR_DRAWN_CLEARS=1 reverts. Compared on a frozen race against a control: only the pause menu's animated highlight differs.
+- **Long "passes" in REGPU_GPU_PASSES are mostly the GPU waiting for work**, not GPU cost (REGPU_GPU_LONG now prints the times lists reached the queue). A 42 ms pass was a gap between lists.
+- **Tried, no gain, reverted or left off:** REGPU_SUBMIT_DRAWS 64/256 (64 worse on the grid); Debug.WaitForFence off (0x82A80B5C; the game's own wait after Present, about 6 ms a frame, but something else blocks in its place); waiting for the token after D3D's kick instead of in VdSwap (D3D kicks after VdSwap, sub_826CE8C0, so a finished frame waits unsent; moving the wait gave 1% lows of 56-61 against 76-78, so I reverted it, cause not known).
+- The rear-view mirror's old stereo path is not faster than the one-image path. Seat lock off: 88.4/89.9 against 86.8/88.4 average before Matt's setting, two pairs, not settled.
+- Tools: `simfps.sh` (simulator uncapped, SIMXR_HZ), `ppcfn.py` (a recompiled function's PowerPC), INCAR=1 and NOFENCE=1 in `hmdtest.sh`.

@@ -11,6 +11,7 @@ one() {
     grep -a 'vr: [0-9.]* FPS' $L | tail -1 | cut -c12-120
 }
 both() {
+    [ -n "$INCAR" ] && { $P press LB >/dev/null; sleep 2; $P press LB >/dev/null; sleep 2; } # the in-car view
     sleep 6
     one "$1 grid"
     $P trigger R 1 >/dev/null; sleep 5

@@ -17,6 +17,7 @@ for cfg in "$@"; do
     py -3 $T/bounce.py b 300 2>&1 | grep BOUNCE | cut -c1-170
     sleep 3
     py -3 $T/bounce.py c 300 2>&1 | grep BOUNCE | cut -c1-170
+    py -3 $T/bounce.py cw 300 world 2>&1 | grep BOUNCE | cut -c1-170
     $P trigger R 0 >/dev/null
     $P stop >/dev/null 2>&1
     sleep 3

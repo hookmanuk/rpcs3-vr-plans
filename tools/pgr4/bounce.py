@@ -47,6 +47,8 @@ u.ClientToScreen(hwnd, ctypes.byref(pt))
 W, H = r.right, r.bottom
 # The dash's passenger side and its vents: fixed to the car, away from the steering wheel and the driver's arms, with the HUD's route arrow left out.
 box = {'left': pt.x + int(W * .07), 'top': pt.y + int(H * .47), 'width': int(W * .19), 'height': int(H * .14)}
+if len(sys.argv) > 3:  # 'world': the far scenery through the windscreen instead: the world against the camera
+    box = {'left': pt.x + int(W * .25), 'top': pt.y + int(H * .24), 'width': int(W * .50), 'height': int(H * .17)}
 frames = []
 last = None
 with mss.MSS() as s:

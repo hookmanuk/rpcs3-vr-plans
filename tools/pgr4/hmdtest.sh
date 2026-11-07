@@ -20,6 +20,8 @@ for cfg in "$@"; do
     echo "=== $cfg"
     sh $T/steamrace.sh $eye REGPU_PERF=1 "$@" 2>&1 | tail -1 | cut -c1-80
     grep -a -E 'vr: runtime|vr: eyes|display period|vr: eye 0|vr: eye 1|vertex data in video' $L | cut -c12-120
+    [ -n "$NOFENCE" ] && case "$cfg" in *NOFENCE*) $P poke 82A80B5C 00 >/dev/null;; esac # Debug.WaitForFence off for this run
+    [ -n "$INCAR" ] && { $P press LB >/dev/null; sleep 2; $P press LB >/dev/null; sleep 2; } # the in-car view
     sleep 6
     one grid
     $P trigger R 1 >/dev/null; sleep 5

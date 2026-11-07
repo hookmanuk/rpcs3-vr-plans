@@ -1,36 +1,38 @@
-"""tintfind.py X Y [hash ...]: which pixel shader draws pixel (X, Y)? Each candidate painted magenta in turn on the
-running game (regpuctl ps HASH tint), the pixel read from a shot. Candidates default to the last capture's list."""
-import json, os, re, socket, sys, time
+"""tintfind.py TRACE OUTPREFIX: with the game running: every pixel shader of the trace that blends (and is not plainly the HUD's font), tinted magenta one at a time: a shot of each and where the magenta landed. To find which shader draws something on the screen."""
+import re
+import subprocess
+import sys
+
+import numpy as np
 from PIL import Image
 
-def send(s, line):
-    s.sendall((line + '\n').encode())
-    d = b''
-    while not d.endswith(b'\n'):
-        d += s.recv(65536)
-    return json.loads(d)
+trace, out = sys.argv[1], sys.argv[2]
+PG = ['sh', 'F:/rpsc3/source/plans/tools/pgr4/pg.sh']
+shaders = {}
+for line in open(trace, errors='replace'):
+    m = re.search(r'draw #\d+ vs ([0-9a-f]{16}) ps ([0-9a-f]{16}) prim (\d+) n \d+ blend ([0-9a-f]{8}).* wide (\d)', line)
+    if m and m.group(4) != '00010001' and m.group(5) == '1':
+        key = m.group(2)
+        s = shaders.setdefault(key, {'n': 0, 'vs': m.group(1), 'blend': m.group(4)})
+        s['n'] += 1
 
-x, y = int(sys.argv[1]), int(sys.argv[2])
-hashes = sys.argv[3:]
-if not hashes:
-    seen = {}
-    for line in open('H:/PGR4-ReGPU/thirdparty/ReGPU/out/live.log', errors='ignore'):
-        m = re.search(r'draw #\d+ vs \w+ ps (\w+) .*pitch 1280', line)
-        if m:
-            seen[m.group(1)] = seen.get(m.group(1), 0) + 1
-    hashes = sorted(seen, key=seen.get, reverse=True)
-s = socket.create_connection(('127.0.0.1', 7341))
-shot = 'H:/PGR4-ReGPU/out/tint.png'
-def pixel():
-    send(s, 'shot ' + shot)
-    time.sleep(0.2)
-    return Image.open(shot).convert('RGB').getpixel((x, y))
-print('base', pixel())
-for h in hashes:
-    send(s, 'ps %s tint 1,0,1' % h)
-    time.sleep(1.2)
-    p = pixel()
-    send(s, 'ps ' + h)
-    flag = 'HIT' if p[0] > 150 and p[2] > 150 and p[1] < 90 else ''
-    print(h, p, flag, flush=True)
-    time.sleep(0.2)
+
+def pg(*a):
+    return subprocess.run(PG + list(a), capture_output=True, text=True).stdout
+
+
+print(len(shaders), 'blending pixel shaders')
+for ps, s in sorted(shaders.items(), key=lambda kv: -kv[1]['n']):
+    pg('ps', ps, 'tint', '1,0,1')
+    pg('wait', '6')
+    path = '%s_%s.png' % (out, ps[-8:])
+    pg('shot', path)
+    pg('ps', ps)
+    a = np.asarray(Image.open(path).convert('RGB'), dtype=np.int16)
+    m = (a[:, :, 0] > 120) & (a[:, :, 1] < 70) & (a[:, :, 2] > 120)
+    ys, xs = np.nonzero(m)
+    box = '%d-%d x %d-%d' % (xs.min(), xs.max(), ys.min(), ys.max()) if len(xs) else '-'
+    print('ps %s vs %s blend %s draws %d: magenta %d, box %s' % (ps[-8:], s['vs'][-8:], s['blend'], s['n'], len(xs), box), flush=True)
+    if not len(xs):
+        import os
+        os.remove(path)
