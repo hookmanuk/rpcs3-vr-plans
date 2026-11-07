@@ -6,7 +6,9 @@ P=/f/rpsc3/source/plans/tools/pgr4/pg.sh
 EYE=${1:-2880x2880}; [ $# -gt 0 ] && shift
 $P stop >/dev/null 2>&1
 py -3 -I /f/rpsc3/source/plans/tools/re/simpose.py 0 0 0 >/dev/null
-$P start REGPU_VR=1 'XR_RUNTIME_JSON=F:\rpsc3\source\OpenXR-Simulator\bin\openxr_simulator.json' XRFG_DISABLE_OFXR_BRIDGE=1 \
+# The simulator keeps its window size in settings.json (it shrinks each run).
+sed -i -E 's/"window_width": [0-9]+/"window_width": 1904/; s/"window_height": [0-9]+/"window_height": 1000/' /c/Users/matt/AppData/Local/OpenXR-Simulator/settings.json
+$P start PGR4_VR=1 'XR_RUNTIME_JSON=F:\rpsc3\source\OpenXR-Simulator\bin\openxr_simulator.json' XRFG_DISABLE_OFXR_BRIDGE=1 \
    REGPU_VR_EYE=$EYE "$@" | cut -c1-120
 # Wait for frames (the first boot of a build compiles shaders).
 for i in $(seq 1 60); do

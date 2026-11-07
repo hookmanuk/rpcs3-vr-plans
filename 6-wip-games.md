@@ -4273,5 +4273,11 @@ markers and particle effects; force feedback for wheel and road forces; keep goi
 - [x] Builds on branch `vr` (needs Title Update #2, in H:\ROMs\pgr4). Flat 4K about 150 FPS on Matt's PC.
 - [x] One pass, both eyes (2-layer surfaces, 2 instances a draw); head tracking and eye matrices in clip space; HUD box fixed in the
   world; simulator, real pose: yaw 30 correct. Stereo race grid and driving render.
-- [ ] Open: performance (5120 per eye 65 / 84 FPS, grid / driving, target 90), screen shake option, HUD and 2D markers, particles,
-  force feedback, head-turn culling. Not yet tried on SteamVR.
+- [x] Screen shake switch (launcher, `screen_shake`, off by default), proved with a large forced shake.
+- [x] Force feedback: real physics now reaches the wheel code (the port reported 0 effects to the game), sine, springs and friction played.
+  Tested with the fake wheel only, **not felt on a real wheel**.
+- [x] Culling and level of detail follow the head (the game's camera turns), game frustum shaped to the eyes (black road bars gone).
+- [x] Visuals against flat: St Petersburg 97.7 / 98.2 (mean level), Tokyo night heavy rain 29.6 / 30.5 with rain, tyre smoke, menus, pause.
+  Cone Sprint: gate pillars and cones placed in 3D in both eyes, "Cone Gate" and points popups in the box. The rev counter is translucent on flat too
+  (a cone or barrier shows through it the same way).
+- [ ] Open: performance (see notes), head poses on menus and HUD, lens flares (occlusion queries), SteamVR pacing, real wheel.
