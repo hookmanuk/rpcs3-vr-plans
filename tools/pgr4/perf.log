@@ -368,3 +368,7 @@
 2026-11-07 11:50 keep2 HMD 5120x5120 driving: avg 88.9 FPS, 1% low 45.0, p50 11.12 ms, p99 22.20 ms, worst 29.9 ms, 1778 frames, draws 3152
 2026-11-07 11:52 keep2 HMD 5120x5120 grid: avg 90.0 FPS, 1% low 57.2, p50 11.10 ms, p99 17.48 ms, worst 21.2 ms, 1800 frames, draws 3754
 2026-11-07 11:52 keep2 HMD 5120x5120 driving: avg 89.9 FPS, 1% low 71.6, p50 11.11 ms, p99 13.96 ms, worst 28.3 ms, 1798 frames, draws 3078
+2026-11-07 14:55 seat HMD 5120x5120 grid: avg 90.0 FPS, 1% low 53.5, p50 11.12 ms, p99 18.68 ms, worst 21.4 ms, 1800 frames, draws 3764
+2026-11-07 14:55 seat HMD 5120x5120 driving: avg 90.0 FPS, 1% low 73.1, p50 11.12 ms, p99 13.68 ms, worst 29.0 ms, 1801 frames, draws 3095
+2026-11-07 14:57 seat HMD 5120x5120 grid: avg 90.0 FPS, 1% low 57.0, p50 11.12 ms, p99 17.54 ms, worst 27.0 ms, 1801 frames, draws 3761
+2026-11-07 14:58 seat HMD 5120x5120 driving: avg 88.9 FPS, 1% low 45.1, p50 11.12 ms, p99 22.19 ms, worst 30.6 ms, 1777 frames, draws 3067
