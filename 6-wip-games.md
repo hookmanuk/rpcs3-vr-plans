@@ -4295,8 +4295,12 @@ markers and particle effects; force feedback for wheel and road forces; keep goi
   | 4608 | St Petersburg | 90.0, 0.0 | 88.0, 5.2 |
   | 5120 | St Petersburg | 80.4, 27.6 | 80.8, 26.3 |
   | 5120 (before the stale-wake fix) | Tokyo / Vegas | 83.8, 0 / 88.4, 4.1 | 80.1, 0.5 / 79.3, 30.5 |
+  | 5120, motion blur off, restore draw kept out (2026-11-07) | St Petersburg, 2 runs | 90.0, 0.1 / 90.0, 0.2 | 88.9, 3.4 / 89.9, 0.5 |
+  | 5120, motion blur off, restore draw still on | Tokyo / Vegas | 90.0, 0.0 / 90.0, 0.0 | 88.3, 4.5 / 88.3, 4.9 |
 
   Before the port, 3692: grid 78-86 FPS, 14-27 reprojected a second. **90 FPS at 5K per eye is not met on the real headset**: there the limit is the GPU, about 12.5 ms against an 11.1 ms slot. The simulator's and null headset's figures were not a guide (null headset 97-100 at 5120).
 - [x] Visual regression on the new loop: menus, car scrolling (no stale geometry), a second track, head poses on HUD and pause (simulator), barrier sparks, crowd.
+- 5K, 2026-11-07: Matt asked what makes up the 12 ms a frame ("multiple passes or content that could be cached?") and ruled "we definitely don't need motion blur, that can be made optional defaulted to off". Done: early depth for draws with the alpha test off; motion blur off in VR (`motion_blur`, launcher switch; flat keeps it); the full-screen restore draw and the two colour resolves only it read are gone (uncommitted, in the build Matt is testing). Grid holds 90 at 5120; driving 89-90 with a few frames over budget. Next: lens mask (XR_KHR_visibility_mask), the main pass is now by far the largest item.
+- **Open bug: road markings missing for a whole race** in 2 of about 9 runs (the dashes and the white edge band, VR, grid and driving; seen in shots `blur0_*`, `blurt1_*`). Not the motion blur: warm runs with it off have them. Cause unknown; first suspect tile merging (a later tile drops draws it takes for the first tile's). Needs repeated boots with a detector and REGPU_TRACE_TILES.
 - [ ] Open, needs Matt: **wearing the headset** (nobody has looked through the lenses: HUD size and distance, comfort), **real wheel** (forces only tested with the fake wheel; no wheel connected).
 - [ ] Open: behaviour on a weaker GPU. The loop waits for the game after xrWaitFrame, as Driveclub does (see the audit of igorexa225's port, `profiles/CUSA00003-notes.md`).

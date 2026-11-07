@@ -313,3 +313,58 @@
 2026-11-07 09:19 final HMD 4096x4096 Tokyo night rain driving: avg 89.9 FPS, 1% low 63.9, p50 11.12 ms, p99 15.66 ms, worst 39.1 ms, 1348 frames, draws 2018
 2026-11-07 09:21 final HMD 4096x4096 Vegas cone sprint grid: avg 90.0 FPS, 1% low 83.9, p50 11.11 ms, p99 11.92 ms, worst 13.3 ms, 1350 frames, draws 3530
 2026-11-07 09:22 final HMD 4096x4096 Vegas cone sprint driving: avg 86.8 FPS, 1% low 44.3, p50 11.13 ms, p99 22.59 ms, worst 43.6 ms, 1303 frames, draws 2550
+2026-11-07 09:32 earlyz HMD 5120x5120 REGPU_TEST_EARLYZ=1 grid: avg 88.0 FPS, 1% low 44.8, p50 11.12 ms, p99 22.34 ms, worst 22.8 ms, 1056 frames, draws 4379
+2026-11-07 09:33 earlyz HMD 5120x5120 REGPU_TEST_EARLYZ=1 driving: avg 77.0 FPS, 1% low 44.4, p50 11.22 ms, p99 22.50 ms, worst 29.5 ms, 924 frames, draws 2293
+2026-11-07 09:35 earlyz HMD 5120x5120 REGPU_TEST_EARLYZ=1 grid: avg 86.1 FPS, 1% low 44.7, p50 11.13 ms, p99 22.38 ms, worst 23.0 ms, 1033 frames, draws 3762
+2026-11-07 09:35 earlyz HMD 5120x5120 REGPU_TEST_EARLYZ=1 driving: avg 83.6 FPS, 1% low 44.8, p50 11.32 ms, p99 22.32 ms, worst 31.2 ms, 1003 frames, draws 2908
+2026-11-07 09:37 earlyz HMD 5120x5120 grid: avg 73.8 FPS, 1% low 44.5, p50 11.48 ms, p99 22.48 ms, worst 28.3 ms, 886 frames, draws 4397
+2026-11-07 09:37 earlyz HMD 5120x5120 driving: avg 80.5 FPS, 1% low 44.5, p50 11.63 ms, p99 22.47 ms, worst 36.0 ms, 966 frames, draws 2302
+2026-11-07 09:47 earlyz HMD 5120x5120 grid: avg 86.5 FPS, 1% low 44.8, p50 11.14 ms, p99 22.31 ms, worst 23.1 ms, 1730 frames, draws 3779
+2026-11-07 09:47 earlyz HMD 5120x5120 driving: avg 81.6 FPS, 1% low 44.7, p50 11.53 ms, p99 22.38 ms, worst 36.6 ms, 1631 frames, draws 2996
+2026-11-07 09:49 earlyz HMD 5120x5120 REGPU_NO_EARLY_DEPTH=1 grid: avg 80.8 FPS, 1% low 44.7, p50 11.34 ms, p99 22.38 ms, worst 27.7 ms, 1616 frames, draws 3756
+2026-11-07 09:50 earlyz HMD 5120x5120 REGPU_NO_EARLY_DEPTH=1 driving: avg 81.0 FPS, 1% low 44.5, p50 11.86 ms, p99 22.47 ms, worst 36.8 ms, 1619 frames, draws 3072
+2026-11-07 09:52 earlyz HMD 5120x5120 grid: avg 87.8 FPS, 1% low 45.0, p50 11.14 ms, p99 22.24 ms, worst 23.1 ms, 1756 frames, draws 3777
+2026-11-07 09:52 earlyz HMD 5120x5120 driving: avg 81.1 FPS, 1% low 44.4, p50 11.58 ms, p99 22.54 ms, worst 30.5 ms, 1621 frames, draws 3090
+2026-11-07 09:54 earlyz HMD 5120x5120 REGPU_NO_EARLY_DEPTH=1 grid: avg 74.1 FPS, 1% low 44.4, p50 11.37 ms, p99 22.55 ms, worst 29.3 ms, 1483 frames, draws 3763
+2026-11-07 09:54 earlyz HMD 5120x5120 REGPU_NO_EARLY_DEPTH=1 driving: avg 81.8 FPS, 1% low 44.9, p50 11.85 ms, p99 22.29 ms, worst 36.6 ms, 1636 frames, draws 3084
+2026-11-07 09:56 earlyz HMD 5120x5120 grid: avg 82.0 FPS, 1% low 44.7, p50 11.18 ms, p99 22.40 ms, worst 22.9 ms, 1639 frames, draws 3778
+2026-11-07 09:57 earlyz HMD 5120x5120 driving: avg 79.8 FPS, 1% low 44.4, p50 11.74 ms, p99 22.50 ms, worst 40.9 ms, 1596 frames, draws 3014
+2026-11-07 09:59 passes driving: avg 79.3 FPS, 1% low 44.5, p50 11.86 ms, p99 22.46 ms, worst 37.3 ms, 635 frames, draws 2584
+2026-11-07 10:02 1848x1848 driving: avg 90.0 FPS, 1% low 82.7, p50 11.11 ms, p99 12.09 ms, worst 28.9 ms, 720 frames, draws 2570
+2026-11-07 10:04 2560x2560 driving: avg 90.0 FPS, 1% low 75.6, p50 11.13 ms, p99 13.24 ms, worst 27.1 ms, 721 frames, draws 2910
+2026-11-07 10:06 3692x3692 driving: avg 90.0 FPS, 1% low 72.5, p50 11.11 ms, p99 13.78 ms, worst 33.9 ms, 720 frames, draws 2920
+2026-11-07 10:08 5120x5120 driving: avg 81.7 FPS, 1% low 44.7, p50 11.75 ms, p99 22.39 ms, worst 35.9 ms, 653 frames, draws 2876
+2026-11-07 10:10 2560x2560 driving: avg 89.9 FPS, 1% low 81.7, p50 11.12 ms, p99 12.24 ms, worst 25.5 ms, 719 frames, draws 1943
+2026-11-07 10:12 5120x5120 driving: avg 84.5 FPS, 1% low 53.2, p50 11.74 ms, p99 18.78 ms, worst 37.4 ms, 676 frames, draws 1862
+2026-11-07 10:22 5120x5120 REGPU_TEST_VRS=1 driving: avg 87.2 FPS, 1% low 44.7, p50 11.14 ms, p99 22.38 ms, worst 34.8 ms, 700 frames, draws 1826
+2026-11-07 10:24 5120x5120 REGPU_TEST_VRS=2 driving: avg 90.0 FPS, 1% low 78.4, p50 11.13 ms, p99 12.76 ms, worst 28.2 ms, 720 frames, draws 1922
+2026-11-07 10:26 5120x5120 driving: avg 83.0 FPS, 1% low 44.9, p50 11.66 ms, p99 22.29 ms, worst 26.7 ms, 664 frames, draws 1890
+2026-11-07 10:28 5120x5120 SIMXR_HZ=240 driving: avg 77.0 FPS, 1% low 40.1, p50 12.65 ms, p99 24.93 ms, worst 52.7 ms, 616 frames, draws 2295
+2026-11-07 10:30 5120x5120 SIMXR_HZ=240 REGPU_TEST_VRS=1 driving: avg 92.1 FPS, 1% low 40.6, p50 10.56 ms, p99 24.65 ms, worst 28.0 ms, 737 frames, draws 2468
+2026-11-07 10:32 5120x5120 SIMXR_HZ=240 REGPU_TEST_VRS=2 driving: avg 107.1 FPS, 1% low 52.7, p50 9.12 ms, p99 18.99 ms, worst 36.2 ms, 858 frames, draws 2510
+2026-11-07 10:34 shaders driving: avg 75.3 FPS, 1% low 43.7, p50 13.23 ms, p99 22.89 ms, worst 25.4 ms, 301 frames, draws 2249
+2026-11-07 10:42 5120x5120 SIMXR_HZ=240 REGPU_TEST_NOBLUR=1 driving: avg 90.2 FPS, 1% low 45.6, p50 10.86 ms, p99 21.92 ms, worst 51.0 ms, 725 frames, draws 2454
+2026-11-07 10:44 5120x5120 SIMXR_HZ=240 driving: avg 78.4 FPS, 1% low 42.3, p50 12.63 ms, p99 23.66 ms, worst 35.3 ms, 627 frames, draws 2563
+2026-11-07 10:49 5120x5120 SIMXR_HZ=240 driving: avg 91.2 FPS, 1% low 47.0, p50 10.76 ms, p99 21.26 ms, worst 46.4 ms, 729 frames, draws 2210
+2026-11-07 10:51 5120x5120 SIMXR_HZ=240 PGR4_MOTION_BLUR=1 driving: avg 77.9 FPS, 1% low 40.2, p50 12.57 ms, p99 24.86 ms, worst 56.6 ms, 626 frames, draws 2471
+2026-11-07 11:17 blurOff HMD 5120x5120 grid: avg 90.0 FPS, 1% low 84.1, p50 11.12 ms, p99 11.89 ms, worst 13.3 ms, 1800 frames, draws 3781
+2026-11-07 11:18 blurOff HMD 5120x5120 driving: avg 88.8 FPS, 1% low 45.2, p50 11.12 ms, p99 22.14 ms, worst 28.4 ms, 1777 frames, draws 3052
+2026-11-07 11:20 blurOff2 HMD 5120x5120 grid: avg 86.4 FPS, 1% low 44.9, p50 11.10 ms, p99 22.30 ms, worst 28.9 ms, 1728 frames, draws 3758
+2026-11-07 11:20 blurOff2 HMD 5120x5120 driving: avg 86.4 FPS, 1% low 44.8, p50 11.11 ms, p99 22.31 ms, worst 37.4 ms, 1727 frames, draws 3092
+2026-11-07 11:23 blurOff HMD 5120x5120 Tokyo night rain grid: avg 90.0 FPS, 1% low 82.2, p50 11.11 ms, p99 12.16 ms, worst 18.1 ms, 1350 frames, draws 3399
+2026-11-07 11:23 blurOff HMD 5120x5120 Tokyo night rain driving: avg 88.3 FPS, 1% low 45.0, p50 11.12 ms, p99 22.22 ms, worst 30.4 ms, 1324 frames, draws 2459
+2026-11-07 11:25 blurOff HMD 5120x5120 Vegas cone sprint grid: avg 90.0 FPS, 1% low 83.0, p50 11.12 ms, p99 12.04 ms, worst 14.0 ms, 1350 frames, draws 3538
+2026-11-07 11:26 blurOff HMD 5120x5120 Vegas cone sprint driving: avg 88.3 FPS, 1% low 44.9, p50 11.12 ms, p99 22.26 ms, worst 34.1 ms, 1324 frames, draws 2552
+2026-11-07 11:33 5120x5120 SIMXR_HZ=240 driving: avg 101.9 FPS, 1% low 46.8, p50 9.67 ms, p99 21.35 ms, worst 36.8 ms, 816 frames, draws 2671
+2026-11-07 11:35 5120x5120 SIMXR_HZ=240 REGPU_NO_KEEP_SCENE=1 driving: avg 92.4 FPS, 1% low 47.0, p50 10.60 ms, p99 21.27 ms, worst 51.9 ms, 743 frames, draws 2429
+2026-11-07 11:37 5120x5120 SIMXR_HZ=240 driving: avg 99.7 FPS, 1% low 47.1, p50 9.82 ms, p99 21.25 ms, worst 28.8 ms, 799 frames, draws 2476
+2026-11-07 11:39 keep HMD 5120x5120 grid: avg 90.0 FPS, 1% low 84.8, p50 11.12 ms, p99 11.80 ms, worst 12.7 ms, 1800 frames, draws 3779
+2026-11-07 11:40 keep HMD 5120x5120 driving: avg 88.7 FPS, 1% low 45.1, p50 11.12 ms, p99 22.18 ms, worst 35.2 ms, 1775 frames, draws 2993
+2026-11-07 11:42 keep HMD 5120x5120 grid: avg 90.0 FPS, 1% low 59.4, p50 11.12 ms, p99 16.84 ms, worst 20.5 ms, 1800 frames, draws 3755
+2026-11-07 11:42 keep HMD 5120x5120 driving: avg 85.4 FPS, 1% low 44.6, p50 11.13 ms, p99 22.42 ms, worst 34.3 ms, 1707 frames, draws 3064
+2026-11-07 11:44 driving: avg 90.0 FPS, 1% low 63.5, p50 11.13 ms, p99 15.76 ms, worst 16.5 ms, 180 frames, draws 2374
+2026-11-07 11:47 driving: avg 100.7 FPS, 1% low 50.5, p50 9.80 ms, p99 19.78 ms, worst 44.9 ms, 604 frames, draws 2397
+2026-11-07 11:49 keep2 HMD 5120x5120 grid: avg 90.0 FPS, 1% low 85.8, p50 11.11 ms, p99 11.65 ms, worst 12.5 ms, 1800 frames, draws 3761
+2026-11-07 11:50 keep2 HMD 5120x5120 driving: avg 88.9 FPS, 1% low 45.0, p50 11.12 ms, p99 22.20 ms, worst 29.9 ms, 1778 frames, draws 3152
+2026-11-07 11:52 keep2 HMD 5120x5120 grid: avg 90.0 FPS, 1% low 57.2, p50 11.10 ms, p99 17.48 ms, worst 21.2 ms, 1800 frames, draws 3754
+2026-11-07 11:52 keep2 HMD 5120x5120 driving: avg 89.9 FPS, 1% low 71.6, p50 11.11 ms, p99 13.96 ms, worst 28.3 ms, 1798 frames, draws 3078
