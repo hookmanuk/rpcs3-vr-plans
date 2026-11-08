@@ -667,3 +667,7 @@
 2026-11-08 00:57 w3_5 Tokyo in-car driving: avg 89.9 FPS, 1% low 73.4, p50 11.12 ms, p99 13.62 ms, worst 50.5 ms, 2697 frames, draws 2997
 2026-11-08 01:00 w6_6 Tokyo in-car driving: avg 89.6 FPS, 1% low 56.8, p50 11.12 ms, p99 17.62 ms, worst 42.2 ms, 2689 frames, draws 2164
 2026-11-08 01:02 w3_6 Tokyo in-car driving: avg 89.6 FPS, 1% low 56.9, p50 11.12 ms, p99 17.58 ms, worst 43.2 ms, 2688 frames, draws 2156
+2026-11-08 01:07 nm1 Tokyo in-car driving: avg 89.6 FPS, 1% low 68.6, p50 11.12 ms, p99 14.57 ms, worst 31.2 ms, 2689 frames, draws 952
+2026-11-08 01:10 mi1 Tokyo in-car driving: avg 89.6 FPS, 1% low 58.2, p50 11.12 ms, p99 17.18 ms, worst 40.2 ms, 2689 frames, draws 3337
+2026-11-08 01:13 nm2 Tokyo in-car driving: avg 146.2 FPS, 1% low 67.0, p50 6.44 ms, p99 14.92 ms, worst 47.6 ms, 4387 frames, draws 1962
+2026-11-08 01:15 mi2 Tokyo in-car driving: avg 140.2 FPS, 1% low 107.6, p50 7.04 ms, p99 9.29 ms, worst 20.9 ms, 4206 frames, draws 2017
