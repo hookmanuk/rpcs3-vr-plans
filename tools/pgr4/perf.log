@@ -675,3 +675,34 @@
 2026-11-08 01:22 fence1 sim Tokyo in-car driving: avg 89.8 FPS, 1% low 51.9, p50 11.11 ms, p99 19.27 ms, worst 42.6 ms, 2692 frames, draws 2215
 2026-11-08 01:25 nofence2 sim Tokyo in-car driving: avg 90.0 FPS, 1% low 53.7, p50 11.11 ms, p99 18.62 ms, worst 38.5 ms, 2700 frames, draws 1855
 2026-11-08 01:28 fence2 sim Tokyo in-car driving: avg 89.9 FPS, 1% low 54.1, p50 11.11 ms, p99 18.49 ms, worst 27.9 ms, 2697 frames, draws 2038
+2026-11-08 12:42 f1 boot 1 grid: avg 89.8 FPS, 1% low 76.9, p50 11.12 ms, p99 13.01 ms, worst 17.3 ms, 2157 frames, draws 4104
+2026-11-08 12:44 f1 boot 2 grid: avg 90.0 FPS, 1% low 75.1, p50 11.11 ms, p99 13.32 ms, worst 16.6 ms, 2160 frames, draws 4105
+2026-11-08 12:46 f1 boot 3 grid: avg 90.0 FPS, 1% low 76.5, p50 11.12 ms, p99 13.07 ms, worst 15.4 ms, 2160 frames, draws 3587
+2026-11-08 12:48 f1 boot 4 grid: avg 90.0 FPS, 1% low 75.0, p50 11.12 ms, p99 13.33 ms, worst 17.8 ms, 2159 frames, draws 3586
+2026-11-08 12:51 t1 delay 0 pair 1 grid: avg 90.0 FPS, 1% low 77.1, p50 11.11 ms, p99 12.97 ms, worst 15.2 ms, 1800 frames, draws 3486
+2026-11-08 12:51 t1 delay 1 pair 1 grid: avg 89.9 FPS, 1% low 75.6, p50 11.12 ms, p99 13.23 ms, worst 19.4 ms, 1797 frames, draws 3490
+2026-11-08 12:52 t1 delay 0 pair 2 grid: avg 90.0 FPS, 1% low 74.6, p50 11.12 ms, p99 13.40 ms, worst 18.0 ms, 1799 frames, draws 3884
+2026-11-08 12:52 t1 delay 1 pair 2 grid: avg 89.9 FPS, 1% low 77.7, p50 11.12 ms, p99 12.87 ms, worst 18.1 ms, 1798 frames, draws 3766
+2026-11-08 12:52 t1 delay 0 pair 3 grid: avg 90.0 FPS, 1% low 80.1, p50 11.11 ms, p99 12.48 ms, worst 15.6 ms, 1799 frames, draws 3782
+2026-11-08 12:53 t1 delay 1 pair 3 grid: avg 90.0 FPS, 1% low 79.1, p50 11.12 ms, p99 12.64 ms, worst 15.0 ms, 1800 frames, draws 3487
+2026-11-08 12:59 s1 grid: avg 89.8 FPS, 1% low 57.4, p50 11.12 ms, p99 17.43 ms, worst 22.0 ms, 3592 frames, draws 3496
+2026-11-08 13:08 s2 grid: avg 89.8 FPS, 1% low 55.6, p50 11.12 ms, p99 18.00 ms, worst 27.4 ms, 3592 frames, draws 3611
+2026-11-08 14:23 s3 grid: avg 90.0 FPS, 1% low 73.7, p50 11.12 ms, p99 13.56 ms, worst 18.3 ms, 3601 frames, draws 3598
+2026-11-08 14:30 s4 grid: avg 89.9 FPS, 1% low 74.3, p50 11.11 ms, p99 13.47 ms, worst 18.0 ms, 3598 frames, draws 3592
+2026-11-08 14:35 s5 grid: avg 90.0 FPS, 1% low 76.7, p50 11.12 ms, p99 13.03 ms, worst 16.5 ms, 3600 frames, draws 3597
+2026-11-08 14:40 p_normal grid: avg 90.0 FPS, 1% low 75.0, p50 11.12 ms, p99 13.33 ms, worst 19.2 ms, 3600 frames, draws 3613
+2026-11-08 14:42 p_above grid: avg 89.9 FPS, 1% low 74.3, p50 11.12 ms, p99 13.46 ms, worst 18.5 ms, 3597 frames, draws 3603
+2026-11-08 15:01 even1 grid: avg 98.3 FPS, 1% low 77.0, p50 10.94 ms, p99 12.99 ms, worst 21.0 ms, 3932 frames, draws 3786
+2026-11-08 15:04 even2 grid: avg 65.7 FPS, 1% low 21.9, p50 11.20 ms, p99 45.64 ms, worst 54.6 ms, 2629 frames, draws 3607
+2026-11-08 15:07 even3 grid: avg 89.9 FPS, 1% low 55.6, p50 11.08 ms, p99 17.99 ms, worst 24.1 ms, 3597 frames, draws 3495
+2026-11-08 15:10 even delay 0 pair 1 grid: avg 89.9 FPS, 1% low 58.5, p50 11.09 ms, p99 17.10 ms, worst 22.7 ms, 1799 frames, draws 3494
+2026-11-08 15:11 even delay 1 pair 1 grid: avg 90.0 FPS, 1% low 55.4, p50 11.11 ms, p99 18.07 ms, worst 29.1 ms, 1800 frames, draws 3493
+2026-11-08 15:11 even delay 0 pair 2 grid: avg 90.1 FPS, 1% low 53.6, p50 11.08 ms, p99 18.66 ms, worst 20.9 ms, 1802 frames, draws 3774
+2026-11-08 15:11 even delay 1 pair 2 grid: avg 90.0 FPS, 1% low 56.3, p50 11.11 ms, p99 17.75 ms, worst 24.1 ms, 1800 frames, draws 3774
+2026-11-08 15:12 even delay 0 pair 3 grid: avg 89.9 FPS, 1% low 55.3, p50 11.08 ms, p99 18.08 ms, worst 21.9 ms, 1799 frames, draws 3790
+2026-11-08 15:12 even delay 1 pair 3 grid: avg 90.0 FPS, 1% low 58.6, p50 11.12 ms, p99 17.07 ms, worst 23.8 ms, 1800 frames, draws 3490
+2026-11-08 15:17 m1 grid: avg 90.0 FPS, 1% low 74.4, p50 11.12 ms, p99 13.45 ms, worst 16.9 ms, 1800 frames, draws 3905
+2026-11-08 15:19 m2 grid: avg 90.0 FPS, 1% low 77.1, p50 11.11 ms, p99 12.96 ms, worst 17.6 ms, 1800 frames, draws 3775
+2026-11-08 15:23 smt1 grid: avg 89.9 FPS, 1% low 73.1, p50 11.11 ms, p99 13.68 ms, worst 17.4 ms, 1798 frames, draws 3898
+2026-11-08 15:26 smt2 grid: avg 90.0 FPS, 1% low 69.2, p50 11.11 ms, p99 14.46 ms, worst 18.0 ms, 1799 frames, draws 3899
+2026-11-08 15:30 d1 grid: avg 89.9 FPS, 1% low 74.3, p50 11.12 ms, p99 13.45 ms, worst 19.1 ms, 1799 frames, draws 3717
