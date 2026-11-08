@@ -1484,6 +1484,11 @@ my disc, I'll let you know when its done."
   then swaps to 2d almost straight away. The game shows in 3d and then randomly switched to 2d."
   1 not investigated (lead: two views per frame pass the head-tracking filter, x scale 1.303 and 0.896, each with a pose
   tag; U1 has one). 2 not started. 3 changed, partly checked (below).
+  [x] 1, 2026-11-08 (uncharted_pc 4dbcacb, local): not the pose (all of a frame's view calls take one head, every frame
+  finds its tag) but the frame rate: his save at 3584 on his headset ran 76 FPS, 41 reprojected a second (GPU 13 ms,
+  2.8 of it the tiled light 43b8ee5e). The lens skip (computes and full-screen passes skip the 27% of each eye outside
+  the lens, from SteamVR's hidden area): same boot, reprojected a second 44 off, 0.1-11.6 on (avg about 4). Some 15 s
+  windows still miss. Needs Matt's headset look. Details: CUSA02343-notes, "U2 jumping world".
 - 2026-11-06: release vr-0.3 (uncharted_pc f5564b3, tag v0.3.9-vr0.3, community-vr pushed, draft release id 437038072 with
   uncharted-windows.zip; Matt publishes). Matt: "this release is for frame pacing fixes for u1, u2 & u3 are still not
   ready". Details in `profiles/CUSA02343-notes.md`, "Quest 3 stalls, pacing, menu state".

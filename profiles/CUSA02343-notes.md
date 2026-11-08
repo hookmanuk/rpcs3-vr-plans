@@ -340,3 +340,39 @@ Matt: "implement all relevant changes to uncharted 2 & 3 as well, all gfx fixes,
 - The launcher's Copy VR report said "does not know this game version" on every copy: it misled a user whose version was fine.
   CUSA02344 (another dump, SHA dc017b45...) works through the code patterns, with 18 VR patches against 02343's 49: why not
   checked (no dump here).
+
+## U2 "jumping world": the frame rate, and the lens skip (uncharted_pc 4dbcacb, 2026-11-08)
+
+Matt 2026-11-03 (U2, main menu Continue): "Turning HMD left or right shows jumping world. I suspect this is steamVR
+frame pacing issue."
+
+- Not the head pose: U2 calls the projection builder five times a frame for the player view (one fresh, four on views
+  already turned), each with a new frame tag; all five take the same head (BB_VR_CALLLOG, a 25 degree simulated head
+  sweep: 0 of 620 frames on more than one head), and every play frame finds its tag.
+- The frame rate: his cliff save (copy in H:/uc_tests/u2user), eye 3584, SteamVR on his headset: 76 FPS, 1% low 43,
+  41 frames reprojected a second (vrstats), at times a 45 Hz period. Eye 3200: 87.7, 3.4 reprojected. GPU 96% busy,
+  13.0 ms a frame (BB_GPU_PROFILE): the tiled light compute 43b8ee5e 2.8 ms (both eyes), the half-size pass 53ae53fd
+  0.7, the main pass 0.7, the depth tiled into guest memory 0.45, the stencil upload 0.24. The 346 one-group skinning
+  dispatches (cs 8f067540, "2.4 ms") are inflated by the profiler's own timestamps; skipping them live hung the GPU.
+- 43b8ee5e (BB_PATCH_SHADERS experiments, simulator 144 Hz uncapped, Matt's save; baseline 84.8 FPS twice): skipped
+  113; no lights 109.3; light culling only (tile light-count heat map) 109.2: nearly every tile holds the fire's
+  light, and the per-pixel shading of that one light is the 2.6 ms. Cookie texture fetch replaced 90.4 (0.4 ms);
+  `precise` removed 88.1; spirv-opt -O 84.6; glslang round trip of the decompiled shader 87.3 (0.3 ms better than the
+  port's own SPIR-V, cause unknown). The inner loops are the game's own waterfalls with each v_movrels / v_movreld
+  emulated by 24 selects (VMovRelSHelper); not changed.
+- The lens skip: SteamVR's hidden area on his headset (logged by PGR4: 108 vertices) is a circle of radius 1.035 in a
+  2.07 square of view tangents (21.8% hidden); the port renders +-1.1155 wide (the eyes' overscan): 27% of each eye's
+  pixels are never shown. Prototype (patched 43b8ee5e, tiles outside skipped): 87.3 -> 92.2 uncapped. Built in: the
+  mask from XR_KHR_visibility_mask, the radius against the headset's field of view, push data vr_lens / vr_lens_size,
+  listed computes return per workgroup, listed fragment shaders discard in stereo draws that write no depth. Same-boot
+  A/B on his headset (tools/uncharted/lensab.sh, dev trigger LENS): reprojected a second off 44.4 / 44.5, computes
+  19.9 / 13.6, both 11.6 / 0.6; again computes 18.9 / 8.1 / 20.1, both 0.1 / 8.0 / 3.9. Adding the depth-testing
+  passes (b70e7012, a428f66d, f7e7ba7e, 9f8b18cc, 0bae6524, 8b447ab6, 31ff3be2) showed no gain: reverted.
+  Eye dumps off / on / off (lenseyes.sh, lenscheck.py): inside the circle the on frame is within the scene's own
+  change; the skipped area starts past 1.05. U1 jungle renders normally with it. The desktop window shows the left
+  eye whole: an arc of last frame's mist at its edges.
+- Left: some 15 s windows still miss (worst frame 22 ms, xrWaitFrame up to 20 ms late, the runtime pattern PGR4
+  showed). Not run in U3; U3 shares 84adaaea and 3371ae8d.
+- Tools (plans/tools/uncharted): sess.sh (GAME=u1|u2, RUNTIME=steamvr, ROUTE, HOLD, SESSION_ENV), steamfps.sh,
+  lensab.sh, lenseyes.sh + lenscheck.py, patchab.sh (a replacement SPIR-V, fresh GPU cache), skipab.sh, simsweep.py,
+  callspread.py. Saves: H:/uc_tests/u1user (his jungle), u2user (his cliff).
