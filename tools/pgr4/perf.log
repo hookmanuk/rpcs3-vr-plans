@@ -671,3 +671,7 @@
 2026-11-08 01:10 mi1 Tokyo in-car driving: avg 89.6 FPS, 1% low 58.2, p50 11.12 ms, p99 17.18 ms, worst 40.2 ms, 2689 frames, draws 3337
 2026-11-08 01:13 nm2 Tokyo in-car driving: avg 146.2 FPS, 1% low 67.0, p50 6.44 ms, p99 14.92 ms, worst 47.6 ms, 4387 frames, draws 1962
 2026-11-08 01:15 mi2 Tokyo in-car driving: avg 140.2 FPS, 1% low 107.6, p50 7.04 ms, p99 9.29 ms, worst 20.9 ms, 4206 frames, draws 2017
+2026-11-08 01:20 nofence1 sim Tokyo in-car driving: avg 90.0 FPS, 1% low 54.6, p50 11.11 ms, p99 18.33 ms, worst 30.7 ms, 2700 frames, draws 1520
+2026-11-08 01:22 fence1 sim Tokyo in-car driving: avg 89.8 FPS, 1% low 51.9, p50 11.11 ms, p99 19.27 ms, worst 42.6 ms, 2692 frames, draws 2215
+2026-11-08 01:25 nofence2 sim Tokyo in-car driving: avg 90.0 FPS, 1% low 53.7, p50 11.11 ms, p99 18.62 ms, worst 38.5 ms, 2700 frames, draws 1855
+2026-11-08 01:28 fence2 sim Tokyo in-car driving: avg 89.9 FPS, 1% low 54.1, p50 11.11 ms, p99 18.49 ms, worst 27.9 ms, 2697 frames, draws 2038
