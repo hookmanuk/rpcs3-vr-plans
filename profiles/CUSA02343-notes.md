@@ -399,3 +399,29 @@ frame pacing issue."
   profiled with 2.9 ms of it idle between submissions: not GPU-bound; the misses are whole periods, as U2's leftovers.
 - Tools: ringrun.sh, menudiff.py, poll.py; steamfps.sh takes GAME / ROUTE / START. U3 save copy: H:/uc_tests/u3user
   (route: wait 50, cross x5 6 s apart).
+
+## U2 fire shadows per eye (uncharted_pc b580ecc, 2026-11-08)
+
+- Matt (F10 + F9 ring at the fire, then): "the shadows are just below the fire, grey patches that flicker on and off per
+  frame", "they also vary per eye", "take 10 dumps, as close as possible". His 768 px ring (384 an eye, a 9:1 linear
+  blit) could not show them; ten full-size dumps of both eyes (dev trigger EYES, about 2 s apart) did: hard grey shadow
+  blades of the timbers on the fire-lit snow in the left eye only.
+- Reproduced at his cliff save after one walk leg (`hold ly=0 lx=40` 2.5 s). A 1024 px ring of 120 frames: on in 97, off
+  on every third frame three times in each 16-frame cycle. Eye distance (dev trigger IPD): 0 both eyes identical, none;
+  0.2 m a wider blade; -0.2 (temporary build) still the left eye only.
+- Knobs that did nothing: the light compute's eye correction (LIGHTEYE), the sun resolve's (SHSCALE), per-eye light data
+  off, AO forced to 1 (patched 12ed77bf), the fire cube's layer pinned, the 64x1 depth row per eye (built, reverted),
+  skips of the motion blur (19367542) and of the full-screen passes. One-dump skips misled: the blades switch with the
+  frame, so each condition needs several dumps (wedge.py scores them: right minus left over the blade, about 5 on, -0.5
+  off); BB_SHADER_DEBUG_FILE skips match pixel and compute shaders only (the dev SKIP trigger takes vertex shaders).
+- Found by dumping the material pass's inputs per eye (TEXDUMP now writes both layers, texview.py): the blades are in
+  the light buffer 118b100000 before the material pass (vs 9e3c1074) reads it. The draw log (DRAWLOG) gave its writers:
+  vs 1bf62085 with pgm a74ece03 and f4a633e3, lights drawn as geometry. Their pixel shaders rebuild the point from
+  gl_FragCoord: ray c12 u + c14, c13 v + c15, z = c9 / (depth - c8), world rows c16, c20, c24: U1's torch layout.
+- Fix: both in BB_VR_EYE_RAY_PS's default (`a74ece03:0:14:16;f4a633e3:0:14:16`). At 0.2 m the left eye's edge is soft
+  again, as the right eye's and the eye-distance-0 picture; at his distance 0 of 10 dumps show blades (9 of 10 before).
+  "VR light rays per eye: pgm 0xa74ece03 applied ..." in the log shows it runs.
+- Tools (plans/tools/uncharted): eyeburst.sh (N full-size dumps; PATCH_SPV, KEEP), skipeyes.sh (REP, PRE), trigeyes.sh
+  (a dev trigger swept, PRE), texsweep.sh (TEXDUMP per knob step, PATCH_SPV), wedge.py, texview.py. Patched shaders: the
+  cached SPIR-V decompiled (spirv-cross --vulkan-semantics), edited, glslangValidator -V --target-env vulkan1.3; 43b8ee5e
+  needs its shared struct declared (uint _m0[132]) and its two 64-bit shared reads as 32-bit pairs.

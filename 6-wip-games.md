@@ -1423,7 +1423,8 @@ my disc, I'll let you know when its done."
     exists only in left eye. (image 1)" "U2 has flickering shadows disappearing in both eyes, compare image 1 to
     image 2." His shots: `evidence/uncharted-collection/2026-10-30-matt-u2-shadow-left-only.png` (the cliff after
     the train, a dark shadow patch in the fire-lit snow in front of the wreck, circled, left eye only) and
-    `2026-10-30-matt-u2-shadow-flicker.png` (the same spot a moment later: the patch gone in both eyes). Not started.
+    `2026-10-30-matt-u2-shadow-flicker.png` (the same spot a moment later: the patch gone in both eyes). Fixed
+    2026-11-08 (b580ecc): the same fault as the 11-03 item 2 below (the geometry lights' per-eye rays).
 - [ ] Matt (2026-10-30, U1 chapter 1, the boat), verbatim: "u1 I just pushed someone on the boat, and on flat it shows
   this prompt. In VR there is no prompt! Fix this now". The prompt: "Press (Y) after the first punch lands" (lower
   centre). Shots: `evidence/uncharted-collection/2026-10-30-matt-u1-prompt-flat.png` (flat, with it) and
@@ -1489,9 +1490,12 @@ my disc, I'll let you know when its done."
   2.8 of it the tiled light 43b8ee5e). The lens skip (computes and full-screen passes skip the 27% of each eye outside
   the lens, from SteamVR's hidden area): same boot, reprojected a second 44 off, 0.1-11.6 on (avg about 4). Some 15 s
   windows still miss. Needs Matt's headset look. Details: CUSA02343-notes, "U2 jumping world".
-  2 (shadows near the opening flicker), 2026-11-08: not seen: 300-frame rings of both eyes at his save (SteamVR still,
-  simulator head sweep) show only the flames changing; the fire-lit ground matches between the eyes (135.6 / 136.1,
-  std 1.6). Needs his look. 3 (2D/3D): U1 and U2 menu states checked through pause and resume; U3's found (5e838f4):
+  [x] 2 (shadows near the opening flicker), 2026-11-08 (uncharted_pc b580ecc, local): his F10 + F9 ring and his words
+  ("grey patches just below the fire, flicker on and off per frame", "they also vary per eye") led to it; the 768 px
+  rings were too small to show it, full-size eye dumps did. The left eye's shadows of the timbers on the fire-lit snow
+  had hard grey blades the right eye lacked, on a 16-frame cycle. Cause: U2's lights drawn as geometry (pgm a74ece03,
+  f4a633e3) rebuild each pixel from the centre camera's ray, without the per-eye correction U1's torch passes have.
+  Added to that list: 0 of 10 dumps show it (9 of 10 before), the eyes match. Needs his headset look. 3 (2D/3D): U1 and U2 menu states checked through pause and resume; U3's found (5e838f4):
   all three switch only with the game's menus. U3 pub on his headset: 87.7 FPS, 3 reprojected a second (not GPU-bound).
 - 2026-11-06: release vr-0.3 (uncharted_pc f5564b3, tag v0.3.9-vr0.3, community-vr pushed, draft release id 437038072 with
   uncharted-windows.zip; Matt publishes). Matt: "this release is for frame pacing fixes for u1, u2 & u3 are still not
