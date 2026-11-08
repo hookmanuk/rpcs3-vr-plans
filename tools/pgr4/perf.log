@@ -655,3 +655,15 @@
 2026-11-08 00:06 rel2 Tokyo in-car driving: avg 89.7 FPS, 1% low 70.1, p50 11.12 ms, p99 14.26 ms, worst 26.9 ms, 2691 frames, draws 1393
 2026-11-08 00:08 avx22 Tokyo in-car driving: avg 89.6 FPS, 1% low 57.0, p50 11.12 ms, p99 17.53 ms, worst 40.8 ms, 2689 frames, draws 2259
 2026-11-08 00:11 rel3 Tokyo in-car driving: avg 89.9 FPS, 1% low 76.1, p50 11.12 ms, p99 13.14 ms, worst 18.9 ms, 2696 frames, draws 751
+2026-11-08 00:33 w3_1 Tokyo in-car driving: avg 89.7 FPS, 1% low 66.2, p50 11.12 ms, p99 15.11 ms, worst 29.4 ms, 2692 frames, draws 1873
+2026-11-08 00:36 w6_1 Tokyo in-car driving: avg 89.9 FPS, 1% low 75.9, p50 11.12 ms, p99 13.17 ms, worst 19.7 ms, 2698 frames, draws 2021
+2026-11-08 00:38 w3_2 Tokyo in-car driving: avg 89.5 FPS, 1% low 55.2, p50 11.12 ms, p99 18.12 ms, worst 36.3 ms, 2686 frames, draws 2560
+2026-11-08 00:41 w6_2 Tokyo in-car driving: avg 89.9 FPS, 1% low 74.3, p50 11.12 ms, p99 13.46 ms, worst 26.6 ms, 2698 frames, draws 1851
+2026-11-08 00:44 w3_3 Tokyo in-car driving: avg 89.9 FPS, 1% low 75.3, p50 11.12 ms, p99 13.28 ms, worst 26.1 ms, 2699 frames, draws 1851
+2026-11-08 00:46 w6_3 Tokyo in-car driving: avg 89.3 FPS, 1% low 57.6, p50 11.12 ms, p99 17.35 ms, worst 41.5 ms, 2679 frames, draws 3336
+2026-11-08 00:49 w6_4 Tokyo in-car driving: avg 89.7 FPS, 1% low 57.0, p50 11.12 ms, p99 17.55 ms, worst 43.4 ms, 2693 frames, draws 1942
+2026-11-08 00:52 w3_4 Tokyo in-car driving: avg 89.6 FPS, 1% low 73.3, p50 11.12 ms, p99 13.64 ms, worst 31.8 ms, 2689 frames, draws 2037
+2026-11-08 00:54 w6_5 Tokyo in-car driving: avg 89.9 FPS, 1% low 75.1, p50 11.12 ms, p99 13.31 ms, worst 26.3 ms, 2696 frames, draws 1861
+2026-11-08 00:57 w3_5 Tokyo in-car driving: avg 89.9 FPS, 1% low 73.4, p50 11.12 ms, p99 13.62 ms, worst 50.5 ms, 2697 frames, draws 2997
+2026-11-08 01:00 w6_6 Tokyo in-car driving: avg 89.6 FPS, 1% low 56.8, p50 11.12 ms, p99 17.62 ms, worst 42.2 ms, 2689 frames, draws 2164
+2026-11-08 01:02 w3_6 Tokyo in-car driving: avg 89.6 FPS, 1% low 56.9, p50 11.12 ms, p99 17.58 ms, worst 43.2 ms, 2688 frames, draws 2156
