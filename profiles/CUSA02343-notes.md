@@ -376,3 +376,26 @@ frame pacing issue."
 - Tools (plans/tools/uncharted): sess.sh (GAME=u1|u2, RUNTIME=steamvr, ROUTE, HOLD, SESSION_ENV), steamfps.sh,
   lensab.sh, lenseyes.sh + lenscheck.py, patchab.sh (a replacement SPIR-V, fresh GPU cache), skipab.sh, simsweep.py,
   callspread.py. Saves: H:/uc_tests/u1user (his jungle), u2user (his cliff).
+
+## U2 shadows, menus in all three, U3 on the headset (uncharted_pc 5e838f4, 2026-11-08)
+
+- U2 ground shadows by the fire (Matt 2026-10-30 / 11-03, "flicker on and off", "capture multiple frames at once"):
+  not seen on the current build. Flash ring (tools/uncharted/ringrun.sh: BB_VR_FLASH_RING=1, 768 px an eye, 300
+  frames, 3.3 s; flashring.py) at his cliff save, SteamVR still and the simulator during a 25 degree head sweep: the
+  only one-frame changes are the flames themselves (the wreck's windows, the fire, bushes), in both eyes alike. The
+  fire-lit ground in front of the wreck over 300 frames: mean 135.6 / 136.1 (left / right), std 1.6 (the flames'
+  flicker), biggest frame-to-frame step 2.4 levels; ground beside it std 0.2. Needs his look; if it shows, his F10 + F9
+  ring.
+- The fire's light texture in 43b8ee5e is a guest 2D array sampled as 2D (a cube face selected by hand, the face index
+  in the LOD argument, as the game's own code has it): its VR view keeps one layer, so both eyes read the same layer.
+  Not a cause.
+- Menus from the game's menu state, all three checked on the simulator (pause, resume, pause and back out): U1 (+0xabb8dc)
+  and U2 (+0xf2f364) switch to the flat screen and back each time, no switch in 2+ minutes of play. U3's field found:
+  image +0x1441ac8 (object +0x1441ac0, state +8; menudiff.py snapshots of the image in pause and play, poll.py through a
+  whole session: 12 title and menus, 7 / 6 between menus, 0 loading and play, 3 / 12 / 5 pause), located by its one
+  test "lea rax; cmp dword [rax+8], 0; setne" (5e838f4). The image base moves between boots (0xb200000-0xbc00000);
+  the port re-executes when it switches to the game, so attach memory tools after that.
+- U3 pub, eye 3584, his headset: 87.7 FPS, 3.0 reprojected a second, 4% over a period, 1% low 44.8. GPU 11.7 ms
+  profiled with 2.9 ms of it idle between submissions: not GPU-bound; the misses are whole periods, as U2's leftovers.
+- Tools: ringrun.sh, menudiff.py, poll.py; steamfps.sh takes GAME / ROUTE / START. U3 save copy: H:/uc_tests/u3user
+  (route: wait 50, cross x5 6 s apart).

@@ -1489,6 +1489,10 @@ my disc, I'll let you know when its done."
   2.8 of it the tiled light 43b8ee5e). The lens skip (computes and full-screen passes skip the 27% of each eye outside
   the lens, from SteamVR's hidden area): same boot, reprojected a second 44 off, 0.1-11.6 on (avg about 4). Some 15 s
   windows still miss. Needs Matt's headset look. Details: CUSA02343-notes, "U2 jumping world".
+  2 (shadows near the opening flicker), 2026-11-08: not seen: 300-frame rings of both eyes at his save (SteamVR still,
+  simulator head sweep) show only the flames changing; the fire-lit ground matches between the eyes (135.6 / 136.1,
+  std 1.6). Needs his look. 3 (2D/3D): U1 and U2 menu states checked through pause and resume; U3's found (5e838f4):
+  all three switch only with the game's menus. U3 pub on his headset: 87.7 FPS, 3 reprojected a second (not GPU-bound).
 - 2026-11-06: release vr-0.3 (uncharted_pc f5564b3, tag v0.3.9-vr0.3, community-vr pushed, draft release id 437038072 with
   uncharted-windows.zip; Matt publishes). Matt: "this release is for frame pacing fixes for u1, u2 & u3 are still not
   ready". Details in `profiles/CUSA02343-notes.md`, "Quest 3 stalls, pacing, menu state".
