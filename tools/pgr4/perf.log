@@ -650,3 +650,8 @@
 2026-11-07 23:35 precise HMD 5120x5120 driving: avg 90.0 FPS, 1% low 73.2, p50 11.12 ms, p99 13.66 ms, worst 29.9 ms, 1350 frames, draws 1798
 2026-11-07 23:37 precise HMD 5120x5120 grid: avg 89.9 FPS, 1% low 60.3, p50 11.11 ms, p99 16.59 ms, worst 22.2 ms, 1349 frames, draws 3788
 2026-11-07 23:37 precise HMD 5120x5120 driving: avg 89.9 FPS, 1% low 68.6, p50 11.12 ms, p99 14.58 ms, worst 29.5 ms, 1349 frames, draws 1551
+2026-11-08 00:00 rel1 Tokyo in-car driving: avg 89.7 FPS, 1% low 59.6, p50 11.12 ms, p99 16.77 ms, worst 34.3 ms, 2691 frames, draws 1057
+2026-11-08 00:03 avx21 Tokyo in-car driving: avg 89.7 FPS, 1% low 64.5, p50 11.12 ms, p99 15.50 ms, worst 34.5 ms, 2690 frames, draws 1867
+2026-11-08 00:06 rel2 Tokyo in-car driving: avg 89.7 FPS, 1% low 70.1, p50 11.12 ms, p99 14.26 ms, worst 26.9 ms, 2691 frames, draws 1393
+2026-11-08 00:08 avx22 Tokyo in-car driving: avg 89.6 FPS, 1% low 57.0, p50 11.12 ms, p99 17.53 ms, worst 40.8 ms, 2689 frames, draws 2259
+2026-11-08 00:11 rel3 Tokyo in-car driving: avg 89.9 FPS, 1% low 76.1, p50 11.12 ms, p99 13.14 ms, worst 18.9 ms, 2696 frames, draws 751
