@@ -455,5 +455,7 @@ frame pacing issue."
   on 14.1 ms, run 2 off 14.3 / on 14.1; the control drifted more than the difference. Reverted (not committed).
 - So U2 at 3584 holds about 72 on the 5090 (GPU-bound); at 90 Hz it reprojects. Matt's options: a 72 or 80 Hz headset
   rate for U2, or eye 3200 (87.7 FPS on his headset, 3.4 reprojected a second).
+- U3 volumetric beam (0a8f4f44): chapter 11's start (As Above, So Below: a rooftop) shows no shafts; skipping the beam live
+  changes nothing there. Still needs a scene with strong shafts.
 - Water: neither U2 nor U3 loads U1's river shader (f2fab535); no water scene found at chapter starts (U2 chapter 3
   start is jungle without water). Not checked.
