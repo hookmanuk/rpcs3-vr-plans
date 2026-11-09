@@ -442,3 +442,18 @@ frame pacing issue."
   the pitch in degrees +0x1230): not used by the L2 aim (hooked, never ran).
 - Result (simulator, head 0 then 20 degrees left during the aim): engaged for the whole aim in both, the aim camera on
   the gaze (0.00), the reticle 20 degrees off the body view. Zoom x scale U2 2.414, U3 1.921.
+
+## U2 frame cost at 3584, more (2026-11-09)
+
+- Profile (BB_GPU_PROFILE, Matt's cliff, simulator, eye 3584): 13.6 ms a frame, 72.7 FPS uncapped. Tiled light 43b8ee5e
+  3.1, the one-group skinning dispatches 8f067540 "2.3" (346 a frame, inflated by the profiler), the half-size pass
+  53ae53fd 0.82 (199 draws), the main pass 0.73, depth tiled 0.37, the composite 3371ae8d 0.36, stencil upload 0.26,
+  then many under 0.35. Nothing big left to cut at 25.7 million pixels a frame; the lens skip is in.
+- 43b8ee5e's v_movrels select chains (VMovRelSHelper, 24 selects each) are only the light-mask word reads (4 sites),
+  not the shading: not worth changing.
+- NoContraction off in pixel and compute shaders (dev switch, fresh cache each side, contractab.sh): run 1 off 13.7 /
+  on 14.1 ms, run 2 off 14.3 / on 14.1; the control drifted more than the difference. Reverted (not committed).
+- So U2 at 3584 holds about 72 on the 5090 (GPU-bound); at 90 Hz it reprojects. Matt's options: a 72 or 80 Hz headset
+  rate for U2, or eye 3200 (87.7 FPS on his headset, 3.4 reprojected a second).
+- Water: neither U2 nor U3 loads U1's river shader (f2fab535); no water scene found at chapter starts (U2 chapter 3
+  start is jungle without water). Not checked.
