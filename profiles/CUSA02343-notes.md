@@ -447,6 +447,22 @@ frame pacing issue."
 - Step 2e-6: gone (1.14-1.20) but U1 missed every tag (its near reads back ~5e-7 off, tags 1e-6 apart in its shader
   term). 2e-5: U2 1.23, tags found in play in U1, U2 (match ages as at 2e-4), U3. BB_VR_TAGLOG prints found / missed.
 
+## U2 after the tag fix: one pose and tag a frame (uncharted_pc eb2f4ff, 2026-11-09)
+
+- Matt: "you fixed 95% of the flicker now ... The shadow still flickers a bit, image 1 & 2, you can see the rock on the
+  right has more shadow in 1 than 2." and "image 3 you can see black marks in the snow, they differ per eye too much".
+- BB_VR_NEARLOG: the light passes' near advanced 5 tags a frame: U2 builds the player's view ~5 times a frame and each
+  call took a new tag and the newest head pose. Now a frame's calls share the first's (the later calls see the camera
+  the handler wrote). Tags found in play as before. No difference measurable on his headset at two spots (flat-area
+  flicker, ringflat.py); BB_VR_FRAME_LATCH=0 for A/B.
+- His images 1/2 spot (route: one walk leg, forward 8 s, then right+forward 3 s: the tree over the fire): the frame
+  changes are sub-pixel image motion (tracking noise) and the fire. The flat game there (gdigrab of the window) flickers
+  the snow rocks right of the fire with the fire: the rock's shadow there is the game's animated firelight.
+- Image 3 (blue streaks strong in the left eye, weak in the right): not reproduced. Simulator and headset dumps under the
+  wreck (eyematch.py block match) agree between the eyes; f4a633e3 (the fire light from inside its volume) rebuilds the
+  point as a74ece03 does (c12-c15 ray, rows c16/c20/c24), specular view vector from the centre camera c4-c6 (small).
+  Needs his location. A GPU page fault (device lost) once at the start of play (run before it fine; retry fine).
+
 ## U2 / U3 head aim in play (uncharted_pc 16db135, 2026-11-09)
 
 - Getting to a fight: the test user H:/uc_tests/u2fight (a copy of the chapter-unlocked saves, every chapter selectable in

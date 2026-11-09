@@ -1513,7 +1513,10 @@ my disc, I'll let you know when its done."
   the lens skip off, per-eye lights off and eye distance 0; the flat game has no streaks. Cause: the frame tag (each
   frame's near plane + k x 2e-4, k 1..16): off, the streaks are gone; control back. Fixed (uncharted_pc 8247f9a,
   1cc71d1, local): step 2e-5 (2e-6 too fine for U1's tag matching); U2 streaks gone (flicker 1.23% of pixels vs
-  1.85-2.61), tags found in play in U1, U2, U3. Needs his look. 3 (2D/3D): U1 and U2 menu states checked through pause and resume; U3's found (5e838f4):
+  1.85-2.61), tags found in play in U1, U2, U3. Needs his look.
+  Matt (17:00): "fixed 95% of the flicker"; rock shadow by the fire still changes (the flat game does it too: the
+  firelight); one pose and tag a frame now (eb2f4ff). [ ] "black marks in the snow, they differ per eye too much"
+  (his image 3, blue streaks under the wreck): not reproduced yet, needs his spot. 3 (2D/3D): U1 and U2 menu states checked through pause and resume; U3's found (5e838f4):
   all three switch only with the game's menus. U3 pub on his headset: 87.7 FPS, 3 reprojected a second (not GPU-bound).
 - 2026-11-06: release vr-0.3 (uncharted_pc f5564b3, tag v0.3.9-vr0.3, community-vr pushed, draft release id 437038072 with
   uncharted-windows.zip; Matt publishes). Matt: "this release is for frame pacing fixes for u1, u2 & u3 are still not
