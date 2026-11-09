@@ -1507,7 +1507,13 @@ my disc, I'll let you know when its done."
   the wreck, as in my 11-08 sheets). His log: the eye clip shift switched 0.0296 / 0.0319 hundreds of times (the simulator
   sets it once): the camera hook published the head's field of view before adding the overscan, and the headset thread
   read it in between (2.232 / 2.072 = 1.077). Fixed in uncharted_pc 8541a15 (local); needs his headset look: his log
-  should show one "eye clip shift" line. 3 (2D/3D): U1 and U2 menu states checked through pause and resume; U3's found (5e838f4):
+  should show one "eye clip shift" line.
+  Matt: "No its still not fixed. it happens on many parts of the screen, in both eyes, flickering all the time" (his log:
+  one shift now, so that race was real but not this). On his headset (rings of 300 frames, ringtrig.sh): unchanged with
+  the lens skip off, per-eye lights off and eye distance 0; the flat game has no streaks. Cause: the frame tag (each
+  frame's near plane + k x 2e-4, k 1..16): off, the streaks are gone; control back. Fixed (uncharted_pc 8247f9a,
+  1cc71d1, local): step 2e-5 (2e-6 too fine for U1's tag matching); U2 streaks gone (flicker 1.23% of pixels vs
+  1.85-2.61), tags found in play in U1, U2, U3. Needs his look. 3 (2D/3D): U1 and U2 menu states checked through pause and resume; U3's found (5e838f4):
   all three switch only with the game's menus. U3 pub on his headset: 87.7 FPS, 3 reprojected a second (not GPU-bound).
 - 2026-11-06: release vr-0.3 (uncharted_pc f5564b3, tag v0.3.9-vr0.3, community-vr pushed, draft release id 437038072 with
   uncharted-windows.zip; Matt publishes). Matt: "this release is for frame pacing fixes for u1, u2 & u3 are still not

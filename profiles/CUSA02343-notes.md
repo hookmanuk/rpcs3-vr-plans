@@ -435,6 +435,18 @@ frame pacing issue."
   = 1.077, the two values' ratio. A shift changing between a frame's passes is what left one-frame grey shards before
   (SetShift's comment). Now published whole under the lock. The simulator never hit the gap, so only his log can show it.
 
+## U2 shadow streaks from the frame tag (uncharted_pc 8247f9a, 1cc71d1, 2026-11-09)
+
+- After 8541a15, Matt: "still not fixed ... many parts of the screen, in both eyes, flickering all the time".
+- His headset (null runs while he waited), cliff save after one walk leg, eye 2160, ringtrig.sh (one session, dev
+  triggers, a 300-frame ring each) and /h/uc_tests/ringcmp.py (p90 of the frame-to-frame change per pixel; % over 10):
+  base 1.8, lens skip off 2.1, per-eye lights off 2.6, eye distance 0 2.5: long streaks fanning from the fire over the
+  snow and Nate's shadow flicker in all. Flat (BB_VR=0, ffmpeg gdigrab of the window): no streaks at all.
+- BB_VR_NEAR_STEP=0 (no frame tags): 1.16 / 1.40, streaks gone; control on the same build 1.85 / 2.01, back. The tag moves
+  each frame's near by k x 2e-4 (k 1..16); some pass reads depth with another frame's (or the untagged) near.
+- Step 2e-6: gone (1.14-1.20) but U1 missed every tag (its near reads back ~5e-7 off, tags 1e-6 apart in its shader
+  term). 2e-5: U2 1.23, tags found in play in U1, U2 (match ages as at 2e-4), U3. BB_VR_TAGLOG prints found / missed.
+
 ## U2 / U3 head aim in play (uncharted_pc 16db135, 2026-11-09)
 
 - Getting to a fight: the test user H:/uc_tests/u2fight (a copy of the chapter-unlocked saves, every chapter selectable in
