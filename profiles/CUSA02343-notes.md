@@ -463,6 +463,27 @@ frame pacing issue."
   point as a74ece03 does (c12-c15 ray, rows c16/c20/c24), specular view vector from the centre camera c4-c6 (small).
   Needs his location. A GPU page fault (device lost) once at the start of play (run before it fine; retry fine).
 
+## Shader preparation ported from Mevlock's lists (uncharted_pc f3de55f, 2026-11-09)
+
+- Found published: Mevlock/uncharted_pc-dev (GPL-2.0) ships shaders/<game>_variants.txt, _keys.txt, _compute_keys.txt and
+  shader_locations_<title>[_ver].txt (inputs and state, no code; recorded by walking every checkpoint): U1 2222 variants /
+  1783 keys, U2 4006 / 4055, U3 12958 / 9793. Their docs/SHADER_PREPARATION.md has the design and measurements.
+- Ported (not merged): translator hooks (t_sharp_override in resource.h, t_translation_replay in info.h and
+  fetch_shader.cpp), list readers, location index, RuntimeInfoFromRegisters, BuildListedVariant (CompileModule split into
+  TranslateModule), the renumbering and key remap. Here the listed variants build before warm_done (no claims or race),
+  and the first launch with a list (marker prepared_<list> in the cache) holds the game until every pipeline is built too.
+  Skipped: their page/overlay, freeze, async compute, GPL, scans without an index. Lines of their own kinds (ultrawide
+  squeeze, split layouts) are skipped; their Bindings has a 4th word (descriptor set): taken when 0.
+- Their BufferSpecialization::coherent is bit 30 of the first word (spare here): without it the list-built computes lacked
+  OpDecorate Coherent (11 of 286 differed); with it all 286 shaders of a U2 session match play-translated ones byte for byte.
+- Game version 1.00 here: index shader_locations_CUSA02343.txt (the _102 is 1.02); the launcher passes every index of the
+  title and the port keeps the one whose sampled locations read back. BB_APP0_DIR is set by probe.c.
+- U2 opening, simulator, empty cache: 61 pipelines built in play (436 ms) -> 2 (4 ms); first launch held 17-24 s.
+  U1 chapter 1 (hub: left once, cross; Chapters 3 down; cross, cross, 3 down, cross), simulator eye 2160, 240 Hz, empty
+  cache, 34 s intro cutscene (60 FPS both) then 16 s of play: without the lists 39 pipelines built (1786 ms), frames of 871,
+  451, 137, 122, 57 ms, play 1% low 67-78, late up to 0.78%; with them 0 built, only the two chapter-load frames (461, 102
+  ms, in both runs), play 1% low 79-83, late 0%; first launch held 11.9 s.
+
 ## Shipping a pipeline recipe instead of a shader cache (2026-11-09)
 
 - Releases ship no cache (package.sh stages a fresh folder): every player gets the first-run stutter. The port already preloads
