@@ -1419,7 +1419,7 @@ my disc, I'll let you know when its done."
   Frame rate, simulator 90 Hz, 3584 (Matt's), DLSS off: U3 pub 90.0 (1% low 84, 0% late); U2 cliff 82 (1% low 74-75,
   ~50% over a period) with the fixes on or off (A/B 81.3/82.5 vs 82.3/82.1: no cost); the scene is GPU-bound (profile
   14.5 ms: cs 43b8ee5e 2.9 ms, the snow particles 1.2 ms). U1 jungle 90.0 (1% low 80).
-  - [ ] Matt (2026-10-30, U2, after the fixes above), verbatim: "U2 has different shadows per eye, circled shadow
+  - [x] Matt (2026-10-30, U2, after the fixes above), verbatim: "U2 has different shadows per eye, circled shadow
     exists only in left eye. (image 1)" "U2 has flickering shadows disappearing in both eyes, compare image 1 to
     image 2." His shots: `evidence/uncharted-collection/2026-10-30-matt-u2-shadow-left-only.png` (the cliff after
     the train, a dark shadow patch in the fire-lit snow in front of the wreck, circled, left eye only) and
@@ -1504,8 +1504,8 @@ my disc, I'll let you know when its done."
     bad). One frame per xrWaitFrame shipped to fix the flooding; whether the stalls go is untested on a Quest.
   - [ ] DLSS on: GPU device lost at the first play frames (3070, driver 581.94). U1 assertion loading the temple area
     (`iSubMesh < m_numSubMeshInstances`, mesh.h:1361; 4090, 2880). Neither reproduced.
-  - [ ] Menu state (d2e9b86): only U2's switch into its first menu seen. U2 play and pause, U1 not checked; U3's field not
-    found (old guess kept, stale reading fixed).
+  - [x] Menu state (d2e9b86): only U2's switch into its first menu seen. U2 play and pause, U1 not checked; U3's field not
+    found (old guess kept, stale reading fixed). Done 2026-11-08 (5e838f4): all three checked through pause and resume.
 - Night 2026-11-01/02 (goal: "make sure uncharted 2 & 3 are optimal and have no graphical errors in one eye"):
   - U2 left-eye-only fire shadow (Matt 2026-10-30): not reproduced at his cliff save. Simulator, eye 1440 and 3584:
     the fire-lit snow's blocks agree between the eyes in single shots (mean |log2 L/R| x100 1.1), over a 300-frame
