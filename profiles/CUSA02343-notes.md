@@ -426,6 +426,15 @@ frame pacing issue."
   cached SPIR-V decompiled (spirv-cross --vulkan-semantics), edited, glslangValidator -V --target-env vulkan1.3; 43b8ee5e
   needs its shared struct declared (uint _m0[132]) and its two 64-bit shared reads as 32-bit pairs.
 
+## U2 wedges still flashing on the headset (uncharted_pc 8541a15, 2026-11-09)
+
+- Matt (headset, after b580ecc): "the grey triangles are still there and still flashing in u2". His last_run log: "VR
+  multiview: eye clip shift" switching 0.029582 / 0.031868 every few lines (200 logged, the cap); simulator runs log one.
+- Cause: both camera hooks set g_rendered = g_head (the headset's field of view) and wrote the overscanned tangents
+  (+0.08 a side) later; the headset thread's SetShift(LastRendered) between them took the narrower view: 2.232 / 2.072
+  = 1.077, the two values' ratio. A shift changing between a frame's passes is what left one-frame grey shards before
+  (SetShift's comment). Now published whole under the lock. The simulator never hit the gap, so only his log can show it.
+
 ## U2 / U3 head aim in play (uncharted_pc 16db135, 2026-11-09)
 
 - Getting to a fight: the test user H:/uc_tests/u2fight (a copy of the chapter-unlocked saves, every chapter selectable in

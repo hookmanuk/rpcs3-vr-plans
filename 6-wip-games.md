@@ -1502,7 +1502,12 @@ my disc, I'll let you know when its done."
   rings were too small to show it, full-size eye dumps did. The left eye's shadows of the timbers on the fire-lit snow
   had hard grey blades the right eye lacked, on a 16-frame cycle. Cause: U2's lights drawn as geometry (pgm a74ece03,
   f4a633e3) rebuild each pixel from the centre camera's ray, without the per-eye correction U1's torch passes have.
-  Added to that list: 0 of 10 dumps show it (9 of 10 before), the eyes match. Needs his headset look. 3 (2D/3D): U1 and U2 menu states checked through pause and resume; U3's found (5e838f4):
+  Added to that list: 0 of 10 dumps show it (9 of 10 before), the eyes match. Needs his headset look.
+  [ ] Matt 2026-11-09 (headset): "the grey triangles are still there and still flashing in u2" (the wedges in the snow by
+  the wreck, as in my 11-08 sheets). His log: the eye clip shift switched 0.0296 / 0.0319 hundreds of times (the simulator
+  sets it once): the camera hook published the head's field of view before adding the overscan, and the headset thread
+  read it in between (2.232 / 2.072 = 1.077). Fixed in uncharted_pc 8541a15 (local); needs his headset look: his log
+  should show one "eye clip shift" line. 3 (2D/3D): U1 and U2 menu states checked through pause and resume; U3's found (5e838f4):
   all three switch only with the game's menus. U3 pub on his headset: 87.7 FPS, 3 reprojected a second (not GPU-bound).
 - 2026-11-06: release vr-0.3 (uncharted_pc f5564b3, tag v0.3.9-vr0.3, community-vr pushed, draft release id 437038072 with
   uncharted-windows.zip; Matt publishes). Matt: "this release is for frame pacing fixes for u1, u2 & u3 are still not
