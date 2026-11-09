@@ -5,6 +5,9 @@ how far it got, and what is open. Detail and history belong in `plans/profiles/<
 evidence in `plans/evidence/<game>/`.
 
 **Rules.**
+- **Hard-to-reach spots, any game (Matt 2026-11-09):** try a few times to reach the place a bug shows; if that fails (never hours), ask Matt to get there,
+  stand still and leave the game running, then work on his live session (full-size eye dumps, draw log, switching shaders off
+  one at a time until the fault goes). "Its much quicker": a dozen scripted walks failed, one sweep on his session found the shader.
 - Game-specific progress goes here and in the game's notes file, **not** in `4-next-steps.md`. That file
   keeps the gates, generic renderer and profile-format work, and releases.
 - When a game ships, add it to `rpcs3/vr-games.md`, move its profile and patch into `rpcs3/bin/`, and delete
@@ -1516,7 +1519,9 @@ my disc, I'll let you know when its done."
   1.85-2.61), tags found in play in U1, U2, U3. Needs his look.
   Matt (17:00): "fixed 95% of the flicker"; rock shadow by the fire still changes (the flat game does it too: the
   firelight); one pose and tag a frame now (eb2f4ff). [ ] "black marks in the snow, they differ per eye too much"
-  (his image 3, blue streaks under the wreck): not reproduced yet, needs his spot. 3 (2D/3D): U1 and U2 menu states checked through pause and resume; U3's found (5e838f4):
+  (his image 3, blue streaks under the wreck): not reproduced yet, needs his spot.
+  [x] Fixed 2026-11-09 (uncharted_pc, deferred decals per eye): the marks now sit on the snow, Matt: "the marks are all good".
+  Lens mask 3 degrees wider (Matt: "the mask is better too"); its FPS cost not measured yet. 3 (2D/3D): U1 and U2 menu states checked through pause and resume; U3's found (5e838f4):
   all three switch only with the game's menus. U3 pub on his headset: 87.7 FPS, 3 reprojected a second (not GPU-bound).
 - 2026-11-06: release vr-0.3 (uncharted_pc f5564b3, tag v0.3.9-vr0.3, community-vr pushed, draft release id 437038072 with
   uncharted-windows.zip; Matt publishes). Matt: "this release is for frame pacing fixes for u1, u2 & u3 are still not

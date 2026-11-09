@@ -463,6 +463,20 @@ frame pacing issue."
   point as a74ece03 does (c12-c15 ray, rows c16/c20/c24), specular view vector from the centre camera c4-c6 (small).
   Needs his location. A GPU page fault (device lost) once at the start of play (run before it fine; retry fine).
 
+## U2 blue snow marks: deferred decals per eye (2026-11-09)
+
+- Matt: "the dark snow is further moved apart per eye than the brown rocks next to it". The spot: through the gap under the
+  carriage until the camera changes (crates, pillar, rocks); a dozen scripted walks never reached it (the path varies), so he
+  stood there and I worked on his live session (dev triggers EYES, DRAWLOG, SKIP=vs): one sweep of 20 groups found vs f7dd5989 /
+  pgm 71165e3f, blended.
+- The pixel shader rebuilds x = z (c63 u + c65) and subtracts an interpolated origin (input 6). The eye's offset s / P00 stays in.
+  Measured with the decal on minus off, rocks masked, in the blocks where the marks are: off -22 px vs snow -100; 0.8: 16.5 px
+  from the snow, 0.9: 7.5, 1.0: 1. Earlier "the eyes match" readings were wrong: whole-picture matching and windows dominated by
+  rocks; Matt's eye was right. Fix: the origin's x + s c[ray] / 2 in the pixel shader (BB_VR_EYE_DECAL_PS "pgm:input:ray").
+- Search (tools: /h/uc_tests/scan2.py, scan3.py, SSA taint over spirv-cross output of the 2146 cached shaders): z from depth
+  multiplied by a screen ray. New: decals b1386ddc:5:105, 75132665:5:101; light layout 14e3079b, 6aed7ebb (BB_VR_EYE_RAY_PS). Not
+  seen in a run yet. Left: computes 12ed77bf (AO) and 38d8bf05: relative positions only, as far as read.
+
 ## U2 / U3 head aim in play (uncharted_pc 16db135, 2026-11-09)
 
 - Getting to a fight: the test user H:/uc_tests/u2fight (a copy of the chapter-unlocked saves, every chapter selectable in
