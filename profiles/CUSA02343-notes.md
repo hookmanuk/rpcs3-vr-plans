@@ -438,7 +438,7 @@ frame pacing issue."
 ## U2 shadow streaks from the frame tag (uncharted_pc 8247f9a, 1cc71d1, 2026-11-09)
 
 - After 8541a15, Matt: "still not fixed ... many parts of the screen, in both eyes, flickering all the time".
-- His headset (null runs while he waited), cliff save after one walk leg, eye 2160, ringtrig.sh (one session, dev
+- His headset through SteamVR (he said to use it), cliff save after one walk leg, eye 2160, ringtrig.sh (one session, dev
   triggers, a 300-frame ring each) and /h/uc_tests/ringcmp.py (p90 of the frame-to-frame change per pixel; % over 10):
   base 1.8, lens skip off 2.1, per-eye lights off 2.6, eye distance 0 2.5: long streaks fanning from the fire over the
   snow and Nate's shadow flicker in all. Flat (BB_VR=0, ffmpeg gdigrab of the window): no streaks at all.
