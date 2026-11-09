@@ -463,6 +463,23 @@ frame pacing issue."
   point as a74ece03 does (c12-c15 ray, rows c16/c20/c24), specular view vector from the centre camera c4-c6 (small).
   Needs his location. A GPU page fault (device lost) once at the start of play (run before it fine; retry fine).
 
+## Shipping a pipeline recipe instead of a shader cache (2026-11-09)
+
+- Releases ship no cache (package.sh stages a fresh folder): every player gets the first-run stutter. The port already preloads
+  every recorded pipeline at launch (StartWarmUp: Matt's 1459 of 1462 in 445 ms). U2 opening, simulator (coldwarm.sh): empty
+  cache 61 pipelines built in play, 436 ms, worst play frame 156 ms; the same run warm 0 (preload 107 ms), loading frames only.
+- Legal (Matt asked): .spv = Naughty Dog's shaders translated, not shippable. .key = hashes and render state. .meta (read the
+  writer, RegisterShaderMeta): specialization (state), Info (resources, user-data mask, hash), our own SRT walker x86, and
+  flattened_ud_buf, a snapshot of the draw's constants (game data, no code): to blank before shipping.
+- Size of the known recipes (keys + metas, zip -9): Matt's main cache 1463 pipelines 4.39 MB; all three of his caches merged
+  3969 files 5.16 MB.
+- Match proven: the program id is the shader's own 64-bit hash from its OrbShdr footer (regs_shader.h GetParams). Dev
+  BB_DUMP_GCN_RAW=dir dumps the code translated; pakindex.py indexes every footer (270206 footers in 4218 files, 34002 unique
+  shaders: u1data 3453, u2data 8677, u3data 23056, 667 shared); pakmatch.py: all 287 shaders of a U2 run found under their hash,
+  every copy (25266) byte-identical. The recipe can name a pak, offset and length; the player's own files supply the code.
+- Translation needs draw state (runtime info, specialization), so the files alone cannot build everything: the recipe covers what
+  has been recorded (2146 of 34002 shaders seen so far); chapter starts add more (not measured).
+
 ## U2 blue snow marks: deferred decals per eye (2026-11-09)
 
 - Matt: "the dark snow is further moved apart per eye than the brown rocks next to it". The spot: through the gap under the
