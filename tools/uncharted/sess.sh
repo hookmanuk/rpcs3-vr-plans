@@ -5,7 +5,8 @@ printf '{"x":0,"y":0,"z":0,"yaw":0,"pitch":0,"roll":0}' > "$LOCALAPPDATA/OpenXR-
 cd /h/uncharted_pc
 G=${GAME:-u2}; EYE=${EYE:-3584}
 # GAME=u1: a copy of Matt's U1 jungle save (H:/uc_tests/u1user); u2: his U2 cliff save (u2user).
-export DRIVE_USER="H:\\uc_tests\\${G}user"
+# UCUSER=name: another test user folder under H:/uc_tests (u2fight: chapters unlocked, U2 Continue in Urban Warfare).
+export DRIVE_USER="H:\\uc_tests\\${UCUSER:-${G}user}"
 case $G in u1) EXE=eboot.bin;; u3) EXE=big3-ps4_Shipping.elf;; *) EXE=big2-ps4_Shipping.elf;; esac
 export BB_VELOCITY_PS=f4b18264 BB_UPSCALE_BEFORE_CS=aec539f0 BB_HUDLESS_PS=484cdbf5 BB_JITTER_PS=f614041e,b2a42acf,1a08df2d BB_OFFLINE_NPID=1 BB_FRAME_STATS=1 BB_VR_STEREO=mv BB_VBLANK_HZ=240 BB_FRAME_GEN=off BB_UPSCALER=off BB_UPSCALE_PRESET=0 BB_PRESENT_MODE=Mailbox
 export BB_VR_HEAD_AIM=1 BB_VR_LOCK_VERTICAL=always

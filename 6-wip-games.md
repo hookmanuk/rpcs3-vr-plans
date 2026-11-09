@@ -1442,7 +1442,14 @@ my disc, I'll let you know when its done."
   (camera object +0x1830, U1 1.00 update +0xc42c0) is written with the head's at the start of its update: 30/12 degree
   head swing, aim on the gaze the next frame; the stick turned 73 degrees with the aim held on the gaze; Nathan's gun
   follows. Vertical lock zeroes right stick up/down (pad layer). Headset check pending.
-  [ ] U2 / U3 (uncharted_pc 829a57b): hooks found statically, not yet tried while aiming (no save with a gun: Matt's
+  [x] U2 / U3, 2026-11-09 (uncharted_pc 16db135, local): tried while aiming, from Chapter Select on the unlocked test saves
+  (H:/uc_tests/u2fight; Matt: "skip chapters with cheats", "turn off tutorials"). U2 chapter 6 (Desperate Times), U3
+  chapter 6 (The Chateau), L2, simulator: head aim engages for the whole aim; with the head 20 degrees left the aim camera
+  is on the gaze (error 0.00) and the reticle 20 degrees off the body view. U2's hook (+0x18c9a0) was right: it runs every
+  frame in play; the 11-03 test sat in chapter 5's frozen run-and-gun tutorial. U3's was not: slot 36 runs once as the
+  aim begins, slot 37 (+0x1356b0) every frame (call counts over the camera code, BB_GUEST_HOOKS). Zoom x scale U2 2.414,
+  U3 1.921 (play 1.303): the reticle layer's 1.8 threshold fits both. Needs Matt's headset look in a fight.
+  [x] (was) U2 / U3 (uncharted_pc 829a57b): hooks found statically, not yet tried while aiming (no save with a gun: Matt's
   U2 save is at the end of chapter 1, mine at the train and the U3 pub). Each game's CameraControlZoom from its
   factory and vtable; the update that turns the aim direction by the stick, matched to U1's by the same helper call
   and stores: U2 +0x18c9a0 (this in rdi, direction +0x1f30), U3 +0x135950 (this in rsi, direction +0x11e0). Only a unit

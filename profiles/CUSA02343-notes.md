@@ -425,3 +425,20 @@ frame pacing issue."
   (a dev trigger swept, PRE), texsweep.sh (TEXDUMP per knob step, PATCH_SPV), wedge.py, texview.py. Patched shaders: the
   cached SPIR-V decompiled (spirv-cross --vulkan-semantics), edited, glslangValidator -V --target-env vulkan1.3; 43b8ee5e
   needs its shared struct declared (uint _m0[132]) and its two 64-bit shared reads as 32-bit pairs.
+
+## U2 / U3 head aim in play (uncharted_pc 16db135, 2026-11-09)
+
+- Getting to a fight: the test user H:/uc_tests/u2fight (a copy of the chapter-unlocked saves, every chapter selectable in
+  all three games; save_editor.py describe). Routes in plans/tools/uncharted: U2 /h/uc_tests/u2ch6.route (Options, Game:
+  hints off; Chapters, 6 - Desperate Times, Start Chapter), U3 u3ch6.route (6 - The Chateau). In the Chapters screen a
+  right press opens the chapter carousel; cross picks, then down x3 to Start Chapter. sess.sh takes UCUSER=u2fight.
+  U2 chapter 5 (Urban Warfare, the save's Continue) stops in the run-and-gun tutorial freeze: no camera updates run.
+- Finding the per-frame aim update: BB_GUEST_HOOKS=<lo>-<hi> counts every function with a frame-pointer prologue in the
+  range (a report every 2 s); calls while L2 is held against not. U2 (0x150000-0x190000): CameraControlZoom's factory
+  +0x187830 once per aim, slots 28/29 (+0x18cef0 / +0x18c9a0) 90 a second while aiming. U3 (0x133000-0x13c000; the wider
+  0x128000-0x148000 hung the boot): slot 36 (+0x135950) once per aim, slot 37 (+0x1356b0, this in rdi) every frame.
+  U3 writes +0x11e0 in slot 36, slot 40 (+0x13c230, a quaternion turn: likely the platform's) and +0x138e2e.
+- U2 also has CameraControlAiming (factory +0x1588c0, vtable +0xe05e10, slot 28 +0x1593d0: a level direction +0x170 and
+  the pitch in degrees +0x1230): not used by the L2 aim (hooked, never ran).
+- Result (simulator, head 0 then 20 degrees left during the aim): engaged for the whole aim in both, the aim camera on
+  the gaze (0.00), the reticle 20 degrees off the body view. Zoom x scale U2 2.414, U3 1.921.
