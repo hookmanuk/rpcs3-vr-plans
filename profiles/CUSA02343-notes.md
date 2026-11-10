@@ -483,6 +483,11 @@ frame pacing issue."
   cache, 34 s intro cutscene (60 FPS both) then 16 s of play: without the lists 39 pipelines built (1786 ms), frames of 871,
   451, 137, 122, 57 ms, play 1% low 67-78, late up to 0.78%; with them 0 built, only the two chapter-load frames (461, 102
   ms, in both runs), play 1% low 79-83, late 0%; first launch held 11.9 s.
+  U3 chapter 1 (chroute u3 1 now goes straight to Start Chapter: the list's first cross opened and closed it), empty
+  cache: without the lists 67 pipelines built entering the chapter (2973 ms, a 1129 ms frame), none after; with them 0
+  built, frames up to 94 ms later on (69, 65, 50, 93: not compiles; the no-list run had 81 and 79); first launch held 84 s
+  with a cold driver cache, 69 s and 14 s on reruns (the driver's own disk cache). Its vulkan_driver.vkc 184 MB (7 MB
+  without): the first prepared launch now saves it before releasing the game (507 ms).
 
 ## Shipping a pipeline recipe instead of a shader cache (2026-11-09)
 

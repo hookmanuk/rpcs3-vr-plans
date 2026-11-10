@@ -6,5 +6,10 @@ for i in $(seq 2 $N); do R="$R press right; wait 1.5;"; done
 if [ $G = u2 ]; then
     echo "wait 45; press cross; wait 4; press down; wait 1; press down; wait 1; press right; wait 1; press cross; wait 3; press cross; wait 3; press down; wait 1; press right; wait 1; press down; wait 1; press right; wait 1; press circle; wait 2; press circle; wait 2; press left; wait 1; press up; wait 1; press cross; wait 3;$R press down; wait 1.5; press down; wait 1.5; press down; wait 1.5; press cross; wait 3; press down; wait 1.5; press down; wait 1.5; press down; wait 1.5; press cross; wait 60"
 else
-    echo "wait 50; press cross; wait 6; press down; wait 1.5; press cross; wait 4;$R press cross; wait 2; press down; wait 1.5; press down; wait 1.5; press down; wait 1.5; press cross; wait 3; press cross; wait 60"
+    # Chapter 1 is already the selected one: no chapter list (a cross opens it, the next closes it).
+    if [ $N = 1 ]; then
+        echo "wait 50; press cross; wait 6; press down; wait 1.5; press cross; wait 4; press down; wait 1.5; press down; wait 1.5; press down; wait 1.5; press cross; wait 60"
+    else
+        echo "wait 50; press cross; wait 6; press down; wait 1.5; press cross; wait 4;$R press cross; wait 2; press down; wait 1.5; press down; wait 1.5; press down; wait 1.5; press cross; wait 3; press cross; wait 60"
+    fi
 fi
