@@ -8,5 +8,5 @@ for st in "$@"; do
     rm -f $E/eye_*.png
     /f/rpsc3/source/plans/tools/icovr_dump.sh $S 1 ICO_START_STAGE=$st $ICOVR_ENV >/dev/null 2>&1
     l=$(ls $E/eye_*_L.png 2>/dev/null | head -1); r=$(ls $E/eye_*_R.png 2>/dev/null | head -1)
-    [ -n "$l" ] && mv "$l" $E/stage_${st}_L.png && mv "$r" $E/stage_${st}_R.png && echo "stage $st dumped" || echo "stage $st: no dump"
+    [ -n "$l" ] && mv "$l" $E/stage_${st}_L.png && mv "$r" $E/stage_${st}_R.png && echo "stage $st dumped $(grep 'VR: water' /h/ico-pc/dist/x64/logs/ico-pc.log | tail -1 | sed 's/.*water: //')" || echo "stage $st: no dump"
 done

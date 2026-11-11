@@ -50,8 +50,15 @@ picture at 4K. The game itself steps at 30 Hz; every present between ticks is in
   VU programs apply D_v to h before vu_divide (and G D_v G^-1 to the clip rows, G = the +0x1C0 projection over S);
   screen prims and shadow volumes the game projected through the frame camera (RD_SCREEN_FRAME_CAMERA,
   RD_SHADOW_FRAME_CAMERA: the interpolation's own test) apply D_v to (X, Y, Z, 1) and output a homogeneous position
-  (perspective-correct attributes; STQ / w'). Draws under the reflection cameras (pictureW != 0) and 2D are not
-  transformed yet.
+  (perspective-correct attributes; STQ / w').
+- **Reflections** (pool.c/puddle.c rd_push_camera scopes, VU draws with pictureW != 0): the reflection camera keeps
+  the frame camera's view (the mirror is in the model), its screen S_r is S scaled about 2048, so its eyes are
+  K D_v K^-1 with K = S_r S^-1 and its own depth row in vrClip. The presenter replays a blended copy of the frame, so
+  the scope is found in the ring frame with the same number (rd__vr_picture_camera, matched by list and picture).
+  The pool grids' STs (RdGridSt, made on the CPU from the camera's screen position) move by the eye's screen move
+  times sx/sy (0.8 for REFLECT) in vu_grid.hlsl (VuCB qword 20 in VR); the puddle ripples (RD_SCREEN_ST_SHIFT) the
+  same in sprite_stq_vertex (DrawCB.vr.yz). rd_vis keeps every reflection draw in VR (the eyes see past its picture).
+  Before: vertical streaks (the eye's lookup past the camera's reflection) and a grey patch in one eye.
 - **Culling.** gsb_ClipBox keeps every box (returns 2: drawn with the clipping program) under VR; freeCamera's
   behind-eye rule on for every VU draw. The cutscene cameras' sets end where they did not look: below them is the
   fog's colour (pixels nothing drew), not a cull.
@@ -95,7 +102,7 @@ picture at 4K. The game itself steps at 30 Hz; every present between ticks is in
 
 ## Open
 
-- Reflections (puddle/pool cameras: their draws take no eye transform, a mono reflection), node-flag-2 parts on the
-  500 unit screen (+0x640: D_v uses the frame's S), the particle extent scale: check per eye.
+- Node-flag-2 parts on the 500 unit screen (+0x640: D_v uses the frame's S), the particle extent scale: check per
+  eye. Puddle ripples (RD_SCREEN_ST_SHIFT) are untested: no stage start showed one.
 - Shadow volume per-eye winding (above).
 - Matt's headset test through SteamVR (the session there is unverified: the null headset cannot make one).

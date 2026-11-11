@@ -1,0 +1,68 @@
+# path: OpenXR Simulator, RPCS3_VR_MULTIVIEW=default, build bd55a2a24 VR: pace published frames to the GPU (headset show
+# BCES00664 vrtest_wipeout_race: WipEout HD (released): in a race, ship at speed
+BCES00664 vrtest_wipeout_race vblank 72 scale 300%:
+   
+   => no frame stats (did not run)
+   (no frame stats: retrying once)
+BCES00664 vrtest_wipeout_race vblank 72 scale 300%:
+   577 frames over 8.0 s: avg 72.0 FPS, 1% low 68.2, 0.1% low 62.1 (worst frame 16.1 ms), median 13.99 ms, late 0.00%, RSX thread 11.06 ms/frame, new frames 72.0/s
+   576 frames over 8.0 s: avg 72.0 FPS, 1% low 68.5, 0.1% low 66.0 (worst frame 15.2 ms), median 13.99 ms, late 0.00%, RSX thread 11.58 ms/frame, new frames 72.0/s
+   576 frames over 8.0 s: avg 72.0 FPS, 1% low 67.5, 0.1% low 65.1 (worst frame 15.4 ms), median 13.99 ms, late 0.00%, RSX thread 12.10 ms/frame, new frames 72.0/s
+   => median of 3 windows: avg 72.0 FPS, 1% low 68.2, late frames 0.00%, RSX thread 11.58 ms/frame
+   eyes: residual at 0 49.05, best shift -236 (10.47) 
+SUSTAINABLE BCES00664 vrtest_wipeout_race: 72 Hz
+# BCUS98259 vrtest_icosotc_1: ICO & SotC Collection (released): SotC, a valley
+BCUS98259 vrtest_icosotc_1 vblank 72 scale 300%:
+   
+   => no frame stats (did not run)
+   (no frame stats: retrying once)
+BCUS98259 vrtest_icosotc_1 vblank 72 scale 300%:
+   576 frames over 8.0 s: avg 72.0 FPS, 1% low 68.9, 0.1% low 63.5 (worst frame 15.7 ms), median 14.00 ms, late 0.00%, RSX thread 12.29 ms/frame, new frames 1.4/s
+   577 frames over 8.0 s: avg 72.0 FPS, 1% low 68.7, 0.1% low 66.7 (worst frame 15.0 ms), median 14.00 ms, late 0.00%, RSX thread 11.92 ms/frame, new frames 1.6/s
+   576 frames over 8.0 s: avg 72.0 FPS, 1% low 68.9, 0.1% low 64.5 (worst frame 15.5 ms), median 14.00 ms, late 0.00%, RSX thread 12.77 ms/frame, new frames 0.2/s
+   => median of 3 windows: avg 72.0 FPS, 1% low 68.9, late frames 0.00%, RSX thread 12.29 ms/frame
+   eyes: residual at 0 19.04, best shift -222 (10.78) 
+SUSTAINABLE BCUS98259 vrtest_icosotc_1: 72 Hz
+# BCUS98114 vrtest_gt5_race_start: Gran Turismo 5: race start
+BCUS98114 vrtest_gt5_race_start vblank 72 scale 300%:
+   
+   => no frame stats (did not run)
+   (no frame stats: retrying once)
+BCUS98114 vrtest_gt5_race_start vblank 72 scale 300%:
+   
+   => no frame stats (did not run)
+SUSTAINABLE BCUS98114 vrtest_gt5_race_start: none Hz
+# BCUS98155 vrtest_mspr_race: MotorStorm: Pacific Rift: Free-Play, Kanaloa Bay, 11 AI, rally car, countdown "1" (holds R2)
+BCUS98155 vrtest_mspr_race vblank 72 scale 300%:
+   563 frames over 8.0 s: avg 70.3 FPS, 1% low 51.2, 0.1% low 46.5 (worst frame 21.5 ms), median 14.08 ms, late 0.18%, RSX thread 12.63 ms/frame, new frames 70.3/s
+   574 frames over 8.0 s: avg 71.7 FPS, 1% low 54.8, 0.1% low 26.0 (worst frame 38.5 ms), median 13.93 ms, late 0.17%, RSX thread 10.56 ms/frame, new frames 71.7/s
+   => median of 2 windows: avg 70.3 FPS, 1% low 51.2, late frames 0.17%, RSX thread 10.56 ms/frame
+   eyes: residual at 0 30.12, best shift -232 (14.07) 
+SUSTAINABLE BCUS98155 vrtest_mspr_race: none Hz
+# BLUS30839 vrtest_sonic_race: Sonic & All-Stars Racing Transformed: Ocean View, mid-lap 1 (holds R2; Unlocked frame rate + Wider view 3.0)
+BLUS30839 vrtest_sonic_race vblank 72 scale 300%:
+   
+   => no frame stats (did not run)
+   (no frame stats: retrying once)
+BLUS30839 vrtest_sonic_race vblank 72 scale 300%:
+   576 frames over 8.0 s: avg 72.0 FPS, 1% low 66.1, 0.1% low 50.0 (worst frame 20.0 ms), median 14.00 ms, late 0.00%, RSX thread 10.07 ms/frame, new frames 72.0/s
+   577 frames over 8.0 s: avg 72.0 FPS, 1% low 67.8, 0.1% low 59.0 (worst frame 16.9 ms), median 14.00 ms, late 0.00%, RSX thread 7.72 ms/frame, new frames 72.0/s
+   576 frames over 8.0 s: avg 72.0 FPS, 1% low 61.7, 0.1% low 56.1 (worst frame 17.8 ms), median 14.00 ms, late 0.00%, RSX thread 8.32 ms/frame, new frames 72.0/s
+   => median of 3 windows: avg 72.0 FPS, 1% low 66.1, late frames 0.00%, RSX thread 8.32 ms/frame
+   eyes: residual at 0 52.07, best shift -240 (10.53) 
+SUSTAINABLE BLUS30839 vrtest_sonic_race: 72 Hz
+# BCUS98116 vrtest_kz2_carrier: Killzone 2: Campaign > Continue, the carrier walk (Write/Read Color Buffers in the game config)
+BCUS98116 vrtest_kz2_carrier vblank 144 scale 300%:
+   576 frames over 8.0 s: avg 72.0 FPS, 1% low 59.5, 0.1% low 46.2 (worst frame 21.7 ms), median 13.85 ms, late 0.17%, RSX thread 13.73 ms/frame, new frames 72.0/s
+   576 frames over 8.0 s: avg 71.9 FPS, 1% low 56.4, 0.1% low 52.4 (worst frame 19.1 ms), median 13.84 ms, late 0.00%, RSX thread 13.66 ms/frame, new frames 61.3/s
+   => median of 2 windows: avg 71.9 FPS, 1% low 56.4, late frames 0.00%, RSX thread 13.66 ms/frame
+   eyes: residual at 0 32.42, best shift 0 (32.42) 
+SUSTAINABLE BCUS98116 vrtest_kz2_carrier: 72 Hz
+# BLUS30068 vrtest_segarally_race: SEGA Rally Revo: Safari, race start (holds R2; Unlocked frame rate + Wider view 2.0)
+BLUS30068 vrtest_segarally_race vblank 72 scale 300%:
+   577 frames over 8.0 s: avg 72.1 FPS, 1% low 58.0, 0.1% low 53.5 (worst frame 18.7 ms), median 13.99 ms, late 0.00%, RSX thread 7.87 ms/frame, new frames 72.1/s
+   575 frames over 8.0 s: avg 71.8 FPS, 1% low 55.3, 0.1% low 39.7 (worst frame 25.2 ms), median 13.99 ms, late 0.52%, RSX thread 9.93 ms/frame, new frames 71.8/s
+   => median of 2 windows: avg 71.8 FPS, 1% low 55.3, late frames 0.00%, RSX thread 7.87 ms/frame
+   eyes: residual at 0 32.22, best shift -242 (7.79) 
+SUSTAINABLE BLUS30068 vrtest_segarally_race: 72 Hz
+DONE /f/rpsc3/source/plans/evidence/vrtest/2026-10-12-2134-vr10-quick

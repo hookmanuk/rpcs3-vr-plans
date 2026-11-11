@@ -1,0 +1,17 @@
+73 frames over 1.0 s: avg 72.5 FPS, 1% low 16.4, 0.1% low 16.4 (worst frame 60.9 ms), median 12.84 ms, late 2.74%, RSX thread 13.34 ms/frame
+90 frames over 1.0 s: avg 89.2 FPS, 1% low 73.4, 0.1% low 73.4 (worst frame 13.6 ms), median 11.26 ms, late 0.00%, RSX thread 9.11 ms/frame
+90 frames over 1.0 s: avg 89.5 FPS, 1% low 69.0, 0.1% low 69.0 (worst frame 14.5 ms), median 11.17 ms, late 0.00%, RSX thread 8.52 ms/frame
+88 frames over 1.0 s: avg 87.9 FPS, 1% low 47.3, 0.1% low 47.3 (worst frame 21.2 ms), median 11.16 ms, late 2.27%, RSX thread 9.63 ms/frame
+89 frames over 1.0 s: avg 88.9 FPS, 1% low 71.0, 0.1% low 71.0 (worst frame 14.1 ms), median 11.11 ms, late 0.00%, RSX thread 9.98 ms/frame
+83 frames over 1.0 s: avg 82.8 FPS, 1% low 61.2, 0.1% low 61.2 (worst frame 16.3 ms), median 11.81 ms, late 0.00%, RSX thread 10.97 ms/frame
+88 frames over 1.0 s: avg 87.4 FPS, 1% low 66.0, 0.1% low 66.0 (worst frame 15.1 ms), median 11.59 ms, late 0.00%, RSX thread 10.54 ms/frame
+89 frames over 1.0 s: avg 88.7 FPS, 1% low 51.4, 0.1% low 51.4 (worst frame 19.4 ms), median 11.19 ms, late 1.12%, RSX thread 10.00 ms/frame
+84 frames over 1.0 s: avg 83.8 FPS, 1% low 62.8, 0.1% low 62.8 (worst frame 15.9 ms), median 11.66 ms, late 0.00%, RSX thread 11.68 ms/frame
+89 frames over 1.0 s: avg 88.4 FPS, 1% low 73.0, 0.1% low 73.0 (worst frame 13.7 ms), median 11.23 ms, late 0.00%, RSX thread 9.85 ms/frame
+91 frames over 1.0 s: avg 90.1 FPS, 1% low 70.0, 0.1% low 70.0 (worst frame 14.3 ms), median 11.19 ms, late 0.00%, RSX thread 7.85 ms/frame
+91 frames over 1.0 s: avg 90.1 FPS, 1% low 68.6, 0.1% low 68.6 (worst frame 14.6 ms), median 11.06 ms, late 0.00%, RSX thread 6.27 ms/frame
+90 frames over 1.0 s: avg 90.0 FPS, 1% low 82.0, 0.1% low 82.0 (worst frame 12.2 ms), median 11.02 ms, late 0.00%, RSX thread 5.17 ms/frame
+91 frames over 1.0 s: avg 90.0 FPS, 1% low 82.0, 0.1% low 82.0 (worst frame 12.2 ms), median 11.03 ms, late 0.00%, RSX thread 5.16 ms/frame
+90 frames over 1.0 s: avg 90.0 FPS, 1% low 80.2, 0.1% low 80.2 (worst frame 12.5 ms), median 11.03 ms, late 0.00%, RSX thread 5.22 ms/frame
+90 frames over 1.0 s: avg 89.5 FPS, 1% low 61.2, 0.1% low 61.2 (worst frame 16.4 ms), median 11.16 ms, late 0.00%, RSX thread 7.89 ms/frame
+91 frames over 1.0 s: avg 90.2 FPS, 1% low 73.1, 0.1% low 73.1 (worst frame 13.7 ms), median 11.08 ms, late 0.00%, RSX thread 7.28 ms/frame

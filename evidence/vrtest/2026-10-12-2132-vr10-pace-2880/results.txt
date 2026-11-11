@@ -1,0 +1,16 @@
+# path: OpenXR Simulator, RPCS3_VR_MULTIVIEW=default, build bd55a2a24 VR: pace published frames to the GPU (headset show
+# BCUS98282 vrtest_rc1_veldin: Ratchet & Clank 1: Veldin, start (HelpDesk tip on screen)
+BCUS98282 vrtest_rc1_veldin vblank 72 scale 300%:
+   569 frames over 8.0 s: avg 71.1 FPS, 1% low 54.4, 0.1% low 40.9 (worst frame 24.5 ms), median 14.07 ms, late 0.18%, RSX thread 12.22 ms/frame, new frames 71.1/s
+   571 frames over 8.0 s: avg 71.3 FPS, 1% low 51.2, 0.1% low 40.3 (worst frame 24.8 ms), median 13.96 ms, late 0.53%, RSX thread 11.85 ms/frame, new frames 71.3/s
+   567 frames over 8.0 s: avg 70.9 FPS, 1% low 54.4, 0.1% low 50.5 (worst frame 19.8 ms), median 14.03 ms, late 0.00%, RSX thread 12.18 ms/frame, new frames 68.0/s
+   => median of 3 windows: avg 71.1 FPS, 1% low 54.4, late frames 0.18%, RSX thread 12.18 ms/frame
+   eyes: residual at 0 22.89, best shift -232 (2.87) 
+SUSTAINABLE BCUS98282 vrtest_rc1_veldin: none Hz
+# BCUS98282 vrtest_rc2_aranos: Ratchet & Clank 2: Aranos interior (light scene)
+BCUS98282 vrtest_rc2_aranos vblank 72 scale 300%:
+   577 frames over 8.0 s: avg 72.0 FPS, 1% low 65.0, 0.1% low 61.7 (worst frame 16.2 ms), median 13.94 ms, late 0.00%, RSX thread 2.24 ms/frame, new frames 72.0/s
+   576 frames over 8.0 s: avg 72.0 FPS, 1% low 64.4, 0.1% low 54.2 (worst frame 18.5 ms), median 13.92 ms, late 0.00%, RSX thread 2.20 ms/frame, new frames 72.0/s
+   576 frames over 8.0 s: avg 72.0 FPS, 1% low 64.6, 0.1% low 48.2 (worst frame 20.7 ms), median 13.91 ms, late 0.00%, RSX thread 2.17 ms/frame, new frames 72.0/s
+   => median of 3 windows: avg 72.0 FPS, 1% low 64.6, late frames 0.00%, RSX thread 2.20 ms/frame
+   eyes: residual at 0 35.00, best shift -234 (3.58) 

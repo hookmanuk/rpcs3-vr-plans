@@ -1,0 +1,2 @@
+# path: OpenXR Simulator, RPCS3_VR_MULTIVIEW=default, build a324d613a VR profiles: boosted_targets (a target rendered ab
+# BLUS31006 vrtest_xillia_field: Tales of Xillia: first field (academy)
