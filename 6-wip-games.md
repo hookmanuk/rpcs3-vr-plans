@@ -1564,6 +1564,30 @@ my disc, I'll let you know when its done."
     (shared code, measure first).
 - Details: `profiles/CUSA02343-notes.md`.
 
+## ICO (PS2, ico-pc native port + VR fork, not RPCS3)
+
+Matt 2026-11-11: "I've just forked this repo - https://github.com/hookmanuk/ico-pc can you download it, build it and
+the run with the rom" (H:\ROMs\ico, the USA disc SCUS-97113 as a bare .bin). Then: "Ok, let's make a VR port. Note
+that we already had Ico done on RPCS3, so you may find useful learnings in those notes about culling shaders etc."
+Goal: "make a multiview port with as optimised smooth frame rate as possible, where the graphics in VR match the 2d
+graphics and there are no eye anomalies such as incorrect depth or on eye only issues ... Use previous recomp VR ports
+for the best frame pacing and renderers."
+
+- Repo `H:\ico-pc` (hookmanuk/ico-pc, nathanialf's port: the decompiled game in C, its own GS/VU1 renderer `rd` on a
+  small RHI), branch `vr`. Built in WSL Debian 13 (the project's toolchain cross-compiles with mingw-gcc):
+  `plans/tools/icovr_build.sh` (syncs into /root/ico-pc, ninja win-x64, copies the exe to `H:\ico-pc\distd`).
+  Notes: `profiles/ico-pc-notes.md`.
+- Flat benchmark (2026-11-11, RTX 5090, 9800X3D, uncapped, vsync off): 4K 433 FPS avg, 1% low 165; 1x 451 / 167:
+  CPU-bound on the render thread (walk + interpolation), the GPU ~1 ms a picture at 4K.
+- 2026-11-11 VR stage 1 (fork f49875c3a and on, local): multiview stereo (Vulkan stereo mode: every texture two
+  layers, view mask 0b11), shaders' VR variants (textures as arrays by the view index), per-eye matrices from the
+  head pose through the game's own camera (VU programs, CPU-projected prims, shadow volumes), the Uncharted headset
+  loop (own thread and queue, xrWaitFrame -> token -> the picture drawn at the interpolation's alpha for the frame ->
+  copy into a 2-layer swapchain -> xrEndFrame with the drawn poses). Simulator 2880x2880/eye: 90.0 FPS, 1% low 81,
+  0% late, GPU 2.5 ms a picture (both eyes), render thread ~2 ms. Game camera culling off for the eyes (every box
+  drawn, clipped). Open: flat screen for menus/FMV, HUD placement, shadow volume winding per eye, SteamVR pacing,
+  headset test.
+
 ## Dragon's Dogma: Dark Arisen (BLUS31155 v01.02)
 
 Notes: `profiles/BLUS31155-notes.md`. Evidence: `evidence/ddda/`. Profile `BLUS31155.json`, patch file
