@@ -58,16 +58,44 @@ picture at 4K. The game itself steps at 30 Hz; every present between ticks is in
 - Dev switches: ICO_VR_TEST_EYE1=<units> (eye 1 moved), ICO_VR_TEST_TINT=1 (right eye red in the present blit),
   ICO_VR_TEST_GAMEFOV=1 (both eyes the camera's own picture: compare with flat), ICO_VR_COPY_WAIT=1, ICO_VR_SCALE.
 
+## Findings (2026-11-11 night)
+
+- **The eyes came out identical** while the VU pre-pass was on: it evaluates each vertex once into records the draws
+  read. VR turns it off (ICO_RD_VU_PREPASS=0; set with `_putenv_s`, not SDL_setenv_unsafe, which the CRT's getenv
+  does not see).
+- **A floor missing in the right eye only** (stage 3, low camera): the scissor programs' trivial reject used clip
+  flags through G D G^-1 with G = (+0x1C0 projection) S^-1, which is not what rows 20..23 hold. Now the flags come
+  from the eye's own GS position (vrClip: a 2048-pixel guard band, the camera's near/far). Also every packet goes
+  through the clipping program in VR (RegistPacket.c), and gsb_ClipBox culls nothing.
+- **The HUD**: list 11/12 screen prims that are not the camera's and do not read the frame's own targets (copies,
+  fades over the picture: ds.screenCopy, texCrop, RD_TEXKIND_TARGET; a bounding-box test alone failed on strip-drawn
+  full-screen copies) and the port's overlay/deferred text (rd__overlay_draw) are DrawCB.vr.x 2: their place in the
+  target's frame mapped onto a 2 m wide 4:3 screen 2 m before the recentred seat (vrHud: frame uv -> eye uv).
+- **Flat pictures**: a movie, a frame without camera, or one without mesh/skinned/grid draws (the pause screen, boot
+  signs, title) are drawn in a 4:3 box of the left eye's image and shown on a 3 m quad layer 2.6 m before the seat.
+- **Dashed coloured rows** in the OpenXR Simulator's preview are the simulator's: the eye output and the swapchain
+  image as the runtime gets it (read back before release) are clean; RPCS3's older simulator captures do not show
+  them, the port's path does whatever the write (copy or blit, one or two swapchains).
+- **SteamVR null headset cannot test Vulkan**: xrGetVulkanGraphicsDeviceKHR returns XR_ERROR_RUNTIME_FAILURE (no
+  adapter) and xrCreateSession XR_ERROR_VALIDATION_FAILURE. The session on SteamVR needs Matt's headset.
+- **Pacing**: the token's alpha is the frame's predicted display time (xrConvertTimeToWin32PerformanceCounterKHR ->
+  SDL ticks) less its smoothed lead over xrWaitFrame's return: motion steps 0.333 ticks a frame at 90 Hz, sd 0.009,
+  4 irregular of 1200 (ICO_VR_ALPHALOG).
+- Shadow volumes: the frame camera's (RD_SHADOW_FRAME_CAMERA) take D_v; their inc/dec split is the camera's winding
+  (an eye far from the camera could see a near-edge-on face the other way: thin streaks at worst; two-sided stencil
+  would need the strips' parity, not done).
+- Desktop: the window mirrors the left eye (rhi_vr_mirror_blit). F8 recentres (SteamVR's reset view too).
+
 ## Results
 
 - 2026-11-11 simulator 2880x2880/eye, opening cutscene: 90.0 FPS, 1% low 81.5, 0% late, new pictures 100%; GPU 2.5
   ms a picture (both eyes), render thread CPU ~2 ms. The headset loop: wait frame ~7.7 ms, picture 1.3, end 2.1.
+- Walking in the first hall (icovr-walk.txt, no cull, every packet clipped): 90.0 FPS, 1% low 82, 0% late; GPU 1.5
+  ms a picture, render thread 3.4 ms (walk 2.5, interpolation 0.7).
 
 ## Open
 
-- Flat screen (quad layer) for frames without 3D: boot signs, title, menus, FMV, loading.
-- HUD/menus over gameplay (subtitles, pause): now drawn identically in both eyes (head-locked at infinity).
-- Shadow volumes: the CPU's front/back split is the camera's winding; per-eye winding may differ at silhouettes.
-- Reflections (puddle/pool cameras), the particle extent scale, the light shafts and flames: check per eye.
-- Horizontal dashed rows seen in the simulator preview only (not in the eye dumps): the preview's scaling?
-- SteamVR pacing (null headset only while Matt is away), Matt's headset test.
+- Reflections (puddle/pool cameras: their draws take no eye transform, a mono reflection), node-flag-2 parts on the
+  500 unit screen (+0x640: D_v uses the frame's S), the particle extent scale: check per eye.
+- Shadow volume per-eye winding (above).
+- Matt's headset test through SteamVR (the session there is unverified: the null headset cannot make one).

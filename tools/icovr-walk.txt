@@ -1,0 +1,287 @@
+# port/input/pad-boot.txt: power-on -> boot signs -> title -> New Game
+#
+# Format: port/input/pad_script.h. <tick> = Main tick from 0 (25 per second
+# in PAL: frame step systemStatus[1] = 2, common/src/main.c). Buttons are
+# the game's logical word, active high: CROSS 0040, START 0800, LEFT 8000.
+#
+# The boot timings below are worked out from the code; the measured ones
+# are marked ("Measured"). Each step's tick depends on load and memory-card latency,
+# so the script does not try to hit each screen at a known tick. It repeats
+# a cycle in which every press either advances the screen that is up or does
+# nothing there (checked for each screen below). Every press lasts 3 ticks;
+# the game acts on the press edge only (pad[0].flags is iosPadRead's trg,
+# fumi/ios/pad.c iosPadRead, sugipon/src/keyInput.c:46), so holding never repeats.
+#
+# frame_count: exec_layout_texture clears pad[0].flags whenever frame_count -
+# selectFrame is 0 or 1 (common/src/layout_texture.c:619-621), and it runs
+# every tick in a loaded stage (common/src/icoMisc.c:275-279), before
+# kanbanExec and the actors. frame_count advances only in GsBase.c
+# (seki/src/GsBase.c:981, gsb_UpdateGSSystem, once per frame step). The
+# headless build compiles the real GsBase.c (cmake/IcoSources.cmake), so it
+# does advance; a build that stubs gsb_UpdateGSSystem would eat every press.
+#
+# Pad: the host pad reports a DualShock that reaches pad.c's stable analog
+# state on tick 6 and is first read on tick 7 (port/input/pad_host.c); the
+# first press is at tick 8.
+#
+# Screens in order, what accepts input, and how this script answers.
+# Confidence is for the logic; no step's timing is known.
+#
+#  1. Stage 1 load, memory-card check. kanbanBootMcCheck checks ports 0 and
+#     1, ten tries (common/src/kanbanBoot.c:66-117); the host card layer
+#     (port/save/mc_host.c) answers per its folder, port 1 empty. No input. Confidence: high.
+#  2. Language sign (kanban 0, kanbanBoot.c:153-174), cursor on English
+#     (item 26 for sceScfGetLanguage 1, kanbanBoot.c:157-158;
+#     port/config/sysconf.c; English = 1). CROSS confirms (kanban.c:138-141
+#     -> key 1, kanbanBoot.c:177). A sign takes input from its first tick,
+#     fading in or not (kanban.c:394). LEFT: item 26 has no left link
+#     (texProperty[26]), so it does nothing. Confidence: high.
+#  3. 50/60 Hz sign (kanban 1, kanbanBoot.c:223-246), default item 33 = 50 Hz
+#     (texLayout[1].defaultItem; kanbanBoot.c:230-231 keeps systemStatus[0]
+#     = 1). CROSS confirms 50 Hz; LEFT on 33 does nothing (34's left goes to
+#     33). Confidence: high.
+#  4. No memory card (kanban 5 with the "no card" sign 3, kanbanBoot.c:
+#     255-285; after the second card check, kanbanBoot.c:248-249, 108-117).
+#     The cursor starts on item 42 (texLayout[5].defaultItem), which is
+#     "check again"; only item 41 continues (kanbanBoot.c:276-280). LEFT
+#     moves 42 -> 41 (texProperty[42].leftItem), then CROSS continues. A
+#     CROSS on 42 just retries the card check and the sign comes back
+#     (kanbanBoot.c:282-284), so a cycle that lands badly costs one cycle.
+#     Confidence: high (logic), medium (no run).
+#  5. "Please wait" sign for 5 s = 125 ticks (kanbanBoot.c:318-330), then
+#     kanbanBootEnd (kanbanBoot.c:346). No input. Confidence: high.
+#  6. Opening demo (script/src/op.c:126-178, layout 55 la_game_demo,
+#     common/src/layout_action.c:612-621). START (0800) skips to the title
+#     (op.c:169-172) once the demo's ADPCM stream handle is set and 30 ticks
+#     have passed (op.c:161-164). CROSS and LEFT do nothing here; START on
+#     layout 55 also needs gflag 388 (layout_action.c:2562), which nothing in
+#     the C sets. If no START lands, the demo runs out and puts up the title
+#     itself (op.c:474), which phase 2 handles. Confidence: medium: the
+#     handle comes from an ADPCM open through the cdvd background reader
+#     (script/src/script.c:931-942, fumi/sound/adpcm_init.c:399-414); if that
+#     never completes, the boot stops here whatever is pressed.
+#  7. Title, "Continue / New Game" (layout 12, layout_action.c:711-769). With
+#     no card _la_set_current_port_2 returns -1 (layout_action.c:309-311,
+#     458-470) and the title switches itself to layout 13 (layout_action.c:
+#     763-766) once it has faded in (1.5 s, layout_texture.c:587). No input
+#     needed; CROSS/START do nothing while continueDecided is 0. Confidence:
+#     medium-high.
+#  8. Title, "New Game" only (layout 13, layout_action.c:773-821). The card
+#     check sets newGameDecided (layout_action.c:807-809); after the 1.5 s
+#     fade-in, CROSS or START (mask 0840) starts a new game (796-803 ->
+#     layout 9). Presses during the fades are ignored (the proc runs only in
+#     fade states 1-2 and accepts only in 2, layout_texture.c:575,587). The
+#     title's 10 s idle timer (op.c:92-101, 197) only runs before a choice.
+#     Confidence: high (logic).
+#  9. Vibration on/off (layout 9 la_vibe_select, layout_action.c:652-684),
+#     cursor on 44 = on. CROSS or START after its 0.5 s fade-in: gflagInit,
+#     gflagOn(382) (layout_action.c:668-671). TRIANGLE would go back to the
+#     title, so it is never pressed. Confidence: high.
+# 10. gflag 382 -> actSt26aConte01_1_newgame: gflagOn(2), RequestStageChange
+#     (op.c:484-499); stgmgrForceSwitchWithFadeColor sets graphics_ready = 1
+#     (common/src/StageManager.c:502) in that same tick, so the layout procs
+#     stop and a later press cannot confirm screen 9 twice (a second confirm
+#     would gflagInit again). The next stage starts on layout 54 or a
+#     cutscene's 55 (layout_texture.c:767-768). Confidence: medium.
+#
+# Phases:
+#   phase 1 (ticks 8..1599): LEFT, CROSS, START every 40 ticks. Covers
+#     screens 2-9 if the title is reached by about tick 1500. Estimate (no
+#     run): load + card checks a few hundred ticks, the four signs and the
+#     wait about 300-400, demo to START about 100, title to New Game about
+#     150: roughly 800-1100 ticks.
+#   phase 2 (ticks 1608..5999): LEFT and CROSS only, for a slower boot or a
+#     demo that runs to the end (screens 2-5 and 7-9 accept CROSS).
+# Stray presses after the new game: START pauses the game on layout 54
+#   (layout_action.c:2523-2537); CROSS (item 295 is the default) or START
+#   resumes (layout_action.c:2588); LEFT does nothing in the pause menu.
+#   CROSS in play is a game action. Once a trace shows the tick where
+#   gf11 bit 30 (0x40000000, flag 382) sets, delete every line after it.
+#
+# Host devices on the way: every disc read finishes at the next vsync; the sound driver is the SNDN2DRV host over
+# the emulated SPU2, so streams advance as the IOP's would;
+# the memory card is port/save/mc_host.c: port 0 is the saves folder (a
+# formatted card, empty on a first run), port 1 has no card. Screens 4 and
+# 7 below were written when both ports reported no card (the earlier null
+# card) and describe that path, not the one a card in port 0 takes.
+#
+# Measured:
+# flag 382 sets at Main tick 661 (stage 1); the stages then run 41 (tick
+# 663), 42, 43, 45, 40 and 3 (tick 1036).
+
+# ---- phase 1: ticks 8..1599, every 40 ticks: LEFT, CROSS, START ----
+8 8000    # LEFT
+11 0000
+21 0040    # CROSS
+24 0000
+34 0800    # START
+37 0000
+48 8000    # LEFT
+51 0000
+61 0040    # CROSS
+64 0000
+74 0800    # START
+77 0000
+88 8000    # LEFT
+91 0000
+101 0040    # CROSS
+104 0000
+114 0800    # START
+117 0000
+128 8000    # LEFT
+131 0000
+141 0040    # CROSS
+144 0000
+154 0800    # START
+157 0000
+168 8000    # LEFT
+171 0000
+181 0040    # CROSS
+184 0000
+194 0800    # START
+197 0000
+208 8000    # LEFT
+211 0000
+221 0040    # CROSS
+224 0000
+234 0800    # START
+237 0000
+248 8000    # LEFT
+251 0000
+261 0040    # CROSS
+264 0000
+274 0800    # START
+277 0000
+288 8000    # LEFT
+291 0000
+301 0040    # CROSS
+304 0000
+314 0800    # START
+317 0000
+328 8000    # LEFT
+331 0000
+341 0040    # CROSS
+344 0000
+354 0800    # START
+357 0000
+368 8000    # LEFT
+371 0000
+381 0040    # CROSS
+384 0000
+394 0800    # START
+397 0000
+408 8000    # LEFT
+411 0000
+421 0040    # CROSS
+424 0000
+434 0800    # START
+437 0000
+448 8000    # LEFT
+451 0000
+461 0040    # CROSS
+464 0000
+474 0800    # START
+477 0000
+488 8000    # LEFT
+491 0000
+501 0040    # CROSS
+504 0000
+514 0800    # START
+517 0000
+528 8000    # LEFT
+531 0000
+541 0040    # CROSS
+544 0000
+554 0800    # START
+557 0000
+568 8000    # LEFT
+571 0000
+581 0040    # CROSS
+584 0000
+594 0800    # START
+597 0000
+608 8000    # LEFT
+611 0000
+621 0040    # CROSS
+624 0000
+634 0800    # START
+637 0000
+648 8000    # LEFT
+651 0000
+661 0040    # CROSS
+664 0000
+674 0800    # START
+677 0000
+688 8000    # LEFT
+691 0000
+701 0040    # CROSS
+704 0000
+714 0800    # START
+717 0000
+728 8000    # LEFT
+731 0000
+741 0040    # CROSS
+744 0000
+754 0800    # START
+757 0000
+768 8000    # LEFT
+771 0000
+781 0040    # CROSS
+784 0000
+794 0800    # START
+797 0000
+808 8000    # LEFT
+811 0000
+821 0040    # CROSS
+824 0000
+834 0800    # START
+837 0000
+848 8000    # LEFT
+851 0000
+861 0040    # CROSS
+864 0000
+874 0800    # START
+877 0000
+888 8000    # LEFT
+891 0000
+901 0040    # CROSS
+904 0000
+914 0800    # START
+917 0000
+928 8000    # LEFT
+931 0000
+941 0040    # CROSS
+944 0000
+954 0800    # START
+957 0000
+965 0000    # released: gameplay from here (stage 3)
+# walk a square: left, up, right, down, 4 s each
+1000 0000 0 128 128 128
+1120 0000 128 0 128 128
+1240 0000 255 128 128 128
+1360 0000 128 255 128 128
+1480 0000 0 128 128 128
+1600 0000 128 0 128 128
+1720 0000 255 128 128 128
+1840 0000 128 255 128 128
+1960 0000 0 128 128 128
+2080 0000 128 0 128 128
+2200 0000 255 128 128 128
+2320 0000 128 255 128 128
+2440 0000 0 128 128 128
+2560 0000 128 0 128 128
+2680 0000 255 128 128 128
+2800 0000 128 255 128 128
+2920 0000 0 128 128 128
+3040 0000 128 0 128 128
+3160 0000 255 128 128 128
+3280 0000 128 255 128 128
+3400 0000 0 128 128 128
+3520 0000 128 0 128 128
+3640 0000 255 128 128 128
+3760 0000 128 255 128 128
+3880 0000 0 128 128 128
+4000 0000 128 0 128 128
+4120 0000 255 128 128 128
+4240 0000 128 255 128 128
+4360 0000 128 128 128 128
