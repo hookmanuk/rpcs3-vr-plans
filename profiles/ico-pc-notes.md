@@ -220,6 +220,10 @@ SCES-50760; `iso=` in `dist\x64\ico-pc.ini`); `dist\x64\ico_vr.cmd` starts VR (I
 - README, later the same evening (Matt): the VR section also says to turn on Options > Controls > Analogue stick fix
   with a gamepad, and that VR "has only been tested with the European disc" (vr 1d1d95c3e, main 9bbee6639); the zips
   in `H:\ico-pc\dist\release` are built from 1d1d95c3e.
+- **Pushed and drafted** (Matt: "ok push the code and release to github"): origin vr 1d1d95c3e (new branch), main
+  9bbee6639, tag v0.11.4-vr-0.1 on 1d1d95c3e; a draft release with both zips and the notes
+  (`profiles/ico-pc-release-v0.11.4-vr-0.1.md`) made by `tools/icovr_release.py`; he presses Publish. The fork has
+  no active workflows (none registered, 0 runs), so the pushes and the tag started none of upstream's CI.
 - Open: a first start as the flat game writes config.toml with Screen softening and Motion blur on, and VR then
   starts with them on (the Off default only applies when the first start is in VR). Offered to Matt: VR's own saved
   values for the two; no answer yet.
