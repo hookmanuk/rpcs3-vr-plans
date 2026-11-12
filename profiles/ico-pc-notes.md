@@ -88,9 +88,14 @@ picture at 4K. The game itself steps at 30 Hz; every present between ticks is in
 - **Pacing**: the token's alpha is the frame's predicted display time (xrConvertTimeToWin32PerformanceCounterKHR ->
   SDL ticks) less its smoothed lead over xrWaitFrame's return: motion steps 0.333 ticks a frame at 90 Hz, sd 0.009,
   4 irregular of 1200 (ICO_VR_ALPHALOG).
-- Shadow volumes: the frame camera's (RD_SHADOW_FRAME_CAMERA) take D_v; their inc/dec split is the camera's winding
-  (an eye far from the camera could see a near-edge-on face the other way: thin streaks at worst; two-sided stencil
-  would need the strips' parity, not done).
+- Shadow volumes: the frame camera's (RD_SHADOW_FRAME_CAMERA) take D_v. The game's inc/dec lists mix both vertex
+  orders, so in VR each triangle is reordered (from the recorded payload) so that its camera winding is its op's and
+  the lists are drawn with two-sided stencil (RD_STENCIL_TWO_SIDED_POS: front incr, back decr): the camera's count is
+  unchanged, an eye that sees a face the other way counts it the other way. In-run A/B (icovr_ab.sh, trigger file
+  `onesided`): one-sided vs two-sided differ by fewer pixels than the same mode 8 s apart. A first version re-read
+  the triangles from the mapped upload ring (write-combined): +10 ms render thread a picture (68 FPS); fixed.
+- Node flag 2 (camera-locked) parts use +0xC0 (the frame screen) on the NTSC disc, so D_v is right for them; only
+  PAL's +0x640 (500 unit screen) would need K D K^-1.
 - Desktop: the window mirrors the left eye (rhi_vr_mirror_blit). F8 recentres (SteamVR's reset view too).
 
 ## Results
@@ -100,9 +105,14 @@ picture at 4K. The game itself steps at 30 Hz; every present between ticks is in
 - Walking in the first hall (icovr-walk.txt, no cull, every packet clipped): 90.0 FPS, 1% low 82, 0% late; GPU 1.5
   ms a picture, render thread 3.4 ms (walk 2.5, interpolation 0.7).
 
+- 2026-11-12 (after reflections and two-sided shadows), walk (icovr_rate.sh): 90 Hz 90.0 FPS, 1% low 82.7, 0% late,
+  render thread 3.2 ms (walk 2.3), GPU 1.5 ms; 120 Hz 120.0 (1% low 107), 144 Hz 144.0 (126), 180 Hz 180.0 (154),
+  all 0% late. Stage 34 (pool) and 36 (sea) at 120 Hz: 120.0 FPS, 0% late, GPU 1.9 / 1.7 ms.
+- Head poses (icovr_poses.sh, simpose.py real pose: straight, yaw +-20, pitch 10, roll 15) on stage 3: both eyes
+  consistent, nothing cut or following the head.
+
 ## Open
 
-- Node-flag-2 parts on the 500 unit screen (+0x640: D_v uses the frame's S), the particle extent scale: check per
-  eye. Puddle ripples (RD_SCREEN_ST_SHIFT) are untested: no stage start showed one.
-- Shadow volume per-eye winding (above).
+- The particle extent scale: check per eye. Puddle ripples (RD_SCREEN_ST_SHIFT) are untested: no stage start showed
+  one. PAL: flag-2 nodes on +0x640.
 - Matt's headset test through SteamVR (the session there is unverified: the null headset cannot make one).

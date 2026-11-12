@@ -1,0 +1,1 @@
+# icovr-idle.txt: no input (stage starts through ICO_START_STAGE)
