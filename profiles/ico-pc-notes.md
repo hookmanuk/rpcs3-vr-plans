@@ -212,8 +212,14 @@ SCES-50760; `iso=` in `dist\x64\ico-pc.ini`); `dist\x64\ico_vr.cmd` starts VR (I
   aside to copy a build in; the process needed an admin end or a reboot.
 - Gameplay after all of it (walk, 120 Hz): 120.0 FPS, display 1% low 118.7 to 119.8, 0 slots skipped, 0 frames over
   budget, render thread 2.3 ms, GPU 1.6 ms a picture.
-- Still open from Matt: "Occaisionally the camera is positioned behind a wall I have to lean forwards to see through
-  it ... It didn't happen with the rpcs3 version in vr?" (he will save a state at a spot that shows it; F8 recentres).
+- The camera behind a wall ("Occaisionally the camera is positioned behind a wall I have to lean forwards to see
+  through it"): closed by Matt the same evening, "remove the part about the wall being a problem, its not."
+- **A fresh start**: a new unpack started through ico_vr.cmd (ICO_VR=1) opens the port's own window "Choose your ICO
+  disc image (one of the supported discs)" on the desktop, so the launcher alone is enough (checked on a fresh
+  portable unpack on the simulator). The README's VR section says so (cb4fafca8; main 8271b3f5c).
+- Open: a first start as the flat game writes config.toml with Screen softening and Motion blur on, and VR then
+  starts with them on (the Off default only applies when the first start is in VR). Offered to Matt: VR's own saved
+  values for the two; no answer yet.
 
 ## Open
 
