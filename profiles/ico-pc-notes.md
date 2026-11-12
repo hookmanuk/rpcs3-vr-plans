@@ -134,6 +134,9 @@ picture at 4K. The game itself steps at 30 Hz; every present between ticks is in
 - Stage survey before the fixes (icovr_survey.sh 120 40, display metrics): every stage 120.0 FPS with 0 skipped display
   slots; over budget only on 10 (33), 16 (27), 22 (7), 27 (5), 31 (5), 17 (2); render thread 2.6-6.6 ms, GPU
   1.2-2.6 ms.
+- After (same survey, the heavy stages): 8, 10, 12, 17, 22, 27, 31 at 0 frames over budget, 16 at 1 of 900; all 0
+  skipped slots, display 1% low 118.2-119.8; render thread 3.1-4.4 ms (10: 5.9 -> 4.0, 16: 6.6 -> 4.3, 22: 5.9 ->
+  4.0, 27: 5.6 -> 3.4, 31: 6.0 -> 4.4), GPU 1.6-2.3 ms.
 
 ## Open
 
