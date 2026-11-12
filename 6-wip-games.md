@@ -1581,8 +1581,10 @@ state of each (details: `profiles/ico-pc-notes.md`, "2026-11-12: headset feedbac
   in vr, like resolution scale. we need a way to change resolution in vr in game." Done (d46fef585).
 - "can we make fsr work in game too?" / "just do fsr 3.1, its better": my first run of it crashed his PC; then
   "Remove all the upscaling options. We don't need them anyway." Removed.
-- "Can you add AA? That would be useful": MSAA 2x/4x/8x in VR (e8afc2cdc), validation clean; 4x at 2880 eyes holds
-  120 Hz on the simulator (1% low 119.3, GPU 4.3 ms). His headset check pending.
+- "Can you add AA? That would be useful": MSAA in VR was built and validated (e8afc2cdc), then on his headset:
+  "remove MSAA, it doesnt work and isnt needed." Removed (258e4e4a5).
+- "VR resolution has no options next to it. If it needs to be a list then do 100-200 in 10 increments." The row was
+  built without its value and arrows; fixed, 100..200 % in tens (258e4e4a5).
 - "the title screen ICO logo moves with your head ... the logo is right in front of my face, not 2m away... If I turn
   its on a flat plane that doesnt match the text." Fixed on the simulator (a5c717599); his headset check pending.
 - "it keeps restarting ico if I leave it on the menu": the title's idle timer, off in VR (06d89e380).

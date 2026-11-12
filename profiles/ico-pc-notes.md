@@ -186,6 +186,13 @@ SCES-50760; `iso=` in `dist\x64\ico-pc.ini`); `dist\x64\ico_vr.cmd` starts VR (I
   at 120 Hz: 120.0 FPS, display 1% low 119.3, 0 skipped, 0 over budget, GPU 4.3 ms a picture (off at 50 %: 1.6 ms).
 - **The mirror's blit** (same commit): the validation boot showed rhi_vr_mirror_blit reading the eyes before the
   list's pending barriers were recorded (their attachment layout, an error every picture); they go first now.
+- **Then, the same day** (258e4e4a5). Matt: "VR resolution has no options next to it. If it needs to be a list then
+  do 100-200 in 10 increments. remove MSAA, it doesnt work and isnt needed." The row had no value or arrows because
+  its option id lies outside the range settings.c steppable() takes (I had never looked at the page). Stepped now,
+  100..200 % in tens. MSAA is out of VR again (the row hidden, no sample counts in the stereo mode, the MSAA shaders
+  as before); the mirror blit's barrier fix stays. Checked by looking: `tools/icovr-options.txt` opens Options >
+  Display from the title (rows: VR resolution, Window mode, Frame rate counter, Video mode); two Rights read 120 %
+  and the scene is made again at 3456x3456 in 2880 eyes.
 - **A test process that would not die**: after a Stop-Process a simulator run stayed as one thread (exiting in the
   driver), kept `ico_pc_x64.exe` locked and stopped the next start at "starting the device". Rename the locked exe
   aside to copy a build in; the process needed an admin end or a reboot.
