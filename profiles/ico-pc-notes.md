@@ -142,6 +142,11 @@ picture at 4K. The game itself steps at 30 Hz; every present between ticks is in
   start): stages 7 (sun patches, bloom), 11 (outdoor haze), 18, 25 (cliff fog), 36 (shadow creature, sea), 38 (forest
   light shafts, glare) match in every effect; the flat's cinematic bars are off in VR by design.
 
+- **~4K per eye** (ICO_VR_SCALE=1.34: 3859x3859, near Matt's headset), stage 38 (the GPU's heaviest) at 120 Hz: 120.0
+  FPS, 0 skipped, 0 over budget, display 1% low 118.3; GPU 2.7 -> 4.2 ms a picture (worst 6), render thread 3.5. GPU
+  by list: 3 1.2 ms, 2 1.0, 7 0.8, 0 0.4; effects glow 0.5, motion blur 0.3, fog 0.3. The frame moves ~2.4 GB of
+  attachment loads/stores a picture (24 passes, each the whole 2-layer target): the next GPU target if needed.
+
 ## Open
 
 - The particle extent scale: check per eye. Puddle ripples (RD_SCREEN_ST_SHIFT) are untested: no stage start showed
