@@ -1585,6 +1585,12 @@ state of each (details: `profiles/ico-pc-notes.md`, "2026-11-12: headset feedbac
   "remove MSAA, it doesnt work and isnt needed." Removed (258e4e4a5).
 - "VR resolution has no options next to it. If it needs to be a list then do 100-200 in 10 increments." The row was
   built without its value and arrows; fixed, 100..200 % in tens (258e4e4a5).
+- "why have we got video mode there? That seems irrelevant? also can you add 50-100 res steps too": Video mode
+  hidden in VR (60 Hz there), VR resolution 50..200 % (6561492b2).
+- "alter the readme in vr and main branches, add a VR section to the top ... create a v0.11.4-vr-0.1 release like
+  usual. Let me know where to test it." and "move the ico_vr.cmd up a folder, if thats our VR entry point": README
+  sections committed on both branches, zips built with the project's package script (`icovr_package.sh`), unpacked
+  for him at `H:\ico-pc\dist\release\test`; push, tag and the draft release wait for his word.
 - "the title screen ICO logo moves with your head ... the logo is right in front of my face, not 2m away... If I turn
   its on a flat plane that doesnt match the text." Fixed on the simulator (a5c717599); his headset check pending.
 - "it keeps restarting ico if I leave it on the menu": the title's idle timer, off in VR (06d89e380).

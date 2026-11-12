@@ -193,6 +193,20 @@ SCES-50760; `iso=` in `dist\x64\ico-pc.ini`); `dist\x64\ico_vr.cmd` starts VR (I
   as before); the mirror blit's barrier fix stays. Checked by looking: `tools/icovr-options.txt` opens Options >
   Display from the title (rows: VR resolution, Window mode, Frame rate counter, Video mode); two Rights read 120 %
   and the scene is made again at 3456x3456 in 2880 eyes.
+- **VR resolution 50..200 %, Video mode hidden** (6561492b2). Matt: "why have we got video mode there? That seems
+  irrelevant? also can you add 50-100 res steps too". Video mode is the European disc's 50/60 Hz switch (the game's
+  own tick rate, 25 or 30 a second); hidden in VR, and the boot takes 60 Hz there (sysconf.c ico_boot_video_mode).
+  Seven Lefts from 100 %: the scene 2592, 2304, 2016, 1728, 1440 and held.
+- **Release v0.11.4-vr-0.1** (Matt: "alter the readme in vr and main branches, add a VR section to the top detailing
+  the download release url and vr features. create a v0.11.4-vr-0.1 release like usual"; then "move the ico_vr.cmd up
+  a folder, if thats our VR entry point"). README: a VR section at the top on vr and on main. The package is the
+  project's own `tools/package_win.sh <label>`, which now also stages `tools/vr/openxr_loader.dll` (Khronos SDK
+  1.1.63's prebuilt loader, its licence in NOTICES.txt through tools/notices/manifest.json) beside the program and
+  `tools/vr/ico_vr.cmd` at the zip's top beside the README (it starts x64\ico_pc_x64.exe). Run it with
+  `plans/tools/icovr_package.sh v0.11.4-vr-0.1`: a clean clone of the vr branch at /root/ico-pc-pkg in WSL (the build
+  clone /root/ico-pc is an rsync copy; its toolchain and .venv are linked in), a full clean build of about 15
+  minutes, the two zips in `H:\ico-pc\dist\release`. The label parses as 0.11.4.0 for the exe's version
+  information. Matt tests the unpacked zip; on his word: push vr and main, tag, draft release with both zips.
 - **A test process that would not die**: after a Stop-Process a simulator run stayed as one thread (exiting in the
   driver), kept `ico_pc_x64.exe` locked and stopped the next start at "starting the device". Rename the locked exe
   aside to copy a build in; the process needed an admin end or a reboot.
