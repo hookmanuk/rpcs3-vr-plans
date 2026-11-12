@@ -177,10 +177,15 @@ SCES-50760; `iso=` in `dist\x64\ico-pc.ini`); `dist\x64\ico_vr.cmd` starts VR (I
   it: the signs answered to tick 300, one START at 420 (`icovr-title.txt`), dumps from 24 s.
 - **The title's attract loop** (06d89e380). Matt: "it keeps restarting ico if I leave it on the menu": op.c tick, the
   title's 10 s idle countdown back to the opening demo. Off with the headset on (ico_video_vr); the flat game keeps it.
-- **Anti-aliasing in VR: built, not validated, not committed.** MSAA 2x/4x/8x only (supersampling is the VR
-  resolution row above 100 %; a saved SSAA choice draws as Off). The MSAA resolve (blit.hlsl) and the fog's MSAA depth
-  read (fog_lut.hlsl FOG_MS) read Texture2DMS; under the stereo mode the views are two-layer arrays, so they now take
-  ICO_T2DMS / ICO_MSLD (reg.hlsli). Wants a validation boot with MSAA 4x before Matt uses it.
+- **Anti-aliasing in VR** (e8afc2cdc). MSAA 2x/4x/8x only (supersampling is the VR resolution row above 100 %; a
+  saved SSAA choice draws as Off). The backend had MSAA off in the stereo mode because the MSAA shaders read
+  Texture2DMS: the resolve (blit.hlsl) and the fog's per-sample depth read (fog_lut.hlsl FOG_MS) now take ICO_T2DMS /
+  ICO_MSLD (reg.hlsli), the device enables shaderStorageImageMultisample (SPIR-V ImageMSArray needs it) and the stereo
+  mode keeps the sample counts where it exists. Vulkan validation (`ICO_VK_VALIDATION=1`,
+  `VK_LAYER_PATH=C:\VulkanSDK\1.4.341.1\Bin`): 0 errors off and at MSAA 4x. MSAA 4x at 2880x2880 eyes, the first hall
+  at 120 Hz: 120.0 FPS, display 1% low 119.3, 0 skipped, 0 over budget, GPU 4.3 ms a picture (off at 50 %: 1.6 ms).
+- **The mirror's blit** (same commit): the validation boot showed rhi_vr_mirror_blit reading the eyes before the
+  list's pending barriers were recorded (their attachment layout, an error every picture); they go first now.
 - **A test process that would not die**: after a Stop-Process a simulator run stayed as one thread (exiting in the
   driver), kept `ico_pc_x64.exe` locked and stopped the next start at "starting the device". Rename the locked exe
   aside to copy a build in; the process needed an admin end or a reboot.
