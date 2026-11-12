@@ -227,8 +227,8 @@ SCES-50760; `iso=` in `dist\x64\ico-pc.ini`); `dist\x64\ico_vr.cmd` starts VR (I
 - **"remove the portable"** (Matt): the portable zip is off the draft and out of its notes, and the README's VR
   section names the one zip (vr 260d720c8, main 5eaa1865e, pushed). The tag still points at 1d1d95c3e and the
   draft's zip is the one built from it, whose inner README still mentions a portable zip: moving the tag to
-  260d720c8 (a forced tag push) and uploading the zip rebuilt from it was blocked by the permission check, left
-  for Matt to decide. A PATCH of a draft release without tag_name resets its tag to "untagged-...": the release
+  260d720c8 (a forced tag push) and uploading the zip rebuilt from it was blocked by the permission check; Matt
+  said yes, and it is done: the tag is on 260d720c8 and the draft holds the zip built from it (35480593 bytes). A PATCH of a draft release without tag_name resets its tag to "untagged-...": the release
   tools now send tag_name with every PATCH (`icovr_release_drop.py`, `icovr_release_update.py`).
 - Open: a first start as the flat game writes config.toml with Screen softening and Motion blur on, and VR then
   starts with them on (the Off default only applies when the first start is in VR). Offered to Matt: VR's own saved
