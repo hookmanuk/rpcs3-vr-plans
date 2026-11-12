@@ -1587,6 +1587,17 @@ for the best frame pacing and renderers."
   0% late, GPU 2.5 ms a picture (both eyes), render thread ~2 ms. Game camera culling off for the eyes (every box
   drawn, clipped). Open: flat screen for menus/FMV, HUD placement, shadow volume winding per eye, SteamVR pacing,
   headset test.
+- 2026-11-12 (fork up to b7da7e16d and on, local, not pushed): flat quad for frames without the world (menus,
+  fades, pause), the HUD on a 2 m screen 2 m ahead, per-eye pool reflections (stage 34: streaks and a one-eye grey
+  patch gone), shadow volumes counted by each eye's winding (two-sided stencil), no still re-present in VR (it
+  re-showed old-pose pictures), upload rings in host-cached memory (render thread -25-35%). Matt asked why the 1%
+  lows were bad: they measured xrEndFrame gaps (picture-time variance), not display slots, and no shaders compile in
+  play (0 pipelines created; warm cache, start-up set before play). Display-side survey at 120 Hz on the simulator
+  (2880x2880/eye), every stage 3-38: 120.0 FPS, 0 skipped display slots, display 1% low 118-120; after the fixes 0
+  frames over budget on every heavy stage but 16 (1 of 900); render thread 2.4-4.4 ms, GPU 1.2-2.6 ms a picture.
+  Also holds 144 and 180 Hz in the first hall. Flat vs VR look matches on 7 stages; head poses (yaw +-20, pitch 10,
+  roll 15) clean on stages 3 and 15. Open: SteamVR on Matt's headset (the null headset cannot make a Vulkan session),
+  puddle ripples (no stage start has a puddle), HUD size (53 degrees: the left eye cuts its right edge).
 
 ## Dragon's Dogma: Dark Arisen (BLUS31155 v01.02)
 
