@@ -217,6 +217,9 @@ SCES-50760; `iso=` in `dist\x64\ico-pc.ini`); `dist\x64\ico_vr.cmd` starts VR (I
 - **A fresh start**: a new unpack started through ico_vr.cmd (ICO_VR=1) opens the port's own window "Choose your ICO
   disc image (one of the supported discs)" on the desktop, so the launcher alone is enough (checked on a fresh
   portable unpack on the simulator). The README's VR section says so (cb4fafca8; main 8271b3f5c).
+- README, later the same evening (Matt): the VR section also says to turn on Options > Controls > Analogue stick fix
+  with a gamepad, and that VR "has only been tested with the European disc" (vr 1d1d95c3e, main 9bbee6639); the zips
+  in `H:\ico-pc\dist\release` are built from 1d1d95c3e.
 - Open: a first start as the flat game writes config.toml with Screen softening and Motion blur on, and VR then
   starts with them on (the Off default only applies when the first start is in VR). Offered to Matt: VR's own saved
   values for the two; no answer yet.
