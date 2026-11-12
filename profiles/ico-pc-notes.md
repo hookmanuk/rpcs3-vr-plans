@@ -149,6 +149,6 @@ picture at 4K. The game itself steps at 30 Hz; every present between ticks is in
 
 ## Open
 
-- The particle extent scale: check per eye. Puddle ripples (RD_SCREEN_ST_SHIFT) are untested: no stage start showed
-  one. PAL: flag-2 nodes on +0x640.
+- The particle extent scale: check per eye. Puddle ripples (RD_SCREEN_ST_SHIFT) are untested: the puddles are in the
+  Waterfall room (stage 22) once drained, a story state no stage start reaches (no save states yet): needs a save. PAL: flag-2 nodes on +0x640.
 - Matt's headset test through SteamVR (the session there is unverified: the null headset cannot make one).
