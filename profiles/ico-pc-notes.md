@@ -147,6 +147,48 @@ picture at 4K. The game itself steps at 30 Hz; every present between ticks is in
   by list: 3 1.2 ms, 2 1.0, 7 0.8, 0 0.4; effects glow 0.5, motion blur 0.3, fog 0.3. The frame moves ~2.4 GB of
   attachment loads/stores a picture (24 passes, each the whole 2-layer target): the next GPU target if needed.
 
+## 2026-11-12: headset feedback (Matt on SteamVR), options, the title
+
+Matt: "this works amazingly well!" The disc is now the European one (`H:\ROMs\ico\Ico (Europe) (En,Fr,De,Es,It).iso`,
+SCES-50760; `iso=` in `dist\x64\ico-pc.ini`); `dist\x64\ico_vr.cmd` starts VR (ICO_VR=1, ICO_VR_SCALE).
+
+- **Options in VR** (d46fef585). Display > VR resolution, 50..200 % in tens (`[vr] render_scale`): the scene at that
+  percent of the eyes' size, stretched or box-reduced by the present (checked at 50 %: scene 1440x1440 in 2880 eyes).
+  The rows VR does not use are hidden (Preset, Resolution, Aspect, Vertical sync, Frame rate, Downsampling, the three
+  Upscaling rows, Full-height, Full pixel, CRT). Screen softening and Motion blur default Off with ICO_VR=1 (the
+  defaults and the first config.toml). No upscaler in VR: Matt, after the crash below, "Remove all the upscaling
+  options. We don't need them anyway."
+- **FSR 3.1 in VR: tried, crashed Matt's PC, removed.** Needed: a second FidelityFX context (the right eye's history),
+  a FidelityFX patch (its 2D views of an external image take VK_REMAINING_ARRAY_LAYERS, invalid on the two-layer
+  stereo images, and only layer 0 is reachable), and motion vectors without the VU pre-pass (VR turns it off): a
+  full-screen pass from SCENE's depth, M = W_prev W_cur^-1 with W = Se E V an eye. The first simulator run made both
+  contexts (2016 -> 2880) and took the PC down. All reverted. If ever retried: Vulkan validation boot first, Matt away.
+- **The title's logo** (a5c717599). Matt: "the title screen ICO logo moves with your head, it should be fixed in front
+  of you same as 2d position", then with two headset shots: "the logo is right in front of my face, not 2m away... If
+  I turn its on a flat plane that doesnt match the text." The logo is not 2D: models I, C, O, their glows (_f) and
+  shadows (_sd) and the darkening plane title_back (port/game/title_logo.c), stage animations that stand just before
+  the game's camera. Through the eyes they sat centimetres from the face (left/right disparity 640 px at 900 against
+  the far castle's 220 and the menu text's 230). Now reg_DispObj marks those models (rd_vr_hud_mark), the renderer
+  keeps the meshes recorded under the mark, and vu_divide (DrawCB.vr.x 4/5) places each vertex by the camera's own 2D
+  picture on the HUD's screen (vrHud); title_back is stretched 8x about the screen's middle so it darkens the whole
+  view. Simulator, real head pose 0 and 20 degrees: the letters' disparity is the text's (230), one plane.
+  Dead ends on the way: the frame-covering list 11 sprites (all untextured fades: a change keyed on them "fixed
+  nothing"), the port's overlay (it is on the HUD already), and six boot scripts that missed the title. What reaches
+  it: the signs answered to tick 300, one START at 420 (`icovr-title.txt`), dumps from 24 s.
+- **The title's attract loop** (06d89e380). Matt: "it keeps restarting ico if I leave it on the menu": op.c tick, the
+  title's 10 s idle countdown back to the opening demo. Off with the headset on (ico_video_vr); the flat game keeps it.
+- **Anti-aliasing in VR: built, not validated, not committed.** MSAA 2x/4x/8x only (supersampling is the VR
+  resolution row above 100 %; a saved SSAA choice draws as Off). The MSAA resolve (blit.hlsl) and the fog's MSAA depth
+  read (fog_lut.hlsl FOG_MS) read Texture2DMS; under the stereo mode the views are two-layer arrays, so they now take
+  ICO_T2DMS / ICO_MSLD (reg.hlsli). Wants a validation boot with MSAA 4x before Matt uses it.
+- **A test process that would not die**: after a Stop-Process a simulator run stayed as one thread (exiting in the
+  driver), kept `ico_pc_x64.exe` locked and stopped the next start at "starting the device". Rename the locked exe
+  aside to copy a build in; the process needed an admin end or a reboot.
+- Gameplay after all of it (walk, 120 Hz): 120.0 FPS, display 1% low 118.7 to 119.8, 0 slots skipped, 0 frames over
+  budget, render thread 2.3 ms, GPU 1.6 ms a picture.
+- Still open from Matt: "Occaisionally the camera is positioned behind a wall I have to lean forwards to see through
+  it ... It didn't happen with the rpcs3 version in vr?" (he will save a state at a spot that shows it; F8 recentres).
+
 ## Open
 
 - The particle extent scale: check per eye. Puddle ripples (RD_SCREEN_ST_SHIFT) are untested: the puddles are in the

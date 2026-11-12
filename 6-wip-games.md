@@ -1573,6 +1573,19 @@ Goal: "make a multiview port with as optimised smooth frame rate as possible, wh
 graphics and there are no eye anomalies such as incorrect depth or on eye only issues ... Use previous recomp VR ports
 for the best frame pacing and renderers."
 
+Matt 2026-11-12, first headset session (SteamVR): "this works amazingly well!" His reports that day, with the
+state of each (details: `profiles/ico-pc-notes.md`, "2026-11-12: headset feedback"):
+- "Occaisionally the camera is positioned behind a wall I have to lean forwards to see through it. Why is this
+  happening? It didn't happen with the rpcs3 version in vr?" Open: he will save a state where it shows.
+- "we need to default screen softening and motion blur to off. we need to hide all the options that have no effect
+  in vr, like resolution scale. we need a way to change resolution in vr in game." Done (d46fef585).
+- "can we make fsr work in game too?" / "just do fsr 3.1, its better": my first run of it crashed his PC; then
+  "Remove all the upscaling options. We don't need them anyway." Removed.
+- "Can you add AA? That would be useful": MSAA in VR built, waiting for a validation boot, not committed.
+- "the title screen ICO logo moves with your head ... the logo is right in front of my face, not 2m away... If I turn
+  its on a flat plane that doesnt match the text." Fixed on the simulator (a5c717599); his headset check pending.
+- "it keeps restarting ico if I leave it on the menu": the title's idle timer, off in VR (06d89e380).
+
 - Repo `H:\ico-pc` (hookmanuk/ico-pc, nathanialf's port: the decompiled game in C, its own GS/VU1 renderer `rd` on a
   small RHI), branch `vr`. Built in WSL Debian 13 (the project's toolchain cross-compiles with mingw-gcc):
   `plans/tools/icovr_build.sh` (syncs into /root/ico-pc, ninja win-x64, copies the exe to `H:\ico-pc\distd`).
