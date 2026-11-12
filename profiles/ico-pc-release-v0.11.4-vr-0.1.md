@@ -4,8 +4,7 @@ The whole game in stereo 3D in a PC VR headset through OpenXR, on Windows. The f
 
 ## Download
 
-- **ico-pc-v0.11.4-vr-0.1-win.zip**: the normal download. Saves and settings go in `%APPDATA%\ico-pc`.
-- **ico-pc-v0.11.4-vr-0.1-win-portable.zip**: the same, keeping saves and settings in the game's own folder.
+**ico-pc-v0.11.4-vr-0.1-win.zip**. Saves and settings go in `%APPDATA%\ico-pc`.
 
 ## Playing in VR
 
