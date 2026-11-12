@@ -111,6 +111,30 @@ picture at 4K. The game itself steps at 30 Hz; every present between ticks is in
 - Head poses (icovr_poses.sh, simpose.py real pose: straight, yaw +-20, pitch 10, roll 15) on stage 3: both eyes
   consistent, nothing cut or following the head.
 
+## Frame pacing and the render thread (2026-11-12)
+
+- **The 1% low was the wrong measure.** The old figure came from the gaps between xrEndFrame returns, which carry each
+  picture's own time variance (a 3.5 ms picture then a 4.7 ms one reads as a 9.5 ms frame) though every frame met its
+  display slot (0% late, 100% new pictures). The headset report now adds a `display:` line: 1% low by the predicted
+  display times, display slots skipped, frames over budget (xrWaitFrame's return to xrEndFrame's past one period) and
+  the picture wait's p99; the old figure stays as "submit 1% low". The rd side logs the render thread's time a
+  picture, interpolated vs a new game frame's (no spikes at the 30 Hz tick: p99 within 0.5 ms of each other).
+- **Not shader compilation**: 0 pipelines created in play (every 10 s window); the disk pipeline cache is warm and the
+  start-up set (100 keys) is built before play in ~23 ms.
+- **Upload memory**: the upload rings were in the resizable-BAR window (device-local, host-visible): write-combined
+  stores across the bus. Host-cached system memory first (vk_memory.c; ICO_RHI_UPLOAD_CACHED=0 the old order): stage
+  16 at 120 Hz render thread 6.5 -> 5.0 ms (frames over budget 28 -> 0), walk 3.2 -> 2.4, flat 2.4 -> 1.9; GPU 1.8 ->
+  1.9 ms.
+- **Still re-present off in VR**: it re-showed 6 of 997 presents (the last head pose's picture: a judder); off in VR,
+  which also drops the whole-frame hash every present. The DrawCB cache hash is 8 bytes a step. Stage 16: 5.0 -> 4.3.
+- Profiling: `plans/tools/re/sym_sample.py ico_pc_x64.exe render SECONDS H:/ico-pc/dist/x64/ico_pc_x64.syms` (leaf
+  samples by the exe's `llvm-nm -n` symbols, static functions included; dump the .syms after a build from WSL with
+  `llvm-nm -n build-host/win-x64/ico_pc.exe | grep ' [tT] '`). After the fixes the render thread's profile is flat
+  (vuDraw 5%, the rest under 2% each).
+- Stage survey before the fixes (icovr_survey.sh 120 40, display metrics): every stage 120.0 FPS with 0 skipped display
+  slots; over budget only on 10 (33), 16 (27), 22 (7), 27 (5), 31 (5), 17 (2); render thread 2.6-6.6 ms, GPU
+  1.2-2.6 ms.
+
 ## Open
 
 - The particle extent scale: check per eye. Puddle ripples (RD_SCREEN_ST_SHIFT) are untested: no stage start showed
