@@ -138,6 +138,10 @@ picture at 4K. The game itself steps at 30 Hz; every present between ticks is in
   skipped slots, display 1% low 118.2-119.8; render thread 3.1-4.4 ms (10: 5.9 -> 4.0, 16: 6.6 -> 4.3, 22: 5.9 ->
   4.0, 27: 5.6 -> 3.4, 31: 6.0 -> 4.4), GPU 1.6-2.3 ms.
 
+- **Flat vs VR look** (icovr_flatcmp.sh: the flat window against the VR eye with ICO_VR_TEST_GAMEFOV=1, same stage
+  start): stages 7 (sun patches, bloom), 11 (outdoor haze), 18, 25 (cliff fog), 36 (shadow creature, sea), 38 (forest
+  light shafts, glare) match in every effect; the flat's cinematic bars are off in VR by design.
+
 ## Open
 
 - The particle extent scale: check per eye. Puddle ripples (RD_SCREEN_ST_SHIFT) are untested: no stage start showed
