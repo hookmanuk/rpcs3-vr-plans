@@ -578,3 +578,9 @@ frame pacing issue."
   GAMEVIEW A/B in one session), turnrate.sh, simhold.py, dispmap.py (disparity per block between the eyes).
 - Open: U3 and U1 have the same kind of game view (not checked for culling); other water shaders with this lookup need
   their pgm:image in BB_VR_PROJECTIVE_SAMPLES; the uncapped cost of the wider visibility field.
+- U3 and the double head (uncharted_pc 1f6dc0f, 2026-11-14): U3's game view is built from +0x6a7091 (x scale 1.3032,
+  far 75000), U1 has none (one caller, +0xa717d). In U2 and U3 the render views' first call each frame comes with the
+  game view's input and field of view (after GameView: x scale 0.5860, aspect 0.9612), so the head went on twice;
+  RestoreGameView puts the game's own back at the player's view hook. tools/uncharted/gvcheck.sh GAME LABEL runs the
+  standing on/off comparison and the turning dumps on a running session of any of the three (U3 route:
+  /h/uc_tests/u3ch6.route with UCUSER=u2fight; U1: five crosses 6 s apart from 50 s, u1user).

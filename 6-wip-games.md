@@ -1594,6 +1594,22 @@ my disc, I'll let you know when its done."
   - Also fixed: with the simulator's head at exactly zero and a still camera the head froze (the latch took what it
     wrote for the game's camera); a frame's first call is never a repeat now.
   - Needs Matt's headset look (run.bat build of 2026-11-14, out/bb-probe.exe). Not pushed.
+  - Matt (2026-11-14, after the above): "Make sure u3 does this culling fix too. You were supposed to have already put
+    all the u1 fixes into U2 and u3 already."
+    - [x] U3 (uncharted_pc 1f6dc0f, local): the same game view (built from +0x6a7091, far 75000) and the same culling:
+      chapter 6 (The Chateau, the forest), head 35 left, stick turning: holes in 4 of 4 dumps off, 0 of 4 on; standing
+      with the head at 20 a bush at the left is missing off, there on
+      (evidence/uncharted-collection/2026-11-14-u3-chateau-culling-off-on.png: top off, bottom on). 90.0 FPS at 90 Hz
+      (slowest frame 11.7 ms), eye 2880, simulator, DLSS off. Game::game_view is on for U3 now.
+    - [x] Found doing it: the first version of the fix (c6d90b4, the build Matt had for an hour) turned the picture
+      twice as far as the head: the game copies its render camera and field of view from the view the fix turned, and
+      the player's view hook put the head on again (U3 standing, head 20: the picture alternated with the fix on and
+      off). The hook now puts the game's own camera back first. Checked standing, fix off / on / off / on, mean
+      difference of the dumps: U2 river on-off 3.3-4.5 against 3.4-4.3 for same-same (identical); U3 on-off differs
+      only by the bush the fix restores. U2's turn test again: holes off, none on, the same views in both rows.
+    - [x] U1: one view only, built from the camera update (+0xa717d), the one that takes the head; no separate game
+      view. Jungle save, head 35 left, stick turning: no holes in 8 dumps. Nothing to change.
+    - The river fix in U3 / U1: U1 has it (f2fab535); U3 water not looked at (no water scene found yet).
 - Details: `profiles/CUSA02343-notes.md`.
 
 ## ICO (PS2, ico-pc native port + VR fork, not RPCS3)
