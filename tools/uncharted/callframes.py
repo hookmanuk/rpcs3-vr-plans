@@ -13,3 +13,6 @@ frames = frames[1:-1]
 bad_tag = sum(len({t for t, _ in f}) > 1 for f in frames); bad_head = sum(len({h for _, h in f}) > 1 for f in frames)
 yaws = {f[0][1] for f in frames}
 print('%d frames, %d distinct head yaws; frames with two tags %d, with two heads %d' % (len(frames), len(yaws), bad_tag, bad_head))
+import collections
+kinds = collections.Counter(' '.join(l.split()[6:7] + l.split()[11:]) for l in lines)  # fresh/recall + written/other [gameview]
+print('calls:', dict(kinds))

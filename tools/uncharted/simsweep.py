@@ -9,8 +9,14 @@ period = float(sys.argv[3]) if len(sys.argv) > 3 else 2.0
 hz = float(sys.argv[4]) if len(sys.argv) > 4 else 250
 
 
+full = os.environ.get('SWEEP_FULL') == '1'  # SWEEP_FULL=1: pitch, roll and the position move too, as a real head
+
+
 def put(yaw):
     cmd = {'x': 0.0, 'y': 0.0, 'z': 0.0, 'yaw': math.radians(yaw), 'pitch': 0.0, 'roll': 0.0}
+    if full:
+        k = yaw / max(amp, 1e-6)
+        cmd.update(x=0.15 * k, y=0.05 * k * k, z=-0.1 * k, pitch=math.radians(0.3 * yaw), roll=math.radians(-0.2 * yaw))
     tmp = os.path.join(d, 'head_pose_command.json.tmp')
     with open(tmp, 'w') as f:
         json.dump(cmd, f)

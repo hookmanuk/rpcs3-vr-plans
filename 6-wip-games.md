@@ -1633,6 +1633,38 @@ my disc, I'll let you know when its done."
       (+-1.036 square) and a head that never stands still. My guess, not shown: the two poses a frame above (the
       water's camera constants from one, the picture from the other) put the reflection off by the head's movement
       per frame; that is gone with 77b5f6e. If it still shows: his F9 at the river (both eyes and the frame's draws).
+      Matt later: "reflections I think are actually right, so stop looking at that". Closed.
+  - Matt (2026-11-14, on 77b5f6e, run.bat): "its still double image". On the simulator and on his headset standing
+    still nothing was wrong (one pose a frame; the character moves with the scenery over 300 consecutive frames, fix
+    on and off: tools/uncharted/ringlag.py). His A/B: "BB_VR_GAMEVIEW=0 does fix the double view stale frames. But we
+    need the culling fixed properly, not just widening the view."
+    - [x] uncharted_pc 9f60f61: the player's view samples the head when its frame begins, as before the culling fix;
+      the game view follows with that head (it had taken the newest head itself and handed it to the player's view,
+      a frame older on the frames the game view was built). Matt: "ok, those bugs are all fixed."
+  - Matt (2026-11-14, on 9f60f61), verbatim: "I notice the aiming is completely opposite from what should happen. If
+    I aim to the left the the reticule goes to the right and the landscape to the left culls. Same with vertical, its
+    opposite. Note this aiming logic should also take the game settings option for aiming into account too. once fixed
+    make sure u3 has the same fix." Then: "Are you sure the culling issue isn't just that the camera direction used
+    for the culling is the wrong way round? This would match the reticule moving the wrong direction too".
+    - [x] uncharted_pc 7b77fe0 (local). He was close: while aiming the game's camera already points along the gaze, and
+      the game view was the head on that camera again: twice the head's angle. The game places its reticle through
+      that camera (its world-to-screen reads the global camera), so the reticle went the other way, and the visibility
+      field pointed past the picture. The game view is now the player's view as last written (its head and, while
+      aiming, its base). Simulator, aiming with the head 20 left / pitch 15, fix off against on: the aim camera, base,
+      view and reticle angles the same in U2 (chapter 6) and U3 (chapter 6); off, the left of the picture is culled
+      while aiming with the head left; on, whole. Also: every later view build of a frame keeps the frame's camera,
+      head and tag (U3's 0x1300.. view took the game's next camera as a new frame in 4 frames of 10). After: 0 of 798
+      frames with two tags or heads in U2 and in U3 (full-motion sweep, stick turning and walking); culling check as
+      before in both; 90.0 FPS at 90 Hz (slowest frame 11.8 U2, 11.7 U3; eye 2880, DLSS off).
+    - Tried and dropped (not committed): the head's view only for the visibility tests through the game's camera
+      accessor (U2 image +0x3e2710, "lea rax, [camera]; ret", 124 call sites, 9 active in play: return addresses
+      +0x23e7d, +0x3979f, +0x49d4f, +0x14d298, +0x157673, +0x1d1f7f, +0x39498f (world-to-screen, 1200 a second),
+      +0x3c2f69, +0x556076 (2400 a second)). Giving every caller the substitute crashed the game; which callers test
+      visibility was not found before Matt's question made it unnecessary.
+    - [ ] "take the game settings option for aiming into account": which option he means is not known yet (asked).
+    - Needs his headset look.
+  - [ ] Matt (2026-11-14): "the ripples when you walk in the river are very quick. Can you compare them to flat at
+    normal fps, I think it might need slowing down for 90fps." Not started.
 - Details: `profiles/CUSA02343-notes.md`.
 
 ## ICO (PS2, ico-pc native port + VR fork, not RPCS3)
