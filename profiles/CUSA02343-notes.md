@@ -584,3 +584,14 @@ frame pacing issue."
   RestoreGameView puts the game's own back at the player's view hook. tools/uncharted/gvcheck.sh GAME LABEL runs the
   standing on/off comparison and the turning dumps on a running session of any of the three (U3 route:
   /h/uc_tests/u3ch6.route with UCUSER=u2fight; U1: five crosses 6 s apart from 50 s, u1user).
+- One pose a frame with the game view (uncharted_pc 77b5f6e, 2026-11-14): per frame U2 / U3 call the builder for the
+  player's view once with the game's x scale ("fresh") and 3-4 times more for the same copy and the 0x1300..afb0 view;
+  with the game view head-tracked those later calls arrive with a game view build's camera (not what the hook wrote),
+  and about 46% of the frames' first calls do too (the game view is built on about every second frame). RestoreGameView
+  returns whether it put a build's camera back; such a later call is the same frame (same_frame), never a new latch.
+  GameView latches one head from its first build after the player's view's first call; that call takes the same head
+  (report every 9000 frames: "took the game view's head", "an earlier build's"). BB_VR_GAMEVIEW_LOG=1 logs first calls
+  whose camera is not a known build's while the head is 5 degrees or more off (none in play).
+- Reflection checks that found nothing wrong on the simulator: rotwarp.py (a turned eye dump warped back by the pure
+  rotation; the water's ripple alone gives a mean difference of 5.6, so judge the sheets, not the numbers), reflpos.sh
+  (head moved, simhold.py takes X Y Z now).

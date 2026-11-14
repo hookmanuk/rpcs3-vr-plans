@@ -1610,6 +1610,29 @@ my disc, I'll let you know when its done."
     - [x] U1: one view only, built from the camera update (+0xa717d), the one that takes the head; no separate game
       view. Jungle save, head 35 left, stick turning: no holes in 8 dumps. Nothing to change.
     - The river fix in U3 / U1: U1 has it (f2fab535); U3 water not looked at (no water scene found yet).
+  - Matt (2026-11-14, on 1f6dc0f), verbatim: "ok in u2 the culling fixed. However the double characters when turning
+    the HMD is now back again. Also the reflections dont move as much, but they dont line up with the real world at
+    all."
+    - [x] Double characters (uncharted_pc 77b5f6e, local): caused by the culling fix. The frame's later view builds come
+      with a copy of the game view's camera; put back to the game's own (RestoreGameView) they no longer matched what
+      the hook had written, so each was taken for a new frame: the frame's first build drew with one head sample and
+      tag, the rest with a newer head and the next tag (call log under a 30 degree, 1 s head sweep: every frame two
+      tags and two heads). Now a later call that comes with a game view build's camera keeps the frame's head and tag,
+      the game view takes one head a frame and the player's view the same one, and every recent build is recognised
+      (16 kept; the first version knew only the last). After: 0 of 798 frames with two tags or two heads in U2 (river,
+      sweep, stick turning and walking) and 0 of 798 in U3 (Chateau); culling check as before in both (holes off, none
+      on; standing picture the same on and off but for the restored pieces); 90.0 FPS at 90 Hz (slowest frame 12.7 ms
+      U2, 11.9 U3; eye 2880, simulator, DLSS off). A knob (dev trigger GAMEVIEW=3, the game view 5 degrees off) moves
+      nothing in the picture: nothing is drawn with that view. U1: no game view, not rerun. tools/uncharted/
+      callframes.py counts it from BB_VR_CALLLOG.
+    - [ ] Reflections not lining up: not reproduced on the simulator. With the head held at yaw 25, pitch -20, roll 15
+      and a mix, the turned picture warped back onto the head-0 one (tools/uncharted/rotwarp.py, reflrot.sh) shows the
+      reflections where they were; with the head moved 0.5 m right / up / back (reflpos.sh) nothing slides visibly; the
+      reflection camera's change on and off (DERIVED) moves the reflection by under 12 px (noise). His headset differs
+      from the simulator in the lens mask (21.8% hidden: the lens skip is active only there), the field of view
+      (+-1.036 square) and a head that never stands still. My guess, not shown: the two poses a frame above (the
+      water's camera constants from one, the picture from the other) put the reflection off by the head's movement
+      per frame; that is gone with 77b5f6e. If it still shows: his F9 at the river (both eyes and the frame's draws).
 - Details: `profiles/CUSA02343-notes.md`.
 
 ## ICO (PS2, ico-pc native port + VR fork, not RPCS3)
