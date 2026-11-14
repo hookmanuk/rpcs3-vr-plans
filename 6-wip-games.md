@@ -1664,7 +1664,15 @@ my disc, I'll let you know when its done."
     - [ ] "take the game settings option for aiming into account": which option he means is not known yet (asked).
     - Needs his headset look.
   - [ ] Matt (2026-11-14): "the ripples when you walk in the river are very quick. Can you compare them to flat at
-    normal fps, I think it might need slowing down for 90fps." Not started.
+    normal fps, I think it might need slowing down for 90fps." Not answered yet. Tried: flash rings of the river
+    right after a walk at 90 FPS and at a true 60 FPS in VR (BB_VBLANK_HZ=60 BB_VR_CAP=0 BB_VR_IMMEDIATE_FLIPS=0), scored
+    by how long the water region keeps its pattern (tools/uncharted/ripple.py): three 90 FPS runs gave 33, 119 and 183 ms
+    for the same thing, so the measure does not repeat (where Drake stops, Sully walking through, the camera's idle
+    sway) and says nothing; the 60 FPS run (43 ms) is inside that spread. The river's draw log shows no ripple
+    simulation target (the small targets are the exposure and bloom chains), so the walk ripples are most likely
+    particles in the half-size pass (vs 0x8b55e926 / pgm 0x3c1ccf07, 60 draws) or the water shader's own scrolling
+    normals (pgm 38324efc, constants 75 / 76). Next: track one ripple ring's radius over time at 60 and 90 from
+    full-size dumps, or read the particle update's time step.
 - Details: `profiles/CUSA02343-notes.md`.
 
 ## ICO (PS2, ico-pc native port + VR fork, not RPCS3)
