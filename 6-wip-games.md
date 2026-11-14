@@ -1562,6 +1562,38 @@ my disc, I'll let you know when its done."
     tiled into guest memory for texel-buffer reads, e1c1da0), then a pass samples it as a texture. A copy from the
     depth image's stencil aspect instead would save ~0.3 ms of U2's 12.7 ms GPU frame (cliff, 3584): not tried
     (shared code, measure first).
+- [ ] Matt (2026-11-14, U2, Borneo, chapter 3), verbatim: "In U2, borneo level, at the start if you rotate your HMD fast
+  left and right you see double images of the people intermittently, maybe once a second. Also in borneo if you rotate
+  the stick left or right then the river reflections move more than they should, they are always wrong too. Also in
+  borneo, if you move the stick right and look left, the world is culled." His saves: H:/uc_tests/matt_chapters (copy
+  for tests: u2borneo; Continue lands at the chapter's start, the river is 6 s of walking forward).
+  - [x] 1. Double images: he was on the packaged vr-0.3 build (dist/uncharted-windows, 6 Nov; its log: the eye shift
+    switching 0.0296 / 0.0319 all session, a pose and tag per view call). On the current build (run.bat) Matt: "the HMD
+    turn double image issue is fixed."
+  - [x] 3. Culling (uncharted_pc c6d90b4, local). Reproduced on the simulator: head held 35 degrees left, right stick
+    turning the camera: large pieces of the level missing on the left (sky and clear colour), 3 of 4 dumps. Cause: the
+    game's own camera view (image +0xeb81e0, built from +0x16605d, never drawn, copied once a frame to the global
+    camera at +0xfb0b00 that the visibility tests read) kept the game's camera and its 75 degree field. It now takes
+    the head and a field 0.25 wider in tangent than the rendered one. Same session, dev trigger GAMEVIEW 0 / 2 / 0 / 2:
+    holes in 4 of 4 dumps off, 0 of 4 on (evidence/uncharted-collection/2026-11-14-u2-borneo-culling-off-on.png: top
+    off, bottom on). The stick turns the camera as before (2 s of full stick: 73-82 degrees off, 80-82 on, head 0 and
+    35), the walk follows the game's camera, not the head (head 60). U2 only (Game::game_view): U1 / U3 not looked at.
+  - [x] 2. River reflections (c6d90b4). Two faults. The river's shader (vs e8f0881a, pgm 38324efc, U1's lookup: the
+    reflected view direction through its own projection, image 5) read the same place for both eyes: the reflection
+    sat at the water surface's depth (36-96 px of disparity at eye 2880 against 4-18 for the trees it mirrors); now
+    each eye reads where it sees the water (U1's fix: BB_VR_PROJECTIVE_SAMPLES default + 38324efc:5): the sky patch's
+    disparity 55 -> about 17 px, the trees beside it 16-18
+    (2026-11-14-u2-borneo-reflection-eyes-before-after.png: top before, bottom after; left and right eye). And the
+    reflection's camera (the game's camera mirrored in the water, built through the main camera's call with far 30-120)
+    did not take the head and kept the game's aspect: it now mirrors the head's view, so the reflection covers what
+    the head looks at. A sanity knob (dev trigger DERIVED=2, that camera 20 degrees off) shows the lookup follows the
+    camera it is given: only the uncovered edge changes. "Moves more than it should" while the stick turns was not
+    measured as motion: my reading is the depth error (a reflection at the surface's depth swims as the camera orbits).
+  - Frame rate, simulator, eye 2880, 90 Hz, DLSS off, the river with the culling and camera fixes on: 90.0 FPS,
+    slowest frame 12.0 ms (no 1% low taken; the wider visibility field draws more: not A/B'd uncapped yet).
+  - Also fixed: with the simulator's head at exactly zero and a still camera the head froze (the latch took what it
+    wrote for the game's camera); a frame's first call is never a repeat now.
+  - Needs Matt's headset look (run.bat build of 2026-11-14, out/bb-probe.exe). Not pushed.
 - Details: `profiles/CUSA02343-notes.md`.
 
 ## ICO (PS2, ico-pc native port + VR fork, not RPCS3)

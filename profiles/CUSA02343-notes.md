@@ -553,3 +553,28 @@ frame pacing issue."
   changes nothing there. Still needs a scene with strong shafts.
 - Water: neither U2 nor U3 loads U1's river shader (f2fab535); no water scene found at chapter starts (U2 chapter 3
   start is jungle without water). Not checked.
+
+## U2 Borneo: culling view, river reflection (uncharted_pc c6d90b4, 2026-11-14)
+
+- Views per frame (CAMLOG now logs every build with its caller): the render views from +0x61194f (per-frame copies
+  0x10..., 3 buffers at 0x1300..afb0), the shadow cascades (x scale 0), three origin views from +0x5c4cf9 / +0x5c4d65 /
+  +0x5c4ddf (far 100), the game's own view 0xeb81e0 from +0x16605d (4-5 builds a frame, the game's x scale 1.3032), and
+  in Borneo the reflection's view (0x130..b7f0: the camera mirrored in y = 0, the player's x scale, near 0.2, far 30 or
+  120, through the main call).
+- The game's own view: +0x14bb2e calls +0x3e2730 once a frame, which copies the global camera (+0xfb0b00, 0x290 bytes)
+  to the previous one (+0xfb0d90) and the view into the global. Readers of the global (dev trigger WATCH on its
+  view-projection +0xd0 and world-to-camera +0x50): +0x3e5b60 from +0x3949ae (about 15 a frame), +0x55614e from +0x4f9cc8,
+  whole-struct copies at +0x1d1f8c and a memcpy from +0xc9a0. Not followed further: the head on the view itself
+  (GameView) cures the culling. A wider field alone (x scale 0.3) also removed the holes at 35 degrees but cannot cover
+  a head turned further.
+- The river: pgm 38324efc (vs e8f0881a, one blended draw before the mist pass 84adaaea; found by the dev trigger SKIP
+  over the seven blended draws there). Its reflection sample: (constants 99-101 + constant 78 x the reflected view
+  direction) through rows 103-114, divided, clamped to 0..1, image 5 (the 1440 reflection target 0x116c3d0000 at eye
+  2880, 170 draws). Refraction (images 3, 4) reads at gl_FragCoord: per eye already.
+- The pose latch (eb2f4ff) compared a call's input with what the hook wrote last: at head pose exactly identity (the
+  simulator at 0) that is the game's camera, so with a still camera every frame was a "repeat" and the head stayed at
+  zero whatever the simulator said. A call with the game's own x scale is the frame's first now.
+- Tools (plans/tools/uncharted): bsess.sh (a Borneo session in the background), rivertest.sh, borneoab.sh (DERIVED and
+  GAMEVIEW A/B in one session), turnrate.sh, simhold.py, dispmap.py (disparity per block between the eyes).
+- Open: U3 and U1 have the same kind of game view (not checked for culling); other water shaders with this lookup need
+  their pgm:image in BB_VR_PROJECTIVE_SAMPLES; the uncapped cost of the wider visibility field.
