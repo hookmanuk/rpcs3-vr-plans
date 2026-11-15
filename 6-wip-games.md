@@ -1682,15 +1682,38 @@ my disc, I'll let you know when its done."
       the camera); Aim and Fire L1/R1 (the pad layer already takes L1 or L2 as the aim button).
     - Needs his headset look (aim reversed fix 7b77fe0; swapped sticks bf97505).
   - [ ] Matt (2026-11-14): "the ripples when you walk in the river are very quick. Can you compare them to flat at
-    normal fps, I think it might need slowing down for 90fps." Not answered yet. Tried: flash rings of the river
-    right after a walk at 90 FPS and at a true 60 FPS in VR (BB_VBLANK_HZ=60 BB_VR_CAP=0 BB_VR_IMMEDIATE_FLIPS=0), scored
-    by how long the water region keeps its pattern (tools/uncharted/ripple.py): three 90 FPS runs gave 33, 119 and 183 ms
-    for the same thing, so the measure does not repeat (where Drake stops, Sully walking through, the camera's idle
-    sway) and says nothing; the 60 FPS run (43 ms) is inside that spread. The river's draw log shows no ripple
-    simulation target (the small targets are the exposure and bloom chains), so the walk ripples are most likely
-    particles in the half-size pass (vs 0x8b55e926 / pgm 0x3c1ccf07, 60 draws) or the water shader's own scrolling
-    normals (pgm 38324efc, constants 75 / 76). Next: track one ripple ring's radius over time at 60 and 90 from
-    full-size dumps, or read the particle update's time step.
+    normal fps, I think it might need slowing down for 90fps."
+    - Compared (2026-11-15, simulator, eye 2880, DLSS off): the same scripted wade along the river
+      (tools/uncharted/ripplering.sh WALKING=1: 6 s forward into the river, then left along it) with the game at 90 FPS
+      and at a true 60 FPS (BB_VBLANK_HZ=60 BB_VR_CAP=0 BB_VR_IMMEDIATE_FLIPS=0: the flat game's rate; the wake is built
+      by the game, see below, so the renderer does not matter). The two recordings are lined up by the walk's start
+      (wakecmp.py, picture evidence/uncharted-collection/2026-11-15-u2-wake-90-vs-60.png) and the wake behind Drake is
+      scored by how much its picture changes between two frames (wakerate.py), against the bank as a control (no
+      water: the camera's motion alone, which follows the clock).
+      | pair | wake, equal real time (33 / 67 / 100 ms) | wake, 3 frames apart | bank, equal real time |
+      |---|---|---|---|
+      | 90 (run 1) / 60 | 1.10 / 1.10 / 1.08 | 1.00 | 1.02 / 0.99 / 0.97 |
+      | 90 (run 2) / 60 | 1.08 / 1.09 / 1.10 | 0.99 | 0.97 / 0.99 / 1.04 |
+      | 90 run 1 / 90 run 2 (noise) | 1.02 / 1.01 / 0.98 | 1.02 | 1.04 / 1.00 / 0.93 |
+      The wake changes as much in 3 frames at 90 (33 ms) as in 3 frames at 60 (50 ms), and 8 to 10% more per equal
+      real time at 90 (run-to-run noise 2%): it is stepped once a frame, so it runs about 1.5 times as fast at 90 as
+      in the flat game at 60 (120 Hz: twice). The 1.5 is inferred from the equal-frames match; the change measure
+      saturates and does not give the factor itself. The wake's size and trail length look the same at both rates in
+      the picture (its life follows the clock); the open water away from Drake did not repeat between two 90 runs
+      (1.2 to 1.4) and says nothing.
+    - What it is: one blended effect drawn only while wading (draw logs standing against wading: vs 0x99b45d3e /
+      pgm 0xaad23b78, 8 to 10 draws a frame per stage, full size; skipped with the dev trigger SKIP the wake is gone).
+      Its pixel shader samples two scrolling textures (images 2 and 3) with coordinates that come in the vertices
+      (attributes 2 and 3) to distort a third; its constants hold no time (logged over 12 frames: only the camera and
+      the depth fade's near-plane term change), so the scroll is added into the vertices by the game's own code, once
+      a frame.
+    - Not fixed yet. The fix is in the game's effect update (scale that per-frame scroll step by 60 x the frame
+      time, as the port already does for U1's per-step physics values in src/probe.c); the code that builds those
+      vertices is not found yet (next: a data watch on the wake's vertex buffer for its writer).
+    - Earlier attempts that said nothing: ripple.py (how long the water region keeps its pattern: 33, 119, 183 ms in
+      three 90 FPS runs) and a flicker spectrum of the standing water (the 60 FPS ring is longer and still held the
+      walk). Both were Drake standing: the walk's forward path stops at the log on the far bank after 6 s, so no wake
+      was on screen.
 - Details: `profiles/CUSA02343-notes.md`.
 
 ## ICO (PS2, ico-pc native port + VR fork, not RPCS3)
