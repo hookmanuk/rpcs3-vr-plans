@@ -1,0 +1,111 @@
+diff --git a/gpu/shadps4/video_core/renderer_vulkan/vk_rasterizer.cpp b/gpu/shadps4/video_core/renderer_vulkan/vk_rasterizer.cpp
+index d69c1fc..4db2eb3 100644
+--- a/gpu/shadps4/video_core/renderer_vulkan/vk_rasterizer.cpp
++++ b/gpu/shadps4/video_core/renderer_vulkan/vk_rasterizer.cpp
+@@ -890,6 +890,55 @@ void Rasterizer::PostDraw(const Pipeline* pipeline, const PreparedDraw* used_pre
+         std::memcpy(out, stage->user_data.data(), stage->user_data.size_bytes());
+         std::memcpy(out + stage->user_data.size_bytes(), stage->flattened_ud_buf.data(),
+                     stage->flattened_ud_buf.size() * sizeof(u32));
++        // DEV (not committed): BB_CONST_LOG=<pgm hash>,...: after the trigger file %TEMP%/dcvr/CONSTLOG appears, the
++        // constants (user data, flattened table, constant rings; as floats) of the next 200 draws with those shaders.
++        {
++            static const std::vector<u32> wanted = [] {
++                std::vector<u32> v;
++                if (const char* env = std::getenv("BB_CONST_LOG")) {
++                    for (const char* c = env; *c;) {
++                        char* end;
++                        v.push_back(u32(std::strtoull(c, &end, 16)));
++                        c = *end ? end + 1 : end;
++                    }
++                }
++                return v;
++            }();
++            if (!wanted.empty() && std::find(wanted.begin(), wanted.end(), u32(stage->pgm_hash)) != wanted.end()) {
++                static int left = 0;
++                static u64 seen = 0;
++                static std::chrono::steady_clock::time_point t0 = std::chrono::steady_clock::now();
++                if (left == 0 && (++seen & 15) == 0) {
++                    const char* temp = std::getenv("TEMP");
++                    const std::string trigger = std::string(temp ? temp : ".") + "/dcvr/CONSTLOG";
++                    if (std::remove(trigger.c_str()) == 0) {
++                        left = 200;
++                    }
++                }
++                if (left > 0) {
++                    --left;
++                    const double ms = std::chrono::duration<double, std::milli>(std::chrono::steady_clock::now() - t0).count();
++                    std::string line = fmt::format("CONSTLOG {:08x} t {:.1f} ud {} flat {} rings {}:", u32(stage->pgm_hash), ms,
++                                                   stage->user_data.size(), stage->flattened_ud_buf.size(), ring.size());
++                    for (size_t i = 0; i < stage->flattened_ud_buf.size() && i < 220; ++i) {
++                        float f;
++                        std::memcpy(&f, &stage->flattened_ud_buf[i], 4);
++                        line += fmt::format(" {:.5g}", f);
++                    }
++                    for (const auto& binding : ring) {
++                        line += fmt::format(" | ring {:#x}+{}:", binding.address, binding.size);
++                        if (binding.address && binding.size && memory->IsValidGpuMapping(binding.address, binding.size)) {
++                            const auto* words = reinterpret_cast<const float*>(binding.address);
++                            for (u32 i = 0; i < binding.size / 4 && i < 160; ++i) {
++                                line += fmt::format(" {:.5g}", words[i]);
++                            }
++                        }
++                    }
++                    std::printf("%s%c", line.c_str(), 10);
++                    std::fflush(stdout);
++                }
++            }
++        }
+         if (ConstCheckHash() && u32(stage->pgm_hash) == ConstCheckHash()) {
+             ConstSnapshot snapshot{
+                 {stage->user_data.begin(), stage->user_data.end()},
+@@ -1671,6 +1720,50 @@ void Rasterizer::DrawRecord(const GraphicsPipeline* pipeline, const PreparedDraw
+             }
+         }
+     }
++    // DEV (not committed): BB_VB_LOG=<vs pgm hash>: after the trigger file %TEMP%/dcvr/VBLOG appears, the vertex
++    // shader's buffers (address, stride, size, the first elements as floats) of the next 80 draws with that shader.
++    {
++        static const u32 wanted = [] {
++            const char* env = std::getenv("BB_VB_LOG");
++            return env ? u32(std::strtoull(env, nullptr, 16)) : 0u;
++        }();
++        const auto& vs = pipeline->GetStage(Shader::SwStage::Vertex);
++        if (wanted && u32(vs.pgm_hash) == wanted) {
++            static int left = 0;
++            static u64 seen = 0;
++            if (left == 0 && (++seen & 7) == 0) {
++                const char* temp = std::getenv("TEMP");
++                const std::string trigger = std::string(temp ? temp : ".") + "/dcvr/VBLOG";
++                if (std::remove(trigger.c_str()) == 0) {
++                    left = 600;
++                }
++            }
++            if (left > 0) {
++                --left;
++                std::string line = fmt::format("VBLOG frame {} t {:.2f} vs {:08x}:", BbStats::gpu_frames.load(), std::chrono::duration<double, std::milli>(std::chrono::steady_clock::now().time_since_epoch()).count(), u32(vs.pgm_hash));
++                for (u32 b = 0; b < vs.buffers.size(); ++b) {
++                    const auto& resource = vs.buffers[b];
++                    if (resource.IsSpecial()) continue;
++                    const auto buffer = resource.GetSharp(vs);
++                    const u32 stride = buffer.GetStride();
++                    const u32 size = buffer.GetSize();
++                    const VAddr address = buffer.base_address;
++                    line += fmt::format(" | buf {} at {:#x} stride {} size {}:", b, address, stride, size);
++                    if (!buffer.Valid() || !memory->IsValidGpuMapping(address, 0) ||
++                        memory->ClampRangeSize(address, size) != size) {
++                        continue;
++                    }
++                    const auto* f = reinterpret_cast<const float*>(address);
++                    const u32 words = std::min<u32>(size / 4, stride >= 4 ? std::min<u32>(stride / 4 * 4, 48) : 16);
++                    for (u32 i = 0; i < words; ++i) {
++                        line += fmt::format(" {:.9g}", f[i]);
++                    }
++                }
++                std::printf("%s%c", line.c_str(), 10);
++                std::fflush(stdout);
++            }
++        }
++    }
+     // bbport diagnosis: BB_BONE_CHECK=1 reports vertex shader bone palettes (stride-16 buffers)
+     // holding values no bone matrix has (NaN, infinity, beyond 1e5) as the draw is recorded.
+     static const bool bone_check = std::getenv("BB_BONE_CHECK") != nullptr;

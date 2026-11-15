@@ -610,3 +610,18 @@ frame pacing issue."
   way, the other, and again; diffg.py A1,A2 B1,B2 lists the bytes that follow it (the flag was the first line in all
   three). nav.py drives a running session (press / shot); aimdir.py measures which way each stick turns the aim and
   whether the player walks. A data watch needs the address image base + offset (the base is printed by snapg.py).
+
+## Is an effect stepped per frame? Read its inputs, not the picture (2026-11-15)
+
+- The U2 river wake (Matt: "very quick"): a picture measure across frame rates said "per frame"; the vertices said
+  "by the clock" and were right (the game's motion blur differs with the frame time and fooled the picture measure).
+- The way that worked: tools/uncharted/devlog_constants_vertices.patch (apply to uncharted_pc, never commit; put the
+  committed build back after): BB_CONST_LOG=<pgm hash>,... with the trigger file CONSTLOG logs a shader's constants
+  per draw with times; BB_VB_LOG=<vs pgm hash> with VBLOG logs the vertex shader's buffers (the first elements).
+  Find the effect's draws first: DRAWLOG with and without it on screen, then SKIP=<vs> to confirm. Cached shaders
+  decompile with spirv-cross --vulkan-semantics (H:/uc_tests/<user>/cache/.../0x<hash>_0.spv).
+- The game clock counts whole 1/300 s ticks and carries the rest: a value that grows by a whole number of equal
+  steps a frame (3 or 4 at 90 FPS) follows the clock; one with the same step every frame whatever the frame time is
+  stepped per frame. Logging slows the game, which gives the spread of frame times the test needs.
+- The near-plane term of the depth fade (pixel constant 73 of the wake, vertex constant 92 of the river) steps by
+  0.00002 a frame: that is the VR hook's frame tag in the near plane, not an animation.

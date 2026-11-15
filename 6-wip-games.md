@@ -1681,39 +1681,36 @@ my disc, I'll let you know when its done."
     - Not run: head aim off with the options flipped (the game's own aim, nothing of the fork's between the stick and
       the camera); Aim and Fire L1/R1 (the pad layer already takes L1 or L2 as the aim button).
     - Needs his headset look (aim reversed fix 7b77fe0; swapped sticks bf97505).
-  - [ ] Matt (2026-11-14): "the ripples when you walk in the river are very quick. Can you compare them to flat at
-    normal fps, I think it might need slowing down for 90fps."
-    - Compared (2026-11-15, simulator, eye 2880, DLSS off): the same scripted wade along the river
-      (tools/uncharted/ripplering.sh WALKING=1: 6 s forward into the river, then left along it) with the game at 90 FPS
-      and at a true 60 FPS (BB_VBLANK_HZ=60 BB_VR_CAP=0 BB_VR_IMMEDIATE_FLIPS=0: the flat game's rate; the wake is built
-      by the game, see below, so the renderer does not matter). The two recordings are lined up by the walk's start
-      (wakecmp.py, picture evidence/uncharted-collection/2026-11-15-u2-wake-90-vs-60.png) and the wake behind Drake is
-      scored by how much its picture changes between two frames (wakerate.py), against the bank as a control (no
-      water: the camera's motion alone, which follows the clock).
-      | pair | wake, equal real time (33 / 67 / 100 ms) | wake, 3 frames apart | bank, equal real time |
+  - [x] Matt (2026-11-14): "the ripples when you walk in the river are very quick. Can you compare them to flat at
+    normal fps, I think it might need slowing down for 90fps." Matt (2026-11-15), asked whether to go after a fix: "Yes".
+    - Answer (2026-11-15): they are the same speed at 60 and at 90; nothing to slow down for the frame rate. Measured
+      from the wake's own vertices (simulator, the scripted wade of tools/uncharted/wadelog.sh: 6 s forward into the
+      river, then left along it; a development build that logs the wake's quads with wall-clock times; ringgrow.py):
+      | run | frame rate while logging | ring growth (diagonal), real time | growth a frame |
       |---|---|---|---|
-      | 90 (run 1) / 60 | 1.10 / 1.10 / 1.08 | 1.00 | 1.02 / 0.99 / 0.97 |
-      | 90 (run 2) / 60 | 1.08 / 1.09 / 1.10 | 0.99 | 0.97 / 0.99 / 1.04 |
-      | 90 run 1 / 90 run 2 (noise) | 1.02 / 1.01 / 0.98 | 1.02 | 1.04 / 1.00 / 0.93 |
-      The wake changes as much in 3 frames at 90 (33 ms) as in 3 frames at 60 (50 ms), and 8 to 10% more per equal
-      real time at 90 (run-to-run noise 2%): it is stepped once a frame, so it runs about 1.5 times as fast at 90 as
-      in the flat game at 60 (120 Hz: twice). The 1.5 is inferred from the equal-frames match; the change measure
-      saturates and does not give the factor itself. The wake's size and trail length look the same at both rates in
-      the picture (its life follows the clock); the open water away from Drake did not repeat between two 90 runs
-      (1.2 to 1.4) and says nothing.
-    - What it is: one blended effect drawn only while wading (draw logs standing against wading: vs 0x99b45d3e /
-      pgm 0xaad23b78, 8 to 10 draws a frame per stage, full size; skipped with the dev trigger SKIP the wake is gone).
-      Its pixel shader samples two scrolling textures (images 2 and 3) with coordinates that come in the vertices
-      (attributes 2 and 3) to distort a third; its constants hold no time (logged over 12 frames: only the camera and
-      the depth fade's near-plane term change), so the scroll is added into the vertices by the game's own code, once
-      a frame.
-    - Not fixed yet. The fix is in the game's effect update (scale that per-frame scroll step by 60 x the frame
-      time, as the port already does for U1's per-step physics values in src/probe.c); the code that builds those
-      vertices is not found yet (next: a data watch on the wake's vertex buffer for its writer).
+      | game at 90 | 45.4 FPS | 2.345 m/s (19 rings, 2.03 to 3.72) | 0.053 m |
+      | game at a true 60 | 26.2 FPS | 2.303 m/s (27 rings, 1.96 to 4.96) | 0.085 m |
+      (The logging slowed both runs, which widens the test: 1.7 times apart in frame rate, 2% apart in speed.) Frame
+      by frame the growth is a whole number of the game clock's 1/300 s ticks (0.00713 m a tick: 3 or 4 ticks a
+      frame at 90, 7 or 8 while logging), and the ring's fade moves with it. The river's surface takes the time in
+      seconds (its vertex shader's constant 48: +0.0111 a frame at 90).
+    - My first answer was wrong (said: stepped once a frame, 1.5 times too fast at 90). It came from a picture
+      measure (how much the wake's picture changes between two frames, 90 against 60, with the bank as the control:
+      1.08 to 1.10 at equal real time, 1.00 at equal frame counts). The game's motion blur is longer per frame at 60,
+      which smooths the wake's fine bright detail more than the bank's, so the measure read blur as speed. The
+      measuring tool is deleted; do not judge an effect's speed from picture change across frame rates.
+    - What the wake is: one blended effect drawn only while wading (vs 0x99b45d3e / pgm 0xaad23b78, 8 to 12 quads a
+      frame, one per ring; skipped with the dev trigger SKIP the wake is gone). A quad is 4 vertices of 32 bytes:
+      position (world, 5 cm over the water), colour and fade (4 half floats), corner (2), a pair whose second value
+      grows with the ring. Textures: the eye's depth, a 256 ring texture (two materials), a 512 texture twice and a
+      64 one; no scroll (the shader's scroll input is 0), no time in the constants.
+    - So what Matt sees is the game's own speed: a ring's side grows about 1.6 m/s. At real size in the headset that
+      is fast for water (it is the same in the flat game, where it is small on the screen). Slowing it would be a VR
+      taste change to the game's effect (the ring's growth rate in the effect's data), not a frame-rate fix: not
+      done, his call.
     - Earlier attempts that said nothing: ripple.py (how long the water region keeps its pattern: 33, 119, 183 ms in
-      three 90 FPS runs) and a flicker spectrum of the standing water (the 60 FPS ring is longer and still held the
-      walk). Both were Drake standing: the walk's forward path stops at the log on the far bank after 6 s, so no wake
-      was on screen.
+      three 90 FPS runs) and a flicker spectrum of the standing water. Both were Drake standing: the walk's forward
+      path stops at the log on the far bank after 6 s, so no wake was on screen.
 - Details: `profiles/CUSA02343-notes.md`.
 
 ## ICO (PS2, ico-pc native port + VR fork, not RPCS3)
