@@ -1661,8 +1661,26 @@ my disc, I'll let you know when its done."
       +0x23e7d, +0x3979f, +0x49d4f, +0x14d298, +0x157673, +0x1d1f7f, +0x39498f (world-to-screen, 1200 a second),
       +0x3c2f69, +0x556076 (2400 a second)). Giving every caller the substitute crashed the game; which callers test
       visibility was not found before Matt's question made it unnecessary.
-    - [ ] "take the game settings option for aiming into account": which option he means is not known yet (asked).
-    - Needs his headset look.
+    - Matt (2026-11-15): "Yes, invert aims need to work. It's not just for me, different users will have different
+      settings." The game's Controls options (the same list in U1, U2 and U3, shared across the collection): Aiming
+      Horizontal / Vertical Normal or Flipped, Camera Horizontal / Vertical, Aim and Fire L2/R2 or L1/R1, Left and
+      Right Stick Normal or Swapped.
+    - [x] Aiming Horizontal Flipped, head aim on (simulator, tools/uncharted/aimdir.py: the aim held, the stick right
+      for 1 s): the view turns 84 degrees left in U2 and 85 in U3 (Normal: 82 right in U2), the held base and the
+      camera with it. The fork has no sign of its own there: it takes the turn the game's update made. Aiming Vertical:
+      with head aim the stick's up and down does nothing while aiming in either setting (the head's, as designed).
+    - [x] Left and Right Stick Swapped was broken, uncharted_pc bf97505 (local): the game swaps the sticks of the pad
+      it read, so the left stick turns the view; the pad layer watched and locked the right one. Before (U2, aim
+      held): neither stick turned the aim (0.0 degrees), the lock was on the stick that walks, and the look's up and
+      down was not locked (U1: left stick up, pitch +19.8). After: the aim turns on the left stick (U2 -85.0 with
+      Flipped, U3 -86.0, U1 +84.3 Normal), the right stick walks (U2 3.31 m back / 1.25 m forward in a second, U3
+      0.97, U1 2.67) and the left stick's up and down is locked (0.0). Control, sticks Normal on the new build (U1):
+      right stick right +84.5 while aiming, the left stick walks, as before. The option is read from the game's
+      settings (U1 image +0x9989bc, U2 +0xe71488, U3 +0x1436798 in 1.00; found by the game's own test of it, a
+      pattern, in every version).
+    - Not run: head aim off with the options flipped (the game's own aim, nothing of the fork's between the stick and
+      the camera); Aim and Fire L1/R1 (the pad layer already takes L1 or L2 as the aim button).
+    - Needs his headset look (aim reversed fix 7b77fe0; swapped sticks bf97505).
   - [ ] Matt (2026-11-14): "the ripples when you walk in the river are very quick. Can you compare them to flat at
     normal fps, I think it might need slowing down for 90fps." Not answered yet. Tried: flash rings of the river
     right after a walk at 90 FPS and at a true 60 FPS in VR (BB_VBLANK_HZ=60 BB_VR_CAP=0 BB_VR_IMMEDIATE_FLIPS=0), scored

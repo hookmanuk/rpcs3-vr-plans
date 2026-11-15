@@ -595,3 +595,18 @@ frame pacing issue."
 - Reflection checks that found nothing wrong on the simulator: rotwarp.py (a turned eye dump warped back by the pure
   rotation; the water's ripple alone gives a mean difference of 5.6, so judge the sheets, not the numbers), reflpos.sh
   (head moved, simhold.py takes X Y Z now).
+
+## The game's Controls options and the VR pad layer (uncharted_pc bf97505, 2026-11-15)
+
+- The options are one settings object per game, shared by the collection's save: U1 image +0x994188, U2 +0xe6cc10, U3
+  +0x1431ac8 (1.00). "Left and Right Stick: Swapped" is a dword in it (U1 +0x4834, U2 +0x4878, U3 +0x4cd0), tested by
+  "lea rax, [rip + settings]; cmp dword [rax + offset], 0" (Game::sticks in vr_camera.cpp). U2's pad code (+0x251e10)
+  swaps the two sticks of the pad it read at +0x25203a when it is set; the two dwords before it (+0x4870, +0x4874)
+  swap button pairs the same way (Aim and Fire).
+- So the stick that turns the view is the left one with the option on: bbgpu_vr_sticks_swapped() gives the pad layer
+  (vr_sticks, src/runtime_pad.c) the option; the vertical lock and head aim's "the player turns the aim" follow it.
+- Aiming Horizontal Flipped needs nothing: head aim takes the turn the game's update made to the direction it wrote.
+- Finding a setting: tools/uncharted/snapg.py GAME NAME (the data segment of the running game) with the option one
+  way, the other, and again; diffg.py A1,A2 B1,B2 lists the bytes that follow it (the flag was the first line in all
+  three). nav.py drives a running session (press / shot); aimdir.py measures which way each stick turns the aim and
+  whether the player walks. A data watch needs the address image base + offset (the base is printed by snapg.py).
