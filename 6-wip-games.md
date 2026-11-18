@@ -1711,6 +1711,39 @@ my disc, I'll let you know when its done."
     - Earlier attempts that said nothing: ripple.py (how long the water region keeps its pattern: 33, 119, 183 ms in
       three 90 FPS runs) and a flicker spectrum of the standing water. Both were Drake standing: the walk's forward
       path stops at the log on the far bank after 6 s, so no wake was on screen.
+  - [ ] Matt (2026-11-18): "theres something wrong with the uncharted releases now... I tried u2 and u3. Both had
+    massive cpu spikes, I checked in task manager and bbprobe.exe was at 70% of my CPU". "it then crashed!" (U2,
+    Borneo). fpsVR: periodic CPU frame-time spikes, reprojection 31-49%. "even the u3 intro video has cpu spikes and
+    isn't smooth". U3: "once I get into a choke hold, the frame spikes happen consistently". U2 repro: "continue in
+    Borneo - walk forwards (slightly left a bit) until you reach the green bomb, a cutscene will play - after the
+    cutscene your cpu will spike".
+    - Fixed (uncharted_pc 32cf9aa, local, plus the flat-screen part in the same commit): the headset loop waited for
+      every game frame (WaitForGameFrame, from the Driveclub layer). When the game fell below 90 SteamVR went to its
+      45 Hz mode, and that then paced the game down too. Now a headset frame without a new game frame shows the last
+      one again (BB_VR_REPEAT=0: the old wait). And in VR the idle job workers sleep on every CPU (they spun on more
+      than 12 threads: the CPU Task Manager showed). SteamVR, eye 3584, U2 after the bomb cutscene (tools/uncharted/
+      bombsess.sh reaches it every time):
+      | build | game FPS | headset FPS | 1% low | late | CPU (cycles) |
+      |---|---|---|---|---|---|
+      | before (wait, workers spin) | 49-74 | 49-70 (SteamVR 45 Hz) | 44 | 27% | 59% |
+      | repeat, workers spin | 85-87 | 90 | 84.9 | 0% | 59% |
+      | repeat, workers sleep (now) | 87-90 | 90 | 84-86 | 0% | 34% |
+      Live A/B of the loop (dev trigger REPEAT, same spot, twice each): wait 67-74 / 49-50 game FPS, 1% low 44, 27%
+      late; repeat 83-86, 1% low 84.5-84.8, 0% late; wait at most 60% of a period 84, 1% low 72.6, 11% over.
+      U3 intro movie: the loop waited for the game's 60 flips on the flat screen (headset 51.7, SteamVR 45 Hz);
+      fixed by the same change (Matt: "the intro video is fine now" with the flat-screen-only first version).
+    - Why my CPU numbers were wrong for hours: thread times (GetThreadTimes, Get-Process) showed bb-probe at 2-5%
+      while Task Manager showed 44-70%. The idle workers wake thousands of times a second and run microseconds:
+      thread-time accounting misses them, cycle counts do not. tools/uncharted/cycles.py and hotspots.py count cycles.
+    - What makes the game slower after the cutscene: the game skins 1318 meshes a frame there (skinning cs
+      8f067540, one-group dispatches; 20 before the cutscene) and draws 2124 (the dig's soldiers stream in). Not our
+      camera code: CULL, GAMEVIEW, DERIVED off live change neither count.
+    - Not checked: U3's choke hold on the new build (draws 1340 there, game 61; the same loop change applies).
+    - Open: the GPU crash (device lost, a shader read an unmapped address: 0x4997000 in Matt's run, 0x52f8000 in one
+      of mine) seconds after dig-wide-01 loads and a fourth stereo swapchain is made. Once in 6 of my runs past the
+      cutscene; a run with BB_GPU_CHECKPOINTS=1 did not crash.
+    - The launcher's text for "Idle game workers sleep" still says "Automatic: on for up to 12 threads" (the English
+      text is the translations' key; not changed).
 - Details: `profiles/CUSA02343-notes.md`.
 
 ## ICO (PS2, ico-pc native port + VR fork, not RPCS3)

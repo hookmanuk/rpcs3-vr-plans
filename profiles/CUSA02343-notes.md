@@ -625,3 +625,21 @@ frame pacing issue."
   stepped per frame. Logging slows the game, which gives the spread of frame times the test needs.
 - The near-plane term of the depth fade (pixel constant 73 of the wake, vertex constant 92 of the river) steps by
   0.00002 a frame: that is the VR hook's frame tag in the near plane, not an animation.
+
+## CPU spikes and the headset loop (2026-11-18)
+
+- Task Manager's CPU column counts cycles. Thread times (Get-Process, GetThreadTimes) miss the game's idle job
+  workers, which wake thousands of times a second: 2-5% there against 44-70% in Task Manager. Measure with
+  tools/uncharted/cycles.py (per thread, % of a core by cycles, RIP samples) and hotspots.py (the busiest threads by
+  function; bb-probe.exe names from llvm-nm; GUEST = the game's image).
+- The idle loop: U2 GUEST+0x4ecd39 / 0x4ecd58, U3 GUEST+0x49f359 / 0x49f378 (the job manager's queue poll). The main
+  thread runs it too while it waits for jobs, so "the main thread at 99% in game code" can mean idle.
+- Reaching the U2 bomb cutscene (Borneo, Matt's checkpoint, copy H:/uc_tests/mc_copy): tools/uncharted/bombsess.sh,
+  every time. On SteamVR the headset lies on the desk looking left of the path, and walking goes where the view
+  looks: one short right turn (rx=200 for 0.25 s), then forward with a jump tap every 2 s for 8 s (Matt plays it as
+  W and Space). Pause menu: Restart Checkpoint is down x4, then left for Yes.
+- Launching exactly as the launcher does (its saved settings and environment, run.py, piped output): asplayer.py.
+- Development triggers in %TEMP%/dcvr: REPEAT (1 show the last frame again, 0 wait for the game, 2 wait 60% of a
+  period), CULL (0: the game's own culling planes), with DERIVED and GAMEVIEW.
+- After the cutscene: 1318 one-group skinning dispatches a frame (cs 8f067540; 20 before it), 2124 draws. In wait
+  mode the GPU sat 38-48% idle (the game paced by SteamVR's 45 Hz); in repeat mode the GPU is the limit.
