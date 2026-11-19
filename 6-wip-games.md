@@ -1742,6 +1742,16 @@ my disc, I'll let you know when its done."
     - Open: the GPU crash (device lost, a shader read an unmapped address: 0x4997000 in Matt's run, 0x52f8000 in one
       of mine) seconds after dig-wide-01 loads and a fourth stereo swapchain is made. Once in 6 of my runs past the
       cutscene; a run with BB_GPU_CHECKPOINTS=1 did not crash.
+      2026-11-19 night: 0 crashes in 14 more runs of the bomb route on 016863b, 6 with the new loop and 8 with
+      BB_VR_REPEAT=0 (tools/uncharted/crashhunt.sh: the same checkpoint restored each run, BB_GPU_CHECKPOINTS=1
+      BB_GPU_ADDRESS_REPORT=1, logs kept per run). Not reproduced on the route: needs his crash log (last_run.log) if
+      it happens again.
+      My 11-18 crash came while walking to the bomb; its fault address 0x52f8000 is tiny (a null pointer plus an
+      offset, likely a buffer not yet streamed in as dig-wide-01 loads). His crash was on the old build (the loop
+      waiting for every game frame).
+      Tonight his headset slept on the desk and SteamVR paced at ~150 Hz (xrWaitFrame 6.2 ms): the game fell to ~50
+      after the cutscene there (SteamVR compositing at 150 Hz; our loop copies only new game frames). Frame rates from
+      these runs do not count.
     - The launcher's text for "Idle game workers sleep" still says "Automatic: on for up to 12 threads" (the English
       text is the translations' key; not changed).
     - Matt 2026-11-19 on 32cf9aa: "Thank you, you fixed the CPU issue!"
