@@ -643,3 +643,21 @@ frame pacing issue."
   period), CULL (0: the game's own culling planes), with DERIVED and GAMEVIEW.
 - After the cutscene: 1318 one-group skinning dispatches a frame (cs 8f067540; 20 before it), 2124 draws. In wait
   mode the GPU sat 38-48% idle (the game paced by SteamVR's 45 Hz); in repeat mode the GPU is the limit.
+
+## U3 bar fight: ghosts and the window HUD (2026-11-19)
+
+- Reaching it: a copy of Matt's saves (H:/uc_tests/mc_copy, his U3 slot copied in) Continues at the throw tutorial
+  (the scene holds until the throw: `ly=0 circle` on the pad file). sess.sh GAME=u3 UCUSER=mc_copy, route wait 50,
+  cross x5 6 s apart. After a death the game returns to the throw tutorial.
+- Ghosts: blocky haze silhouettes one clip shift beside each person (left eye left, right eye right). Ours: the
+  epipolar march (cs 661db47f) offset correction (BB_VR_EYE_OFFSET_PS). The beam pass reads the march at the eye's
+  own screen position, so the march must read the eye's depth at the same place: no offset. Default now empty.
+- How it was found: per-pass SKIP showed nothing (outputs of skipped computes persist in a static scene); the
+  LIGHTEYE knob (0 / 1 / 2) moved the ghost with it; RAYPS (new dev trigger, "pgm scale": one ray pass's
+  correction) ruled out the four light passes; BB_VR_EYE_OFFSET_PS=none at launch removed it.
+- Desktop window HUD: Stereo::RecordMirror now ray-traces the HUD quad (vr_openxr MirrorHud: the frame's pose
+  relative to the seat, the left eye, kHudDistance/Width/Height) instead of laying the square canvas over the eye.
+- The red strip at the top of the HUD box in fights: the game's damage indicator at the canvas's top edge.
+- Tools (plans/tools/uncharted): winshot.py (the game window, DPI-aware, PrintWindow), skipregion.sh (skip each
+  pass live, eye change in a box), trigregion.sh (a dev trigger swept, eyes dumped), eyecrops.py (eye dump crops),
+  h16png.py (RGBA16F TSHOT targets), redcatch.sh (fight until a red streak shows in the window).

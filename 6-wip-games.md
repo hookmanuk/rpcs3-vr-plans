@@ -1711,7 +1711,7 @@ my disc, I'll let you know when its done."
     - Earlier attempts that said nothing: ripple.py (how long the water region keeps its pattern: 33, 119, 183 ms in
       three 90 FPS runs) and a flicker spectrum of the standing water. Both were Drake standing: the walk's forward
       path stops at the log on the far bank after 6 s, so no wake was on screen.
-  - [ ] Matt (2026-11-18): "theres something wrong with the uncharted releases now... I tried u2 and u3. Both had
+  - [x] Matt (2026-11-18): "theres something wrong with the uncharted releases now... I tried u2 and u3. Both had
     massive cpu spikes, I checked in task manager and bbprobe.exe was at 70% of my CPU". "it then crashed!" (U2,
     Borneo). fpsVR: periodic CPU frame-time spikes, reprojection 31-49%. "even the u3 intro video has cpu spikes and
     isn't smooth". U3: "once I get into a choke hold, the frame spikes happen consistently". U2 repro: "continue in
@@ -1744,6 +1744,29 @@ my disc, I'll let you know when its done."
       cutscene; a run with BB_GPU_CHECKPOINTS=1 did not crash.
     - The launcher's text for "Idle game workers sleep" still says "Automatic: on for up to 12 threads" (the English
       text is the translations' key; not changed).
+    - Matt 2026-11-19 on 32cf9aa: "Thank you, you fixed the CPU issue!"
+  - [ ] Matt (2026-11-19, U3 bar fight, screenshot of the left eye at the throw tutorial): "you can see to the left
+    of the people there is an untextured version of them. Also the HUD is not in the right ratio." "Work all night,
+    do not ask me for anything. Fix everything that is wrong."
+    - Fixed, uncharted_pc 016863b (local, not pushed); reached on the simulator from a copy of his save (Continue lands
+      at the throw tutorial; tools/uncharted/sess.sh GAME=u3 UCUSER=mc_copy, route: wait 50, cross x5 6 s apart):
+    - Ghosts: the haze lost a blocky silhouette of each person one clip shift (53 px at 3584) beside them, left in
+      the left eye, right in the right. Cause: our own correction on the volumetric spot light's epipolar march
+      (cs 661db47f, BB_VR_EYE_OFFSET_PS default "661db47f:0:34:0.5", from the one-eye audit's fix): each eye read its depth half
+      a clip shift away, but the beam pass looks the march up at the eye's own screen position. Found by the knob:
+      dev trigger LIGHTEYE 0 / 1 / 2 = no ghost / 53 px / farther; with the offset list empty both eyes are clean
+      (the room, every person, head yaw -20 / +20, pitch 10, roll 15). Now empty by default.
+    - HUD ratio: his screenshot is the desktop window, which laid the square HUD canvas 1:1 over the eye (the game
+      lays it out for 16:9, so the text was squeezed). The headset was right (16:9 quad). The window now traces each
+      pixel from the left eye to the HUD quad: the HUD at the size and place the headset shows it.
+    - Frame rate (simulator 90 Hz, eye 3584, DLSS off): the fight 87-90 game FPS, headset 90.0, p99 14-21 ms, 2-18
+      frames per report over 1.5x the median (worst 27 ms), CPU 27% of 16 cores by cycles, GPU thread idle 34%
+      (CPU-bound, the game side); the tutorial hold 90.0, p99 11.2 ms. The choke hold reached and played through.
+    - Seen, not changed: a red jagged strip along the top of the HUD box during the fight is the game's damage
+      indicator, drawn at the top edge of the HUD canvas (the screen's edge in the flat game). Whole and in its box;
+      his call whether it should move.
+    - Lesson: SKIP of a pass in a static scene says nothing when the pass's output persists (a compute's image keeps
+      its last contents); sweep the suspected knob instead.
 - Details: `profiles/CUSA02343-notes.md`.
 
 ## ICO (PS2, ico-pc native port + VR fork, not RPCS3)
