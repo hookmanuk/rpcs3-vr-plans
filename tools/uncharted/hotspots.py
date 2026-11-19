@@ -56,5 +56,5 @@ while time.time() < end:
 for t in top:
     n = sum(hits[t].values()) or 1
     print('\nthread %d (%d samples):' % (t, n))
-    for f, c in hits[t].most_common(14):
+    for f, c in hits[t].most_common(int(os.environ.get("HOT_N", "14"))):
         print('  %5.1f%%  %s' % (100 * c / n, f))

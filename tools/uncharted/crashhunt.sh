@@ -6,7 +6,7 @@ T=$(cd "$(dirname "$0")" && pwd)
 for n in $(seq 1 ${1:-6}); do
     tasklist | grep -qi bb-probe.exe && { echo "bb-probe already running: stop"; exit 1; }
     for d in SAVEDATA020 SAVEDATA020.sce_sys SAVEDATA02P SAVEDATA02P.sce_sys; do  # the same checkpoint every run
-        rm -rf "/h/uc_tests/mc_copy/savedata/1/CUSA02343/${d}"; cp -r "/h/uc_tests/crashhunt_save/${d}" "/h/uc_tests/mc_copy/savedata/1/CUSA02343/${d}"
+        [ -d "/h/uc_tests/bomb_save/${d}" ] || { echo "no backup ${d}"; exit 1; }; rm -rf "/h/uc_tests/mc_copy/savedata/1/CUSA02343/${d}"; cp -r "/h/uc_tests/bomb_save/${d}" "/h/uc_tests/mc_copy/savedata/1/CUSA02343/${d}"
     done
     bash "$T/bombsess.sh" "BB_GPU_CHECKPOINTS=1 BB_GPU_ADDRESS_REPORT=1 $2" 60
     cp /h/uncharted_pc/out/try/u2/run.log /h/uc_tests/crashhunt${TAG}_$n.log

@@ -657,7 +657,39 @@ frame pacing issue."
   correction) ruled out the four light passes; BB_VR_EYE_OFFSET_PS=none at launch removed it.
 - Desktop window HUD: Stereo::RecordMirror now ray-traces the HUD quad (vr_openxr MirrorHud: the frame's pose
   relative to the seat, the left eye, kHudDistance/Width/Height) instead of laying the square canvas over the eye.
-- The red strip at the top of the HUD box in fights: the game's damage indicator at the canvas's top edge.
+- The red strip at the top of the HUD box in fights: the game's damage indicator, vs 0x366882ce + 0x3f051de (a pair
+  per hit direction; near death a band along the top edge). Not vs 0xfadcd6fe right after them: the counter prompt's
+  red ring over an enemy (TSHOT saves the target BEFORE each draw: the shot named after a draw shows the one before
+  it). BB_VR_DAMAGE 0 hidden / 1 normal / >1 own quad that many times the HUD's size, edges faded (vr_stereo.comp
+  FADE); the launcher's Damage indicator: Subtle (2, default), Normal, Hidden (uncharted_pc efef19d).
 - Tools (plans/tools/uncharted): winshot.py (the game window, DPI-aware, PrintWindow), skipregion.sh (skip each
   pass live, eye change in a box), trigregion.sh (a dev trigger swept, eyes dumped), eyecrops.py (eye dump crops),
   h16png.py (RGBA16F TSHOT targets), redcatch.sh (fight until a red streak shows in the window).
+
+## U2 after Borneo's bomb cutscene: periodic missed frames (2026-11-19)
+
+- Matt's fpsVR: CPU frametime a sawtooth (rising for 1-2 s, then an orange run, reset), GPU frametime ~3 ms.
+  SteamVR's own xrWaitFrame period: 22.2 ms (45 Hz) for exactly 23 frames at a time, every ~2 s (pose log column 8).
+  Motion smoothing off for the app (Matt) did not change it. My "late" counter does not see what SteamVR sees:
+  judge by fpsVR (tools/uncharted/winshot.py OUT fpsVR.exe captures its window).
+- Cause: after the cutscene the game skins ~1500 small objects (cs 8f067540, one group, 136 meshes about ten times
+  each, 10 bindings) in every other frame: flat frames alternate ~8.5 / ~12.4 ms (BB_FLIP_LOG per frame: the heavy
+  ones carry ~2200 dispatches, the light ones ~700). The game is locked to the headset (each flip waits for its next
+  frame), so a heavy frame cannot use the slack of a light one: every heavy frame misses.
+- The limit is our GPU-command side, not the GPU (~50% busy) or the game's threads: the recording thread (draw pipe
+  stage B) costs ~12.7k TSC cycles per skinning dispatch, and the command thread (stage A) drains it at the game's
+  submits and at CPU-emulated copy shaders. Breakdown per dispatch (devlog_perf_u2.patch, BB_CS_STATS): buffer lookups
+  2.7k, barrier+bind+record 1.8k, barrier checks 1.0k, VR per-eye descriptor 0.9k, BindTextures (no images!) 0.9k,
+  meta-clear check 0.8k, range clamp / sharps / note / invalidate ~0.35k each.
+- Measure with run.py's settings: the launcher's Play goes through run.py, which gives U2 BB_GPU_MERGE=0,
+  BB_TINY_READBACK=1, BB_READBACK_SMALL_BUFFERS=1, BB_SCALAR_COPY64_SYNC=2, BB_SCALAR_COPY64_DEFER=1; sess.sh /
+  drive.py do not (benchu2.sh adds them). VR on the simulator with them: game ~70 FPS, 1% low ~39 (without: ~84).
+- Flat benchmarks need BB_JOB_SLEEP=1: spinning job workers (flat default on 16 threads) gave the same build 9 or 12 ms
+  frames run to run. A/B on one binary with an env switch, alternating runs (abu2.sh); never compare builds.
+- Done (uncharted_pc 101d7bd): recording ~10% cheaper per draw; scalar copies of 1 MiB+ (the 32-51 MB depth copies)
+  no longer drain (CanDeferGuestCopy's staging limit refused them though they are GPU-only): 85.3/87.7 -> 88.8/90.8
+  FPS flat. Heavy frames still ~12.4 ms: per-dispatch trimming cannot take the ~2 ms they need.
+- Tools: benchu2.sh TAG VR "ENV" (the route, 30 s measured, one summary line), abu2.sh (alternating A/B),
+  flipspikes.py (spikes, gaps, work in spike frames), devlog_perf_u2.patch (timers, drain reasons, defer refusals).
+- Pitfalls: background tasks run in separate shells (ps cannot see them, TaskStop them by ID); a killed loop leaves
+  drive.py running (it relaunches nothing but holds its wait); Git Bash heredocs strip backslashes (python via Write).

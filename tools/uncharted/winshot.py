@@ -1,11 +1,12 @@
-"""winshot.py OUT.png: DPI-aware capture of bb-probe.exe's desktop window (what Matt screenshots: the left eye with the
+"""winshot.py OUT.png [EXE]: DPI-aware capture of bb-probe.exe's (or EXE's) desktop window (what Matt screenshots: the left eye with the
 HUD composited by Stereo::RecordMirror), via PrintWindow(PW_RENDERFULLCONTENT) so it works behind other windows."""
 import ctypes, ctypes.wintypes as W, subprocess, re, sys
 from PIL import Image
 ctypes.windll.shcore.SetProcessDpiAwareness(2)
 u32, g32 = ctypes.windll.user32, ctypes.windll.gdi32
-out = subprocess.run(['tasklist', '/FI', 'IMAGENAME eq bb-probe.exe', '/FO', 'CSV', '/NH'], capture_output=True, text=True).stdout
-pid = int(re.search(r'"bb-probe.exe","(\d+)"', out).group(1))
+exe = sys.argv[2] if len(sys.argv) > 2 else 'bb-probe.exe'
+out = subprocess.run(['tasklist', '/FI', f'IMAGENAME eq {exe}', '/FO', 'CSV', '/NH'], capture_output=True, text=True).stdout
+pid = int(re.search(r'"' + re.escape(exe) + r'","(\d+)"', out).group(1))
 found = []
 @ctypes.WINFUNCTYPE(W.BOOL, W.HWND, W.LPARAM)
 def cb(h, _):
