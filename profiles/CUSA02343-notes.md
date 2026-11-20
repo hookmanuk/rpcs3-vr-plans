@@ -762,3 +762,13 @@ frame pacing issue."
   (SyncRecording) before each submit; the recorder thread could submit itself. The tiled light 43b8ee5e is 2.3 ms.
 - Tools (plans/tools/uncharted): crashab.sh (A/B crash counts), abexe.sh (A/B two exes), benchu2.sh MEAS=seconds,
   hunks.py / resolve.py (merge conflicts by hunk).
+- After 31999ab (profiled, dev2 branch): GPU busy 11.06 ms a frame, idle 0.93 (24 small gaps between the early
+  parts, a few 0.2-0.4 ms ones inside the particle pass af7b11bd and at the frame end after the flip's PrepareFrame).
+  Without the idle U2 would reach the 90 Hz cap. Tried and reverted: (1) the R8Uint 3584 stencil-plane refresh
+  skipped entirely (its 0.26 ms upload): 85.5 vs 85.2, no gain, so a stencil-aspect copy is not worth it; (2) the
+  early parts submitted by the Vulkan recording thread itself (FlushAsync, the draw recording thread not waiting in
+  SyncRecording): 80.7, 80.7 vs 86.0, 84.0, worse (validation clean). Sampled threads (hotspots.py): no thread
+  saturated (recorder ~half spinning for work, recording thread and GPU command thread about half idle).
+- 0.3.15 clamps the loop count of the skinning shaders (8f067540, 7d7e7206, 0c936dd6; effect_loop_clamp_pass.cpp:
+  garbage counts hung the GPU). A lead for the remaining crash (a read of an invalid address, not a hang), not proven.
+- U1 jungle soak on 31999ab (2 min): 90.0 FPS, worst 5 s 90.0, no fault; U1 and U2 pictures normal.
