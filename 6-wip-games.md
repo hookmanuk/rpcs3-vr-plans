@@ -1790,9 +1790,19 @@ my disc, I'll let you know when its done."
       | U3 bar fight with combos and grabs, VR (mean, lowest 5 s) | 78.6 / 68.2, 81.8 / 77.5 | 88.1 / 85.2, 88.6 / 86.2 |
       | U1 jungle walk, VR | - | 89.4 |
     - Option 2 (one frame ahead of the headset) not done: not chosen.
-    - Left: U2 VR ~78-80 is GPU-near (86% busy; the 1318 skinning dispatches ~6.6 ms profiled) plus our recording
-      thread (~58%). Simulator runs show a 10-18 ms xrEndFrame every ~2.5 s (the simulator's own; not on SteamVR).
+    - Left: U2 VR ~78-80 is GPU-near (86% busy) plus our recording thread (~58%). (The skinning's "6.6 ms" was the
+      profiler: ~0.5 ms real, 2026-11-20.) Simulator runs show a 10-18 ms xrEndFrame every ~2.5 s (the simulator's own; not on SteamVR).
       SteamVR check invalid tonight (headset asleep: fpsVR 27 FPS, 99.9% reprojection); his headset numbers needed.
+  - [ ] Matt (2026-11-20): "Ok, fix the 6.6ms of tiny skinning jobs." ... "park these changes on a experimental branch,
+    then pull in all the updates from the source repo, as they have performance improvements. Then benchmark those
+    changes." ... "do some more runs, then merge to our branch. Then get back on looking for performance improvements
+    on the latest."
+    - Skinning: not 6.6 ms but ~0.5 (profiler artefact): left alone. ba48f9c parked on branch experimental (it made the
+      GPU crash frequent: 9 of 12 runs).
+    - SuperMedo 0.3.15 merged into community-vr (a4f3d65, local): U2 VR 70.0 -> 78.5, U3 fight 83.0 -> 89.5.
+    - Early submit through the draw pipe, parts of 12 draws / 0.25 ms (d5d3d87, 31999ab, local): U2 VR 78-83 -> 85.4
+      (p99 14.1 ms); U3 89.7 (cap); flat unchanged. Nothing pushed; vr-0.4 zip not rebuilt from these yet.
+    - The GPU crash is rarer on 0.3.15 but not gone (crashed once with large submit parts). Not on his headset yet.
 - Details: `profiles/CUSA02343-notes.md`.
 
 ## ICO (PS2, ico-pc native port + VR fork, not RPCS3)

@@ -1,0 +1,156 @@
+diff --git a/gpu/shadps4/video_core/renderer_vulkan/vk_gpu_profiler.h b/gpu/shadps4/video_core/renderer_vulkan/vk_gpu_profiler.h
+index 9656a14..9658662 100644
+--- a/gpu/shadps4/video_core/renderer_vulkan/vk_gpu_profiler.h
++++ b/gpu/shadps4/video_core/renderer_vulkan/vk_gpu_profiler.h
+@@ -9,6 +9,7 @@
+ #include <array>
+ #include <chrono>
+ #include <cstdio>
++#include <cstdlib>
+ #include <string>
+ #include <unordered_map>
+ #include <vector>
+@@ -35,6 +36,12 @@ public:
+         if (!described.contains(key)) {
+             described.emplace(key, describe());
+         }
++        // TEMP measurement: BB_GPU_PROFILE_RUNS=1: a run of segments with one label is timed as one (no timestamps
++        // inside it, so the GPU overlaps its dispatches as it does unprofiled).
++        static const bool runs = std::getenv("BB_GPU_PROFILE_RUNS") != nullptr;
++        if (runs && key == current) {
++            return;
++        }
+         WriteTimestamp(key);
+     }
+ 
+diff --git a/gpu/shadps4/video_core/renderer_vulkan/vk_rasterizer.cpp b/gpu/shadps4/video_core/renderer_vulkan/vk_rasterizer.cpp
+index e48fb87..0237bef 100644
+--- a/gpu/shadps4/video_core/renderer_vulkan/vk_rasterizer.cpp
++++ b/gpu/shadps4/video_core/renderer_vulkan/vk_rasterizer.cpp
+@@ -2675,7 +2675,30 @@ void Rasterizer::DispatchRecord(const ComputePipeline* pipeline) {
+     }();
+     const void* checkpoint =
+         NoteCheckpoint(scheduler, "dispatch", cs.pgm_hash, 0, dim_x, dim_y, dim_z, 0);
++    // TEMP measurement: BB_CS_DUP=<hash>: that shader's dispatches run twice (its real GPU cost).
++    static const u64 dup_cs = [] {
++        const char* env = std::getenv("BB_CS_DUP");
++        return env ? std::strtoull(env, nullptr, 16) : 0ull;
++    }();
++    static const int dup_n = [] {
++        const char* env = std::getenv("BB_CS_DUP_N");
++        return env ? std::atoi(env) : 1;
++    }();
++    const bool dup = dup_cs && u32(cs.pgm_hash) == u32(dup_cs);
++    if (dup) {
++        static std::atomic<u64> dups{0};
++        if ((dups.fetch_add(1) & 0xffff) == 0) {
++            std::printf("CS dup: %llu dispatches of %08x doubled x%d\n",
++                        static_cast<unsigned long long>(dups.load()), u32(dup_cs), dup_n);
++        }
++    }
+     scheduler.Record([=](vk::CommandBuffer cmdbuf) {
++        if (dup) {
++            cmdbuf.bindPipeline(vk::PipelineBindPoint::eCompute, handle);
++            for (int i = 0; i < dup_n; ++i) {
++                cmdbuf.dispatch(dim_x, dim_y, dim_z);
++            }
++        }
+         const vk::MemoryBarrier2 barrier = {
+             .srcStageMask = vk::PipelineStageFlagBits2::eAllCommands,
+             .srcAccessMask = vk::AccessFlagBits2::eMemoryWrite | vk::AccessFlagBits2::eMemoryRead,
+diff --git a/gpu/shadps4/video_core/renderer_vulkan/vk_staging_buffer_pool.cpp b/gpu/shadps4/video_core/renderer_vulkan/vk_staging_buffer_pool.cpp
+index 663ea3d..8c6f44a 100644
+--- a/gpu/shadps4/video_core/renderer_vulkan/vk_staging_buffer_pool.cpp
++++ b/gpu/shadps4/video_core/renderer_vulkan/vk_staging_buffer_pool.cpp
+@@ -16,6 +16,13 @@
+ #include "video_core/renderer_vulkan/vk_staging_buffer_pool.h"
+ #include "video_core/renderer_vulkan/vk_vram.h"
+ 
++#include <atomic> // TEMP diagnosis
++#include <cstdio>
++#include <string>
++#ifdef _WIN32
++#include <windows.h>
++#endif
++
+ namespace Vulkan {
+ 
+ using VideoCore::MemoryType;
+@@ -58,8 +65,77 @@ StagingBufferPool::StagingBufferPool(const Instance& instance_, Scheduler& sched
+ 
+ StagingBufferPool::~StagingBufferPool() = default;
+ 
++// TEMP diagnosis: overlapping Request calls (two threads in the pool at once) and the callers' threads.
++namespace {
++std::atomic<int> g_in_pool{0};
++std::atomic<u64> g_overlaps{0}, g_calls{0};
++std::atomic<u32> g_thread_ids[8]{};
++std::atomic<u64> g_thread_calls[8]{};
++std::atomic<int64_t> g_last_print{0};
++std::string ThreadName() {
++    char name[64] = "?";
++#ifdef _WIN32
++    PWSTR description = nullptr;
++    if (SUCCEEDED(GetThreadDescription(GetCurrentThread(), &description)) && description) {
++        WideCharToMultiByte(CP_UTF8, 0, description, -1, name, sizeof(name), nullptr, nullptr);
++        LocalFree(description);
++    }
++#endif
++    return name;
++}
++struct PoolEntry {
++    PoolEntry() {
++        g_calls.fetch_add(1, std::memory_order_relaxed);
++        if (g_in_pool.fetch_add(1, std::memory_order_acq_rel) != 0) {
++            const u64 n = g_overlaps.fetch_add(1, std::memory_order_relaxed);
++            if (n < 20) {
++                std::printf("Staging overlap #%llu on thread '%s'\n", static_cast<unsigned long long>(n + 1),
++                            ThreadName().c_str());
++            }
++        }
++        const u32 id = GetCurrentThreadId();
++        for (u32 i = 0; i < 8; ++i) {
++            u32 expected = 0;
++            if (g_thread_ids[i].load() == id ||
++                g_thread_ids[i].compare_exchange_strong(expected, id) || expected == id) {
++                if (g_thread_calls[i].fetch_add(1, std::memory_order_relaxed) == 0) {
++                    std::printf("Staging caller %u: thread '%s'\n", i, ThreadName().c_str());
++                }
++                break;
++            }
++        }
++        const int64_t now = GetTickCount64();
++        int64_t last = g_last_print.load();
++        if (now - last > 5000 && g_last_print.compare_exchange_strong(last, now)) {
++            std::printf("Staging: %llu calls, %llu overlapping; per caller %llu %llu %llu %llu %llu %llu\n",
++                        static_cast<unsigned long long>(g_calls.load()),
++                        static_cast<unsigned long long>(g_overlaps.load()),
++                        static_cast<unsigned long long>(g_thread_calls[0].load()),
++                        static_cast<unsigned long long>(g_thread_calls[1].load()),
++                        static_cast<unsigned long long>(g_thread_calls[2].load()),
++                        static_cast<unsigned long long>(g_thread_calls[3].load()),
++                        static_cast<unsigned long long>(g_thread_calls[4].load()),
++                        static_cast<unsigned long long>(g_thread_calls[5].load()));
++        }
++    }
++    ~PoolEntry() {
++        g_in_pool.fetch_sub(1, std::memory_order_acq_rel);
++    }
++};
++} // namespace
++
+ StagingBufferRef StagingBufferPool::Request(u64 size, MemoryType type, u64 alignment,
+                                             bool deferred) {
++    PoolEntry pool_entry;
++    {
++        static thread_local const bool on_cp = ThreadName().find("GpuCommand") != std::string::npos;
++        static std::atomic<u32> printed{0};
++        if (on_cp && printed.fetch_add(1) < 60) {
++            std::printf("Staging on CP: type %u size %llu align %llu deferred %d tick %llu\n", u32(type),
++                        static_cast<unsigned long long>(size), static_cast<unsigned long long>(alignment),
++                        int(deferred), static_cast<unsigned long long>(scheduler.CurrentTick()));
++        }
++    }
+     Ring& ring = rings[u32(type)];
+     if (deferred || size > BLOCK_SIZE) {
+         return RequestLarge(size, type, deferred);

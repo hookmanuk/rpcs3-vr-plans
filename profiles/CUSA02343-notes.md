@@ -732,3 +732,33 @@ frame pacing issue."
   0x5f78000, while walking to the bomb. Log kept as H:/uc_tests/gpucrash_2026-11-20_prof.log.
 - Tools: soaku2.sh / soaku1.sh TAG MIN (soaks, verdict line), benchu3.sh TAG SECS (U3 bar fight from bar_save,
   window shots every 15 s). Saves backed up: H:/uc_tests/bar_save (U3), u1_save (U1), bomb_save (U2).
+
+## Skinning cost, the crash, SuperMedo 0.3.15 and early submit through the pipe (2026-11-20)
+
+- The skinning cs 8f067540 (1318 one-group dispatches a frame after the bomb cutscene) does not cost 6.6 ms: that was
+  the profiler's per-dispatch timestamps. Measured: each dispatch run twice (BB_CS_DUP, experimental branch) 79 -> 77
+  FPS, nine times 55.7 FPS (~0.6 ms per extra copy of all of them); timed as one span (BB_GPU_PROFILE_RUNS=1) 0.27 ms
+  before the cutscene, 0.44 ms after. Merging them would gain at most ~0.5 ms: not done.
+- ba48f9c (labels behind landing copies, its three switches) made the known GPU crash (device lost, a read of
+  0x49xxxxx-0x67xxxxx) frequent in U2 VR after the cutscene: 9 of 12 runs with all three on, 0 of 13 with any one
+  off (and no gain then either). Ruled out: sparse binds while the GPU runs (BB_SPARSE_IDLE=1 still crashed), late
+  labels landing in freed memory (a compare-and-swap guard never fired and it still crashed), the staging pool used
+  by two threads at once, the constant ring. Validation (lifetimes, thread safety) clean but too slow for the race.
+  The fault address is never in any app allocation (BB_GPU_ADDRESS_REPORT: nearest bind 0xcd40000). Parked on
+  uncharted_pc branch experimental with the dev knobs (7dde419).
+- SuperMedo's 0.3.15 (Supermedo/uncharted_pc main, newer than drakolordx7's community) merged into community-vr
+  (a4f3d65): U2 VR 70.0 -> 78.5 FPS (p99 18.4 -> 16.1 ms), U3 fight 83.0 -> 89.5 (worst 5 s 76.8 -> 87.8), the same
+  gain ba48f9c gave; ba48f9c on top: 79.5 vs 78.2, 89.6 vs 87.9, within run to run: reverted. The crash is rarer but
+  not gone (1 in ~12 runs: with 192-draw early submit parts it crashed again, log gpucrash_2026-11-20_sweep_large).
+- Where the GPU idled (BB_GPU_PROFILE=1 with idle gaps by length and by the submitting stack, dev-perf branch): 1.9 ms
+  a frame, one gap of ~1 ms a frame between the 2048x2048 shadow passes, after 0.3.15's early submits, which drained
+  the draw pipe on the GPU command thread (~8 a frame). Not the cause: the submission lock (BB_NO_SUBMIT_LOCK), the
+  flip interrupt behind the landings (BB_FLIP_NOW), the deferred-label wait at the submission end.
+- Fix: the early submit goes through the draw pipe, submitted by the recording thread in order (d5d3d87): idle 2.1 ->
+  0.9 ms; 81.1 vs 79.1 FPS mean of 4 pairs. Parts of 12 draws / 0.25 ms instead of 48 / 1 ms (31999ab): 85.5-86.5
+  vs 82.8-83.2 (6 / 0.1 ms 82.5, 192 / 4 ms 77.0). U3 fight 89.7 both (cap), U2 flat 101.8 vs 101.2.
+  U2 VR after the cutscene now 85.4 FPS (p99 14.1 ms) at eye 3584 on the simulator.
+- Next: the remaining ~0.7 ms idle after these submits is the recording thread waiting for the Vulkan recorder
+  (SyncRecording) before each submit; the recorder thread could submit itself. The tiled light 43b8ee5e is 2.3 ms.
+- Tools (plans/tools/uncharted): crashab.sh (A/B crash counts), abexe.sh (A/B two exes), benchu2.sh MEAS=seconds,
+  hunks.py / resolve.py (merge conflicts by hunk).
