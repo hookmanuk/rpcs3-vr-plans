@@ -693,3 +693,42 @@ frame pacing issue."
   flipspikes.py (spikes, gaps, work in spike frames), devlog_perf_u2.patch (timers, drain reasons, defer refusals).
 - Pitfalls: background tasks run in separate shells (ps cannot see them, TaskStop them by ID); a killed loop leaves
   drive.py running (it relaunches nothing but holds its wait); Git Bash heredocs strip backslashes (python via Write).
+
+## Labels behind landing copies: CPU and GPU took turns (uncharted_pc ba48f9c, 2026-11-20)
+
+- What held U2 VR at ~70 with run.py's settings: the raycaster copies land on the landing thread once the GPU has
+  finished the work that wrote them (BB_SCALAR_COPY64_SYNC=2 DEFER=1), and three waits behind them stopped our threads
+  or the game until the GPU finished the frame. Found by timing each wait site (a temporary per-site timer, printed
+  every 2 s; "blocked: host copies" in Frame stats is their sum):
+  1. RunWriteData: U2 writes a frame-done flag once a frame (WriteData, 4 bytes, value 1, three dwords in rotation at
+     0x3d11b0f88/90/98). The recording thread waited 3-4 ms there (24% of its time). Now label-sized writes (<= 8
+     bytes) are chained like end-of-shader labels (SignalAfterHostCopies). BB_WRITEDATA_CHAIN=0: old wait.
+  2. That exposed a race: with copies pending, SignalFlip posted the flip interrupt to the landing thread, whose
+     handler prepares the frame (Presenter::PrepareFrame -> Stereo::OnDisplayBuffer -> CaptureAtFlip) in the draw
+     scheduler. It was only safe because the recording thread sat in wait 1. Without it: a host fault in nvoglv64
+     (read of 0x130) at the second Continue, every run. Now the flip is raised on the recording thread (the frame
+     prepared in order, as without pending copies) and only the guest's view of it (flip status, events, the old
+     buffer's label) waits in VideoOutDriver::Flip for a ready flag set behind the copies and labels
+     (DeferFlipVisibility). BB_FLIP_SPLIT=0: old path.
+  3. Submission end: the dry point waited for every deferred label before the GpuIdle interrupt, which releases
+     sceGnmSubmitDone's submission lock: the game's next frame could not be submitted until the GPU finished this one.
+     Now the interrupt does not wait for labels behind landing copies (LandingGate::Active); work_retired (IsGpuIdle)
+     is set only once they ran. They still run in order, so a label the game sees means those before it are written.
+     BB_IDLE_EARLY=0: old wait. Real hardware does not hold submissions until the GPU is idle either.
+- Results, simulator, eye 3584, DLSS off, run.py's settings, alternating runs of one binary (new / old via the three
+  env switches): U2 after the bomb cutscene VR 77.3, 79.8 / 70.8, 68.3 FPS; flat 101.1 / 89.1. U3 bar fight (60 s of
+  combos, two pairs) VR 88.1, 88.6 / 78.6, 81.8 mean, lowest 5 s window 85-86 / 68-78. U1 jungle unchanged at 89.4.
+  Soaks with no fault or assert: U2 5 min of walking, jumping and turning after the cutscene, U1 3 min, U3 4 x 60 s.
+- Tried and dropped: letting the submission-end wait give way when a new submission arrives (no gain: the game never
+  submits during it, it is blocked by the submission lock).
+- Where U2 VR stands now (~78-80): GPU ~86% busy (nvidia-smi), recording thread ~58%. GPU profile (BB_GPU_PROFILE=1,
+  inflates small dispatches): the skinning cs 8f067540, 1318 one-group dispatches a frame, 6.6 ms; none follows a
+  barrier (counted), so it is launch cost; merging them would need shader work. cs 43b8ee5e (448x448 groups) 2.3 ms.
+- The simulator's xrEndFrame takes 10-18 ms once every ~200-225 headset frames (~2.5 s, BB_VR_STALL_LOG=8: "end
+  frame"): periodic spikes in every simulator run (U2 and U3). Not on SteamVR (same build, same scene). Flat has none.
+- SteamVR 2026-11-20 03:00 (headset asleep on the desk): our side 80.5 FPS, 1% low 55, but fpsVR showed 27 FPS and
+  99.9% reprojection: SteamVR's numbers in that state do not count (as on 11-19).
+- Known GPU crash seen again (11-20, prof run, old and new code alike ~1 in 6): device lost, a shader read
+  0x5f78000, while walking to the bomb. Log kept as H:/uc_tests/gpucrash_2026-11-20_prof.log.
+- Tools: soaku2.sh / soaku1.sh TAG MIN (soaks, verdict line), benchu3.sh TAG SECS (U3 bar fight from bar_save,
+  window shots every 15 s). Saves backed up: H:/uc_tests/bar_save (U3), u1_save (U1), bomb_save (U2).

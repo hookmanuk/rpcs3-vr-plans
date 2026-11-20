@@ -1777,6 +1777,22 @@ my disc, I'll let you know when its done."
       his call whether it should move.
     - Lesson: SKIP of a pass in a static scene says nothing when the pass's output persists (a compute's image keeps
       its last contents); sweep the suspected knob instead.
+  - [ ] Matt (2026-11-19/20): "Why does VR have those periodic high usage spikes though?" ... "Ok, yes do performance
+    optimisations" ... "Once you've exhausted all performance gains on this scene, try the u3 bar fight scene too when
+    you're in the hold." Then, offered (1) asynchronous labels, (2) one frame ahead of the headset, (3) U3: "Do 1 and 3."
+    - Done, uncharted_pc 101d7bd + ba48f9c (local, not pushed; vr-0.4 zip repackaged 2026-11-20 02:57 for his test):
+      with run.py's settings (his Play) the labels behind landing copies made CPU and GPU take turns each frame
+      (frame-done WriteData wait, flip, submission-end idle). Simulator eye 3584, DLSS off, A/B on one binary:
+      | scene | before | now |
+      |---|---|---|
+      | U2 after the bomb cutscene, VR | 70.8, 68.3 (1% low ~39) | 77.3, 79.8 (1% low ~45) |
+      | U2 same, flat | 89.1 | 101.1 |
+      | U3 bar fight with combos and grabs, VR (mean, lowest 5 s) | 78.6 / 68.2, 81.8 / 77.5 | 88.1 / 85.2, 88.6 / 86.2 |
+      | U1 jungle walk, VR | - | 89.4 |
+    - Option 2 (one frame ahead of the headset) not done: not chosen.
+    - Left: U2 VR ~78-80 is GPU-near (86% busy; the 1318 skinning dispatches ~6.6 ms profiled) plus our recording
+      thread (~58%). Simulator runs show a 10-18 ms xrEndFrame every ~2.5 s (the simulator's own; not on SteamVR).
+      SteamVR check invalid tonight (headset asleep: fpsVR 27 FPS, 99.9% reprojection); his headset numbers needed.
 - Details: `profiles/CUSA02343-notes.md`.
 
 ## ICO (PS2, ico-pc native port + VR fork, not RPCS3)
